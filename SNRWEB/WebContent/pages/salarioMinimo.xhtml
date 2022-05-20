@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelTarifa}" />
+				</li>	
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelSalarioMinimo}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fSalario" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:panel style="min-width:800px;">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:commandButton action="#{beanSalarioMinimo.showDialog}"
+									icon="fa fa-plus-circle"
+									value="#{messageBeanSNR.commonButtonInsertar}" />
+							</div>
+						</div>
+						<p:dataTable id="idDtListado" var="item" style="width: 450px;"
+							value="#{beanSalarioMinimo.allPagos}"
+							emptyMessage="#{errorBeanSNR.errorSinRegistros}" editable="true">
+
+							<f:facet name="header">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelSalarioMinimo}" />
+								<p:ajax event="rowEdit"
+									listener="#{beanSalarioMinimo.onRowEdit}" />
+							</f:facet>
+							<p:column headerText="#{messageBeanSNR.commonLabelIdSalario}"
+								filterBy="#{item.idSalario}">
+								<h:outputText value="#{item.idSalario}" />
+							</p:column>
+
+							<p:column headerText="#{messageBeanSNR.commonLabelVigencia}"
+								filterBy="#{item.vigencia}">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{item.vigencia}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{item.vigencia}" maxlength="4"
+											id="idITVigencia"
+											label="#{messageBeanSNR.commonLabelVigencia}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelValorSalario}"
+								filterBy="#{item.valorSalario}">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{item.valorSalario}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputNumber maxlength="6" maxValue="99999999"
+											id="idINValorSalario"
+											placeholder="#{messageBeanSNR.commonLabelValorSalario}"
+											symbol="$" value="#{item.valorSalario}">
+											<p:keyFilter regEx="/[\d\-\.]/" preventPaste="false" />
+										</p:inputNumber>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column style="width:32px">
+								<p:rowEditor />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</center>
+			</h:form>
+
+			<p:dialog id="DialogSalario"
+				header="#{messageBeanSNR.commonButtonInsertarSalario}"
+				resizable="false" modal="true" appendTo="@(body)"
+				widgetVar="idDataSalario" width="50%">
+				<h:form id="SalarioMinimoForm"
+					style="font-size: medium; top: 20%; left: 20%;">
+					<p:panel>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelIdSalario}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idITIdSalario"
+									label="#{messageBeanSNR.commonLabelIdSalario}" maxlength="20"
+									placeholder="#{messageBeanSNR.commonLabelIdSalario}"
+									value="#{beanSalarioMinimo.detalleSalario.idSalario}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelVigencia}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idITVigencia" label="#{messageBeanSNR.commonLabelVigencia}"
+									maxlength="4"
+									placeholder="#{messageBeanSNR.commonLabelVigencia}"
+									value="#{beanSalarioMinimo.detalleSalario.vigencia}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelValorSalario}" />
+								<br />
+								<p:inputNumber id="idItCuantiaActo" maxlength="10"
+									maxValue="99999999"
+									placeholder="#{messageBeanSNR.commonLabelValorSalario}"
+									symbol="$"
+									value="#{beanSalarioMinimo.detalleSalario.valorSalario}">
+									<p:keyFilter regEx="/[\d\-\.]/" preventPaste="false" />
+								</p:inputNumber>
+							</div>
+						</div>
+
+						<div class="ui-g" align="center">
+							<p:commandButton id="btnInsertarTipo" icon="fa fa-save"
+								value="#{messageBeanSNR.commonButtonSalvar}"
+								actionListener="#{beanSalarioMinimo.insertarRegistro}">
+							</p:commandButton>
+							<p:commandButton value="#{messageBeanSNR.commonLabelCancelar}"
+								icon="fa fa-close" onclick="PF('idDataSalario').hide();"
+								ajax="false">
+							</p:commandButton>
+						</div>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

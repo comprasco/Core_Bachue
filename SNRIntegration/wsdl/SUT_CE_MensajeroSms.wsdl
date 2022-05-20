@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/ce/mensajerosms/v1"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/ce/mensajerosms/v1"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/ce/mensajerosms/enviarmensajetexto/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ce/mensajerosms/enviarmensajetexto/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType name="tipoEntradaEnviarMensajeTexto">
+				<xsd:sequence>
+					<xsd:element name="numeroTelefonoMovil"
+						type="xsd:string" minOccurs="0" maxOccurs="1" />
+					<xsd:element name="contenidoMensaje" type="xsd:string"
+						minOccurs="0" maxOccurs="1" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="entradaEnviarMensajeTexto"
+				type="bachue1:tipoEntradaEnviarMensajeTexto" />
+
+			<xsd:complexType name="tipoSalidaEnviarMensajeTexto">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="salidaEnviarMensajeTexto"
+				type="bachue1:tipoSalidaEnviarMensajeTexto" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="EnviarMensajeTexto_Request">
+		<wsdl:part name="entrada"
+			element="bachue1:entradaEnviarMensajeTexto" />
+	</wsdl:message>
+	<wsdl:message name="EnviarMensajeTexto_Response">
+		<wsdl:part name="salida"
+			element="bachue1:salidaEnviarMensajeTexto" />
+	</wsdl:message>
+
+	<wsdl:portType name="SUT_CE_MensajeroSms">
+		<wsdl:operation name="EnviarMensajeTexto">
+			<wsdl:input message="bachue:EnviarMensajeTexto_Request" />
+			<wsdl:output message="bachue:EnviarMensajeTexto_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SUT_CE_MensajeroSmsSOAP12Binding"
+	type="bachue:SUT_CE_MensajeroSms">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="EnviarMensajeTexto">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ce/mensajerosms/v1/EnviarMensajeTexto" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SUT_CE_MensajeroSms">
+		<wsdl:port name="SUT_CE_MensajeroSmsPort"
+			binding="bachue:SUT_CE_MensajeroSmsSOAP12Binding">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

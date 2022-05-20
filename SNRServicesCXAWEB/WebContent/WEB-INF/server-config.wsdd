@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+	xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+	<globalConfiguration>
+		<parameter name="attachments.implementation"
+			value="org.apache.axis.attachments.AttachmentsImpl" />
+		<parameter name="disablePrettyXML" value="false" />
+		<parameter name="sendMultiRefs" value="true" />
+		<parameter name="sendXMLDeclaration" value="true" />
+		<parameter name="sendXsiTypes" value="true" />
+		<requestFlow>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="session" />
+			</handler>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="request" />
+				<parameter name="extension" value=".jwr" />
+			</handler>
+		</requestFlow>
+	</globalConfiguration>
+	<handler name="Authenticate"
+		type="java:org.apache.axis.handlers.SimpleAuthenticationHandler" />
+	<handler name="LocalResponder"
+		type="java:org.apache.axis.transport.local.LocalResponder" />
+	<handler name="URLMapper"
+		type="java:org.apache.axis.handlers.http.URLMapper" />
+	<service name="AdminService" provider="java:MSG">
+		<parameter name="allowedMethods" value="AdminService" />
+		<parameter name="enableRemoteAdmin" value="false" />
+		<parameter name="className"
+			value="org.apache.axis.utils.Admin" />
+		<namespace>http://xml.apache.org/axis/wsdd/</namespace>
+	</service>
+	<service name="Version" provider="java:RPC">
+		<parameter name="allowedMethods" value="getVersion" />
+		<parameter name="className" value="org.apache.axis.Version" />
+	</service>
+
+  <!-- Services from SBB_CB_Anotaciones WSDL service -->
+
+  <service name="SBB_CB_AnotacionesPort" provider="java:RPC" style="document" use="literal">
+      <parameter name="wsdlTargetNamespace" value="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/v1"/>
+      <parameter name="wsdlServiceElement" value="SBB_CB_Anotaciones"/>
+      <parameter name="schemaQualified" value="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"/>
+      <parameter name="wsdlServicePort" value="SBB_CB_AnotacionesPort"/>
+      <parameter name="className" value="co.gov.supernotariado.www.services.bachue.cb.anotaciones.v1.SBB_CB_AnotacionesSOAP12BindingSkeleton"/>
+      <parameter name="wsdlPortType" value="SBB_CB_Anotaciones"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <parameter name="allowedMethods" value="*"/>
+
+      <typeMapping
+        xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        qname="ns:>tipoEntradaDatosAnotacion>convenio"
+        type="java:java.lang.String"
+        serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        qname="ns:>tipoEntradaDatosAnotacion>claseAnotacion"
+        type="java:co.gov.supernotariado.www.services.bachue.cb.anotaciones.consultarAnotaciones.v1.TipoEntradaDatosAnotacionClaseAnotacion"
+        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        qname="ns:>tipoAnotacion>numAnotacion"
+        type="java:java.math.BigInteger"
+        serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        qname="ns:>tipoEntradaDatosAnotacion>numIdentificacionPredio"
+        type="java:java.lang.String"
+        serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        qname="ns:tipoSalidaDatosAnotacion"
+        type="java:co.gov.supernotariado.www.services.bachue.cb.anotaciones.consultarAnotaciones.v1.TipoAnotacion[]"
+        innerType="cmp-ns:tipoAnotacion" xmlns:cmp-ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        qname="ns:>tipoEntradaDatosAnotacion>tipoIdentificacionPredio"
+        type="java:co.gov.supernotariado.www.services.bachue.cb.anotaciones.consultarAnotaciones.v1.TipoEntradaDatosAnotacionTipoIdentificacionPredio"
+        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        qname="ns:tipoAnotacion"
+        type="java:co.gov.supernotariado.www.services.bachue.cb.anotaciones.consultarAnotaciones.v1.TipoAnotacion"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        qname="ns:tipoInterviniente"
+        type="java:co.gov.supernotariado.www.services.bachue.cb.anotaciones.consultarAnotaciones.v1.TipoInterviniente"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        qname="ns:>tipoAnotacion>fechaAnotacion"
+        type="java:java.util.Date"
+        serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        qname="ns:>tipoAnotacion>fechaDocumento"
+        type="java:java.util.Date"
+        serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        qname="ns:tipoAnotacionCancelada"
+        type="java:co.gov.supernotariado.www.services.bachue.cb.anotaciones.consultarAnotaciones.v1.TipoAnotacionCancelada"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        qname="ns:tipoEntradaDatosAnotacion"
+        type="java:co.gov.supernotariado.www.services.bachue.cb.anotaciones.consultarAnotaciones.v1.TipoEntradaDatosAnotacion"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1"
+        qname="ns:>tipoAnotacion>codMensaje"
+        type="java:java.math.BigInteger"
+        serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+
+	<transport name="http">
+		<requestFlow>
+			<handler type="URLMapper" />
+			<handler
+				type="java:org.apache.axis.handlers.http.HTTPAuthHandler" />
+		</requestFlow>
+		<parameter name="qs:list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs:wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+		<parameter name="qs.list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs.method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs:method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs.wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+	</transport>
+	<transport name="local">
+		<responseFlow>
+			<handler type="LocalResponder" />
+		</responseFlow>
+	</transport>
+</deployment>

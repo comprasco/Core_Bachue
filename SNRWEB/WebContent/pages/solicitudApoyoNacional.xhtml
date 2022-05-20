@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelApoyoNacional}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelSolicitud}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<p:dialog widgetVar="statusDispositivo" modal="true"
+				draggable="false" closable="false" resizable="false"
+				showHeader="false" appendTo="@(body)" width="16%">
+				<p:progressBar id="progressBar" mode="indeterminate"
+					widgetVar="progressBar" rendered="true" />
+			</p:dialog>
+
+
+			<h:form id="fSolicitudApoyoNacional" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true"
+					redisplay="false" />
+
+				<p:poll listener="#{beanSolicitudApoyoNacional.documentosEnviadosOWCC}"
+					update="fSolicitudApoyoNacional:idBotonesDescargarPDF" interval="15"
+					widgetVar="wvPoll" autoStart="false" />
+
+				<p:remoteCommand name="segundaVerificacion"
+					actionListener="#{beanSolicitudApoyoNacional.segundaVerificacion}"
+					update="fSolicitudApoyoNacional:idGrowl" partialSubmit="true"
+					global="false" />
+				<p:remoteCommand name="verify"
+					action="#{beanSolicitudApoyoNacional.generarSolicitudApoyoNacional()}"
+					update="fSolicitudApoyoNacional" />
+				<p:remoteCommand name="fail"
+					actionListener="#{beanDispositivos.error}" update="idGrowl"
+					partialSubmit="true" global="false" />
+				<p:remoteCommand name="firma"
+					actionListener="#{beanSolicitudApoyoNacional.firma}"
+					update="idGrowl" partialSubmit="true" global="false" />
+
+				<center>
+					<p:panel header="#{messageBeanSNR.commonLabelBandejaDeEntrada}"
+						style="min-width:800px;" toggleable="true">
+
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-4 ui-lg-5" />
+							<div class="ui-g-12 ui-md-4 ui-lg-2">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+								<br />
+								<p:selectOneMenu style="width:100%" id="idCirculo"
+									title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoCirculoRegistral}"
+									value="#{beanSolicitudApoyoNacional.idCirculo}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanReference.findCirculoRegistralActivoUsuario()}"
+										var="circuloAntSistema"
+										itemValue="#{circuloAntSistema.idCirculo}"
+										itemLabel="#{circuloAntSistema.idCirculo} - #{circuloAntSistema.nombre}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGroup>
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonGenerarReporte}"
+										disabled="#{beanSolicitudApoyoNacional.procesoTerminado}"
+										actionListener="#{beanSolicitudApoyoNacional.consultarSolicitudesApoyoNacional()}"
+										ajax="true" icon="fa fa-newspaper-o"
+										update="idDtApoyoNacional,idGenerarReporte" />
+								</h:panelGroup>
+							</div>
+						</div>
+
+						<br />
+						<div class="ui-g">
+							<p:dataTable id="idDtApoyoNacional"
+								value="#{beanSolicitudApoyoNacional.turnosApoyoNacional}"
+								var="item"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+								<f:facet name="header">#{messageBeanSNR.commonLabelApoyoNacional}</f:facet>
+								<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+									<h:outputText value="#{item.nir}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+									<h:outputText value="#{item.idTurno}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelFecha}">
+									<h:outputText value="#{item.fechaCreacion}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelMatriculas}">
+									<h:outputText value="#{item.matriculasApoyoNacional}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelActos}">
+									<h:outputText value="#{item.actosApoyoNacional}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelDocumentoPublico}">
+									<h:outputText value="#{item.infoDocumento}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelOficinaOrigen}">
+									<h:outputText value="#{item.nombreOficinaOrigen}" />
+								</p:column>
+
+								<f:facet name="footer">
+									<p:column style="text-align:right">
+										<h:outputText
+											value="#{messageBeanSNR.commonLabelTotalEnBandeja}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{beanSolicitudApoyoNacional.totalBandeja}" />
+									</p:column>
+									<p:column>
+										<h:outputText value="" />
+									</p:column>
+								</f:facet>
+							</p:dataTable>
+						</div>
+						<br />
+
+						<!--  <p:commandButton icon="fa fa-edit" id="idBotonPadFirmas"
+							actionListener="#{beanDetalleEntrega.abrirPadFirmas()}"
+							global="false" value="#{messageBeanSNR.commonLabelPadFirmas}"
+							onclick="PF('statusDispositivo').show()" /> -->
+
+						<p:outputPanel id="idGenerarReporte"
+							rendered="#{beanSolicitudApoyoNacional.turnosApoyoNacional.size() >= 11 and !beanSolicitudApoyoNacional.procesoTerminado}">
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonGenerarSolicitudDeApoyo}"
+										actionListener="#{beanSolicitudApoyoNacional.generarSolicitudApoyoNacional()}"
+										icon="fa fa-newspaper-o" update="idDtApoyoNacional" />
+								</div>
+							</div>
+						</p:outputPanel>
+
+
+						<p:outputPanel id="idBotonesDescargarPDF"
+							rendered="#{beanSolicitudApoyoNacional.documentosEnviados}">
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<h:commandLink id="idBotonConsultaSGD"
+										action="#{beanSolicitudApoyoNacional.consultaSGDAbrirPestana()}"
+										target="_blank">
+										<p:commandButton
+											value="#{messageBeanSNR.commonLabelConsultaSGD}" icon="lupa"
+											iconPos="left" />
+									</h:commandLink>
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonEnviarADireccionTecnica}"
+										action="#{beanSolicitudApoyoNacional.enviarADireccionTecnica()}"
+										icon="fa fa-newspaper-o" update="idDtApoyoNacional" />
+								</div>
+							</div>
+						</p:outputPanel>
+
+					</p:panel>
+					<p:spacer />
+					<div align="left">
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="principal?faces-redirect=true">
+						</p:commandButton>
+					</div>
+					<br />
+				</center>
+			</h:form>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelNIRCreado}"
+				widgetVar="idDialogNir" modal="true" height="100" resizable="false">
+				<h:form id="fDialog2"
+					style="font-size: large; top: 100%; left: 100%;">
+					<h:outputText id="otMensaje"
+						value="#{beanSolicitudApoyoNacional.mensajeTerminarProceso}" />
+				</h:form>
+			</p:dialog>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

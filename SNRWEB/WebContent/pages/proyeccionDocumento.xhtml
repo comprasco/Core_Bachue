@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtmltransitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelVisitas}" />
+				</li>
+				<li class="breadcrumb-item" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelEjecucionDeVisitas}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleEjecucionVisitas}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fDesignDetalle" style="width: 100%;"
+				enctype="multipart/form-data" onkeypress="return event.keyCode!=13">
+				<p:growl id="idGrowl" globalOnly="true" showDetail="true"
+					sticky="false" life="10000" redisplay="false" />
+				<ui:param name="bean" value="#{beanDetalleEjecucionVisitas}" />
+				<ui:include src="headerDatosTurnoInclude.xhtml" />
+				<br />
+				<ui:include src="panelSolicitudVisitasInclude.xhtml" />
+				<br />
+				<p:outputPanel id="container">
+					<p:panel id="idOpUsuariosVisitadores" toggleable="true"
+						rendered="#{bean.tramiteSeleccionado eq '1' and bean.tipoTramiteSeleccionado eq '1'}">
+						<p:dataTable id="usuarios" widgetVar="usuarios"
+							value="#{bean.usuarios}" var="usuario">
+							<f:facet name="header">
+								<p:outputLabel value="Usuarios" />
+							</f:facet>
+							<p:column headerText="Nombre funcionario"
+								filterBy="#{usuario.nombreCompleto}">
+								<f:facet name="filter">
+									<p:inputText onchange="PF('usuarios').filter()" />
+								</f:facet>
+								<p:outputLabel value="#{usuario.nombreCompleto}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.reasignacionVisita}">
+								<center>
+									<p:selectBooleanCheckbox value="#{usuario.seleccionado}" />
+								</center>
+							</p:column>
+							<p:column headerText="Nombre a reasignar">
+								<p:selectOneMenu id="idSOMUsuarioReasignado" style="width:85%;"
+									title="#{tooltipBeanSNR.administracionDesbordesDesbordesDetalleOrip}"
+									value="#{usuario.idUsuarioReasignacion}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems value="#{bean.allUsuarios}" var="item"
+										itemValue="#{item.idUsuario}"
+										itemLabel="#{item.nombreCompleto}" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelUsuarioVisitdorPrincipal}">
+								<center>
+									<p:selectBooleanCheckbox id="radioVisitadorPrincipal"
+										value="#{usuario.visitadorPrincipal}">
+									</p:selectBooleanCheckbox>
+								</center>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<h:panelGroup id="layoutsContainer">
+						<h:panelGrid id="layoutsGrid" columns="2"
+							style="margin-top: 15px;" cellpadding="0" cellspacing="0"
+							layout="responsive">
+							<pe:layout fullPage="false" style="width:1095px; height:700px;"
+								options="#{beanProyeccionDocumento.layoutOptions}">
+								<pe:layoutPane position="west">
+									<p:panel id="panelCaja">
+										<div class="ui-g" align="center">
+											<p:outputPanel id="fechas"
+												rendered="#{(bean.tramiteSeleccionado eq '1' and (bean.tipoTramiteSeleccionado eq '2' or bean.tipoTramiteSeleccionado eq '3')) or (bean.tramiteSeleccionado eq '2' and bean.tipoTramiteSeleccionado eq '10' )}">
+												<div class="ui-g-12 ui-md-6 ui-lg-12">
+													<p:outputLabel
+														value="#{(bean.tramiteSeleccionado eq '2' and bean.tipoTramiteSeleccionado eq '10') ? messageBeanSNR.commonLabelFechaInicialProrroga : messageBeanSNR.commonLabelFechaInicial}" />
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:calendar id="idCalFechaInicio" size="10" mask="true"
+														locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+														value="#{bean.fechaInicial}" showOn="button" />
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-12">
+													<p:outputLabel
+														value="#{(bean.tramiteSeleccionado eq '2' and bean.tipoTramiteSeleccionado eq '10') ? messageBeanSNR.commonLabelFechaFinalProrroga : messageBeanSNR.commonLabelFechaFinal}" />
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:calendar id="idCalFechaFin" size="10" mask="true"
+														locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+														value="#{bean.fechaFinal}" showOn="button" />
+												</div>
+											</p:outputPanel>
+											<p:repeat var="item" value="#{bean.camposPantalla}">
+												<div class="ui-g-12 ui-md-6 ui-lg-12">
+													<p:textEditor value="#{item.texto}" height="300"
+														valueChangeListener="#{bean.ocultarBotonSalvarProyeccionDocumento}"
+														style="margin-bottom:10px">
+														<f:facet name="toolbar">
+															<span class="ql-formats">
+																<div class="ui-g-12 ui-md-6 ui-lg-12">
+																	<p:outputLabel
+																		value="#{item.tag}#{messageBeanSNR.commonLabelObligatorio}" />
+																</div>
+															</span>
+														</f:facet>
+														<p:ajax event="keyup" global="false"
+															listener="#{bean.ocultarBotonSalvarProyeccionDocumento}"
+															update="fDesignDetalle:botonSalvar" />
+													</p:textEditor>
+												</div>
+											</p:repeat>
+											<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+												<p:commandButton
+													value="#{messageBeanSNR.commonButtonGenerarDocumentos}"
+													icon="fa fa-check" update="@form:idGrowl,container"
+													action="#{bean.generarDocumentos()}" />
+											</div>
+										</div>
+									</p:panel>
+								</pe:layoutPane>
+								<pe:layoutPane position="center">
+									<p:outputPanel id="PanelDocumento" style="margin-left: 30px;">
+										<pe:documentViewer height="690px" id="documento" width="97%"
+											value="#{beanProyeccionDocumento.imagenDocumento}" />
+									</p:outputPanel>
+								</pe:layoutPane>
+							</pe:layout>
+						</h:panelGrid>
+					</h:panelGroup>
+					<div class="ui-g">
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+							<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="#{bean.regresarProyeccionDocumento()}" />
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+							<p:outputPanel id="botonSalvar">
+								<p:commandButton
+									rendered="#{bean.mostrarBotonSalvarProyeccionDocumento}"
+									value="#{messageBeanSNR.commonButtonSalvar}" icon="fa fa-save"
+									update="@form:idGrowl"
+									action="#{bean.salvarEjecucionVisitas()}" />
+							</p:outputPanel>
+						</div>
+					</div>
+				</p:outputPanel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

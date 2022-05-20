@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/salvedades/v1"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/salvedades/v1"
+	xmlns:bachueCS="https://www.supernotariado.gov.co/services/bachue/cb/salvedades/consultarSalvedades/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/salvedades/consultarSalvedades/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType name="tipoEntradaSalvedades">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de entrada para la operacion consultarSalvedades
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="convenio" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								Código del convenio que tiene la SNR con
+								Entidades Externas que necesiten este servicio.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="tipoIdentificacionPredio"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al tipo de identificacion por el
+								cual podemos buscar un predio.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="matricula">
+									<xsd:annotation>
+										<xsd:documentation>En el campo numIdentificacionPredio deberá
+											venir los
+											tres primeros caracteres del cículo y luego si el
+											número de
+											matrícula
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredial">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al CHIP, si es Bogotá o a la
+											referencia o cédula catastral del predio.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredialAnterior">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al anterior numero de
+											Identifiación Predial.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="NUPRE">
+									<xsd:annotation>
+										<xsd:documentation>Número Único Predial
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numIdentificacionPredio"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Al seleccionar un tipo de Identificación
+								predio,
+								se espera en este campo el número correspondiente; para
+								el caso
+								de
+								matricula, el sistema toma los tres primeros caracteres
+								como
+								Código Circulo Registral y los siguientes como el Número de
+								Matrícula Inmobiliaria.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoSalidaSalvedades">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de salida para la operacion consultarSalvedades
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="salvedades" minOccurs="0"
+						maxOccurs="unbounded" type="bachueCS:tipoSalvedad" />
+					<xsd:element name="codMensaje" type="xsd:integer">
+						<xsd:annotation>
+							<xsd:documentation>200 cuando no hay error, 4* por errores de
+								validación de campos de entrada o validación de negocio y 500
+								cuando existen errores de sistema
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a al mensaje de error para los
+								casos en que la consulta no fue exitosa, vacío cuando la
+								consulta es exitosa
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoSalvedad">
+				<xsd:sequence>
+					<xsd:element name="numAnotacion" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al número de la anotación de la
+								salvedad.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="numeroCorreccion" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al número de la corrección de la
+								salvedad.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NIR" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al NIR de la salvedad.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="radicacion" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a la radicacion de la salvedad.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="fechaSalvedad" type="xsd:dateTime"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a la fecha de la salvedad.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="descripcionSalvedad"
+						type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>descripción de la salvedad
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaDatosSalvedades"
+				type="bachueCS:tipoEntradaSalvedades" />
+			<xsd:element name="salidaDatosSalvedades"
+				type="bachueCS:tipoSalidaSalvedades" />
+			<!-- Últimas modificaciones 2020-02-03 17:25 -->
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- INICIO WSDL:mesage -->
+	<wsdl:message name="ConsultarSalvedades_Request">
+		<wsdl:part name="entrada"
+			element="bachueCS:entradaDatosSalvedades"></wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="ConsultarSalvedades_Response">
+		<wsdl:part name="salida"
+			element="bachueCS:salidaDatosSalvedades"></wsdl:part>
+	</wsdl:message>
+
+	<!-- INICIO ConsultasBachue -->
+	<wsdl:portType name="SBB_CB_Salvedades">
+
+		<!-- Inicio Operacion consultarSalvedades -->
+		<wsdl:operation name="consultarSalvedades">
+			<wsdl:input message="bachue:ConsultarSalvedades_Request"></wsdl:input>
+			<wsdl:output
+				message="bachue:ConsultarSalvedades_Response"></wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Operacion consultarSalvedades -->
+	</wsdl:portType>
+
+	<!-- INICIO WSDL:binding -->
+	<wsdl:binding name="SBB_CB_SalvedadesSOAP12Binding"
+		type="bachue:SBB_CB_Salvedades">
+
+		<!-- Inicio Binding DatosSalvedades -->
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="consultarSalvedades">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/salvedades/v1/consultarSalvedades" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Binding DatosSalvedades -->
+	</wsdl:binding>
+
+	<wsdl:service name="SBB_CB_Salvedades">
+		<wsdl:port name="SBB_CB_SalvedadesPort"
+			binding="bachue:SBB_CB_SalvedadesSOAP12Binding">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+	<!-- Últimas modificaciones 2020-01-27 11:13 -->
+</wsdl:definitions>

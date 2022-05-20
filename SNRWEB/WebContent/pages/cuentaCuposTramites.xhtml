@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelCuentaCupos}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fCuentaCupos" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true"
+					redisplay="false" />
+				<center>
+					<p:outputLabel value="#{messageBeanSNR.commonLabelCuentaCupos}" />
+					<br />
+					<p:panel header="#{messageBeanSNR.commonLabelBandejaDeEntrada}"
+						style="min-width:800px;" toggleable="true">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+										style="font-size: 100%;" />
+									<p:inputText placeholder="#{messageBeanSNR.commonLabelNIR}"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaNir}"
+										id="nir" value="#{beanCuentaCupos.nirConsultaBandeja}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}"
+										style="font-size: 100%;" />
+									<p:inputText placeholder="#{messageBeanSNR.commonLabelTurno}"
+										id="idTurno" value="#{beanCuentaCupos.turnoConsultaBandeja}"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaTurno}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGroup>
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										actionListener="#{beanCuentaCupos.returnPages()}"
+										ajax="true" icon="lupa" id="idCBConsultaDetalle"
+										update="idOPBandejas,idGrowl" />
+								</h:panelGroup>
+
+							</div>
+						</div>
+						<div class="ui-g">
+						<p:outputPanel id="idOPBandejas">
+							<p:dataTable id="idDtTurnos" sortOrder="ascending"
+								value="#{beanCuentaCupos.datosBandejaDetalle}" var="row"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+								paginator="true" rows="50">
+
+								<p:column style="width: 16%;"
+									headerText="#{messageBeanSNR.commonLabelNIR}">
+									<h:outputText value="#{row.nir}" />
+								</p:column>
+
+								<p:column style="width: 16%;"
+									headerText="#{messageBeanSNR.commonLabelTurno}">
+									<h:outputText value="#{row.idTurno}" />
+								</p:column>
+
+								<p:column style="width: 16%;"
+									headerText="#{messageBeanSNR.commonLabelEntidadCuentaCupo}"
+									filterBy="#{row.documento}" filterMatchMode="contains">
+									<h:outputText value="#{row.documento}"
+										title="#{tooltipBeanSNR.procesosCuentaCuposDocumento}" />
+								</p:column>
+
+								<p:column style="width: 16%;"
+									headerText="#{messageBeanSNR.commonLabelNombreEntidad}"
+									filterBy="#{row.nombre}" filterMatchMode="contains">
+									<h:outputText value="#{row.nombre}"
+										title="#{tooltipBeanSNR.procesosCuentaCuposNombre}" />
+								</p:column>
+
+								<p:column style="width: 16%;"
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<h:outputText value="#{row.fechaCreacion}" />
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+									style="width: 13%;">
+									<div align="center">
+										<p:commandButton id="idCBObservacionesAnt"
+											icon="fa fa-id-card-o"
+											actionListener="#{beanCuentaCupos.mostrarObservacionesProcesoAnterior(row.observaciones)}"
+											update="fCuentaCupos:idGrowl"
+											title="#{tooltipBeanSNR.procesosAprobacionObservacionesProcesoAnterior}"
+											style="width: 23%;" />
+									</div>
+								</p:column>
+
+								<p:column style="width: 7%;"
+									headerText="#{messageBeanSNR.commonLabelDetalle}">
+									<div align="center">
+										<h:commandButton
+											value="#{messageBeanSNR.commonLabelVerDetalle}"
+											action="#{beanCuentaCupos.abrirDetalleTurno(row)}"
+											image="../images/find.png">
+										</h:commandButton>
+									</div>
+								</p:column>
+							</p:dataTable>
+							</p:outputPanel>
+						</div>
+					</p:panel>
+					<p:spacer />
+					<div align="left">
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="cuentaCupos?faces-redirect=true">
+						</p:commandButton>
+					</div>
+					<br />
+				</center>
+			</h:form>
+
+			<p:dialog id="cuadroObsProcesoAnterior" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+				widgetVar="obsProcesoAnterior" modal="true" resizable="false"
+				width="700">
+				<h:form id="fDialogo"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaCuadroProcesoAnterior" maxwidth="280"
+						cellspacing="1" cellpadding="20" border="1" bgcolor="#1E679A"
+						align="center">
+						<tr>
+							<td id="fila1TablaCuadroProcesoAnterior" bgcolor="#ffffff">
+								<h:outputText value="#{beanCuentaCupos.observaciones}"
+									id="id_observacionesProcesoAnterior" />
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

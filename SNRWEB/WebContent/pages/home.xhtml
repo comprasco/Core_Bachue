@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge;IE=9" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="SNR" />
+	<meta name="author" content="bachue.com" />
+	<meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="expires" content="0" />
+	<meta http-equiv="pragma" content="no-cache" />
+	<title>SNR</title>
+	<!-- Bootstrap core CSS -->
+	<link
+		href="#{facesContext.externalContext.requestContextPath}/css/bootstrap.min.css"
+		rel="stylesheet" />
+	<link
+		href="#{facesContext.externalContext.requestContextPath}/css/style.css"
+		rel="stylesheet" />
+	<link rel="icon"
+		href="#{facesContext.externalContext.requestContextPath}/images/favicon.png"
+		type="image/png" />
+	<h:outputScript library="primefaces" name="jquery/jquery.js"
+		target="head" />
+	<h:outputScript library="primefaces" name="jquery/jquery-plugins.js"
+		target="head" />
+
+</h:head>
+<body id="idBodyHome">
+	<h:form id="idfHome">
+		<p:growl id="idGrowl" sticky="true" showSummary="false" globalOnly="true"
+			redisplay="false" />
+		<p:poll interval="#{beanLogin.timeOutMedio}"
+			listener="#{beanLogin.activarSesion}" />
+		<p:idleMonitor timeout="#{beanLogin.timeOut}"
+			multiWindowSupport="true">
+			<p:ajax event="idle" listener="#{beanLogin.cerrarSesionExpirada}" />
+		</p:idleMonitor>
+		<div class="ui-g-12 ui-md-12 ui-l-12" id="div_principal">
+			<div class="ui-g-8 ui-md-8 ui-l-8" />
+			<div class="ui-grid ui-grid-responsive">
+				<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+					<p:commandLink id="idCLHelpIcon">
+						<p:graphicImage id="idIAyuda" style="width: 3%;" class="HomeIcons" 
+							value="images/ayudaLinea40V3.png"
+							title="#{messageBeanSNR.commonLabelAyudaEnLinea}" />
+						<p:effect type="highlight" event="click" for="idIAyuda" />
+					</p:commandLink>
+					<p:commandLink action="#{beanLogin.cerrarSesion(true)}">
+						<h:outputText class="Homebuttons"
+							value="#{messageBeanSNR.commonLabelCerrarSesion}" />
+					</p:commandLink>
+					<br />
+					<b><p:outputLabel id="idOlUsuario"
+						value="Bienvenido, #{sessionScope.nombreusuario != null ? sessionScope.nombreusuario : ''}" /></b>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				</div>
+			</div>
+		</div>
+		<div class="ui-g-12 ui-md-12 ui-l-12 sinBordes" style="width:100%;">
+			<p:dataGrid var="comp" value="#{beanLogin.permisosMenuHome}" 
+				layout="grid" styleClass="dataGrid" style="border-collapse:collapse">
+				<p:panel style="text-align:center;">
+					<h:panelGrid columns="1" style="text-align:center;">
+						<p:outputLabel value=" #{comp.nombre}" />
+						<h:commandLink
+							ajax="false" disabled="#{!comp.esParte}"
+							actionListener="#{beanLogin.cargarMenuCoreBachue(comp)}">
+							<h:graphicImage styleClass="#{comp.esParte ? 'HomeIcons' : 'HomeIconsDisabled'}" 
+							value="data:image/png;base64, #{comp.icono}"
+								title="#{comp.esParte ? comp.nombre : 'SIN ACCESO '}" />
+						</h:commandLink>
+						<br />
+						<h:commandLink id="boton" ajax="false"
+							actionListener="#{beanLogin.cargarMenuCoreBachue(comp)}"
+							disabled="#{!comp.esParte}">
+							<h:outputText
+								class="#{comp.esParte ? 'Homebuttons' : 'HomebuttonsDisabled'}"
+								value="#{comp.botonComponente}" />
+						</h:commandLink>
+					</h:panelGrid>
+				</p:panel>
+			</p:dataGrid>
+		</div>
+	</h:form>
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script
+		src="#{facesContext.externalContext.requestContextPath}/js/calendar.js"></script>
+	<script
+		src="#{facesContext.externalContext.requestContextPath}/js/bootstrap.min.js"></script>
+	<script
+		src="#{facesContext.externalContext.requestContextPath}/js/popper.min.js"></script>
+
+	<script type="text/javascript" src="../js/scripts.js"></script>
+
+	<script type="text/javascript" src="../js/jqueryScripts.js"></script>
+</body>
+</html>

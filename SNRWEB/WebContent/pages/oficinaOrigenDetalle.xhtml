@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelNegocio}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelOficinaOrigen}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{beanOficinaOrigen.insertar ? messageBeanSNR.pageInsertarOficinaOrigen: messageBeanSNR.pageModificarOficinaOrigen}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fOficinaOrigenDetalle" style="width: 100%;"
+				enctype="multipart/form-data" onkeypress="return event.keyCode!=13">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false"/>
+				<center>
+					<p:panel>
+						<p:panel
+							header="#{beanOficinaOrigen.insertar ? messageBeanSNR.pageInsertarOficinaOrigen: messageBeanSNR.pageModificarOficinaOrigen}"
+							style="width:100%">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelIdTipoOficina}#{messageBeanSNR.commonLabelObligatorio}" />
+
+									<p:selectOneMenu id="idTipoOficina" style="width:100%;"
+										value="#{beanOficinaOrigen.oficinaOrigen.idTipoOficina}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findAllTipoOficinaActivoById()}"
+											var="tipoOficina" itemValue="#{tipoOficina.idTipoOficina}"
+											itemLabel="#{tipoOficina.idTipoOficina} - #{tipoOficina.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelIdPais}#{messageBeanSNR.commonLabelObligatorio}" />
+
+									<p:selectOneMenu id="idPais" style="width:100%;"
+										value="#{beanOficinaOrigen.oficinaOrigen.idPais}">
+										<p:ajax event="change" update="idDepartamento" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanReference.findPaises()}"
+											var="paises" itemValue="#{paises.idPais}"
+											itemLabel="#{paises.idPais} - #{paises.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelIdDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+
+									<p:selectOneMenu id="idDepartamento" style="width:100%;"
+										value="#{beanOficinaOrigen.oficinaOrigen.idDepartamento}">
+										<p:ajax event="change" update="idMunicipio" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanOficinaOrigen.findDepartamentos()}"
+											var="departamentos"
+											itemValue="#{departamentos.idDepartamento}"
+											itemLabel="#{departamentos.nombre} - #{departamentos.idDepartamento}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelIdMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+
+									<p:selectOneMenu id="idMunicipio" style="width:100%;"
+										value="#{beanOficinaOrigen.oficinaOrigen.idMunicipio}">
+										<p:ajax event="change" update="idVereda" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanOficinaOrigen.findMunicipios()}"
+											var="municipios" itemValue="#{municipios.idMunicipio}"
+											itemLabel="#{municipios.nombre} - #{municipios.idMunicipio}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelIdVereda}#{messageBeanSNR.commonLabelObligatorio}" />
+
+									<p:selectOneMenu id="idVereda" style="width:100%;"
+										value="#{beanOficinaOrigen.oficinaOrigen.idVereda}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanOficinaOrigen.findVereda()}"
+											var="veredas" itemValue="#{veredas.idVereda}"
+											itemLabel="#{veredas.nombre} - #{veredas.idVereda}" />
+									</p:selectOneMenu>
+								</div>
+
+
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelActivo}#{messageBeanSNR.commonLabelObligatorio}" />
+
+									<p:selectOneMenu id="idActivo" style="width:100%;"
+										value="#{beanOficinaOrigen.oficinaOrigen.activo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNotificarCorrespondencia}#{messageBeanSNR.commonLabelObligatorio}" />
+
+									<p:selectOneMenu id="idNotificarCorrespondecia"
+										style="width:100%;"
+										value="#{beanOficinaOrigen.oficinaOrigen.notificarCorrespondencia}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNombre}" />
+									<br />
+									<p:inputText id="idNombre" onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionOficinaOrigenNombre}"
+										placeholder="#{messageBeanSNR.commonLabelNombre}"
+										value="#{beanOficinaOrigen.oficinaOrigen.nombre}">
+									</p:inputText>
+
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNumero}" />
+									<br />
+									<p:inputText id="idNumero" onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionOficinaOrigenNumero}"
+										placeholder="#{messageBeanSNR.commonLabelNumero}"
+										value="#{beanOficinaOrigen.oficinaOrigen.numero}">
+										<p:keyFilter regEx="/[0-9_]/i" preventPaste="false"
+											maxlength="3" />
+									</p:inputText>
+
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNombreTitular}" />
+									<br />
+									<p:inputText id="idNombreTitular"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionOficinaOrigenNombreTitular}"
+										placeholder="#{messageBeanSNR.commonLabelNombreTitular}"
+										value="#{beanOficinaOrigen.oficinaOrigen.nombreTitular}">
+									</p:inputText>
+
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDireccion}" />
+									<br />
+									<p:inputText id="idDireccion"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionOficinaOrigenDireccion}"
+										placeholder="#{messageBeanSNR.commonLabelDireccion}"
+										value="#{beanOficinaOrigen.oficinaOrigen.direccion}">
+									</p:inputText>
+
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTelefono}" />
+									<br />
+									<p:inputText id="idTelefono" onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionOficinaOrigenTelefono}"
+										placeholder="#{messageBeanSNR.commonLabelTelefono}"
+										value="#{beanOficinaOrigen.oficinaOrigen.telefono}">
+										<p:keyFilter regEx="/[0-9_]/i" preventPaste="false"
+											maxlength="20" />
+									</p:inputText>
+
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelCorreoElectronico}" />
+									<br />
+									<p:inputText id="idEmail" onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionOficinaOrigenEmail}"
+										placeholder="#{messageBeanSNR.commonLabelCorreoElectronico}"
+										value="#{beanOficinaOrigen.oficinaOrigen.correoElectronico}">
+									</p:inputText>
+
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelFax}" />
+									<br />
+									<p:inputText id="idFax" onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionOficinaOrigenFax}"
+										placeholder="#{messageBeanSNR.commonLabelFax}"
+										value="#{beanOficinaOrigen.oficinaOrigen.fax}">
+									</p:inputText>
+
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelUnico}" />
+									<br />
+									<p:inputText id="idUnico" onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionOficinaOrigenIdUnico}"
+										placeholder="#{messageBeanSNR.commonLabelUnico}"
+										value="#{beanOficinaOrigen.oficinaOrigen.idUnico}">
+									</p:inputText>
+
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelVersion}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText id="idVersion" onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionOficinaOrigenVersion}"
+										placeholder="#{messageBeanSNR.commonLabelVersion}"
+										value="#{beanOficinaOrigen.oficinaOrigen.version}"
+										disabled="#{!beanOficinaOrigen.insertar}">
+										<p:keyFilter regEx="/[0-9_]/i" preventPaste="false"
+											maxlength="20" />
+									</p:inputText>
+								</div>
+							</div>
+
+							<p:dataTable id="idDetalle" var="item"
+								value="#{beanOficinaOrigen.datosAuditoria}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}"
+								rendered="#{!beanOficinaOrigen.insertar}">
+								<f:facet name="header">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+								</f:facet>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+									<h:outputText value="#{item.idUsuarioCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<h:outputText value="#{item.fechaCreacion}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="GMT-5" />
+									</h:outputText>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+									<h:outputText value="#{item.idUsuarioModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+									<h:outputText value="#{item.fechaModificacion}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="GMT-5" />
+									</h:outputText>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIpModificación}">
+									<h:outputText value="#{item.ipModificacion}" />
+								</p:column>
+							</p:dataTable>
+
+							<div class="ui-g" align="left">
+
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										update="globalMsg" action="oficinaOrigen?faces-redirect=true" />
+
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:commandButton
+										value="#{beanOficinaOrigen.insertar ? messageBeanSNR.commonButtonInsertarOficinaOrigen: messageBeanSNR.commonButtonModificarOficinaOrigen}"
+										icon="fa fa-pencil" iconPos="left" update="globalMsg"
+										action="#{beanOficinaOrigen.salvar()}" ajax="false" />
+								</div>
+							</div>
+						</p:panel>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtmltransitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<p:panel id="panelSolicitudVisitas" toggleable="true"
+	header="#{messageBeanSNR.commonLabelSolicitudVisitasPanel}"
+	style="text-align:center;">
+	<p:dataTable id="idSolicitudesVisitas" var="row"
+		emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+		value="#{bean.datosPanelSolicitudVisitas}">
+		<p:column headerText="#{messageBeanSNR.commonLabelOrip}"
+			style="text-align: center;">
+			<h:outputLabel value="#{row.idCirculo} - #{row.nombreCirculo}" style="font-weight: normal" />
+		</p:column>
+		<p:column headerText="#{messageBeanSNR.commonLabelTipoVisita}"
+			style="text-align: center;">
+			<h:outputLabel value="#{row.idSubProceso} - #{row.nombreSubProceso}"
+				style="font-weight: normal" />
+		</p:column>
+		<p:column headerText="#{messageBeanSNR.commonLabelFechaDesde}"
+			style="text-align: center;">
+			<h:outputLabel value="#{row.fechaDesde}" style="font-weight: normal" />
+		</p:column>
+		<p:column headerText="#{messageBeanSNR.commonLabelFechaHasta}"
+			style="text-align: center;">
+			<h:outputLabel value="#{row.fechaHasta}" style="font-weight: normal" />
+		</p:column>
+		<p:column headerText="#{messageBeanSNR.commonLabelNombreUsuario}"
+			style="text-align: center;">
+			<h:outputLabel value="#{row.nombreUsuario}"
+				style="font-weight: normal" />
+		</p:column>
+		<p:column headerText="#{messageBeanSNR.commonLabelDependencia}"
+			style="text-align: center;">
+			<h:outputLabel
+				value="#{row.idDependencia} - #{row.nombreDependencia}"
+				style="font-weight: normal" />
+		</p:column>
+	</p:dataTable>
+</p:panel>
+</html>

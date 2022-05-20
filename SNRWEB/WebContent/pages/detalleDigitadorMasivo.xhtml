@@ -1,0 +1,1421 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDigitadorMasivo}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelRegistroCalificacion}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fdetalleDigitadorMasivo" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false"/>
+				<center>
+					<p:outputPanel style="min-width:800px;">
+
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+								<br />
+								<p:inputText readonly="true"
+									title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnoDetalleDelturnoDetalleActoRegistroCalificacionDigitadorMasivoNir}"
+									value="#{beanDetalleDigitadorMasivo.matriculas.nir}" />
+							</div>
+							<div class="ui-g-12 ui-md-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}" />
+								<br />
+								<p:inputText readonly="true"
+									title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnoDetalleDelturnoDetalleActoRegistroCalificacionDigitadorMasivoTurno}"
+									value="#{beanDetalleDigitadorMasivo.matriculas.turno}" />
+							</div>
+							<div class="ui-g-12 ui-md-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelFechaCreacion}" />
+								<br />
+								<p:inputText readonly="true"
+									title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnoDetalleDelturnoDetalleActoRegistroCalificacionDigitadorMasivoFechaCreacion}"
+									value="#{beanDetalleDigitadorMasivo.turnoObjeto.fechaCreacion}" />
+							</div>
+						</div>
+						<p:panel header="#{messageBeanSNR.commonLabelMatriculas}"
+							toggleable="true">
+							<div class="ui-g">
+								<p:dataTable id="idDtTurnos"
+									value="#{beanDetalleDigitadorMasivo.matriculas.allMatriculas}"
+									var="row"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+									<p:column headerText="#{messageBeanSNR.commonLabelMatriculas}">
+										<h:outputText value="#{row.idCirculo}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelEstado}">
+										<h:outputText value="#{row.estadoMatricula}" />
+									</p:column>
+								</p:dataTable>
+							</div>
+						</p:panel>
+						<br />
+
+						<p:outputPanel id="idFormTabs">
+							<p:panel toggleable="true"
+								rendered="#{beanDetalleDigitadorMasivo.salvar == false and beanDetalleDigitadorMasivo.matriculas.englobe}"
+								header="#{messageBeanSNR.commonLabelDatosDelPredioEnglobado}"
+								collapsed="#{beanDetalleDigitadorMasivo.matriculas.englobe}">
+								<p:tabView id="idTVRegistroCalificacion">
+									<!-- Tab Datos básicos -->
+									<p:tab title="#{messageBeanSNR.commonLabelDatosBasicos}"
+										rendered="#{beanDetalleDigitadorMasivo.matriculas.englobe}"
+										id="idDatosBasicos">
+										<p:panel header="#{messageBeanSNR.commonLabelMatriculas}"
+											toggleable="true">
+											<p:repeat var="idMatriculasEnglobes"
+												value="#{beanDetalleDigitadorMasivo.matriculas.allMatriculas}">
+												<p:panel id="idPanelUbicacion"
+													header="#{messageBeanSNR.commonLabelUbicacion}: #{idMatriculasEnglobes.idCirculo}"
+													toggleable="true" style="text-align:center">
+													<div class="ui-g" align="center">
+														<div class="ui-g-12 ui-md-6 ui-lg-6">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+															<br />
+															<p:selectOneMenu id="circuloRegistral" disabled="true"
+																value="#{idMatriculasEnglobes.zonaRegistral.idCirculo}"
+																style="width:100%">
+																<f:selectItems
+																	value="#{beanReference.findCirculoRegistral(true)}"
+																	var="circulo" itemValue="#{circulo.idCirculo}"
+																	itemLabel="#{circulo.idCirculo} - #{circulo.nombre}" />
+																<p:ajax event="change" update="idSOMMunDirRe"/>
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-4 ui-lg-6">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelEstadoMatricula}" />
+															<br />
+															<p:selectOneMenu id="idSOMestadoPredio"
+																value="#{idMatriculasEnglobes.estadoPredio}"
+																style="width:100%" disabled="true">
+																<f:selectItems
+																	value="#{beanReference.findEstadoPredio()}"
+																	var="esPredio" itemValue="#{esPredio.idEstadoPredio}"
+																	itemLabel="#{esPredio.nombre}" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+													<div class="ui-g" align="center">
+														<div class="ui-g-12 ui-md-4 ui-lg-6">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDepartamento}" />
+															<br />
+															<p:selectOneMenu id="idSOMDepDirRe" style="width:100%"
+																value="#{idMatriculasEnglobes.zonaRegistral.idDepartamento}"
+																disabled="true">
+																<f:selectItems
+																	value="#{beanReference.findDepartamentos(idMatriculasEnglobes.zonaRegistral.idPais)}"
+																	var="depRes" itemValue="#{depRes.idDepartamento}"
+																	itemLabel="#{depRes.nombre}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-4 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelMunicipio}" />
+															<br />
+															<p:selectOneMenu id="idSOMMunDirRe" style="width:100%"
+																value="#{idMatriculasEnglobes.zonaRegistral.idMunicipio}"
+																disabled="true">
+																<f:selectItems
+																	value="#{beanReference.findMunicipiosByCirculo(idMatriculasEnglobes.zonaRegistral.idCirculo)}"
+																	var="munRes" itemValue="#{munRes.idMunicipio}"
+																	itemLabel="#{munRes.nombre}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-4 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelVereda}" />
+															<br />
+															<p:selectOneMenu id="idSOMVerDirRe" style="width:100%"
+																value="#{idMatriculasEnglobes.zonaRegistral.idVereda}"
+																disabled="true">
+																<f:selectItems
+																	value="#{beanReference.findVeredas(idMatriculasEnglobes.zonaRegistral.idPais,idMatriculasEnglobes.zonaRegistral.idDepartamento,idMatriculasEnglobes.zonaRegistral.idMunicipio)}"
+																	var="ver" itemValue="#{ver.idVereda}"
+																	itemLabel="#{ver.nombre}" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+												</p:panel>
+												<br />
+											</p:repeat>
+										</p:panel>
+
+										<br />
+
+										<p:panel
+											header="#{messageBeanSNR.commonLabelSeleccioneUbicacionEnglobes}"
+											toggleable="true">
+											<p:dataTable id="idDTUbicacionesEnglobes"
+												value="#{beanDetalleDigitadorMasivo.matriculas.allMatriculas}"
+												var="item">
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelMatricula}">
+													<p:outputLabel value="#{item.idCirculo}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelSeleccione}">
+													<p:selectBooleanCheckbox disabled="true"
+														value="#{item.matriculaSeleccionada}">
+													</p:selectBooleanCheckbox>
+												</p:column>
+											</p:dataTable>
+										</p:panel>
+
+										<br />
+
+										<p:panel
+											header="#{messageBeanSNR.commonLabelInformacionDeApertura}"
+											toggleable="true">
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-6 ui-lg-5">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelFechaApertura}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:calendar size="10" style="width:100%" disabled="true"
+														mask="true" locale="es" placeholder="DD/MM/AAAA"
+														pattern="dd/MM/yyyy"
+														value="#{beanDetalleDigitadorMasivo.matriculas.fechaApertura}"
+														showOn="button">
+													</p:calendar>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-3">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelRadicacion}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:inputText readonly="true"
+														value="#{beanDetalleDigitadorMasivo.matriculas.radicacion}">
+													</p:inputText>
+												</div>
+											</div>
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-6 ui-lg-5">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}">
+													</p:outputLabel>
+													<br />
+													<p:selectOneMenu style="width:100%" disabled="true"
+														value="#{beanDetalleDigitadorMasivo.matriculas.dataDocumento.idTipoDocumento}">
+														<f:selectItems
+															value="#{beanReference.findTipoDocumentoPublicoActivo()}"
+															var="item" itemLabel="#{item.nombre}"
+															itemValue="#{item.idTipoDocumento}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-3">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelNumeroDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:inputText readonly="true"
+														value="#{beanDetalleDigitadorMasivo.matriculas.dataDocumento.numero}">
+													</p:inputText>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelFechaDelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:calendar mask="true" locale="es" disabled="true"
+														placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+														value="#{beanDetalleDigitadorMasivo.matriculas.dataDocumento.fechaDocumento}"
+														showOn="button">
+													</p:calendar>
+												</div>
+											</div>
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-6 ui-lg-5">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelTipoDeOficina}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu style="width:100%" disabled="true"
+														value="#{beanDetalleDigitadorMasivo.matriculas.dataDocumento.idTipoOficina}">
+														<f:selectItems value="#{beanReference.findTipoOficina()}"
+															var="item" itemLabel="#{item.nombre}"
+															itemValue="#{item.idTipoOficina}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-3">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelTipoDeEntidad}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu style="width:100%" disabled="true"
+														value="#{beanDetalleDigitadorMasivo.matriculas.dataDocumento.tipoEntidad}">
+														<f:selectItems value="#{beanReference.findTipoEntidad()}"
+															var="item" itemLabel="#{item.nombre}"
+															itemValue="#{item.idTipoEntidad}" />
+													</p:selectOneMenu>
+												</div>
+											</div>
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-6 ui-lg-5">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelPais}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu style="width:100%" disabled="true"
+														value="#{beanDetalleDigitadorMasivo.matriculas.dataDocumento.idPais}">
+														<f:selectItems value="#{beanReference.findPaises()}"
+															var="paises" itemValue="#{paises.idPais}"
+															itemLabel="#{paises.nombre}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-3">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu style="width:100%" disabled="true"
+														value="#{beanDetalleDigitadorMasivo.matriculas.dataDocumento.idDepartamento}">
+														<f:selectItems
+															value="#{beanReference.findDepartamentos(beanDetalleDigitadorMasivo.matriculas.dataDocumento.idPais)}"
+															var="item" itemValue="#{item.idDepartamento}"
+															itemLabel="#{item.nombre}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu style="width:100%" disabled="true"
+														value="#{beanDetalleDigitadorMasivo.matriculas.dataDocumento.idMunicipio}">
+														<f:selectItems
+															value="#{beanReference.findMunicipios(beanDetalleDigitadorMasivo.matriculas.dataDocumento.idPais,beanDetalleDigitadorMasivo.matriculas.dataDocumento.idDepartamento)}"
+															var="munRes" itemValue="#{munRes.idMunicipio}"
+															itemLabel="#{munRes.nombre}" />
+													</p:selectOneMenu>
+												</div>
+											</div>
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-6 ui-lg-5">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelOficinaDeOrigen}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu style="width:100%" disabled="true"
+														value="#{beanDetalleDigitadorMasivo.matriculas.dataDocumento.idOficinaOrigen}">
+														<f:selectItem
+															itemLabel="#{beanReference.findOficinaOrigenById(beanDetalleDigitadorMasivo.matriculas.dataDocumento.idOficinaOrigen).nombre}" />
+													</p:selectOneMenu>
+												</div>
+											</div>
+										</p:panel>
+
+										<br />
+
+										<p:panel
+											header="#{messageBeanSNR.commonLabelMatriculaAbiertaConBase}"
+											toggleable="true">
+											<p:dataTable id="idDTMatriculasEnglobes"
+												value="#{beanDetalleDigitadorMasivo.matriculas.allMatriculas}"
+												var="item">
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelMatricula}">
+													<p:outputLabel value="#{item.idCirculo}" />
+												</p:column>
+											</p:dataTable>
+										</p:panel>
+									</p:tab>
+									<!-- Tab Areas -->
+									<p:tab title="#{messageBeanSNR.commonLabelAreaDelPredio}"
+										rendered="#{beanDetalleDigitadorMasivo.matriculas.englobe}"
+										id="idAreas">
+										<p:panel header="#{messageBeanSNR.commonLabelAreaDelTerreno}"
+											toggleable="true">
+
+											<div class="ui-g">
+												<p:dataTable id="idDTareasTerreno"
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+													value="#{beanDetalleDigitadorMasivo.areaUI.areasTerreno}"
+													var="item" rowIndexVar="rowKey">
+													<p:column style="width:30px;">
+														<h:outputText value="#{rowKey + 1}" />
+													</p:column>
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelAreaDelTerreno}">
+														<p:inputText value="#{item.area}" readonly="true" />
+													</p:column>
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelUnidadDeMedida}">
+														<p:selectOneMenu style="width:100%" disabled="true"
+															value="#{item.idUnidadMedida}">
+															<f:selectItems
+																value="#{beanReference.findAllMedidaAreaActivo()}"
+																var="unidad" itemValue="#{unidad.idMedidaArea}"
+																itemLabel="#{unidad.codigo} - #{unidad.descripcion}" />
+														</p:selectOneMenu>
+													</p:column>
+												</p:dataTable>
+											</div>
+										</p:panel>
+
+										<br />
+
+										<p:panel header="#{messageBeanSNR.commonLabelDatosArea}"
+											toggleable="true">
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-4 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelAreaConstruida}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:inputText id="idITareaConstruida" readonly="true"
+														value="#{beanDetalleDigitadorMasivo.areaUI.detalleAreaConstruida.area}">
+														<p:keyFilter regEx="/[\d\.]/" preventPaste="false" />
+													</p:inputText>
+												</div>
+												<div class="ui-g-12 ui-md-4 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelUnidadDeMedida}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu style="width:100%"
+														id="idSOMunidadMedidaConstruida" disabled="true"
+														value="#{beanDetalleDigitadorMasivo.areaUI.detalleAreaConstruida.idUnidadMedida}">
+														<f:selectItems
+															value="#{beanReference.findAllMedidaAreaActivo()}"
+															var="unidad" itemValue="#{unidad.idMedidaArea}"
+															itemLabel="#{unidad.codigo} - #{unidad.descripcion}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="ui-g-12 ui-md-4 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelCoeficiente}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:inputText id="idITcoeficiente"
+														value="#{beanDetalleDigitadorMasivo.areaUI.areaPredio.coeficiente}"
+														readonly="true">
+														<p:keyFilter regEx="/[\d\.]/" preventPaste="false" />
+													</p:inputText>
+												</div>
+											</div>
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-4 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelAreaPrivada}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:inputText id="idITareaPrivada" readonly="true"
+														value="#{beanDetalleDigitadorMasivo.areaUI.detalleAreaPrivada.area}">
+														<p:keyFilter regEx="/[\d\.]/" preventPaste="false" />
+													</p:inputText>
+												</div>
+												<div class="ui-g-12 ui-md-4 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelUnidadDeMedida}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu style="width:100%"
+														id="idSOMunidadMedidaPrivada" disabled="true"
+														value="#{beanDetalleDigitadorMasivo.areaUI.detalleAreaPrivada.idUnidadMedida}">
+														<f:selectItems
+															value="#{beanReference.findAllMedidaAreaActivo()}"
+															var="unidad" itemValue="#{unidad.idMedidaArea}"
+															itemLabel="#{unidad.codigo} - #{unidad.descripcion}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="ui-g-12 ui-md-4 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelUsoDelPredio}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu style="width:100%" id="idSOMtipoUsoSuelo"
+														disabled="true"
+														value="#{beanDetalleDigitadorMasivo.areaUI.areaPredio.tipoSuelo}">
+														<f:selectItems value="#{beanReference.findTipoUsoSuelo()}"
+															var="tipo" itemLabel="#{tipo.description}"
+															itemValue="#{tipo.idTipoUsoSuelo}" />
+													</p:selectOneMenu>
+												</div>
+											</div>
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelAreaDelTerreno}" />
+													<br />
+													<p:inputText id="idITareaTerrenoCompleta" readonly="true"
+														value="#{beanDetalleDigitadorMasivo.areaUI.areaTerreno}" />
+												</div>
+											</div>
+										</p:panel>
+									</p:tab>
+									<!-- Tab Anotaciones -->
+									<p:tab title="#{messageBeanSNR.commonLabelAnotacionesAHeredar}"
+										id="idTAnotaciones">
+										<p:dataTable id="idDtActoAsociadoGeneral"
+											emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+											rendered="#{!beanDetalleDigitadorMasivo.matriculas.englobe}"
+											value="#{beanDetalleDigitadorMasivo.matriculasAHeredar.allMatriculas}"
+											var="item" scrollable="true">
+											<p:column headerText="#{messageBeanSNR.commonLabelMatricula}">
+												<p:outputLabel id="idMatriculaMatriz"
+													value="#{item.idCirculo}-#{item.idMatricula} " />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelAnotaciones}">
+												<p:outputLabel id="idAnotacion" value="#{item.idAnotacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelFechaRegistro}">
+												<p:outputLabel id="idfechaRegistro"
+													value="#{item.fechaRegistro}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelRadicacion}">
+												<p:outputLabel id="idradicacion" value="#{item.radicacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelEstadoAnotacion}">
+												<p:outputLabel id="idEstadoAnotacion"
+													value="#{item.idEstadoAnotacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelDatosDocumento}">
+												<p:outputLabel id="iddocumento"
+													value="#{item.documento} - #{item.fechaDocumento} - #{item.numero} " />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelFechaDeOrigen}">
+												<p:outputLabel id="idnombreOficinaOrigen"
+													value="#{item.nombreOficinaOrigen}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelCodigoDelActo}">
+												<p:outputLabel id="idcodActo" value="#{item.codActo}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelNombreActo}">
+												<p:outputLabel id="idnombreActo" value="#{item.nombreActo}" />
+											</p:column>
+										</p:dataTable>
+										<p:dataTable id="idDtActoAsociadoGeneralEnglobes"
+											emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+											rendered="#{beanDetalleDigitadorMasivo.matriculas.englobe}"
+											value="#{beanDetalleDigitadorMasivo.matriculasAHeredar.allMatriculas}"
+											var="item" scrollable="true">
+											<p:column headerText="#{messageBeanSNR.commonLabelMatricula}">
+												<p:outputLabel id="idMatriculaMatriz"
+													value="#{item.idCirculo}-#{item.idMatricula} " />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelAnotaciones}">
+												<p:outputLabel id="idAnotacion" value="#{item.idAnotacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelFechaRegistro}">
+												<p:outputLabel id="idfechaRegistro"
+													value="#{item.fechaRegistro}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelRadicacion}">
+												<p:outputLabel id="idradicacion" value="#{item.radicacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelEstadoAnotacion}">
+												<p:outputLabel id="idEstadoAnotacion"
+													value="#{item.idEstadoAnotacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelDatosDocumento}">
+												<p:outputLabel id="iddocumento"
+													value="#{item.documento} - #{item.fechaDocumento} - #{item.numero} " />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelFechaDeOrigen}">
+												<p:outputLabel id="idnombreOficinaOrigen"
+													value="#{item.nombreOficinaOrigen}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelCodigoDelActo}">
+												<p:outputLabel id="idcodActo" value="#{item.codActo}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelNombreActo}">
+												<p:outputLabel id="idnombreActo" value="#{item.nombreActo}" />
+											</p:column>
+										</p:dataTable>
+									</p:tab>
+									<!-- Tab Complementacion -->
+									<p:tab
+										rendered="#{!beanDetalleDigitadorMasivo.matriculas.englobe}"
+										title="#{messageBeanSNR.commonLabelLinderosYComplementacion}"
+										id="idTComplementacion">
+										<p:panel header="#{messageBeanSNR.commonLabelLinderos}">
+											<div class="ui-g" align="center">
+												<p:inputTextarea rows="6" cols="50" id="idLindero"
+													title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnoDetalleDelturnoDetalleActoRegistroCalificacionDigitadorMasivoComplementacionLinderos}"
+													onblur="value=value.toUpperCase()"
+													onkeyup="contarLinderoDM()"
+													onmouseover="contarActualizarDM()"
+													value="#{beanDetalleDigitadorMasivo.linderoRegistroCalificacion.lindero}" />
+												<div align="right">
+													<h:outputText id="idNumeroCaracteres1" align="right" />
+												</div>
+											</div>
+										</p:panel>
+
+										<br />
+
+										<p:panel header="#{messageBeanSNR.commonLabelComplementacion}">
+											<div class="ui-g" align="center">
+												<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+													<p:selectOneRadio id="idSelectComplementacion"
+														value="#{beanDetalleDigitadorMasivo.complementacionCalificacion.tipoComplementacion}"
+														disabled="true">
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelNueva}"
+															itemValue="nueva" />
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelExistente}"
+															itemValue="existente" />
+													</p:selectOneRadio>
+												</div>
+											</div>
+											<div align="center">
+												<p:inputTextarea id="idcomplementacionComplementacion"
+													title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnoDetalleDelturnoDetalleActoRegistroCalificacionDigitadorMasivoComplementacion}"
+													rows="6" cols="50" onblur="value=value.toUpperCase()"
+													onmouseover="contarActualizarDM()"
+													onkeyup="contarComplementacionDM()"
+													readonly="#{beanDetalleDigitadorMasivo.complementacionCalificacion.tipoComplementacion eq 'existente'}"
+													value="#{beanDetalleDigitadorMasivo.complementacionCalificacion.complementacionPredio.complementacion}" />
+											</div>
+											<div align="right">
+												<h:outputText id="idNumeroCaracteres2" align="right" />
+												<h:outputText
+													value=" #{messageBeanSNR.commonLabelCaracteres}" />
+											</div>
+										</p:panel>
+									</p:tab>
+									<!-- Tab Direccion Predio -->
+									<p:tab title="#{messageBeanSNR.commonLabelDireccionDelPredio}"
+										rendered="#{!beanDetalleDigitadorMasivo.matriculas.englobe}"
+										id="idTDireccionPredioRC">
+										<p:fragment>
+											<p:autoUpdate />
+											<p:panel id="idPDireccionPredio">
+												<div class="ui-g" align="left">
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelTipoDePredio}" />
+														<br />
+														<p:selectOneMenu id="idSOMTipoPredioRC" disabled="true"
+															style="width:100%;"
+															title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnoDetalleDelturnoDetalleActoRegistroCalificacionDigitadorMasivoDireccionDelPredioTipoDePredio}"
+															value="#{beanDetalleDigitadorMasivo.direccionPredio.datosAntiguoSistema.idTipoPredio}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems value="#{beanReference.findTipoPredio()}"
+																var="tipoPredioAntSistema"
+																itemValue="#{tipoPredioAntSistema.idTipoPredio}"
+																itemLabel="#{tipoPredioAntSistema.descripcion}" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelTipoDeEje}" />
+														<br />
+														<p:selectOneMenu id="idsomTipoEjePredioRC" disabled="true"
+															style="width:100%;"
+															title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnoDetalleDelturnoDetalleActoRegistroCalificacionDigitadorMasivoDireccionDelPredioTipoDeEje}"
+															value="#{beanDetalleDigitadorMasivo.direccionPredio.direccionPredio.idTipoEjePrincipal}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems value="#{beanReference.findTipoEje()}"
+																var="tipoEje" itemValue="#{tipoEje.idTipoEje}"
+																itemLabel="#{tipoEje.nombre}" />
+															<p:ajax
+																listener="#{beanDetalleDigitadorMasivo.actualizarDireccionPredio}"
+																update="idItdireccionPredioRC" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:spacer />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelEjePrincipal}" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															disabled="true" id="idItDatoEjePrincipalPredioRC"
+															title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnoDetalleDelturnoDetalleActoRegistroCalificacionDigitadorMasivoDireccionDelPredioEjePrincipal}"
+															placeholder="#{messageBeanSNR.commonLabelEjePrincipal}"
+															value="#{beanDetalleDigitadorMasivo.direccionPredio.direccionPredio.datoEjePrincipal}">
+															<p:ajax event="blur"
+																listener="#{beanDetalleDigitadorMasivo.actualizarDireccionPredio}"
+																update="idItdireccionPredioRC" />
+														</p:inputText>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:spacer />
+														<p:outputLabel value="#{messageBeanSNR.commonLabelEje1}" />
+														<br />
+														<p:selectOneMenu id="idsomTipoEje1PredioRC"
+															disabled="true" style="width:100%;"
+															title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnoDetalleDelturnoDetalleActoRegistroCalificacionDigitadorMasivoDireccionDelPredioEje1}"
+															value="#{beanDetalleDigitadorMasivo.direccionPredio.direccionPredio.idTipoEjeSecundario}">
+															<p:spacer />
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems value="#{beanReference.findTipoEje()}"
+																var="tipoEje" itemValue="#{tipoEje.idTipoEje}"
+																itemLabel="#{tipoEje.nombre}" />
+															<p:ajax
+																listener="#{beanDetalleDigitadorMasivo.actualizarDireccionPredio}"
+																update="idItdireccionPredioRC" />
+														</p:selectOneMenu>
+
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelEjeSecundario}" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															disabled="true" id="idItDatoEjeSecundarioPredioRC"
+															title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnoDetalleDelturnoDetalleActoRegistroCalificacionDigitadorMasivoDireccionDelPredioEjeSecundario}"
+															placeholder="#{messageBeanSNR.commonLabelEjeSecundario}"
+															value="#{beanDetalleDigitadorMasivo.direccionPredio.direccionPredio.datoEjeSecundario}">
+															<p:ajax event="blur"
+																listener="#{beanDetalleDigitadorMasivo.actualizarDireccionPredio}"
+																update="idItdireccionPredioRC" />
+														</p:inputText>
+
+													</div>
+												</div>
+												<div class="ui-g" align="left">
+													<div class="ui-g-12 ui-md-6 ui-lg-6">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelComplementoDireccion}" />
+														<br />
+														<p:inputText
+															title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnoDetalleDelturnoDetalleActoRegistroCalificacionDigitadorMasivoDireccionDelPredioComplementoDireccion}"
+															onblur="value=value.toUpperCase()"
+															disabled="#{!beanDetalleDigitadorMasivo.modificarDireccionPredio}"
+															id="idItComplementoDirPredioRC"
+															placeholder="#{messageBeanSNR.commonLabelComplementoDireccion}"
+															size="30"
+															value="#{beanDetalleDigitadorMasivo.direccionPredio.direccionPredio.complementoDireccion}">
+															<p:ajax event="blur"
+																listener="#{beanDetalleDigitadorMasivo.actualizarDireccionPredio}"
+																update="idItdireccionPredioRC" />
+														</p:inputText>
+														<p:spacer />
+														<br />
+													</div>
+												</div>
+												<div class="ui-g" align="left">
+													<div class="ui-g-12 ui-md-6 ui-lg-6">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelDireccionCompleta}" />
+														<br />
+														<p:inputText
+															title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnoDetalleDelturnoDetalleActoRegistroCalificacionDigitadorMasivoDireccionDelPredioDireccionCompleta}"
+															onblur="value=value.toUpperCase()" disabled="true"
+															id="idItdireccionPredioRC"
+															placeholder="#{messageBeanSNR.commonLabelDireccionCompleta}"
+															size="40"
+															value="#{beanDetalleDigitadorMasivo.direccionPredio.direccion}" />
+													</div>
+												</div>
+											</p:panel>
+											<br />
+											<div align="center">
+												<p:commandButton
+													value="#{messageBeanSNR.commonButtonConfirmarDireccion}"
+													disabled="#{beanDetalleDigitadorMasivo.deshabilitarBotonConfirmarDireccion}"
+													icon="fa fa-check-square" update="idPDireccionPredio"
+													actionListener="#{beanDetalleDigitadorMasivo.confirmarDireccionPredio()}" />
+
+												<p:commandButton
+													value="#{messageBeanSNR.commonButtonModificarDireccion}"
+													disabled="#{beanDetalleDigitadorMasivo.deshabilitarBotonConfirmarDireccion}"
+													icon="fa fa-pencil" update="idPDireccionPredio"
+													actionListener="#{beanDetalleDigitadorMasivo.setModificarDireccionPredio(true)}" />
+											</div>
+										</p:fragment>
+									</p:tab>
+								</p:tabView>
+								<br />
+							</p:panel>
+						</p:outputPanel>
+
+						<br />
+
+						<p:outputPanel id="idOPFormsEnbglobes"
+							rendered="#{beanDetalleDigitadorMasivo.matriculas.englobe}">
+							<p:panel>
+								<strong>
+									<p:outputLabel style="font-size: 40px;"
+										value="#{beanDetalleDigitadorMasivo.matriculas.idCirculo} - #{beanDetalleDigitadorMasivo.matriculas.idMatricula}" />
+								</strong>
+								<p:wizard
+									flowListener="#{beanDetalleDigitadorMasivo.flowListener}"
+									id="myWizard" widgetVar="myWizard" showNavBar="false">
+									<p:tab
+										title="#{messageBeanSNR.commonLabelLinderosYComplementacion}"
+										id="idTComplementacionEnglobes" titleStyle="font-size:15px;">
+										<p:panel header="#{messageBeanSNR.commonLabelLinderos}">
+											<div class="ui-g" align="center">
+												<p:inputTextarea rows="6" cols="50" id="idLinderoEnglobes"
+													title="#{tooltipBeanSNR.procesosDigitadorMasivoDetalleDigitadorMasivoEnglobesLinderosYComplementacionLinderos}"
+													onblur="value=value.toUpperCase()"
+													value="#{beanDetalleDigitadorMasivo.linderoRegistroCalificacion.lindero}"
+													queryDelay="750" maxlength="4000" minQueryLength="4"
+													counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+													counter="idNumeroCaracteresLinderos" />
+											</div>
+											<div align="right">
+												<h:outputText id="idNumeroCaracteresLinderos" align="right" />
+											</div>
+										</p:panel>
+
+										<br />
+
+										<p:panel id="idOPcomplementacionEnglobes"
+											header="#{messageBeanSNR.commonLabelComplementacion}">
+											<div class="ui-g" align="center">
+												<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+													<p:selectOneRadio id="idSelectComplementacionEnglobes"
+														value="#{beanDetalleDigitadorMasivo.complementacionCalificacion.tipoComplementacion}">
+														<p:ajax update="idOPcomplementacionEnglobes"
+															listener="#{beanDetalleDigitadorMasivo.limpiarComplementacionData(true,true,false)}" />
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelNueva}"
+															itemValue="nueva" />
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelCopiarDeUnaMatricula}"
+															itemValue="copiar" />
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelConstruirComplementacion}"
+															itemValue="construir" />
+													</p:selectOneRadio>
+												</div>
+											</div>
+											<p:panel
+												rendered="#{beanDetalleDigitadorMasivo.complementacionCalificacion.tipoComplementacion eq 'copiar'}"
+												id="panelCopiar">
+												<div class="ui-g" align="center">
+													<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelCirculoRegistral}"
+															styleClass="textosConsultaEstadoPredio" />
+														<br />
+														<p:selectOneMenu id="complementacionCirculoRegistral"
+															style="width:100%;"
+															value="#{beanDetalleDigitadorMasivo.complementacionCalificacion.complementacion.idCirculo}"
+															title="#{tooltipBeanSNR.procesosCalificacionRegistroLinderosComplementacionComplementacionCirculoRegistral}"
+															disabled="true">
+															<f:selectItems
+																value="#{beanDetalleDigitadorMasivo.findCirculoRegistral()}"
+																var="circulo" itemValue="#{circulo.idCirculo}"
+																itemLabel="#{circulo.idCirculo} - #{circulo.nombre}" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelMatricula}" />
+														<br />
+														<p:inputText id="complementacionIdMatricula"
+															title="#{tooltipBeanSNR.procesosCalificacionRegistroLinderosComplementacionComplementacionMatricula}"
+															placeholder="#{messageBeanSNR.commonLabelMatricula}"
+															value="#{beanDetalleDigitadorMasivo.complementacionCalificacion.complementacion.idMatricula}">
+															<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+														</p:inputText>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+														<p:commandButton
+															value="#{messageBeanSNR.commonButtonAgregar}"
+															icon="fa fa-plus-circle"
+															onclick="PF('dlgAgregarMatriculaComplementacion').show()">
+														</p:commandButton>
+													</div>
+												</div>
+												<br />
+												<div class="ui-g" align="center">
+													<p:dataTable
+														value="#{beanDetalleDigitadorMasivo.matriculasParaGenerarComplementacion}"
+														var="matricula">
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelCirculo}">
+															<h:outputText value="#{matricula.idCirculo}" />
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelMatricula}">
+															<h:outputText value="#{matricula.idMatricula}" />
+														</p:column>
+														<p:column headerText="#{messageBeanSNR.commonLabelAccion}">
+															<p:commandButton icon="fa fa-trash"
+																update="fdetalleDigitadorMasivo"
+																actionListener="#{beanDetalleDigitadorMasivo.eliminarMatriculaComplementacion(matricula)}">
+															</p:commandButton>
+														</p:column>
+													</p:dataTable>
+												</div>
+												<div class="ui-g" align="center">
+													<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+														<p:commandButton
+															value="#{messageBeanSNR.commonButtonConstruirComplementacion}"
+															update="idOPcomplementacionEnglobes" icon="fa fa-cogs"
+															actionListener="#{beanDetalleDigitadorMasivo.validarCopiarDeUnaMatricula(false,false)}">
+														</p:commandButton>
+														<p:commandButton
+															value="#{messageBeanSNR.commonLabelEditar}"
+															update="idOPcomplementacionEnglobes" icon="fa fa-pencil"
+															actionListener="#{beanDetalleDigitadorMasivo.editarCopiarDeUnaMatricula()}">
+														</p:commandButton>
+													</div>
+												</div>
+											</p:panel>
+											<p:panel
+												rendered="#{beanDetalleDigitadorMasivo.complementacionCalificacion.tipoComplementacion eq 'construir'}">
+												<div class="ui-g" align="center">
+													<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelCirculoRegistral}"
+															styleClass="textosConsultaEstadoPredio" />
+														<br />
+														<p:selectOneMenu
+															id="complementacionConstruirCirculoRegistral"
+															style="width:100%;"
+															value="#{beanDetalleDigitadorMasivo.complementacionCalificacion.complementacion.idCirculo}"
+															var="circulo"
+															title="#{tooltipBeanSNR.procesosCalificacionRegistroLinderosComplementacionComplementacionCirculoRegistral}"
+															disabled="true">
+															<f:selectItems
+																value="#{beanDetalleDigitadorMasivo.findCirculoRegistral()}"
+																var="circulo" itemValue="#{circulo.idCirculo}"
+																itemLabel="#{circulo.idCirculo} - #{circulo.nombre}" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelMatricula}" />
+														<br />
+														<p:inputText id="complementacionConstruirIdMatricula"
+															title="#{tooltipBeanSNR.procesosCalificacionRegistroLinderosComplementacionComplementacionMatricula}"
+															placeholder="#{messageBeanSNR.commonLabelMatricula}"
+															value="#{beanDetalleDigitadorMasivo.complementacionCalificacion.complementacion.idMatricula}">
+															<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+														</p:inputText>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+														<p:commandButton
+															value="#{messageBeanSNR.commonButtonAgregar}"
+															onclick="PF('dlgAgregarMatriculaComplementacionAnotacion').show();"
+															icon="fa fa-plus-circle">
+														</p:commandButton>
+													</div>
+												</div>
+												<div class="ui-g" align="center">
+													<div class="ui-g-4 ui-md-6 ui-lg-12">
+														<p:dataTable id="matriculasCopiarDeAnotaciones"
+															value="#{beanDetalleDigitadorMasivo.matriculasParaGenerarComplementacion}"
+															var="matricula"
+															rendered="#{beanDetalleDigitadorMasivo.habilitarMatriculasComplementacionAnotacion}">
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelCirculo}">
+																<h:outputText value="#{matricula.idCirculo}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelMatricula}">
+																<h:outputText value="#{matricula.idMatricula}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelAccion}">
+																<p:commandButton icon="fa fa-trash-o"
+																	actionListener="#{beanDetalleDigitadorMasivo.eliminarMatriculaComplementacion(matricula,true,true)}"
+																	update="fdetalleDigitadorMasivo,fdetalleDigitadorMasivo:globalMsg" />
+															</p:column>
+														</p:dataTable>
+													</div>
+												</div>
+												<div class="ui-g" align="center">
+													<div class="ui-g-4 ui-md-6 ui-lg-12">
+														<p:dataTable id="idComplementacionAnotacionesLoteo"
+															tableStyle="width:auto"
+															value="#{beanDetalleDigitadorMasivo.complementacionAnotacion}"
+															var="data"
+															rendered="#{beanDetalleDigitadorMasivo.habilitarMatriculasComplementacionAnotacion}"
+															emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+															<p:column headerText="Círculo">
+																<h:outputText value="#{data.anotacionPredio.idCirculo}" />
+															</p:column>
+															<p:column headerText="Matricula">
+																<h:outputText
+																	value="#{data.anotacionPredio.idMatricula}" />
+															</p:column>
+															<p:column headerText="N° de anotación">
+																<h:outputText
+																	value="#{data.anotacionPredio.idAnotacion}" />
+															</p:column>
+															<p:column headerText="Fecha anotación">
+																<h:outputText
+																	value="#{data.anotacionPredio.fechaRegistro}" />
+															</p:column>
+															<p:column headerText="Número radicación">
+																<h:outputText value="#{data.anotacionPredio.radicacion}" />
+															</p:column>
+															<p:column headerText="Estado anotación">
+																<h:outputText
+																	value="#{data.anotacionPredio.estadoAnotacion}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelDatosDocumento}">
+																<p:outputLabel id="iddocumento"
+																	value="#{data.tipoDocumento} - #{data.documento.numero} - #{data.documento.fechaDocumento}  " />
+															</p:column>
+															<p:column headerText="Oficina origen">
+																<h:outputText value="#{data.oficinaOrigen}" />
+															</p:column>
+															<p:column headerText="Acto">
+																<h:outputText
+																	value="#{data.naturalezaJuridica.idNaturalezaJuridica}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelNombreActo}">
+																<h:outputText value="#{data.naturalezaJuridica.nombre}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelSeleccione}">
+																<p:selectBooleanCheckbox
+																	title="#{tooltipBeanSNR.procesosCalificacionRegistroLinderosComplementacionComplementacionSeleccione}"
+																	id="idComplementacionAnotacionSelec"
+																	value="#{data.seleccionado}" />
+															</p:column>
+														</p:dataTable>
+													</div>
+												</div>
+												<div class="ui-g" align="center">
+													<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+														<p:commandButton
+															value="#{messageBeanSNR.commonButtonConstruirComplementacion}"
+															update="idOPcomplementacionEnglobes,idcomplementacionEnglobes,fdetalleDigitadorMasivo:globalMsg"
+															icon="fa fa-cogs"
+															actionListener="#{beanDetalleDigitadorMasivo.validarConstruir()}">
+														</p:commandButton>
+													</div>
+												</div>
+											</p:panel>
+											<br />
+
+											<div class="ui-g" align="center">
+												<p:inputTextarea id="idcomplementacionEnglobes"
+													onblur="value=value.toUpperCase()" maxlength="4000"
+													cols="50" rows="6"
+													counter="idCaracteresComplementacionEnglobes"
+													counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+													rendered="#{beanDetalleDigitadorMasivo.complementacionCalificacion.tipoComplementacion != null}"
+													readonly="#{!beanDetalleDigitadorMasivo.habilitarComplementacion}"
+													title="#{tooltipBeanSNR.procesosDigitadorMasivoDetalleDigitadorMasivoEnglobesLinderosYComplementacionComplementacion}"
+													value="#{beanDetalleDigitadorMasivo.complementacionCalificacion.complementacionPredio.complementacion}" />
+											</div>
+											<div align="right">
+												<h:outputText id="idCaracteresComplementacionEnglobes"
+													align="right" />
+											</div>
+										</p:panel>
+									</p:tab>
+
+									<p:tab title="#{messageBeanSNR.commonLabelDireccionDelPredio}"
+										id="idTDireccionEnglobes" titleStyle="font-size:15px;">
+										<p:panel id="idPanelDirResPredio" toggleable="true"
+											header="#{messageBeanSNR.commonLabelDireccionDelPredio}">
+											<ui:include src="direccionPredioAgregarInclude.xhtml"/>
+											<div align="right">
+												<p:commandButton
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDireccionPredioAgregarDireccion}"
+													value="#{messageBeanSNR.commonLabelAgregarDireccion}"
+													disabled="false" icon="fa fa-check-circle"
+													actionListener="#{beanDetalleDigitadorMasivo.agregarDireccionDigitadorMasivo()}"
+													update="idPDireccionPredio,idPanelDirResPredio" />
+											</div>
+										</p:panel>
+										<br />
+										<p:panel id="idPDireccionPredio"
+											header="#{messageBeanSNR.commonLabelDireccionDelPredio}">
+											<p:dataTable id="idDTDirecciones" var="datosDireccion"
+												value="#{beanDireccion.direccionesPredio2}"
+												style="margin-bottom:20px">
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelTipoDePredio}">
+													<p:selectOneMenu id="idSOMTipoPredio" style="width:100%"
+														disabled="true"
+														title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRealizarRegistroDetalleRegistroCalificacionDetalleDescripcionDireccionDelPredioTablaDirecciones}"
+														value="#{datosDireccion.datosAntiguoSistema.idTipoPredio}">
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems value="#{beanReference.findTipoPredio()}"
+															var="tipoPredioAntSistema"
+															itemValue="#{tipoPredioAntSistema.idTipoPredio}"
+															itemLabel="#{tipoPredioAntSistema.descripcion}" />
+													</p:selectOneMenu>
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelComplemento}#{messageBeanSNR.commonLabelObligatorio}">
+													<p:selectOneMenu id="idsomTipoEjePredio" style="width:100%"
+														disabled="#{!beanDetalleDigitadorMasivo.editorTablaDirecciones}"
+														title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRealizarRegistroDetalleRegistroCalificacionDetalleDescripcionDireccionDelPredioEditorTablaDeDirecciones}"
+														value="#{datosDireccion.direccionPredio.idComplementoDireccion}">
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems value="#{beanReference.findAllComplementoDireccionByTipoPredio(datosDireccion.datosAntiguoSistema.idTipoPredio)}"
+															var="tipoEje" itemValue="#{tipoEje.idTipoEje}"
+															itemLabel="#{tipoEje.nombre}" />
+													</p:selectOneMenu>
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelDescripcionComplemento}#{messageBeanSNR.commonLabelObligatorio}">
+													<p:inputText onblur="value=value.toUpperCase()"
+														title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRealizarRegistroDetalleRegistroCalificacionDetalleDescripcionDireccionDelPredioEditorDatoEjePrincipal}"
+														readonly="#{!beanDetalleDigitadorMasivo.editorTablaDirecciones}"
+														id="idItDatoEjePrincipalPredio"
+														placeholder="#{messageBeanSNR.commonLabelEjePrincipal}"
+														value="#{datosDireccion.direccionPredio.complementoDireccion}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelDireccionCompleta}">
+													<p:inputText onblur="value=value.toUpperCase()"
+														title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRealizarRegistroDetalleRegistroCalificacionDetalleDescripcionDireccionDelPredioComplementoDireccion}"
+														id="idItComplementoDirPredio" size="30" readonly="true"
+														placeholder="#{messageBeanSNR.commonLabelComplementoDireccion}"
+														value="#{datosDireccion.direccionPredio.direccion}" />
+												</p:column>
+												<p:column style="width:50px">
+													<p:commandButton icon="fa fa-pencil" iconPos="left"
+														actionListener="#{beanDetalleDigitadorMasivo.setEditorTablaDirecciones(true)}"
+														rendered="#{!beanDetalleDigitadorMasivo.editorTablaDirecciones}"
+														update="idDTDirecciones"
+														title="#{messageBeanSNR.commonLabelEditar}">
+														<f:setPropertyActionListener value="#{datosDireccion}"
+															target="#{beanDetalleDigitadorMasivo.direccionSeleccionada}" />
+													</p:commandButton>
+													<p:commandButton icon="fa fa-check" iconPos="left"
+														actionListener="#{beanDetalleDigitadorMasivo.onRowEdit()}"
+														rendered="#{beanDetalleDigitadorMasivo.editorTablaDirecciones}"
+														update="idDTDirecciones"
+														title="#{messageBeanSNR.commonLabelConfirmar}" />
+												</p:column>
+											</p:dataTable>
+										</p:panel>
+										<br />
+										<p:panel id="idPanelDireccionesMatriz" toggleable="true" 
+											header="#{messageBeanSNR.commonLabelDireccionesPrediosMatriz}">
+											<p:repeat var="idRdirecciones"
+												value="#{beanDetalleDigitadorMasivo.matriculas.allMatriculas}">
+												<p:panel header="#{idRdirecciones.idCirculo}">
+													<div class="ui-g" align="center">
+														<p:dataTable value="#{idRdirecciones.direcciones}"
+															var="item"
+															emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}">
+																<h:outputText value="#{item.direccion}" />
+															</p:column>
+															<p:column style="width:10%;"
+																headerText="#{messageBeanSNR.commonLabelSeleccione}">
+																<p:selectBooleanCheckbox value="#{item.seleccionado}"
+																	title="#{tooltipBeanSNR.procesosDigitadorMasivoDetalleDigitadorMasivoEnglobesDireccionPredioSeleccione}">
+																	<p:ajax
+																		listener="#{beanDetalleDigitadorMasivo.direccionSeleccionada(item,idRdirecciones)}" />
+																</p:selectBooleanCheckbox>
+															</p:column>
+														</p:dataTable>
+													</div>
+												</p:panel>
+												<br />
+											</p:repeat>
+										</p:panel>
+									</p:tab>
+								</p:wizard>
+
+							</p:panel>
+						</p:outputPanel>
+
+						<p:outputPanel id="idFormMatriculasInfo">
+							<p:outputPanel
+								rendered="#{beanDetalleDigitadorMasivo.salvar and !beanDetalleDigitadorMasivo.matriculas.englobe}">
+								<div class="ui-g">
+
+									<p:panel style="width:100%;">
+										<div align="left">
+											<h:outputLabel
+												value="#{messageBeanSNR.commonLabelMensajeRevisadoCalificador}"
+												styleClass="otherStyle" />
+											<br />
+										</div>
+									</p:panel>
+
+									<p:commandButton icon="fa fa-arrow-down"
+										value="#{messageBeanSNR.commonLabelDescargarUnidades}"
+										iconPos="left"
+										actionListener="#{beanDetalleDigitadorMasivo.generaExcel}"
+										ajax="false">
+										<p:fileDownload value="#{beanRegistroCalificacion.file}" />
+									</p:commandButton>
+									<p:dataTable id="idDtMatriculasInfo"
+										value="#{beanDetalleDigitadorMasivo.matriculasInformacion}"
+										var="row"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+
+										<p:column headerText="#{messageBeanSNR.commonLabelMatriculas}">
+											<p:commandLink style="text-decoration: underline; "
+												action="#{beanDetalleDigitadorMasivo.detalleMatriculasInformacion(true)}">
+												<f:param name="idPredioRegistro"
+													value="#{row.idPredioRegistro}" />
+												<h:outputText value="#{row.idCirculo} - #{row.idMatricula}" />
+											</p:commandLink>
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelAreaDelTerreno}">
+											<h:outputText value="#{row.areaPredio}" />
+										</p:column>
+
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelAreaConstruida}">
+											<h:outputText value="#{row.areaConstruida}" />
+										</p:column>
+
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelAreaPrivada}">
+											<h:outputText value="#{row.areaPrivadaConstruida}" />
+										</p:column>
+
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelCoeficiente}">
+											<h:outputText value="#{row.coeficiente}" />
+										</p:column>
+
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDireccionCompleta}">
+											<h:outputText value="#{row.complementoDireccion}" />
+										</p:column>
+
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelTipoUsoSuelo}">
+											<h:outputText value="#{row.description}" />
+										</p:column>
+
+
+										<p:column headerText="#{messageBeanSNR.commonButtonRevisado}">
+											<h:selectBooleanCheckbox value="#{row.revisadoDigitador}"
+												disabled="true" />
+										</p:column>
+
+
+									</p:dataTable>
+									<p:fileUpload
+										fileUploadListener="#{beanDetalleDigitadorMasivo.processFile}"
+										mode="advanced" dragDropSupport="true"
+										cancelLabel="#{messageBeanSNR.commonLabelCancelar}"
+										uploadLabel="#{messageBeanSNR.commonLabelCargar}"
+										fileLimitMessage="#{messageBeanSNR.commonLabelSoloCargarUnArchivoALaVez}"
+										invalidFileMessage="#{messageBeanSNR.commonLabelElArchivoCargueDebeSerExcel}"
+										label="#{messageBeanSNR.commonLabelModificacionAreas}"
+										sizeLimit="#{beanDetalleDigitadorMasivo.cargarConstanteTamanoLimiteArchivo()}"
+										invalidSizeMessage="#{messageBeanSNR.commonLabelElArchivoCargueNoPuedeExcederLos500Kb}"
+										id="idFuLoadFile" widgetVar="idFuLoadFile" update="@all" fileLimit="1"
+										allowTypes="/(\.|\/)(xls?x)$/"
+										oncomplete="PF('idFuLoadFile').clear();" />
+
+									<p:commandLink id="idClnkRespuesta" ajax="false"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										rendered="#{beanRegistroCalificacion.file != null}">
+										<p:graphicImage value="/images/excel_ico.png" width="48" />
+										<p:fileDownload value="#{beanRegistroCalificacion.file}" />
+									</p:commandLink>
+									<script type="text/javascript">
+										function start()
+										{
+											PF('statusDownload').show();
+										}
+
+										function stop()
+										{
+											PF('statusDownload').hide();
+										}
+									</script>
+
+									<p:dialog modal="true" widgetVar="statusDownload"
+										draggable="false" closable="false" resizable="false">
+										<p:graphicImage value="/images/ajaxloadingbar.gif" />
+									</p:dialog>
+									<br></br>
+									<p:outputLabel id="idOlLinkExcel" value="Archivo de Salida"
+										rendered="#{beanRegistroCalificacion.file != null}">
+									</p:outputLabel>
+								</div>
+							</p:outputPanel>
+						</p:outputPanel>
+
+						<p:outputPanel id="idObservaciones">
+							<div align="left">
+								<strong>
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelObservaciones}" />
+								</strong>
+								<p:inputTextarea rows="5" cols="240"
+									title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoRegistroCalificacionObservaciones}"
+									onblur="value=value.toUpperCase()"
+									style="width: 100%;height: 50%;"
+									value="#{beanDetalleDigitadorMasivo.observaciones}"
+									queryDelay="750" maxlength="4000" minQueryLength="4"
+									counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+									counter="idNumeroCaracteres">
+								</p:inputTextarea>
+							</div>
+							<div align="right">
+								<h:outputText id="idNumeroCaracteres" />
+							</div>
+						</p:outputPanel>
+
+						<p:outputPanel id="opBtnDigitadorMasivo">
+							<div class="ui-g-12 ui-md-12 ui-lg-12">
+								<div class="ui-g-12 ui-md-3 ui-lg-3" align="left">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										id="idCBRegresar" icon="fa fa-arrow-circle-left"
+										iconPos="left"
+										action="turnosDigitadorMasivo?faces-redirect=true" />
+								</div>
+								<div class="ui-g-12 ui-md-9 ui-lg-9" align="right">
+									<p:commandButton
+										rendered="#{beanDetalleDigitadorMasivo.salvar == false and !beanDetalleDigitadorMasivo.matriculas.englobe and !beanDetalleDigitadorMasivo.matriculas.actoSegregacion}"
+										value="#{messageBeanSNR.commonButtonAperturaMatriculas}"
+										iconPos="left" icon="fa fa-save" ajax="false"
+										actionListener="#{beanDetalleDigitadorMasivo.guardarInfoDigitador()}">
+									</p:commandButton>
+									&nbsp;&nbsp;&nbsp;
+									<p:commandButton
+										rendered="#{beanDetalleDigitadorMasivo.salvar and !beanDetalleDigitadorMasivo.matriculas.englobe}"
+										id="idCBEnviarCalificador1"
+										value="#{messageBeanSNR.commonButtonEnviarAlCalificador}"
+										iconPos="right" ajax="false" icon="fa fa-chevron-right"
+										action="#{beanDetalleDigitadorMasivo.accionSalvar()}">
+									</p:commandButton>
+									<p:commandButton
+										rendered="#{beanDetalleDigitadorMasivo.matriculas.englobe and beanDetalleDigitadorMasivo.mostrarRegresarEnglobes}"
+										value="#{messageBeanSNR.commonLabelRegresarLinderosComplementacion}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										update="opBtnDigitadorMasivo" id="idCBRegresarEnglobes"
+										title="#{tooltipBeanSNR.procesosDigitadorMasivoDetalleDigitadorMasivoEnglobesBotonesRegresar}"
+										onclick="PF('myWizard').back()" />
+									<p:commandButton
+										rendered="#{beanDetalleDigitadorMasivo.matriculas.englobe and beanDetalleDigitadorMasivo.mostrarSiguienteEnglobes}"
+										value="#{messageBeanSNR.commonLabelSiguiente}"
+										icon="fa fa-arrow-circle-right" iconPos="right"
+										update="opBtnDigitadorMasivo" id="idCBSiguienteEnglobes"
+										title="#{tooltipBeanSNR.procesosDigitadorMasivoDetalleDigitadorMasivoEnglobesBotonesSiguiente}"
+										onclick="PF('myWizard').next()" />
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonEnviarAlCalificador}"
+										iconPos="right" id="idCBEnviarCalificadorEnglobes"
+										action="#{beanDetalleDigitadorMasivo.salvarEnglobes()}"
+										rendered="#{beanDetalleDigitadorMasivo.matriculas.englobe and !beanDetalleDigitadorMasivo.mostrarSiguienteEnglobes}"
+										title="#{tooltipBeanSNR.procesosDigitadorMasivoDetalleDigitadorMasivoEnglobesBotonesAprobador}"
+										icon="fa fa-chevron-right" />
+								</div>
+							</div>
+						</p:outputPanel>
+						<br />
+						<br />
+					</p:outputPanel>
+				</center>
+			</h:form>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgAgregarMatriculaComplementacion" modal="true"
+				height="90" resizable="false">
+				<h:form id="dlgAgregarMatriculaComplementacion"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelAgregarMatriculaConstruirComplementacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check"
+							action="#{beanDetalleDigitadorMasivo.agregarMatriculaComplementacion(false)}"
+							oncomplete="PF('dlgAgregarMatriculaComplementacion').hide();"
+							update="fdetalleDigitadorMasivo,fdetalleDigitadorMasivo:globalMsg" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close"
+							onclick="PF('dlgAgregarMatriculaComplementacion').hide();"
+							update="fdetalleDigitadorMasivo,fdetalleDigitadorMasivo:globalMsg" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgAgregarMatriculaComplementacionAnotacion" modal="true"
+				height="90" resizable="false">
+				<h:form id="dlgAgregarMatriculaComplementacionAnotacion"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelAgregarMatriculaConstruirComplementacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check"
+							action="#{beanDetalleDigitadorMasivo.agregarMatriculaComplementacion(false,true,true,false,false)}"
+							oncomplete="PF('dlgAgregarMatriculaComplementacionAnotacion').hide();"
+							update="fdetalleDigitadorMasivo" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close"
+							onclick="PF('dlgAgregarMatriculaComplementacionAnotacion').hide();"
+							update="fdetalleDigitadorMasivo" />
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelAdvertencia}"
+				visible="#{beanDetalleDigitadorMasivo.mostrarDialog}"
+				closable="false" widgetVar="dlgSuspension" modal="true"
+				resizable="false" width="750" height="170"
+				style="text-align: justify">
+				<h:form id="fDialogSuspension"
+					style="font-size: large; text-align: justify top: 30%; left: 30%;">
+					<h:outputText style="text-align: justify;"
+						value="#{beanDetalleDigitadorMasivo.observacionesTemporales}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonLabelConfirmar}"
+							icon="fa fa-check" oncomplete="PF('dlgSuspension').hide();"
+							action="#{beanDetalleDigitadorMasivo.returnBandeja()}" />
+					</div>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

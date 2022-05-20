@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTablaBasica}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelTipoEje}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fTiposEje" style="width: 100%;">
+				<p:growl id="gTiposE" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+
+				<p:panel id="idPListadoTiposEje" style="min-width:800px;">
+					<div class="ui-g" align="left">
+						<div class="ui-g-12 ui-md-6 ui-lg-4">
+							<p:commandButton
+								title="#{tooltipBeanSNR.administracionTiposEjeInsertar}"
+								value="#{messageBeanSNR.commonLabelInsertarTipoEje}"
+								icon="fa fa-plus-circle" iconPos="left"
+								update="fTiposEje,gTiposE"
+								action="#{beanTiposEje.botonInsertar(null, true)}" />
+						</div>
+					</div>
+
+					<p:dataTable
+						emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+						id="idDtDocumentoTipos" var="item"
+						value="#{beanTiposEje.cargarTiposEje()}" paginator="true"
+						rows="50">
+						<f:facet name="header">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelTipoEje}" />
+						</f:facet>
+						<p:column headerText="#{messageBeanSNR.commonLabelTipoEje}"
+							filterBy="#{item.idTipoEje}">
+							<div>
+								<h:outputText value="#{item.idTipoEje}"
+									title="#{tooltipBeanSNR.administracionTiposEjeTipoEje}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="#{messageBeanSNR.commonLabelNombre}"
+							filterBy="#{item.nombre}">
+							<div>
+								<p:commandLink id="idClNombre" ajax="false"
+									title="#{tooltipBeanSNR.administracionTiposEjeNombre}"
+									update="fTiposEje,gTiposE" value="#{item.nombre}"
+									styleClass="subrayado" color="blue"
+									action="#{beanTiposEje.botonInsertar(item, false)}">
+								</p:commandLink>
+							</div>
+						</p:column>
+	
+						<p:column headerText="#{messageBeanSNR.commonLabelTipoPredio}"
+								filterBy="#{item.tipoPredio}">
+								<h:outputText value="#{messageBeanSNR.commonLabelU}"
+									rendered="#{item.tipoPredio=='U'}" />
+								<h:outputText value="#{messageBeanSNR.commonLabelR}"
+									rendered="#{item.tipoPredio=='R'}" />
+								<h:outputText value="#{messageBeanSNR.commonLabelM}"
+									rendered="#{item.tipoPredio=='M'}" />
+						</p:column>
+						
+						<p:column headerText="#{messageBeanSNR.commonLabelComplemento}"
+								filterBy="#{item.complementoString}">
+								<h:outputText value="#{messageBeanSNR.commonLabelActivo}"
+									rendered="#{item.complementoString=='S'}" />
+								<h:outputText value="#{messageBeanSNR.commonLabelInactivo}"
+									rendered="#{item.complementoString=='N'}" />
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

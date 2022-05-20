@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBuscar}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultaEstadoPredio}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fConsultaPredio" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:panel>
+						<p:panel style="min-width:600px;"
+							header="#{messageBeanSNR.commonLabelConsultaEstadoPredio}"
+							id="pConsultaPredio">
+							<div class="ui-g" align="center">
+								<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+									<p:outputLabel style="width:50%;text-align: left;"
+										value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+									<br />
+									<p:selectOneMenu id="idSOMcirculoRegistral"
+										title="#{tooltipBeanSNR.buscarConsultaPredioConsultaPredioCirculoRegistral}"
+										value="#{beanConsultaPredio.idCirculo}" 
+										style="width:50%;" filter="true">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findCirculoRegistral(false)}"
+											var="circulo"
+											itemLabel="#{circulo.idCirculo} - #{circulo.nombre}"
+											itemValue="#{circulo.idCirculo}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+									<p:outputLabel style="width:50%"
+										value="#{messageBeanSNR.commonLabelMatricula}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()"
+										id="idITidMatricula" style="width:50% !important;"
+										title="#{tooltipBeanSNR.buscarConsultaPredioConsultaPredioMatricula}"
+										label="#{messageBeanSNR.commonLabelMatricula}"
+										placeholder="#{messageBeanSNR.commonLabelMatricula}"
+										value="#{beanConsultaPredio.idMatricula}" maxlength="25">
+										<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+									</p:inputText>
+								</div>
+							</div>
+							<div class="ui-g" align="center">
+								<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton style="width:50%"
+										value="#{messageBeanSNR.commonButtonConsultarEstadoPredio}"
+										title="#{tooltipBeanSNR.buscarConsultaPredioConsultaPredioConsultaPredio1}"
+										update="globalMsg,btnDetallePredio,idTurnosBloqueados,idTurnosAsociados"
+										ajax="false" icon="lupa"
+										actionListener="#{beanConsultaPredio.consultar()}">
+									</p:commandButton>
+								</div>
+								<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+									<p:commandButton id="btnDetallePredio" style="width:50%"
+										value="#{messageBeanSNR.commonLabelVerDetallePredio}"
+										action="#{beanConsultaPredio.cargarTabsDetalle(true)}"
+										rendered="#{beanConsultaPredio.activarDetalle}">
+									</p:commandButton>
+								</div>
+							</div>
+						</p:panel>
+
+						<br />
+						<p:outputPanel>
+							<p:panel id="idpanelTBloqueo"
+								header="#{messageBeanSNR.commonLabelTurnoBloqueandoMatricula}"
+								style="text-align:center">
+								<div class="ui-g">
+									<p:dataTable id="idTurnoBloqueandoMatricula"
+										value="#{beanConsultaPredio.turnoBloqueo}" var="item"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+										<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+											<h:outputText value="#{item.idTurno}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+											<h:outputText value="#{item.fechaCreacionString}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelEstadoActualDelTruno}">
+											<h:outputText value="#{item.nombreEtapaActual}" />
+										</p:column>
+									</p:dataTable>
+								</div>
+							</p:panel>
+						</p:outputPanel>
+						<br />
+						
+						<p:panel
+							header="#{messageBeanSNR.commonLabelTurnosBloqueadosPortramitesEnCurso}"
+							toggleable="true" style="text-align:center">
+							<div class="ui-g">
+								<p:dataTable id="idTurnosAsociados"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									value="#{beanConsultaPredio.turnosAsociados}" var="item">
+									<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+										<h:outputText value="#{item.idTurno}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+										<h:outputText value="#{item.fechaCreacionString}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelEstadoActualDelTruno}">
+										<h:outputText value="#{item.nombreEtapaActual}" />
+									</p:column>
+								</p:dataTable>
+							</div>
+						</p:panel>
+						<p:dataTable id="idDtListado" style="min-width:500px;"
+							value="#{beanConsultaPredio.consultaPrediosListados}" var="item"
+							emptyMessage="#{errorBeanSNR.errorSinRegistros}" paginator="true"
+							rows="50" sortBy="#{item.nir}" sortOrder="ascending">
+							<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+								<h:outputText value="#{item.nir}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+								<p:commandLink
+									actionListener="#{beanConsultaTrazabilidad.consultaDetallada('consultaPredio?faces-redirect=true')}"
+									action="detalleTrazabilidad?faces-redirect=true">
+									<f:param name="idTurno" value="#{item.idTurno}" />
+									<h:outputText value="#{item.idTurno}" styleClass="subrayado" />
+								</p:commandLink>
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelProceso}">
+								<h:outputText value="#{item.proceso}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelFaseTurno}">
+								<h:outputText value="#{item.estado}" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

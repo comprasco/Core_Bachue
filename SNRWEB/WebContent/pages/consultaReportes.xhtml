@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="content">
+			<h:form id="fConsultaReportes" style="width: 100%;">
+
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+
+				<script type="text/javascript">
+	
+					function formatDate(valor, aEvent) {
+						if (aEvent.keyCode != 8) {
+							if (valor.value.length == 2) {
+								valor.value += "/";
+							}
+							if (valor.value.length == 5) {
+								valor.value += "/";
+							}
+						}
+					}
+
+					function soloNumeros(e) {
+						var key =  e.which;
+								
+						if(key  &gt;= 48 &amp;&amp; key &lt;= 57 || key == 8) 
+							return true;
+						else							
+							e.preventDefault();
+					}
+			
+				</script>
+				<center>
+					<div align="left">
+						<p:outputPanel id="opDataConsul">
+
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeReporte}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoDocIdentidad" ajax="true"
+										style="width:180px"
+										title="#{tooltipBeanSNR.buscarConsultaReportes}"
+										value="#{beanConsultaReportes.tipoReporte}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanReference.cargarTipoConsulta()}"
+											var="tipoRepor" itemValue="#{tipoRepor.idConsulta}"
+											itemLabel="#{tipoRepor.nombreConsulta}" />
+										<p:ajax listener="#{beanConsultaReportes.mostrarPanel}"
+											update=":fConsultaReportes:panelDynamic" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+						</p:outputPanel>
+						<br />
+					</div>
+				</center>
+
+				<br />
+				<center>
+					<p:outputPanel id="panelDynamic"
+						rendered="#{beanConsultaReportes.render}">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<p:panel binding="#{beanConsultaReportes.dataPanel}">
+								</p:panel>
+							</div>
+						</div>
+					</p:outputPanel>
+				</center>
+				<br />
+
+				<br />
+
+
+				<div class="ui-g-12" align="center">
+					<p:commandLink id="idClnkRespuesta" ajax="false"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						rendered="#{beanConsultaReportes.imagen != null}">
+						<p:graphicImage value="/images/excel_ico.png" width="48" />
+						<p:fileDownload value="#{beanConsultaReportes.imagen}" />
+					</p:commandLink>
+					<br></br>
+					<p:outputLabel id="idOlLinkExcel" value="Archivo de salida"
+						rendered="#{beanConsultaReportes.imagen != null}">
+					</p:outputLabel>
+				</div>
+
+				<script type="text/javascript">
+					function start() {
+						PF('statusDownload').show();
+					}
+
+					function stop() {
+						PF('statusDownload').hide();
+					}
+				</script>
+
+				<p:dialog appendTo="@(body)" modal="true" widgetVar="statusDownload"
+					draggable="false" closable="false" resizable="false">
+					<p:graphicImage value="/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+
+				<div class="ui-g-12" align="center">
+					<p:outputPanel id="opBtnLimpiar">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<p:commandButton value="#{messageBeanSNR.commonLabelLimpiar}"
+									rendered="#{beanConsultaReportes.render}" conPos="left"
+									action="#{beanConsultaReportes.clean}"
+									update="panelDynamic,idClnkRespuesta">
+								</p:commandButton>
+							</div>
+						</div>
+					</p:outputPanel>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

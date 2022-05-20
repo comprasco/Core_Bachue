@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTablaBasica}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelTipoPersona}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fTipoPersona" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false"/>
+				<center>
+					<p:panel style="min-width:800px;">
+						<p:dataTable id="idDtListado" var="item"
+							value="#{beanTipoPersona.findAllTipoPersona()}"
+							emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+							<f:facet name="header">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTipoPersona}" />
+							</f:facet>
+							<p:column headerText="#{messageBeanSNR.commonLabelIdentificador}"
+								filterBy="#{item.idTipoPersona}">
+								<h:outputText value="#{item.idTipoPersona}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelDescripcion}"
+								filterBy="#{item.descripcion}">
+								<p:commandLink
+									styleClass="subrayado"
+									actionListener="#{beanTipoPersona.consultaDetallada()}"
+									action="tipoPersonaDetalle?faces-redirect=true">
+									<f:param name="idTipoPersona" value="#{item.idTipoPersona}" />
+									<h:outputText value="#{item.descripcion}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

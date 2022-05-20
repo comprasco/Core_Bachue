@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelCalificacion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeCalificacion}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<h:form id="fCalificacion" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true" redisplay="false" />
+				<center>
+					<br />
+					<p:chart type="pie" model="#{beanTurnos.pieChartModel}"
+						rendered="#{beanTurnos.mostrarGrafica}"
+						style="width:400px;height:300px">
+						<p:ajax event="itemSelect" listener="#{beanTurnos.itemSelect}"
+							update="idGrowl" />
+					</p:chart>
+					<p:outputLabel value="#{messageBeanSNR.commonLabelCalificacion}" />
+					<br />
+
+					<p:panel header="#{messageBeanSNR.commonLabelBandejaDeTurnos}"
+						toggleable="true">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+										style="font-size: 100%;" />
+									<p:inputText placeholder="#{messageBeanSNR.commonLabelNIR}"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosNir}"
+										id="nir" value="#{beanTurnos.nirConsulta}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}"
+										style="font-size: 100%;" />
+									<p:inputText placeholder="#{messageBeanSNR.commonLabelTurno}"
+										id="idTurno" value="#{beanTurnos.idTurnoConsulta}"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosTurno}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGroup>
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										actionListener="#{beanTurnos.generarData()}" ajax="true"
+										icon="lupa" update="idDtTurnos,idDtTurnosCalificacion" />
+								</h:panelGroup>
+
+							</div>
+						</div>
+						
+						
+						<div class="ui-g">
+							<p:dataTable id="idDtTurnos" value="#{beanTurnos.data}"
+								var="item" rendered="#{!beanTurnos.detalleCalificador}">
+								<p:column headerText="#{messageBeanSNR.commonLabelProcesos}"
+									width="15%" style="text-align:left">
+									<h:outputText value="#{item['PROCESO']}" />
+								</p:column>
+
+								<p:column headerText="#{messageBeanSNR.commonLabelTurno}"
+									width="15%" style="text-align:left">
+									<h:outputText value="#{item['ID_TURNO']}" />
+								</p:column>
+
+								<p:column headerText="#{messageBeanSNR.commonLabelNIR}"
+									width="15%" style="text-align:left">
+									<h:outputText value="#{item['NIR']}" />
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelMotivoNoTramite}"
+									width="15%" style="text-align:left">
+									<h:outputText value="#{item['MOTIVO_NO_TRAMITE']}" />
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+									width="22%" style="text-align:left">
+									<h:outputText value="#{item['OBSERVACIONES']}" />
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaAsignacion}"
+									width="10%" style="text-align:left">
+									<h:outputText value="#{item['FECHA_ASIGNACION']}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="GMT-5" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelVisualizar}"
+									width="9%" style="text-align:left">
+									<div align="center">
+										<h:commandButton
+											value="#{messageBeanSNR.commonLabelVerDetalle}"
+											action="#{beanTurnos.detalleActoEtapa}" immediate="true"
+											image="../images/find.png"
+											title="#{tooltipBeanSNR.procesosCalificacionTurnosVisualizar}"
+											rendered="#{item['ESTADO_ACTIVIDAD'] eq 'ASG'}"
+											onclick="PrimeFaces.monitorDownload(start, stop);">
+											<f:param name="idTurnoHistoria"
+												value="#{item['ID_TURNO_HISTORIA']}" />
+											<f:param name="idTurno" value="#{item['ID_TURNO']}" />
+											<f:param name="idEtapa" value="#{item['ID_ETAPA']}" />
+											<f:param name="isLectura" value="0" />
+											<script type="text/javascript">
+												function start()
+												{
+													PF('statusDownload1')
+															.show();
+												}
+
+												function stop()
+												{
+													PF('statusDownload1')
+															.hide();
+												}
+											</script>
+											<p:dialog modal="true" widgetVar="statusDownload1"
+												draggable="false" closable="false" resizable="false">
+												<p:graphicImage value="/images/ajaxloadingbar.gif" />
+											</p:dialog>
+										</h:commandButton>
+									</div>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</p:panel>
+					<p:spacer />
+					<div align="left">
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							title="#{tooltipBeanSNR.procesosCalificacionTurnosRegresar}"
+							action="calificacion?faces-redirect=true">
+						</p:commandButton>
+					</div>
+					<br />
+				</center>
+			</h:form>
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

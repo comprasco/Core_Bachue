@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SNRCommon"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SNRModel"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SNRIntegration"/>
+	<classpathentry kind="lib" path="/SNREAR/EarContent/lib/log4j-1.2.14.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.system"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SNRDao"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

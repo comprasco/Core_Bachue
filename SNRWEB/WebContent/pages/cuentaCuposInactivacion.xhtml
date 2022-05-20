@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelCuentaCupos}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelInactivacionCuentaCupo}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<p:dialog widgetVar="statusDispositivo" modal="true"
+				draggable="false" closable="false" resizable="false"
+				showHeader="false" appendTo="@(body)" width="16%">
+				<p:progressBar id="progressBar" mode="indeterminate"
+					widgetVar="progressBar" rendered="true" />
+			</p:dialog>
+
+			<h:form id="fCuentaCuposInactivacion" style="width: 100%;">
+				<p:growl id="idGrowl" globalOnly="true" showDetail="true"
+					sticky="false" life="10000" redisplay="false" />
+				<p:remoteCommand name="segundaVerificacion"
+					actionListener="#{beanCuentaCuposInactivacion.segundaVerificacion}"
+					update="fCuentaCuposInactivacion:idGrowl" partialSubmit="true"
+					global="false" />
+				<p:remoteCommand name="fail"
+					actionListener="#{beanDispositivos.error}"
+					update="fCuentaCuposInactivacion:idGrowl" partialSubmit="true"
+					global="false" />
+				<p:remoteCommand name="verify"
+					action="#{beanCuentaCuposInactivacion.inactivarCuentaCupo()}"
+					update="fDialog,fCuentaCuposInactivacion" />
+				<center>
+					<p:panel id="idPanelInactivacionCC"
+						header="#{messageBeanSNR.commonLabelInactivacionCuentaCupo}">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelIdCuentaCupo}"
+										style="font-size: 100%;" />
+									<p:inputText
+										disabled="#{beanConsultaCuentaCupos.consultaExitosa}"
+										placeholder="#{messageBeanSNR.commonLabelIdCuentaCupo}"
+										id="idCuentaCupo"
+										value="#{beanCuentaCuposInactivacion.idCuentaCupo}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGroup>
+									<p:commandButton id="idCBConsultar"
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										actionListener="#{beanCuentaCuposInactivacion.consultarIdCuentaCupo()}"
+										disabled="#{beanCuentaCuposInactivacion.consultaExitosa}"
+										ajax="true" icon="lupa"
+										update="idCuentaCupo,idCBConsultar,idOPDatosConsultados,idOPDocumentosSoporte,idOPBotonesPiePagina,idGrowl" />
+								</h:panelGroup>
+							</div>
+						</div>
+						<p:outputPanel id="idOPDatosConsultados">
+							<p:outputPanel
+								rendered="#{beanCuentaCuposInactivacion.consultaExitosa}">
+
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-12 ui-lg-12" align="left">
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelSaldoActual}" />
+											<br />
+											<p:inputText id="idITSaldoActual" style="width:100%;"
+												disabled="true"
+												value="#{beanCuentaCuposInactivacion.cuentaCupo.saldo}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel value="#{messageBeanSNR.commonLabelEstado}" />
+											<br />
+											<p:inputText id="idITEstado" style="width:100%;"
+												disabled="true"
+												value="#{beanCuentaCuposInactivacion.cuentaCupo.estado}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelFechaSolicitud}" />
+											<br />
+											<p:inputText id="idITFechaSolicitud" style="width:100%;"
+												disabled="true"
+												value="#{beanCuentaCuposInactivacion.cuentaCupo.fechaSolicitud}" />
+										</div>
+									</div>
+								</div>
+
+								<p:outputPanel id="idOPDocumentosSoporte">
+									<p:outputPanel>
+										<br />
+										<div class="ui-c">
+											<div class="ui-g-12 ui-md-6 ui-lg-12">
+												<p:fileUpload
+													fileUploadListener="#{beanCuentaCuposInactivacion.cargarDocumentoPdf}"
+													mode="advanced" dragDropSupport="true"
+													cancelLabel="#{messageBeanSNR.commonButtonCancelar}"
+													uploadLabel="#{messageBeanSNR.commonLabelCargar}"
+													fileLimitMessage="#{messageBeanSNR.commonLabelSoloCargarUnArchivoALaVez}"
+													invalidFileMessage="#{messageBeanSNR.commonLabelElArchivoCargueDebeSerPDF}"
+													label="#{messageBeanSNR.commonLabelCargarPfdSoporte}"
+													sizeLimit="5000000"
+													update="idPDocsCargados,idDTDocsCargados,idOPDocumentosSoporte"
+													invalidSizeMessage="#{messageBeanSNR.commonLabelElArchivoCargueNoPuedeExcederLos5Mb}"
+													id="idFuFileNotificacion" widgetVar="idFuFileNotificacion"
+													fileLimit="1" allowTypes="/(\.|\/)(pdf)$/"
+													oncomplete="PF('idFuFileNotificacion').clear();" />
+											</div>
+											<br />
+											<p:panel id="idPDocsCargados"
+												header="#{messageBeanSNR.commonLabelDocumentosCargados}">
+												<p:dataTable
+													value="#{beanCuentaCuposInactivacion.documentosCargados}"
+													var="doc" id="idDTDocsCargados"
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelNombreDeArchivo}">
+														<h:outputText value="#{doc.name}" />
+													</p:column>
+
+													<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+														style="align: left;" width="10%">
+														<p:commandButton icon="fa fa-trash" iconPos="left"
+															update="fCuentaCuposInactivacion:idOPDocumentosSoporte,fCuentaCuposInactivacion:idPDocsCargados"
+															title="#{messageBeanSNR.commonLabelEliminar}"
+															actionListener="#{beanCuentaCuposInactivacion.eliminarDocumentoCargado(doc)}">
+														</p:commandButton>
+													</p:column>
+												</p:dataTable>
+											</p:panel>
+										</div>
+									</p:outputPanel>
+								</p:outputPanel>
+								<br />
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:outputLabel id="idOLJustificacion" indicateRequired="true"
+											value="#{messageBeanSNR.commonLabelJustificacion}" />
+										<br />
+										<p:inputTextarea rows="7" cols="73" id="idITJustificacion"
+											maxlength="4000" onblur="value=value.toUpperCase()"
+											counterTemplate="{0} Caracteres faltantes" autoResize="true"
+											value="#{beanCuentaCuposInactivacion.justificacion}">
+										</p:inputTextarea>
+									</div>
+								</div>
+							</p:outputPanel>
+						</p:outputPanel>
+						<p:spacer />
+
+						<p:outputPanel id="idOPBotonesPiePagina">
+							<div class="ui-g" align="center">
+								<div class="ui-g-6" align="left">
+									<p:commandButton
+										value="#{beanCuentaCuposInactivacion.consultaExitosa ? messageBeanSNR.commonLabelLimpiar : messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										update="idPanelInactivacionCC"
+										action="#{beanCuentaCuposInactivacion.regresar()}">
+									</p:commandButton>
+								</div>
+								<div class="ui-g-6" align="right">
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonInactivarCuentaCupo}"
+										rendered="#{beanCuentaCuposInactivacion.consultaExitosa}"
+										icon="fa fa-check" iconPos="right"
+										onclick="PF('dlgConfirmacion').show();">
+									</p:commandButton>
+								</div>
+							</div>
+						</p:outputPanel>
+						<br />
+					</p:panel>
+				</center>
+			</h:form>
+			<p:dialog appendTo="@(body)" id="idDDialogoConfirmacion"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgConfirmacion" modal="true" height="90"
+				resizable="false">
+				<h:form id="fDialog" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonMessageConfirmarInformacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							id="idCBConfirmar" icon="fa fa-check"
+							onclick="procesar();PF('dlgConfirmacion').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlgConfirmacion').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

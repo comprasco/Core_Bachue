@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelCalificacion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleTurno}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelNotaDevolutiva}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fresumenNotasDevolutivas" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:outputPanel style="min-width:800px;">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+								<br />
+								<p:inputText readonly="true" value="#{beanNotaDevolutiva.nir}" />
+							</div>
+							<div class="ui-g-12 ui-md-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}" />
+								<br />
+								<p:inputText readonly="true" value="#{beanNotaDevolutiva.turno}" />
+							</div>
+						</div>
+
+						<p:panel>
+							<p:outputPanel id="panelTurnosNotaDevolutiva">
+								<div align="right">
+									<p:dataTable
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}."
+										value="#{beanNotaDevolutiva.infoTurnos}" var="row">
+										<p:column headerText="#{messageBeanSNR.commonLabelIdTurno}">
+											<h:outputText value="#{row.turno}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelEstadoDelTurno}">
+											<h:outputText value="#{row.faseTurno}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelEstadoActividad}">
+											<h:outputText value="#{row.tramite}" />
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelDetalle}">
+											<div align="center">
+												<h:commandButton
+													action="#{beanNotaDevolutiva.detalleNotaDevolutiva}"
+													ajax="true" icon="lupa" image="../images/find.png">
+													<f:param name="idTurno" value="#{row.turno}" />
+												</h:commandButton>
+											</div>
+										</p:column>
+									</p:dataTable>
+								</div>
+							</p:outputPanel>
+						</p:panel>
+						<p:outputPanel id="idObservaciones">
+							<div align="left">
+								<strong> <p:outputLabel
+										value="#{messageBeanSNR.commonLabelObservaciones}#{messageBeanSNR.commonLabelObligatorio}" />
+								</strong>
+								<p:inputTextarea rows="10" cols="240" id="idITAObservaciones"
+									title="#{tooltipBeanSNR.procesosCalificacionNotaDevolutivaObservaciones}"
+									onblur="value=value.toUpperCase()"
+									value="#{beanNotaDevolutiva.observaciones}" queryDelay="750"
+									maxlength="4000" minQueryLength="4"
+									counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+									counter="idNumeroCaracteresObs">
+								</p:inputTextarea>
+							</div>
+							<div align="right">
+								<h:outputText id="idNumeroCaracteresObs"
+									value="#{beanNotaDevolutiva.contar('C')}" align="right" />
+							</div>
+						</p:outputPanel>
+						<br />
+
+						<p:panel>
+							<br />
+							<p:outputPanel id="opBtnGenerateFile">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-4 ui-lg-4" align="left">
+										<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+											icon="fa fa-arrow-circle-left" iconPos="left"
+											action="#{beanNotaDevolutiva.accionRegresarNotaDevolutiva}">
+											<f:param name="idTurno"
+												value="#{beanPredioDocumentoActo.idTurno}" />
+											<f:param name="idMotivo"
+												value="#{beanPredioDocumentoActo.motivoTramite}" />
+											<f:param name="idConfrontacion"
+												value="#{beanPredioDocumentoActo.confrontacion}" />
+											<f:param name="datosBasicos"
+												value="#{beanPredioDocumentoActo.datosBasicos}" />
+											<f:param name="insertarMatricula"
+												value="#{beanPredioDocumentoActo.insertaMatricula}" />
+											<f:param name="eliminarMatricula"
+												value="#{beanPredioDocumentoActo.eliminaMatricula}" />
+											<f:param name="varificarFolioCerrado"
+												value="#{beanPredioDocumentoActo.verificaFolioCerrado}" />
+										</p:commandButton>
+									</div>
+									<div class="ui-g-12 ui-md-8 ui-lg-8" align="right">
+										<p:commandButton id="btnSalvar" icon="fa fa-chevron-right"
+											value="#{messageBeanSNR.commonButtonEnviarAlAprobador}"
+											rendered="#{beanNotaDevolutiva.aprobacionVinculados}"
+											iconPos="right" action="#{beanNotaDevolutiva.saveCausales}" />
+									</div>
+								</div>
+							</p:outputPanel>
+						</p:panel>
+					</p:outputPanel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

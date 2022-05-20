@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+	xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+	<globalConfiguration>
+		<parameter name="attachments.implementation"
+			value="org.apache.axis.attachments.AttachmentsImpl" />
+		<parameter name="disablePrettyXML" value="false" />
+		<parameter name="sendMultiRefs" value="true" />
+		<parameter name="sendXMLDeclaration" value="true" />
+		<parameter name="sendXsiTypes" value="true" />
+		<requestFlow>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="session" />
+			</handler>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="request" />
+				<parameter name="extension" value=".jwr" />
+			</handler>
+		</requestFlow>
+	</globalConfiguration>
+	<handler name="Authenticate"
+		type="java:org.apache.axis.handlers.SimpleAuthenticationHandler" />
+	<handler name="LocalResponder"
+		type="java:org.apache.axis.transport.local.LocalResponder" />
+	<handler name="URLMapper"
+		type="java:org.apache.axis.handlers.http.URLMapper" />
+	<service name="AdminService" provider="java:MSG">
+		<parameter name="allowedMethods" value="AdminService" />
+		<parameter name="enableRemoteAdmin" value="false" />
+		<parameter name="className"
+			value="org.apache.axis.utils.Admin" />
+		<namespace>http://xml.apache.org/axis/wsdd/</namespace>
+	</service>
+	<service name="Version" provider="java:RPC">
+		<parameter name="allowedMethods" value="getVersion" />
+		<parameter name="className" value="org.apache.axis.Version" />
+	</service>
+
+	<!-- Services from SDI_CB_SolicitudDeCorreccion WSDL service -->
+
+	<service name="SDI_CB_SolicitudDeCorreccionPort"
+		provider="java:RPC" style="document" use="literal">
+		<parameter name="wsdlTargetNamespace"
+			value="https://www.supernotariado.gov.co/services/bachue/ee/solicituddecorreccion/v1" />
+		<parameter name="wsdlServiceElement"
+			value="SDI_CB_SolicitudDeCorreccion" />
+		<parameter name="schemaQualified"
+			value="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/obtenercausalescorreccion/v1,https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/ingresosolicitud/v1" />
+		<parameter name="wsdlServicePort"
+			value="SDI_CB_SolicitudDeCorreccionPort" />
+		<parameter name="className"
+			value="co.gov.supernotariado.www.services.bachue.ee.solicituddecorreccion.v1.SDI_CB_SolicitudDeCorreccion_BindingSkeleton" />
+		<parameter name="wsdlPortType"
+			value="SDI_CB_SolicitudDeCorreccion" />
+		<parameter name="typeMappingVersion" value="1.2" />
+		<parameter name="allowedMethods" value="*" />
+
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/ingresosolicitud/v1"
+			qname="ns:tipoEntradaIngresoSolicitud"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.ingresosolicitud.v1.TipoEntradaIngresoSolicitud"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/ingresosolicitud/v1"
+			qname="ns:>>>tipoEntradaIngresoSolicitud>matriculas>matricula>datosCorregir"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.ingresosolicitud.v1.TipoEntradaIngresoSolicitudMatriculasMatriculaDatosCorregirDatoCorregir[]"
+			innerType="cmp-ns:>>>>tipoEntradaIngresoSolicitud>matriculas>matricula>datosCorregir>datoCorregir"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/ingresosolicitud/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/ingresosolicitud/v1"
+			qname="ns:>>>>tipoEntradaIngresoSolicitud>matriculas>matricula>datosCorregir>datoCorregir"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.ingresosolicitud.v1.TipoEntradaIngresoSolicitudMatriculasMatriculaDatosCorregirDatoCorregir"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/ingresosolicitud/v1"
+			qname="ns:>tipoSalidaIngresoSolicitud>codigo"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.ingresosolicitud.v1.TipoSalidaIngresoSolicitudCodigo"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/ingresosolicitud/v1"
+			qname="ns:tipoSalidaIngresoSolicitud"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.ingresosolicitud.v1.TipoSalidaIngresoSolicitud"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/ingresosolicitud/v1"
+			qname="ns:>>tipoEntradaIngresoSolicitud>interesado>tipoDocumentoPersona"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.ingresosolicitud.v1.TipoEntradaIngresoSolicitudInteresadoTipoDocumentoPersona"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/obtenercausalescorreccion/v1"
+			qname="ns:tipoSalidaObtenerCausalesCorreccion"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.obtenercausalescorreccion.v1.TipoSalidaObtenerCausalesCorreccion"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/obtenercausalescorreccion/v1"
+			qname="ns:>>tipoSalidaObtenerCausalesCorreccion>listaCausales>Causal"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.obtenercausalescorreccion.v1.TipoSalidaObtenerCausalesCorreccionListaCausalesCausal"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/obtenercausalescorreccion/v1"
+			qname="ns:>tipoSalidaObtenerCausalesCorreccion>codigo"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.obtenercausalescorreccion.v1.TipoSalidaObtenerCausalesCorreccionCodigo"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/ingresosolicitud/v1"
+			qname="ns:>tipoEntradaIngresoSolicitud>matriculas"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.ingresosolicitud.v1.TipoEntradaIngresoSolicitudMatriculasMatricula[]"
+			innerType="cmp-ns:>>tipoEntradaIngresoSolicitud>matriculas>matricula"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/ingresosolicitud/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/ingresosolicitud/v1"
+			qname="ns:>>tipoEntradaIngresoSolicitud>matriculas>matricula"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.ingresosolicitud.v1.TipoEntradaIngresoSolicitudMatriculasMatricula"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/obtenercausalescorreccion/v1"
+			qname="ns:tipoObtenerCausalesCorreccion"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.obtenercausalescorreccion.v1.TipoObtenerCausalesCorreccion"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/ingresosolicitud/v1"
+			qname="ns:>tipoEntradaIngresoSolicitud>interesado"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.ingresosolicitud.v1.TipoEntradaIngresoSolicitudInteresado"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/obtenercausalescorreccion/v1"
+			qname="ns:>tipoSalidaObtenerCausalesCorreccion>listaCausales"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.solicituddecorreccion.obtenercausalescorreccion.v1.TipoSalidaObtenerCausalesCorreccionListaCausalesCausal[]"
+			innerType="cmp-ns:>>tipoSalidaObtenerCausalesCorreccion>listaCausales>Causal"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecorreccion/obtenercausalescorreccion/v1"
+			encodingStyle="" />
+	</service>
+
+	<transport name="http">
+		<requestFlow>
+			<handler type="URLMapper" />
+			<handler
+				type="java:org.apache.axis.handlers.http.HTTPAuthHandler" />
+		</requestFlow>
+		<parameter name="qs:list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs:wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+		<parameter name="qs.list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs.method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs:method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs.wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+	</transport>
+	<transport name="local">
+		<responseFlow>
+			<handler type="LocalResponder" />
+		</responseFlow>
+	</transport>
+</deployment>

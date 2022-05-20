@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<p:outputPanel rendered="#{beanGrabacion.etapa eq 103}">
+				<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+					</li>
+					<li class="breadcrumb-item">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelGrabacion}" />
+					</li>
+					<li class="breadcrumb-item">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+					</li>
+					<li class="breadcrumb-item">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+					</li>
+					<li class="breadcrumb-item active" aria-current="page">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+					</li>
+				</ol>
+				</nav>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{beanGrabacion.etapa eq 104}">
+				<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+					</li>
+					<li class="breadcrumb-item">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelEjecucionGrabacionMatriculas}" />
+					</li>
+					<li class="breadcrumb-item">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelBandejaDeGrabacion}" />
+					</li>
+					<li class="breadcrumb-item">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+					</li>
+					<li class="breadcrumb-item active" aria-current="page">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+					</li>
+				</ol>
+				</nav>
+			</p:outputPanel>
+		</ui:define>
+		<ui:define name="content">
+			<ui:include src="detalleActoInclude.xhtml" />
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fDetalleGrabacion" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true"  redisplay="false" 
+					sticky="false" life="20000" />
+				<center>
+					<p:panel header="#{messageBeanSNR.commonLabelDatosDelPredioGrabar}" 
+						toggleable="true">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-4">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+								<br />
+								<p:selectOneMenu id="idSOMCirculoRegistralAntSistema"
+									style="width:100%" disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaCirculoRegistral}"
+									value="#{beanGrabacion.datosAntSistema.idCirculoGrabacion}">
+									<f:selectItems
+										value="#{beanReference.findCirculoRegistral(true)}"
+										var="circuloAntSistema"
+										itemValue="#{circuloAntSistema.idCirculo}"
+										itemLabel="#{circuloAntSistema.idCirculo} - #{circuloAntSistema.nombre}" />
+									<p:ajax event="change" update="idSOMMunAntSistema"/>
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-4">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelMatricula}" />
+								<br />
+								<p:inputText style="width:100%" id="idITIdMatricula"
+									value="#{beanGrabacion.datosAntSistema.idMatriculaGrabacion}"
+									readonly="true">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-4">
+								<p:outputLabel indicateRequired="true"
+									value="#{messageBeanSNR.commonLabelTipoDePredio}" />
+								<br />
+								<p:selectOneMenu id="idSOMTipoPredioAntSistema"
+									style="width:100%" disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaTipoPredio}"
+									value="#{beanGrabacion.datosAntSistema.idTipoPredio}">
+									<f:selectItems value="#{beanReference.findTipoPredio()}"
+										var="tipoPredioAntSistema"
+										itemValue="#{tipoPredioAntSistema.idTipoPredio}"
+										itemLabel="#{tipoPredioAntSistema.descripcion}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-c" align="left">
+							<div class="ui-g-12 ui-md-4">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelPais}" />
+								<br />
+								<p:selectOneMenu id="idSOMPaisAntSistema" style="width:100%"
+									title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaPais}"
+									value="#{beanGrabacion.datosAntSistema.idPais}" disabled="true">
+									<f:selectItem itemValue="57" itemLabel="COLOMBIA" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-4">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelDepartamento}" />
+								<br />
+								<p:selectOneMenu id="idSOMDepAntSistema" style="width:100%"
+									title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaDepartamento}"
+									value="#{beanGrabacion.datosAntSistema.idDepartamento}"
+									disabled="true">
+									<f:selectItems
+										value="#{beanReference.findDepartamentos(beanGrabacion.datosAntSistema.idPais)}"
+										var="depAntSistema"
+										itemValue="#{depAntSistema.idDepartamento}"
+										itemLabel="#{depAntSistema.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-4">
+								<p:outputLabel indicateRequired="true"
+									value="#{messageBeanSNR.commonLabelMunicipio}" />
+								<br />
+								<p:selectOneMenu id="idSOMMunAntSistema" style="width:100%"
+									title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaMunicipio}"
+									value="#{beanGrabacion.datosAntSistema.idMunicipio}"
+									disabled="true">
+									<f:selectItems
+										value="#{beanReference.findMunicipiosByCirculo(beanGrabacion.datosAntSistema.idCirculoGrabacion)}"
+										var="munAntSistema" itemValue="#{munAntSistema.idMunicipio}"
+										itemLabel="#{munAntSistema.nombre}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-c" align="left">
+							<div class="ui-g-12 ui-md-4">
+								<p:outputLabel id="idOLNombrePredio"
+									value="#{messageBeanSNR.commonLabelNombreDelPredio}" />
+								<br />
+								<p:inputText id="idItNomAntSistema" readonly="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaNombrePredio}"
+									value="#{beanGrabacion.datosAntSistema.nombrePredio}" />
+							</div>
+						</div>
+					</p:panel>
+					<br />
+					<p:panel id="idPPanelDatosBasicos" toggleable="true"
+						header="#{messageBeanSNR.commonLabelDatosBasicosDelInteresado}">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoDePersona}" />
+								<br />
+								<p:selectOneMenu id="idSOMTipoPersona" style="width:100%"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoPersona}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.idTipoPersona}">
+									<f:selectItems value="#{beanReference.findTipoPersona()}"
+										var="tipoPersona" itemValue="#{tipoPersona.idTipoPersona}"
+										itemLabel="#{tipoPersona.descripcion}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoDeDocumento}" />
+								<br />
+								<p:selectOneMenu id="idSOMTipoDoc" style="width:100%"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoDocumento}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.idDocumentoTipo}">
+									<f:selectItems
+										value="#{beanReference.findTipoDocumentoActivo()}"
+										var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+										itemLabel="#{tipoDoc.descripcion}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelDocumento}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idOlDocumento"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoDocumento}"
+									placeholder="#{messageBeanSNR.commonLabelDocumento}"
+									maxlength="20" readonly="true"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.numeroDocumento}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelNacionalidad}" />
+								<br />
+								<p:selectOneMenu id="idSOMNacionalidad" style="width:100%"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoNacionalidad}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.idPais}">
+									<p:ajax update="idSOMNacionalidad" />
+									<f:selectItem itemValue=""
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+									<f:selectItems value="#{beanReference.findPaises()}"
+										var="paises" itemValue="#{paises.idPais}"
+										itemLabel="#{paises.nombre}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+									value="#{messageBeanSNR.commonLabelCalidadEnQueActua}" />
+								<br />
+								<p:selectOneMenu id="idITCalidad" style="width:100%"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoCalidadActua}"
+									value="#{beanGrabacion.parametros.solicitud2.idCalidadSolicitante}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanReference.findCalidadSolicitante()}" var="calSol"
+										itemValue="#{calSol.idCalidadSolicitante}"
+										itemLabel="#{calSol.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel for="idOlPNombre" id="idOLNombre"
+									value="#{messageBeanSNR.commonLabelPrimerNombre}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()" id="idOlPNombre"
+									maxlength="100" readonly="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerNombre}"
+									placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.primerNombre}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel for="idOlSNombre"
+									value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()" id="idOlSNombre"
+									maxlength="100" readonly="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoNombre}"
+									placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.segundoNombre}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel for="idOlPApellido" id="idOLApellido"
+									value="#{messageBeanSNR.commonLabelPrimerApellido}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idOlPApellido" maxlength="150" readonly="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerApellido}"
+									placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.primerApellido}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel for="idOlSApellido"
+									value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idOlSApellido" maxlength="100" readonly="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoApellido}"
+									placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.segundoApellido}" />
+							</div>
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-6">
+								<p:outputLabel for="idOlRazonSocial" id="idOLRazon"
+									value="#{messageBeanSNR.commonLabelRazonSocial}" />
+								<br />
+								<p:inputText
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoRazonSocial}"
+									onblur="value=value.toUpperCase()" id="idOlRazonSocial"
+									readonly="true"
+									placeholder="#{messageBeanSNR.commonLabelRazonSocial}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.razonSocial}" />
+							</div>
+						</div>
+					</p:panel>
+					<br />
+					<p:panel header="#{messageBeanSNR.commonLabelTramitesARealizar}"
+						toggleable="true"
+						style="text-align: left">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelMotivoTramiteDosPuntos}" />
+						<p:selectOneRadio layout="responsive" columns="3"
+							style="text-align: left;width:100%;font-size: 12px;"
+							value="#{beanGrabacion.motivoTramite}"
+							styleClass="ui-selectoneradiosinnegrilla">
+							<f:selectItems itemValue="#{item.idMotivo}" var="item"
+								itemLabel="#{item.descripcion}"
+								value="#{beanPredioDocumentoActo.motivos}" />
+						</p:selectOneRadio>
+					</p:panel>
+					<p:spacer />
+					<div class="ui-g" align="left">
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="#{beanGrabacion.regresar()}">
+						</p:commandButton>
+						<p:commandButton value="#{messageBeanSNR.commonButtonContinuar}"
+							action="#{beanGrabacion.enviaPagina}" ajax="false"
+							icon="fa fa-arrow-circle-right" iconPos="right">
+						</p:commandButton>
+					</div>
+					<br />
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

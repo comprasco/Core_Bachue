@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTipoCanalOrigen}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{beanTipoCanalOrigen.insertar ? messageBeanSNR.pageInsertarTipoCanalOrigen : messageBeanSNR.pageModificarTipoCanalOrigen}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fTipoCanalOrigenDetalle" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false"/>
+				<center>
+					<p:panel>
+						<p:panel
+							header="#{beanTipoCanalOrigen.insertar ? messageBeanSNR.pageInsertarTipoCanalOrigen : messageBeanSNR.pageModificarTipoCanalOrigen}"
+							style="width:100%">
+							<div class="ui-g" align="left">
+
+								<div class="ui-g-12 ui-md-6 ui-lg-6" 
+									style="display: #{!beanTipoCanalOrigen.insertar ? 'block': 'none'}">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoCanalOrigen}" />
+									<br />
+									<p:inputText id="idTipoCanalOrigen"
+										title="#{tooltipBeanSNR.administracionTipoCanalOrigenDetalleTipoCanalOrigen}"
+										placeholder="#{messageBeanSNR.commonLabelTipoCanalOrigen}"
+										value="#{beanTipoCanalOrigen.tipoCanalOrigen.idTipoCanalOrigen}"
+										disabled="#{!beanTipoCanalOrigen.insertar}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelDescripcion}" />
+									<br />
+									<p:inputText id="idDescripcion"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionTipoCanalOrigenDetalleDescripcion}"
+										placeholder="#{messageBeanSNR.commonLabelDescripcion}"
+										value="#{beanTipoCanalOrigen.tipoCanalOrigen.descripcionCanalOrigen}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelActivo}#{messageBeanSNR.commonLabelObligatorio}" />
+
+									<p:selectOneMenu id="idActivo" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionTipoCanalOrigenDetalleActivo}"
+										value="#{beanTipoCanalOrigen.tipoCanalOrigen.activo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelActivo}"
+											itemValue="S" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelInactivo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								<br />
+								<br />
+							</div>
+							<br />
+							<p:dataTable id="idDetalle" var="item"
+								value="#{beanTipoCanalOrigen.datosAuditoria}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}"
+								rendered="#{!beanTipoCanalOrigen.insertar}">
+								<f:facet name="header">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+								</f:facet>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+									<h:outputText value="#{item.idUsuarioCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<h:outputText value="#{item.fechaCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+									<h:outputText value="#{item.idUsuarioModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+									<h:outputText value="#{item.fechaModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIpModificación}">
+									<h:outputText value="#{item.ipModificacion}" />
+								</p:column>
+							</p:dataTable>
+							<br />
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										update="globalMsg"
+										action="tipoCanalOrigen?faces-redirect=true" />
+
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton
+										value="#{beanTipoCanalOrigen.insertar ? messageBeanSNR.commonButtonInsertarTipoCanalOrigen  : messageBeanSNR.commonButtonModificarTipoCanalOrigen}"
+										icon="fa fa-pencil" iconPos="right" update="globalMsg"
+										action="#{beanTipoCanalOrigen.salvar()}" ajax="false" />
+								</div>
+							</div>
+						</p:panel>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

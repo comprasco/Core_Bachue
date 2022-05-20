@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelTarifa}" />
+				</li>	
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelTipoActoCondicion}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{beanTipoActoCondicion.insertar ? messageBeanSNR.commonLabelInsertarTipoActoCondicion : messageBeanSNR.commonLabelModificarTipoActoCondicion}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fsTipoActoCondicionDetalle" style="width: 100%;">
+				<p:growl id="gTipoActoCondicionDetMsg" globalOnly="true"
+					showDetail="true" sticky="false" life="30000" redisplay="false"/>
+				<center>
+
+					<p:panel id="idPInsertUpdate"
+						header="#{beanTipoActoCondicion.insertar ? messageBeanSNR.pageInsertarTipoActoCondicion : messageBeanSNR.commonLabelModificarTipoActoCondicion}">
+						<div class="ui-g" align="center">
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelProceso}" />
+								<br />
+								<p:selectOneMenu id="idSOMProceso"
+									title="#{tooltipBeanSNR.administracionTipoActoCondicionTipoActoCondicionDetalleProceso}"
+									style="width:100%;"
+									value="#{beanTipoActoCondicion.parametros.idProceso}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanTipoActoCondicion.findAllProcesos()}"
+										itemValue="#{proceso.idProceso}" var="proceso"
+										itemLabel="#{proceso.nombre}" />
+								</p:selectOneMenu>
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelSubProceso}" />
+								<br />
+								<p:selectOneMenu id="idSOMSubproceso"
+									title="#{tooltipBeanSNR.administracionTipoActoCondicionTipoActoCondicionDetalleSubproceso}"
+									value="#{beanTipoActoCondicion.parametros.idSubProceso}"
+									style="width:100%;">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanTipoActoCondicion.findAllSubprocesos()}"
+										itemValue="#{subproceso.idSubproceso}" var="subproceso"
+										itemLabel="#{subproceso.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTipoActo}" />
+								<br />
+								<p:selectOneMenu id="idTipoActo"
+									title="#{tooltipBeanSNR.administracionTipoActoCondicionTipoActoCondicionDetalleSubproceso}"
+									value="#{beanTipoActoCondicion.parametros.idTipoActo}"
+									style="width:100%;">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanTiposActo.cargarTiposActo()}"
+										itemValue="#{tipoActo.idTipoActo}" var="tipoActo"
+										itemLabel="#{tipoActo.idTipoActo} - #{tipoActo.nombre}" />
+								<p:ajax event="change" listener="#{beanTipoActoCondicion.cargarTiposActoVersion(beanTipoActoCondicion.parametros.idTipoActo)}" 
+											update="fsTipoActoCondicionDetalle:version" />
+								</p:selectOneMenu>
+							</div>
+							
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelVersion}" />
+								<br />
+								<p:inputText id="version"
+									disabled="true"
+									onblur="value=value.toUpperCase()"
+									title="#{tooltipBeanSNR.administracionNaturalezaJuridicaDetalleVersion}"
+									placeholder="#{messageBeanSNR.commonLabelVersion}"
+									value="#{beanTipoActoCondicion.parametros.version}" />
+							</div>
+							
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelCondicionTarifa}" />
+								<br />
+								<p:selectOneMenu id="idCondTarifa"
+									title="#{tooltipBeanSNR.administracionTipoActoCondicionTipoActoCondicionDetalleSubproceso}"
+									value="#{beanTipoActoCondicion.parametros.idCondicion}"
+									style="width:100%;">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanCondicionTarifa.findAllCondicionTarifa()}"
+										itemValue="#{cond.idCondicionTarifa}" var="cond"
+										itemLabel="#{cond.descripcion}" />
+								</p:selectOneMenu>
+							</div>
+							
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel 
+									value="#{messageBeanSNR.commonLabelOrden}" />
+								<br />
+								<p:inputText id="orden"
+									onblur="value=value.toUpperCase()"
+									title="#{tooltipBeanSNR.administracionCamposCertificadoDetalleCampo}"
+									placeholder="#{messageBeanSNR.commonLabelOrden}"
+									value="#{beanTipoActoCondicion.parametros.orden}" >
+								<p:keyFilter regEx="/[0-9]/" preventPaste="false" />	
+								</p:inputText>
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelActivo} #{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMActivo" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTipoActoCondicionTipoActoCondicionDetalleActivo}"
+									value="#{beanTipoActoCondicion.parametros.activo}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+
+						</div>
+						<div class="ui-g" align="center">
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="right"
+									update="gTipoActoCondicionDetMsg"
+									action="tipoActoCondicion?faces-redirect=true" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelActualizarTipoActoCondicion}"
+									rendered="#{!beanTipoActoCondicion.insertar}"
+									icon="fa fa-check-circle" iconPos="left"
+									update="gTipoActoCondicionDetMsg"
+									action="#{beanTipoActoCondicion.insertUpdateTipoActoCondicion(false)}"
+									ajax="false" />
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelCrearTipoActoCondicion}"
+									rendered="#{beanTipoActoCondicion.insertar}"
+									icon="fa fa-check-circle" iconPos="left"
+									update="gTipoActoCondicionDetMsg"
+									action="#{beanTipoActoCondicion.insertUpdateTipoActoCondicion(true)}"
+									ajax="false" />
+							</div>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

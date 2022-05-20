@@ -1,0 +1,2064 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelGrabacionMatriculas}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeGrabacion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelGrabarMatricula}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fGrabarMatricula" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					widgetVar="idWVGlobalMsg" sticky="false" life="20000" redisplay="false"/>
+				<center>
+					<p:outputPanel style="min-width:800px;">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+								<p:inputText readonly="true"
+									value="#{beanGrabacionMatriculas.predio.get('NIR')}" />
+							</div>
+							<div class="ui-g-12 ui-md-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}" />
+								<p:inputText readonly="true"
+									value="#{beanGrabacionMatriculas.predio.get('ID_TURNO')}" />
+							</div>
+						</div>
+						<p:panel id="crearMatricula_id1"
+							title="#{messageBeanSNR.commonLabelCrearMatricula}">
+							<p:fragment>
+								<p:autoUpdate />
+								<p:panel id="idPanelDetalleListados"
+									rendered="#{!beanGrabacionMatriculas.mostrarBandeja}">
+									<strong>
+										<p:outputLabel id="idOlMatriculaDummy"
+											style="font-size: 40px;"
+											value="#{beanGrabacionMatriculas.accPredioRegistro.idCirculo} - #{beanGrabacionMatriculas.accPredioRegistro.idMatricula}" />
+									</strong>
+									<p:wizard id="wizardId"
+										flowListener="#{beanGrabacionMatriculas.flowListenerCrearGrabar}"
+										widgetVar="tramitesCrearGrabarMatriculaWidged"
+										showNavBar="false">
+										<p:tab id="datosBasicos_id" titleStyle="font-size:15px;"
+											title="#{messageBeanSNR.commonLabelDatosBasicos}">
+											<p:fragment>
+												<p:autoUpdate />
+												<p:panel id="idPanelUbicacion"
+													header="#{messageBeanSNR.commonLabelUbicacion}"
+													toggleable="true" style="text-align:center">
+													<div class="ui-g" align="center">
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+															<br />
+															<p:selectOneMenu id="circuloRegistral"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosUbicacionCirculoRegistral}"
+																disabled="true"
+																value="#{beanGrabacionMatriculas.datosBasicos.ubicacion.circuloRegistral.idCirculo}"
+																style="width:100%">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanReference.findCirculoRegistral(true)}"
+																	var="circulo" itemLabel="#{circulo.idCirculo}"
+																	itemValue="#{circulo.idCirculo}" />
+																<p:ajax event="change" update="idSOMMunDirRe"/>
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-8">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelNombreCirculoRegistral}" />
+															<br />
+															<p:inputText id="circuloRegistralNombre"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosUbicacionNombreCirculoRegistral}"
+																readonly="true"
+																value="#{beanGrabacionMatriculas.datosBasicos.ubicacion.circuloRegistral.nombre}">
+																<p:autoUpdate />
+															</p:inputText>
+														</div>
+													</div>
+													<div class="ui-g" align="center">
+														<div class="ui-g-12 ui-md-4 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDepartamento}" />
+															<br />
+															<p:selectOneMenu id="idSOMDepDirRe" style="width:100%"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosUbicacionDepartamento}"
+																value="#{beanGrabacionMatriculas.datosBasicos.ubicacion.departamento.idDepartamento}"
+																disabled="true">
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.findDepartamentos()}"
+																	var="depRes" itemValue="#{depRes.idDepartamento}"
+																	itemLabel="#{depRes.nombre}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-4 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelMunicipio}" />
+															<br />
+															<p:selectOneMenu id="idSOMMunDirRe" style="width:100%"
+																disabled="true"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosUbicacionMunicipio}"
+																value="#{beanGrabacionMatriculas.datosBasicos.ubicacion.municipio.idMunicipio}">
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.cambiarMunicipio}"
+																	update="idPanelUbicacion" />
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.findMunicipiosByCirculo(beanGrabacionMatriculas.datosBasicos.ubicacion.circuloRegistral.idCirculo)}"
+																	var="munRes" itemValue="#{munRes.idMunicipio}"
+																	itemLabel="#{munRes.nombre}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-4 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelVereda}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMVerDirRe" style="width:100%"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosUbicacionVereda}"
+																value="#{beanGrabacionMatriculas.datosBasicos.ubicacion.vereda.idVereda}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.findVereda()}"
+																	var="ver" itemValue="#{ver.idVereda}"
+																	itemLabel="#{ver.nombre}" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+													<div class="ui-g" align="center">
+														<div class="ui-g-12 ui-md-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTipoDePredio}" />
+															<br />
+															<p:selectOneMenu id="idSOMTipoPredioAntSistema"
+																style="width:100%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaTipoPredio}"
+																value="#{beanGrabacionMatriculas.datosBasicos.accPredioRegistro.idTipoPredio}">
+																<f:selectItems value="#{beanReference.findTipoPredio()}"
+																	var="tipoPredioAntSistema"
+																	itemValue="#{tipoPredioAntSistema.idTipoPredio}"
+																	itemLabel="#{tipoPredioAntSistema.descripcion}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelNombreDelPredio}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaDatosAntiguoSistemaSolicitudNombreDelPredio}"
+																value="#{beanGrabacionMatriculas.datosBasicos.accPredioRegistro.nombrePredio}" />
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelEstadoMatricula}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMestadoPredio"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosUbicacionEstadoMatricula}"
+																style="width:100%" disabled="true"
+																value="#{beanGrabacionMatriculas.datosBasicos.ubicacion.estadoPredio.idEstadoPredio}">
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.findEstadoPredio()}"
+																	var="esPredio" itemValue="#{esPredio.idEstadoPredio}"
+																	itemLabel="#{esPredio.nombre}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelUsoDelPredio}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMusoDelPredio"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioUsoDelPredio}"
+																style="width:100%;"
+																value="#{beanGrabacionMatriculas.datosBasicos.predioRegistro.idTipoUsoSuelo}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanReference.findTipoUsoSuelo()}"
+																	var="tipoUsoSuelo" itemValue="#{tipoUsoSuelo.idTipoUsoSuelo}"
+																	itemLabel="#{tipoUsoSuelo.description}" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+												</p:panel>
+												<br />
+												<p:panel id="idPanelApertura"
+													header="#{messageBeanSNR.commonLabelInformacionDeApertura}"
+													toggleable="true" style="text-align:center">
+													<div class="ui-g">
+														<div class="ui-g-12 ui-md-6 ui-lg-5">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelFechaApertura}" />
+															<br />
+															<p:calendar id="idCalFechaApertura" size="10"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosAperturaFechaApertura}"
+																style="width:100%" mask="true" locale="es"
+																placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+																value="#{beanGrabacionMatriculas.datosBasicos.apertura.fechaApertura}"
+																showOn="button">
+																<p:ajax event="dateSelect"
+																	listener="#{beanGrabacionMatriculas.validarFechaMigracion(beanGrabacionMatriculas.datosBasicos.apertura.fechaApertura,false)}"
+																	update=":fGrabarMatricula:globalMsg" />
+																<p:ajax event="change"
+																	listener="#{beanGrabacionMatriculas.validarFechaMigracion(beanGrabacionMatriculas.datosBasicos.apertura.fechaApertura,false)}"
+																	update=":fGrabarMatricula:globalMsg" />
+															</p:calendar>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelRadicacion}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosAperturaRadicacion}"
+																id="idItRadicacion"
+																placeholder="#{messageBeanSNR.commonLabelRadicacion}"
+																maxlength="20"
+																value="#{beanGrabacionMatriculas.datosBasicos.apertura.radicacion}">
+															</p:inputText>
+														</div>
+													</div>
+													<div class="ui-g">
+														<div class="ui-g-12 ui-md-6 ui-lg-5">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+															</p:outputLabel>
+															<br />
+															<p:selectOneMenu id="idSOMEscritura" style="width:100%"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosAperturaTipoDeDocumento}"
+																value="#{beanGrabacionMatriculas.datosBasicos.apertura.documento.idTipoDocumento}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanReference.findTipoDocumentoPublicoActivo()}"
+																	var="item" itemLabel="#{item.nombre}"
+																	itemValue="#{item.idTipoDocumento}" />
+																<p:ajax event="change"
+																	listener="#{beanGrabacionMatriculas.tipoOficina()}"
+																	update="idPanelApertura,idSOMTipoOficina,idSOMTipoEntidad" />
+																<p:ajax event="change"
+																	listener="#{beanGrabacionMatriculas.actualizarTipoOficinaDocumentos()}"
+																	update="idPanelApertura,idSOMTipoOficina,idSOMTipoEntidad" />
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.validarExistenciaDocumento}"
+																	update=":fGrabarMatricula:globalMsg,idPanelApertura" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelNumeroDeDocumento}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosAperturaNumeroDeDocumento}"
+																id="idItDocuActo" maxlength="20"
+																value="#{beanGrabacionMatriculas.datosBasicos.apertura.documento.numero}">
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.validarExistenciaDocumento}"
+																	event="blur"
+																	update=":fGrabarMatricula:globalMsg,idPanelApertura" />
+															</p:inputText>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+															<br />
+															<p:calendar id="idCalFechaDoc" size="10" mask="true"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosAperturaFechaDelDocumento}"
+																locale="es" pattern="dd/MM/yyyy"
+																value="#{beanGrabacionMatriculas.datosBasicos.apertura.documento.fechaDocumento}"
+																showOn="button">
+																<p:ajax event="dateSelect"
+																	listener="#{beanGrabacionMatriculas.validarExistenciaDocumento}"
+																	update=":fGrabarMatricula:globalMsg,idPanelApertura" />
+															</p:calendar>
+														</div>
+													</div>
+													<div class="ui-g">
+														<div class="ui-g-12 ui-md-6 ui-lg-5">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTipoDeOficina}" />
+															<br />
+															<p:selectOneMenu id="idSOMTipoOficina"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosAperturaTipoDeOficina}"
+																style="width:100%"
+																value="#{beanGrabacionMatriculas.datosBasicos.apertura.idTipoOficina}">
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.tipoOficina}"
+																	update="idPanelApertura,idSOMTipoEntidad" />
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.validarExistenciaDocumento}"
+																	update=":fGrabarMatricula:globalMsg" />
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.cargarTipoOficinaDocumento()}"
+																	var="item" itemLabel="#{item.nombre}"
+																	itemValue="#{item.idTipoOficina}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTipoDeEntidad}" />
+															<br />
+															<p:selectOneMenu id="idSOMTipoEntidad"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosAperturaTipoDeEntidad}"
+																style="width:100%" disabled="true"
+																value="#{beanGrabacionMatriculas.datosBasicos.apertura.idTipoEntidad}">
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.cargarTipoEntidadDocumento()}" var="item"
+																	itemLabel="#{item.nombre}"
+																	itemValue="#{item.idTipoEntidad}" />
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.validarExistenciaDocumento}"
+																	update=":fGrabarMatricula:globalMsg,idPanelApertura" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+													<div class="ui-g">
+														<div class="ui-g-12 ui-md-6 ui-lg-5">
+															<p:outputLabel value="#{messageBeanSNR.commonLabelPais}" />
+															<br />
+															<p:selectOneMenu id="idPaisDocumento"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosAperturaPais}"
+																style="width:100%"
+																value="#{beanGrabacionMatriculas.datosBasicos.apertura.idPais}">
+																<p:ajax listener="#{beanGrabacionMatriculas.pais}"
+																	update="idPanelApertura" />
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.validarExistenciaDocumento}"
+																	update=":fGrabarMatricula:globalMsg,idPanelApertura" />
+																<f:selectItem itemValue=""
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+																<f:selectItems value="#{beanReference.findPaises()}"
+																	var="paises" itemValue="#{paises.idPais}"
+																	itemLabel="#{paises.nombre}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDepartamento}" />
+															<br />
+															<p:selectOneMenu id="idSOMDepartamento"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosAperturaDepartamento}"
+																style="width:100%"
+																value="#{beanGrabacionMatriculas.datosBasicos.apertura.idDepartamento}">
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.departamento}"
+																	update="idPanelApertura" />
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.validarExistenciaDocumento}"
+																	update=":fGrabarMatricula:globalMsg,idPanelApertura" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.findDepartamentos()}"
+																	var="item" itemValue="#{item.idDepartamento}"
+																	itemLabel="#{item.nombre}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelMunicipio}" />
+															<br />
+															<p:selectOneMenu id="idSOMMunicipio" style="width:100%"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosAperturaMunicipio}"
+																value="#{beanGrabacionMatriculas.datosBasicos.apertura.idMunicipio}">
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.oficinaOrigenApertura}"
+																	update="idPanelApertura" />
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.validarExistenciaDocumento}"
+																	update=":fGrabarMatricula:globalMsg,idPanelApertura" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.findMunicipioApertura()}"
+																	var="munRes" itemValue="#{munRes.idMunicipio}"
+																	itemLabel="#{munRes.nombre}" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+													<div class="ui-g">
+														<div class="ui-g-12 ui-md-12 ui-lg-12">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelOficinaDeOrigen}" />
+															<br />
+															<p:selectOneMenu id="idSOMOficinaOrigen"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosAperturaOficinaDeOrigen}"
+																style="width:100%"
+																value="#{beanGrabacionMatriculas.datosBasicos.apertura.idOficinaOrigen}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.getOficinaOrigenApertura()}"
+																	var="orig" itemLabel="#{orig.nombre}"
+																	itemValue="#{orig.idOficinaOrigen}" />
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.validarExistenciaDocumento}"
+																	update=":fGrabarMatricula:globalMsg,idPanelApertura" />
+																<p:ajax process="@this" update="@this" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+												</p:panel>
+												<br />
+												<p:panel id="idPanelMatriculaBase"
+													header="#{messageBeanSNR.commonLabelMatriculaAbiertaConBase}"
+													toggleable="true" style="text-align:center">
+													<div class="ui-g" align="center">
+														<div class="ui-g-12 ui-md-6 ui-lg-5">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelCirculoRegistral}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="circuloRegistralBase" disabled="true"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosMatriculaBaseCirculoRegistral}"
+																value="#{beanGrabacionMatriculas.datosBasicos.matriculaBase.idCirculo}"
+																style="width:100%">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanReference.findCirculoRegistral(true)}"
+																	var="circulo" itemLabel="#{circulo.idCirculo}"
+																	itemValue="#{circulo.idCirculo}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-4 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelMatricula}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:inputText id="idItMatricula"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosMatriculaBaseMatricula}"
+																onkeypress="if (event.keyCode == 13) {return false;}"
+																value="#{beanGrabacionMatriculas.datosBasicos.matriculaBase.idMatricula}">
+																<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+															</p:inputText>
+														</div>
+														<div class="ui-g-12 ui-md-4 ui-lg-4">
+															<br />
+															<div class="ui-g-12 ui-md-12 ui-lg-12">
+																<p:commandButton id="idCbAgregarMatricula"
+																	title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosMatriculaBaseAgregarMatricula}"
+																	value="#{messageBeanSNR.commonButtonAgregarMatricula}"
+																	icon="fa fa-save" iconPos="left"
+																	style="width:229px;" update="idPanelMatriculaBase"
+																	actionListener="#{beanGrabacionMatriculas.agregarMatriculaBase}" />
+															</div>
+														</div>
+													</div>
+													<br />
+													<p:dataTable id="idDtmatriculasBase"
+														emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+														value="#{beanGrabacionMatriculas.datosBasicos.matriculaBase.direccionPredio}"
+														var="item" scrollable="true">
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelMatriculas}">
+															<p:outputLabel id="idOlMatriculaPredio"
+																value="#{item.idCirculo} - #{item.idMatricula}" />
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}">
+															<p:outputLabel id="idOlDireccionPredio"
+																value="#{item.matriculaValida ? item.direccion : messageBeanSNR.commonLabelSinDireccion}" />
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelAccion}">
+															<p:commandButton id="idBtnEliminiar"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosMatriculaBaseAccion}"
+																update="idDtmatriculasBase" icon="fa fa-trash"
+																actionListener="#{beanGrabacionMatriculas.deleteMatriculaBase(item)}" />
+														</p:column>
+													</p:dataTable>
+													<br />
+												</p:panel>
+												<br />
+												<p:panel
+													header="#{messageBeanSNR.commonLabelInformacionCatastral}"
+													toggleable="true" style="text-align:center">
+													<div class="ui-g">
+														<div class="ui-g-12 ui-md-6 ui-lg-5">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelCodigoCatastral}" />
+															<br />
+															<p:inputText id="idItCodigoCatastral" maxlength="50"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosInformacionCatastralCodigoCatastral}"
+																onblur="value=value.toUpperCase()"
+																value="#{beanGrabacionMatriculas.datosBasicos.codigoCatastral}">
+																<p:keyFilter regEx="/[a-z0-9]/i" preventPaste="false" />
+															</p:inputText>
+														</div>
+														<div class="ui-g-12 ui-md-4 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelCodigoCatastralAnterior}" />
+															<br />
+															<p:inputText id="idItCodigoCatastralAnterior"
+																maxlength="50"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDatosBásicosInformacionCatastralCodigoCatastralAnterior}"
+																onblur="value=value.toUpperCase()"
+																value="#{beanGrabacionMatriculas.datosBasicos.codigoCatastralAnterior}">
+																<p:keyFilter regEx="/[a-z0-9]/i" preventPaste="false" />
+															</p:inputText>
+														</div>
+													</div>
+												</p:panel>
+											</p:fragment>
+										</p:tab>
+										<p:tab id="CabidaYLinderos_id" titleStyle="font-size:15px;"
+											title="#{messageBeanSNR.commonLabelDescripcionCabidaYLinderos}">
+											<p:fragment>
+												<p:panel id="idPanelCabidaLinderos"
+													header="#{messageBeanSNR.commonLabelLinderos}"
+													toggleable="true" style="text-align:center">
+													<div align="center">
+														<p:inputTextarea rows="6" cols="50" style="width: 100%"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaCabidaYLinderosLinderos}"
+															onblur="value=value.toUpperCase()" queryDelay="750"
+															onkeyup="contarCaracteres('fGrabarMatricula:idITALinderos','fGrabarMatricula:counterLinderosAntSis')"
+															onmouseover="contarCaracteres('fGrabarMatricula:idITALinderos','fGrabarMatricula:counterLinderosAntSis')"
+															minQueryLength="4" id="idITALinderos" maxlength="4000"
+															value="#{beanGrabacionMatriculas.cabidaLinderos.linderos}" />
+														<div align="right">
+															<h:outputText id="counterLinderosAntSis" />
+															<h:outputText
+																value=" #{messageBeanSNR.commonLabelCaracteres}" />
+														</div>
+													</div>
+												</p:panel>
+												<br />
+												<p:panel id="idPanelComplementacion"
+													header="#{messageBeanSNR.commonLabelComplementacion}"
+													toggleable="true" style="text-align:center">
+													<div class="ui-g" align="center">
+														<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+															<p:selectOneRadio id="idSelectComplementacion"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaCabidaYLinderosComplementacion}"
+																value="#{beanGrabacionMatriculas.complementacionCalificacion.tipoComplementacion}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelNueva}"
+																	itemValue="nueva" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelCopiarDeUnaMatricula}"
+																	itemValue="copiar" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelConstruirComplementacion}"
+																	itemValue="construir" />
+																<p:ajax update="fGrabarMatricula:idPanelComplementacion"
+																	listener="#{beanGrabacionMatriculas.limpiarComplementacionData(true)}" />
+															</p:selectOneRadio>
+														</div>
+													</div>
+													<p:panel id="idPComplementacionCopiar"
+														rendered="#{beanGrabacionMatriculas.complementacionCalificacion.tipoComplementacion eq 'copiar'}">
+														<div class="ui-g" align="center">
+															<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelCirculoRegistral}"
+																	styleClass="textosConsultaEstadoPredio" />
+																<br />
+																<p:selectOneMenu id="cabidaLinderosCirculoRegistral"
+																	style="width:100%"
+																	title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaCabidaYLinderosComplementacionCopiarCirculoRegistral}"
+																	value="#{beanGrabacionMatriculas.complementacionCalificacion.complementacion.idCirculo}"
+																	disabled="true">
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItems
+																		value="#{beanReference.findCirculoRegistral(true)}"
+																		var="circulo" itemValue="#{circulo.idCirculo}"
+																		itemLabel="#{circulo.idCirculo} - #{circulo.nombre}" />
+																</p:selectOneMenu>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelMatricula}" />
+																<br />
+																<p:inputText id="cabidaLinderosIdMatricula"
+																	title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaCabidaYLinderosComplementacionCopiarMatricula}"
+																	placeholder="#{messageBeanSNR.commonLabelMatricula}"
+																	value="#{beanGrabacionMatriculas.complementacionCalificacion.complementacion.idMatricula}">
+																	<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+																</p:inputText>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+																<p:commandButton
+																	value="#{messageBeanSNR.commonButtonAgregar}"
+																	icon="fa fa-plus-circle"
+																	onclick="PF('dlgAgregarMatriculaComplementacion').show()">
+																</p:commandButton>
+															</div>
+														</div>
+														<br />
+														<div class="ui-g" align="center">
+															<p:dataTable
+																emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+																value="#{beanGrabacionMatriculas.matriculasParaGenerarComplementacion}"
+																var="matricula">
+																<p:column
+																	headerText="#{messageBeanSNR.commonLabelCirculo}">
+																	<h:outputText value="#{matricula.idCirculo}" />
+																</p:column>
+																<p:column
+																	headerText="#{messageBeanSNR.commonLabelMatricula}">
+																	<h:outputText value="#{matricula.idMatricula}" />
+																</p:column>
+																<p:column
+																	headerText="#{messageBeanSNR.commonLabelAccion}">
+																	<p:commandButton icon="fa fa-trash"
+																		update="fGrabarMatricula"
+																		actionListener="#{beanGrabacionMatriculas.eliminarMatriculaComplementacion(matricula)}">
+																	</p:commandButton>
+																</p:column>
+															</p:dataTable>
+														</div>
+														<div class="ui-g" align="center">
+															<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+																<p:commandButton
+																	value="#{messageBeanSNR.commonButtonConstruirComplementacion}"
+																	update="fGrabarMatricula:idPanelComplementacion"
+																	icon="fa fa-cogs"
+																	actionListener="#{beanGrabacionMatriculas.validarCopiarDeUnaMatricula(false,true)}">
+																</p:commandButton>
+																<p:commandButton
+																	value="#{messageBeanSNR.commonLabelEditar}"
+																	update="fGrabarMatricula:idPanelComplementacion"
+																	icon="fa fa-pencil"
+																	actionListener="#{beanGrabacionMatriculas.editarCopiarDeUnaMatricula()}">
+																</p:commandButton>
+															</div>
+														</div>
+													</p:panel>
+													<p:panel
+														rendered="#{beanGrabacionMatriculas.complementacionCalificacion.tipoComplementacion eq 'construir'}">
+														<div class="ui-g" align="center">
+															<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelCirculoRegistral}"
+																	styleClass="textosConsultaEstadoPredio" />
+																<br />
+																<p:selectOneMenu
+																	id="complementacionConstruirCirculoRegistral1"
+																	style="width:100%"
+																	title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaCabidaYLinderosComplementacionCopiarCirculoRegistral}"
+																	value="#{beanGrabacionMatriculas.complementacionCalificacion.complementacion.idCirculo}"
+																	disabled="true">
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItems
+																		value="#{beanReference.findCirculoRegistral(true)}"
+																		var="circulo" itemValue="#{circulo.idCirculo}"
+																		itemLabel="#{circulo.idCirculo} - #{circulo.nombre}" />
+																</p:selectOneMenu>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelMatricula}" />
+																<br />
+																<p:inputText id="complementacionConstruirIdMatricula1"
+																	title="#{tooltipBeanSNR.procesosCalificacionRegistroLinderosComplementacionComplementacionMatricula}"
+																	placeholder="#{messageBeanSNR.commonLabelMatricula}"
+																	value="#{beanGrabacionMatriculas.complementacionCalificacion.complementacion.idMatricula}">
+																	<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+																</p:inputText>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+																<p:commandButton
+																	value="#{messageBeanSNR.commonButtonAgregar}"
+																	onclick="PF('dlgAgregarMatriculaComplementacionAnotacion').show();"
+																	icon="fa fa-plus-circle">
+																</p:commandButton>
+															</div>
+														</div>
+														<div class="ui-g" align="center">
+															<div class="ui-g-4 ui-md-6 ui-lg-12">
+																<p:dataTable id="matriculasCopiarDeAnotaciones1"
+																	emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+																	value="#{beanGrabacionMatriculas.matriculasParaGenerarComplementacion}"
+																	var="matricula">
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelCirculo}">
+																		<h:outputText value="#{matricula.idCirculo}" />
+																	</p:column>
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelMatricula}">
+																		<h:outputText value="#{matricula.idMatricula}" />
+																	</p:column>
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelAccion}">
+																		<p:commandButton icon="fa fa-trash-o"
+																			actionListener="#{beanGrabacionMatriculas.eliminarMatriculaComplementacion(matricula,true,false)}"
+																			update="fGrabarMatricula" />
+																	</p:column>
+																</p:dataTable>
+															</div>
+														</div>
+														<div class="ui-g" align="center">
+															<div class="ui-g-4 ui-md-6 ui-lg-12">
+																<p:dataTable id="idComplementacionAnotacionesLoteo1"
+																	tableStyle="width:auto" var="data"
+																	value="#{beanGrabacionMatriculas.complementacionAnotacion}"
+																	emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+																	<p:column headerText="Círculo">
+																		<h:outputText
+																			value="#{data.anotacionPredio.idCirculo}" />
+																	</p:column>
+																	<p:column headerText="Matricula">
+																		<h:outputText
+																			value="#{data.anotacionPredio.idMatricula}" />
+																	</p:column>
+																	<p:column headerText="N° de anotación">
+																		<h:outputText
+																			value="#{data.anotacionPredio.idAnotacion}" />
+																	</p:column>
+																	<p:column headerText="Fecha anotación">
+																		<h:outputText
+																			value="#{data.anotacionPredio.fechaRegistro}" />
+																	</p:column>
+																	<p:column headerText="Número radicación">
+																		<h:outputText
+																			value="#{data.anotacionPredio.radicacion}" />
+																	</p:column>
+																	<p:column headerText="Estado anotación">
+																		<h:outputText
+																			value="#{data.anotacionPredio.estadoAnotacion}" />
+																	</p:column>
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelDatosDocumento}">
+																		<p:outputLabel id="iddocumento"
+																			value="#{data.tipoDocumento} - #{data.documento.numero} - #{data.documento.fechaDocumento}  " />
+																	</p:column>
+																	<p:column headerText="Oficina origen">
+																		<h:outputText value="#{data.oficinaOrigen}" />
+																	</p:column>
+																	<p:column headerText="Acto">
+																		<h:outputText
+																			value="#{data.naturalezaJuridica.idNaturalezaJuridica}" />
+																	</p:column>
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelNombreActo}">
+																		<h:outputText
+																			value="#{data.naturalezaJuridica.nombre}" />
+																	</p:column>
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelSeleccione}">
+																		<p:selectBooleanCheckbox
+																			title="#{tooltipBeanSNR.procesosCalificacionRegistroLinderosComplementacionComplementacionSeleccione}"
+																			id="idComplementacionAnotacionSelec"
+																			value="#{data.seleccionado}" />
+																	</p:column>
+																</p:dataTable>
+															</div>
+														</div>
+														<div class="ui-g" align="center">
+															<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+																<p:commandButton icon="fa fa-cogs"
+																	value="#{messageBeanSNR.commonButtonConstruirComplementacion}"
+																	update="fGrabarMatricula:idPanelComplementacion,idcomplementacionComplementacion"
+																	actionListener="#{beanGrabacionMatriculas.validarConstruir()}">
+																</p:commandButton>
+															</div>
+														</div>
+													</p:panel>
+													<br />
+													<div align="center">
+														<p:inputTextarea rows="6" cols="50" style="width: 100%"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaCabidaYLinderosComplementacionCopiarComplementacion}"
+															onblur="value=value.toUpperCase()" queryDelay="750"
+															readonly="#{!beanGrabacionMatriculas.habilitarComplementacion}"
+															minQueryLength="4"
+															onmouseover="contarCaracteres('fGrabarMatricula:idcomplementacionComplementacion','fGrabarMatricula:counterComplementacionAntSis')"
+															maxlength="4000" id="idcomplementacionComplementacion"
+															value="#{beanGrabacionMatriculas.complementacionCalificacion.complementacionPredio.complementacion}"
+															onkeyup="contarCaracteres('fGrabarMatricula:idcomplementacionComplementacion','fGrabarMatricula:counterComplementacionAntSis')" />
+														<div align="right">
+															<h:outputText id="counterComplementacionAntSis"></h:outputText>
+															<h:outputText
+																value=" #{messageBeanSNR.commonLabelCaracteres}" />
+														</div>
+													</div>
+												</p:panel>
+											</p:fragment>
+										</p:tab>
+										<p:tab id="AreaPredio_id" titleStyle="font-size:15px;"
+											title="#{messageBeanSNR.commonLabelAreaPredio}">
+											<p:panel header="#{messageBeanSNR.commonLabelAreaDelTerreno}"
+												toggleable="true">
+												<p:outputPanel id="idOPareaTerreno">
+													<div class="ui-g">
+														<div class="ui-g-12 ui-md-5 ui-lg-5">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelAreaDelTerreno}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:inputNumber id="idITareaTerreno" thousandSeparator=""
+																value="#{beanGrabacionMatriculas.detalleAreaTerreno.areaLectura}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioAreaDelTerreno}"
+																placeholder="#{messageBeanSNR.commonLabelAreaDelTerreno}"
+																maxValue="9999999999.9999999999" decimalPlaces="10" />
+														</div>
+														<div class="ui-g-12 ui-md-5 ui-lg-5">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelUnidadDeMedida}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu style="width:100%"
+																id="idSOMunidadMedidaTerreno"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioUnidadMedida}"
+																value="#{beanGrabacionMatriculas.detalleAreaTerreno.idUnidadMedida}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+																<f:selectItems
+																	value="#{beanReference.findAllMedidaAreaActivo()}"
+																	var="unidad" itemValue="#{unidad.idMedidaArea}"
+																	itemLabel="#{unidad.codigo} - #{unidad.descripcion}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-2 ui-lg-2">
+															<br />
+															<p:commandButton style="margin-top: 8px;"
+																id="idCBmodificarArea"
+																rendered="#{beanGrabacionMatriculas.bloquearAgregarAreaTerreno}"
+																value="#{messageBeanSNR.commonButtonModificarArea}"
+																update="idDTareasTerreno,idOPareaTerreno,fGrabarMatricula:globalMsg,idITareaTerrenoCompleta"
+																actionListener="#{beanGrabacionMatriculas.modificarAreaTerreno()}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioModificarArea}"
+																icon="fa fa-plus-circle" iconPos="left" />
+															<p:commandButton style="margin-top: 8px;"
+																id="idCBagregarArea"
+																rendered="#{!beanGrabacionMatriculas.bloquearAgregarAreaTerreno}"
+																value="#{messageBeanSNR.commonButtonAgregarArea}"
+																update="idDTareasTerreno,idOPareaTerreno,fGrabarMatricula:globalMsg,idITareaTerrenoCompleta"
+																actionListener="#{beanGrabacionMatriculas.agregarArea()}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioAgregarArea}"
+																icon="fa fa-plus-circle" iconPos="left" />
+														</div>
+													</div>
+												</p:outputPanel>
+												<br />
+												<div class="ui-g">
+													<p:dataTable id="idDTareasTerreno"
+														emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+														value="#{beanGrabacionMatriculas.areaUI.areasTerreno}"
+														var="item" rowIndexVar="rowKey">
+														<p:column style="width:30px;">
+															<h:outputText value="#{rowKey + 1}" />
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelAreaDelTerreno}">
+															<p:inputText value="#{item.area}" readonly="true"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioAreaDelTerreno}" />
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelUnidadDeMedida}">
+															<p:selectOneMenu style="width:100%" disabled="true"
+																value="#{item.idUnidadMedida}">
+																<f:selectItems
+																	value="#{beanReference.findAllMedidaAreaActivo()}"
+																	var="unidad" itemValue="#{unidad.idMedidaArea}"
+																	itemLabel="#{unidad.codigo} - #{unidad.descripcion}" />
+															</p:selectOneMenu>
+														</p:column>
+														<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+															style="width: 95px;">
+															<p:commandButton icon="fa fa-pencil"
+																update="idDTareasTerreno,fGrabarMatricula:idOPareaTerreno"
+																disabled="#{beanGrabacionMatriculas.bloquearAgregarAreaTerreno}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioEditarArea}"
+																actionListener="#{beanGrabacionMatriculas.modificarArea(item)}" />
+															<p:commandButton icon="fa fa-trash"
+																update="idDTareasTerreno"
+																disabled="#{beanGrabacionMatriculas.bloquearAgregarAreaTerreno}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioEliminar}"
+																actionListener="#{beanGrabacionMatriculas.eliminarArea(item)}" />
+														</p:column>
+													</p:dataTable>
+												</div>
+											</p:panel>
+											<br />
+											<p:panel header="#{messageBeanSNR.commonLabelDatosArea}"
+												toggleable="true">
+												<div class="ui-g">
+													<div class="ui-g-12 ui-md-4 ui-lg-4">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelAreaConstruida}" />
+														<br />
+														<p:inputNumber id="idITareaConstruida"
+															thousandSeparator=""
+															value="#{beanGrabacionMatriculas.areaUI.detalleAreaConstruida.areaLectura}"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioAreaConstruida}"
+															placeholder="#{messageBeanSNR.commonLabelAreaConstruida}"
+															maxValue="9999999999.9999999999" decimalPlaces="10" />
+													</div>
+													<div class="ui-g-12 ui-md-4 ui-lg-4">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelUnidadDeMedida}" />
+														<br />
+														<p:selectOneMenu style="width:100%"
+															id="idSOMunidadMedidaConstruida" disabled="true"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioUnidadMedida}"
+															value="#{beanGrabacionMatriculas.areaUI.detalleAreaConstruida.idUnidadMedida}">
+															<f:selectItems
+																value="#{beanReference.findAllMedidaAreaActivo()}"
+																var="unidad" itemValue="#{unidad.idMedidaArea}"
+																itemLabel="#{unidad.codigo} - #{unidad.descripcion}" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-4 ui-lg-4">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelCoeficiente}" />
+														<br />
+														<p:inputNumber id="idITcoeficiente"
+															value="#{beanGrabacionMatriculas.areaUI.areaPredio.coeficienteLectura}"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioCoeficiente}"
+															placeholder="#{messageBeanSNR.commonLabelCoeficiente}" />
+													</div>
+												</div>
+												<div class="ui-g">
+													<div class="ui-g-12 ui-md-4 ui-lg-4">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelAreaPrivada}" />
+														<br />
+														<p:inputNumber id="idITareaPrivada" thousandSeparator=""
+															value="#{beanGrabacionMatriculas.areaUI.detalleAreaPrivada.areaLectura}"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioAreaPrivada}"
+															placeholder="#{messageBeanSNR.commonLabelAreaPrivada}"
+															maxValue="9999999999.9999999999" decimalPlaces="10" />
+													</div>
+													<div class="ui-g-12 ui-md-4 ui-lg-4">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelUnidadDeMedida}" />
+														<br />
+														<p:selectOneMenu style="width:100%"
+															id="idSOMunidadMedidaPrivada" disabled="true"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioUnidadMedida}"
+															value="#{beanGrabacionMatriculas.areaUI.detalleAreaPrivada.idUnidadMedida}">
+															<f:selectItems
+																value="#{beanReference.findAllMedidaAreaActivo()}"
+																var="unidad" itemValue="#{unidad.idMedidaArea}"
+																itemLabel="#{unidad.codigo} - #{unidad.descripcion}" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-4 ui-lg-4">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelUsoDelPredio}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu style="width:100%" id="idSOMtipoUsoSuelo"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioUsoDelPredio}"
+															value="#{beanGrabacionMatriculas.areaUI.areaPredio.tipoSuelo}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+															<f:selectItems
+																value="#{beanReference.findTipoUsoSuelo()}" var="tipo"
+																itemLabel="#{tipo.description}"
+																itemValue="#{tipo.idTipoUsoSuelo}" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+												<div class="ui-g">
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelAreaDelTerreno}" />
+														<br />
+														<p:inputText id="idITareaTerrenoCompleta" readonly="true"
+															value="#{beanGrabacionMatriculas.areaUI.areaTerreno}"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAreaPredioAreaDelTerreno}"
+															placeholder="#{messageBeanSNR.commonLabelAreaDelTerreno}" />
+													</div>
+												</div>
+											</p:panel>
+										</p:tab>
+										<p:tab id="DireccionPredio_id" titleStyle="font-size:15px;"
+											title="#{messageBeanSNR.commonLabelDireccionPredio}">
+											<p:fragment>
+												<p:autoUpdate />
+												<p:panel id="idPanelDirResPredio" toggleable="true"
+													header="#{messageBeanSNR.commonLabelDireccionDelPredio}">
+													<ui:include src="direccionPredioAgregarInclude.xhtml"/>
+													<div align="right">
+														<p:commandButton
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDireccionPredioAgregarDireccion}"
+															value="#{messageBeanSNR.commonLabelAgregarDireccion}"
+															disabled="false" icon="fa fa-check-circle"
+															actionListener="#{beanGrabacionMatriculas.botonAgregarDireccion}"
+															update="idDTDireccionesPredios,idPanelDirResPredio" />
+													</div>
+												</p:panel>
+												<br/>
+												<p:panel toggleable="true"
+													header="#{messageBeanSNR.commonLabelDireccionesDePrediosAgregadas}">
+													<p:outputPanel id="idOPDireccionesResidencia">
+														<div align="ui-g-12">
+															<p:dataTable id="idDTDireccionesPredios"
+																emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronArchivos}"
+																value="#{beanDireccion.direccionesPredio}"
+																var="item" scrollable="true">
+																<p:column
+																	headerText="#{messageBeanSNR.commonLabelDireccionCompleta}">
+																	<h:outputText id="idOTNombreArchivo"
+																		value="#{item.direccion}" />
+																</p:column>
+																<p:column
+																	headerText="#{messageBeanSNR.commonLabelAccion}">
+																	<p:commandButton id="btnEliminiar"
+																		title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaDireccionPredioAccion}"
+																		update="idDTDireccionesPredios" icon="fa fa-trash"
+																		actionListener="#{beanGrabacionMatriculas.borrarDireccionAgregada(item)}" />
+																</p:column>
+															</p:dataTable>
+														</div>
+													</p:outputPanel>
+													<br />
+												</p:panel>
+											</p:fragment>
+										</p:tab>
+										<p:tab id="Anotaciones_id" titleStyle="font-size:15px;"
+											title="#{messageBeanSNR.commonLabelAnotaciones}">
+											<p:fragment>
+												<p:panel id="pDatosAnotacion"
+													header="#{messageBeanSNR.commonLabelDatosAnotacion}"
+													toggleable="true">
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelNumeroAnotacion}#{messageBeanSNR.commonLabelObligatorio}"
+																style="width:200px" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosAnotacionNumeroAnotacion}"
+																id="idItNumeroAnotacionID"
+																label="#{messageBeanSNR.commonLabelNumeroAnotacion}"
+																placeholder="#{messageBeanSNR.commonLabelNumeroAnotacion}"
+																value="#{beanGrabacionMatriculas.numeroAnotacion}"
+																disabled="true" maxlength="10" />
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelFechaAnotacion}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:calendar id="idCalFechaAnotacion" size="10"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosAnotacionFechaAnotacion}"
+																mask="true" locale="es" placeholder="DD/MM/AAAA"
+																pattern="dd/MM/yyyy"
+																value="#{beanGrabacionMatriculas.anotacionPredio.fechaRadicacion}"
+																showOn="button">
+																<p:ajax event="dateSelect"
+																	listener="#{beanGrabacionMatriculas.validarFechaDocumentoRadicacion(true)}"
+																	update="fGrabarMatricula:globalMsg" />
+																<p:ajax event="change"
+																	listener="#{beanGrabacionMatriculas.validarFechaDocumentoRadicacion(true)}"
+																	update="fGrabarMatricula:globalMsg" />
+																<p:ajax event="dateSelect"
+																	listener="#{beanGrabacionMatriculas.validarFechaMigracion(beanGrabacionMatriculas.anotacionPredio.fechaRadicacion,false)}"
+																	update=":fGrabarMatricula:globalMsg" />
+																<p:ajax event="change"
+																	listener="#{beanGrabacionMatriculas.validarFechaMigracion(beanGrabacionMatriculas.anotacionPredio.fechaRadicacion,false)}"
+																	update=":fGrabarMatricula:globalMsg" />
+															</p:calendar>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelRadicacion}#{messageBeanSNR.commonLabelObligatorio}"
+																style="width:200px" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosAnotacionRadicacion}"
+																id="idItRadicacionID"
+																label="#{messageBeanSNR.commonLabelRadicacion}"
+																placeholder="#{messageBeanSNR.commonLabelRadicacion}"
+																value="#{beanGrabacionMatriculas.anotacionPredio.radicacion}"
+																maxlength="100" />
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-2">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelEstadoAnotacion}" />
+															<br />
+															<p:selectOneMenu id="idSOMEstadoAnotacion"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosAnotacionEstadoAnotacion}"
+																style="width:100%" disabled="true"
+																value="#{beanGrabacionMatriculas.anotacionPredio.idEstadoAnotacion}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanReference.findEstadoAnotacion()}"
+																	var="item" itemValue="#{item.idEstadoAnotacion}"
+																	itemLabel="#{item.nombre}" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+												</p:panel>
+												<br />
+												<p:panel id="pDatosDocumento"
+													header="#{messageBeanSNR.commonLabelDatosDelDocumento}"
+													toggleable="true">
+													<div class="ui-g">
+														<div class="ui-g-12 ui-md-6 ui-lg-5">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}">
+															</p:outputLabel>
+															<br />
+															<p:selectOneMenu id="idSOMEscrituraD"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoTipoDeDocumento}"
+																style="width:100%"
+																disabled="#{beanGrabacionMatriculas.deshabilitarDatosDoc}"
+																value="#{beanGrabacionMatriculas.documento.idTipoDocumento}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanReference.findTipoDocumentoPublicoActivo()}"
+																	var="item" itemLabel="#{item.nombre}"
+																	itemValue="#{item.idTipoDocumento}" />
+																<p:ajax event="change" update="idSOMTipoOficinaD"
+																	listener="#{beanGrabacionMatriculas.cargarTiposOficinaAnotaciones('A')}" />
+																<p:ajax event="change"
+																	listener="#{beanGrabacionMatriculas.cargarListasDesplegablesDocumento}"
+																	update="idSOMTipoEntidadD" process="idSOMTipoEntidadD" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelNumeroDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="idItDocuActoD"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoNumeroDocumento}"
+																placeholder="#{messageBeanSNR.commonLabelDocumento}"
+																maxlength="20"
+																disabled="#{beanGrabacionMatriculas.deshabilitarDatosDoc}"
+																value="#{beanGrabacionMatriculas.documento.numero}">
+																<p:ajax listener="#{beanGrabacionMatriculas.validarExistenciaDocumento(false)}"
+																	update="@this,globalMsg" />
+															</p:inputText>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+															<br />
+															<p:calendar id="idCalFechaDocD" size="10" mask="true"
+																locale="es" placeholder="DD/MM/AAAA"
+																pattern="dd/MM/yyyy"
+																disabled="#{beanGrabacionMatriculas.deshabilitarDatosDoc}"
+																value="#{beanGrabacionMatriculas.documento.fechaDocumento}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoFechaDocumento}"
+																showOn="button">
+																<p:ajax event="dateSelect"
+																	listener="#{beanGrabacionMatriculas.validarFechaDocumentoRadicacion(true)}"
+																	update="fGrabarMatricula:globalMsg" />
+																<p:ajax event="change"
+																	listener="#{beanGrabacionMatriculas.validarFechaDocumentoRadicacion(true)}"
+																	update="fGrabarMatricula:globalMsg" />
+															</p:calendar>
+														</div>
+													</div>
+													<div class="ui-g">
+														<div class="ui-g-12 ui-md-6 ui-lg-5">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTipoDeOficina}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMTipoOficinaD"
+																style="width:100%"
+																disabled="#{beanGrabacionMatriculas.deshabilitarDatosDoc}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoTipoOficina}"
+																value="#{beanGrabacionMatriculas.documento.idTipoOficina}">
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.cargarListasDesplegablesDocumento}"
+																	update="idSOMTipoEntidadD,idPaisDocumentoD,idSOMDepartamentoD,idSOMMunicipioD,idSOMOficinaOrigenD"
+																	process="idSOMTipoEntidadD" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.tiposOficinaDoc}"
+																	var="item" itemLabel="#{item.nombre}"
+																	itemValue="#{item.idTipoOficina}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTipoDeEntidad}" />
+															<br />
+															<p:selectOneMenu id="idSOMTipoEntidadD"
+																style="width:100%" disabled="true"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoTipoEntidad}"
+																value="#{beanGrabacionMatriculas.documento.tipoEntidad}">
+																<f:selectItems
+																	value="#{beanReference.findTipoEntidad()}" var="item"
+																	itemLabel="#{item.nombre}"
+																	itemValue="#{item.idTipoEntidad}" />
+																<p:ajax listener="#{beanGrabacionMatriculas.validarExistenciaDocumento(false)}"
+																	update="@this,globalMsg" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+													<div class="ui-g">
+														<div class="ui-g-12 ui-md-6 ui-lg-5">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelPais}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idPaisDocumentoD" style="width:100%"
+																disabled="#{beanGrabacionMatriculas.deshabilitarDatosDoc}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoPais}"
+																value="#{beanGrabacionMatriculas.documento.idPais}">
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.cargarPaisDocumento}"
+																	update="idSOMDepartamentoD,idSOMMunicipioD,idSOMOficinaOrigenD" />
+																<p:ajax listener="#{beanGrabacionMatriculas.validarExistenciaDocumento(false)}"
+																	update="@this,globalMsg" />
+																<f:selectItem itemValue=""
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+																<f:selectItems value="#{beanReference.findPaises()}"
+																	var="paises" itemValue="#{paises.idPais}"
+																	itemLabel="#{paises.nombre}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMDepartamentoD"
+																style="width:100%"
+																disabled="#{beanGrabacionMatriculas.deshabilitarDatosDoc}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoDepartamento}"
+																value="#{beanGrabacionMatriculas.documento.idDepartamento}">
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.cargarDepartamentoDocumento}"
+																	update="idSOMMunicipioD,idSOMOficinaOrigenD" />
+																<p:ajax listener="#{beanGrabacionMatriculas.validarExistenciaDocumento(false)}"
+																	update="@this,globalMsg" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.findDepartamentosDocumento()}"
+																	var="item" itemValue="#{item.idDepartamento}"
+																	itemLabel="#{item.nombre}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMMunicipioD" style="width:100%"
+																disabled="#{beanGrabacionMatriculas.deshabilitarDatosDoc}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoMunicipio}"
+																value="#{beanGrabacionMatriculas.documento.idMunicipio}">
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.cargarOficinaOrigen}"
+																	update="idSOMOficinaOrigenD" />
+																<p:ajax listener="#{beanGrabacionMatriculas.validarExistenciaDocumento(false)}"
+																	update="@this,globalMsg" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.findMunicipiosDocumento()}"
+																	var="munRes" itemValue="#{munRes.idMunicipio}"
+																	itemLabel="#{munRes.nombre}" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+													<div class="ui-g">
+														<div class="ui-g-12 ui-md-12 ui-lg-12">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelOficinaDeOrigen}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMOficinaOrigenD"
+																style="width:100%"
+																disabled="#{beanGrabacionMatriculas.deshabilitarDatosDoc}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoOficinaOrigen}"
+																value="#{beanGrabacionMatriculas.documento.idOficinaOrigen}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.getOficinaOrigen()}"
+																	var="orig" itemLabel="#{orig.nombre}"
+																	itemValue="#{orig.idOficinaOrigen}" />
+																<p:ajax listener="#{beanGrabacionMatriculas.validarExistenciaDocumento(false)}"
+																	process="@this" update="@this,globalMsg" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<br />
+															<div class="ui-g-12 ui-md-12 ui-lg-12">
+																<p:commandButton
+																	value="#{messageBeanSNR.commonButtonLimpiar}"
+																	icon="fa fa-undo"
+																	title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoLimpiarDatos}"
+																	onclick="PF('limpiarDatosDoc').show();" />
+															</div>
+														</div>
+													</div>
+												</p:panel>
+												<br />
+												<p:panel id="pEspecificacion"
+													header="#{messageBeanSNR.commonLabelEspecificacion}"
+													toggleable="true">
+													<div class="ui-g">
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelCodigoDelActo}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMCodigoActo" style="width:100%"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesEspecificacionCodigoActo}"
+																value="#{beanGrabacionMatriculas.codigoNaturalezaJuridicaSeleccionada}">
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.cambiarTipoActo}"
+																	update="idSOMTipoActo,idItDescripcion,idItAnotacionCancela,idOlCalidadInteresado" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanReference.findAllNaturalezaJuridica(false)}"
+																	var="item" itemLabel="#{item.idNaturalezaJuridica}"
+																	itemValue="#{item.llavePrimaria}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDescripcionActo}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMTipoActo" style="width:100%"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesEspecificacionDescripcionActo}"
+																value="#{beanGrabacionMatriculas.naturalezaJuridicaSeleccionada}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanReference.findAllNaturalezaJuridica(false)}"
+																	var="item" itemLabel="#{item.nombre}"
+																	itemValue="#{item.llavePrimaria}" />
+																<p:ajax
+																	listener="#{beanGrabacionMatriculas.cambiarCodigoTipoActo}"
+																	update="idSOMCodigoActo,idItDescripcion,idItAnotacionCancela,idOlCalidadInteresado" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelValorActo}#{messageBeanSNR.commonLabelObligatorio}"
+																style="width:200px" />
+															<br />
+															<p:inputNumber id="idItValorActo" maxlength="20"
+																placeholder="#{messageBeanSNR.commonLabelValorActo}"
+																symbol="$"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesEspecificacionValorActo}"
+																value="#{beanGrabacionMatriculas.anotacionPredio.valor}">
+																<p:keyFilter regEx="/[\d\-\.]/" preventPaste="false" />
+															</p:inputNumber>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelAnotacionQSeCancela}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="idItAnotacionCancela"
+																label="#{messageBeanSNR.commonLabelAnotacionQSeCancela}"
+																placeholder="#{messageBeanSNR.commonLabelAnotacionQSeCancela}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesEspecificacionAnotacionCancela}"
+																value="#{beanGrabacionMatriculas.anotacionCancelacion.idAnotacion1}"
+																disabled="#{!beanGrabacionMatriculas.mostrarAnotacionCancela}"
+																maxlength="10" />
+														</div>
+													</div>
+													<div class="ui-g">
+														<div class="ui-g-12 ui-md-6 ui-lg-6">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDescripcion}#{messageBeanSNR.commonLabelObligatorio}"
+																style="width:200px" />
+															<br />
+															<p:inputTextarea id="idItDescripcion" rows="5"
+																onmouseover="contarCaracteres('fGrabarMatricula:idItDescripcion','fGrabarMatricula:counterDescripcionEspecificacion')"
+																onkeyup="contarCaracteres('fGrabarMatricula:idItDescripcion','fGrabarMatricula:counterDescripcionEspecificacion')"
+																cols="250" onblur="value=value.toUpperCase()"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesEspecificacionDescripcion}"
+																value="#{beanGrabacionMatriculas.anotacionPredio.especificacion}"
+																placeholder="#{messageBeanSNR.commonLabelDescripcion}"
+																queryDelay="750" minQueryLength="4">
+															</p:inputTextarea>
+															<div align="right">
+																<h:outputText id="counterDescripcionEspecificacion"></h:outputText>
+																<h:outputText
+																	value=" #{messageBeanSNR.commonLabelCaracteres}" />
+															</div>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-6">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelComentario}"
+																style="width:200px" />
+															<br />
+															<p:inputTextarea rows="5" cols="250"
+																onblur="value=value.toUpperCase()"
+																value="#{beanGrabacionMatriculas.anotacionPredio.comentario}"
+																placeholder="#{messageBeanSNR.commonLabelComentario}"
+																queryDelay="750" maxlength="1000" minQueryLength="4"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesEspecificacionComentario}"
+																counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+																counter="idNumCarCom">
+															</p:inputTextarea>
+															<h:outputText id="idNumCarCom" />
+														</div>
+													</div>
+												</p:panel>
+												<br />
+												<p:panel id="pInterviniente"
+													header="#{messageBeanSNR.commonLabelInterviniente}"
+													toggleable="true">
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTipoDocumentoIdentidad}" />
+															<br />
+															<p:selectOneMenu id="idSOMTipoDocIdentidad"
+																style="width:100%" widgetVar="wvCampoDocumento"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesTipoDocumentoIdentidad}"
+																value="#{beanGrabacionMatriculas.tipoDocInterviniente}">
+																<p:ajax
+																	update="idSOMTipoDocIdentidad,idItDocumentoID,idSOMTipoDocInter,idOlDocumentoInter" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanGrabacionMatriculas.findTipoDocumentoSecuencia()}"
+																	var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+																	itemLabel="#{tipoDoc.descripcion}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDocumentoIdentidad}#{messageBeanSNR.commonLabelObligatorio}"
+																style="width:200px" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="idItDocumentoID"
+																label="#{messageBeanSNR['commonLabelDocumento']}"
+																placeholder="#{messageBeanSNR['commonLabelDocumento']}"
+																readonly="#{beanGrabacionMatriculas.renderedHabilitaSecuencia}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesDocumentoIdentidad}"
+																value="#{beanGrabacionMatriculas.documentoInterviniente}"
+																maxlength="20" />
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<br />
+															<p:commandButton
+																value="#{messageBeanSNR.commonLabelConsultar}"
+																icon="lupa" iconPos="left" id="idCBConsultarDocumento"
+																update=":fGrabarMatricula:globalMsg,fGrabarMatricula:idPPanelDatosBasicos,fGrabarMatricula:idPPanelDatosBasicosInter"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesConsultar}"
+																actionListener="#{beanGrabacionMatriculas.consultarPersonaDocumento}" />
+														</div>
+													</div>
+													<p:outputPanel id="idPPanelDatosBasicos">
+														<div class="ui-g" align="left">
+															<div class="ui-g-12 ui-md-12 ui-lg-12">
+																<p:dataTable id="idDtPersonas"
+																	emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+																	value="#{beanGrabacionMatriculas.listadoIntervinientes}"
+																	rendered="#{beanGrabacionMatriculas.mostrarListadoPersonas}"
+																	var="item">
+																	<p:column headerText="Tipo Documento" width="8%"
+																		sortBy="#{item.idDocumentoTipo}">
+																		<h:outputText value="#{item.idDocumentoTipo}" />
+																	</p:column>
+																	<p:column headerText="Documento" width="12%"
+																		sortBy="#{item.numeroDocumento}">
+																		<h:outputText value="#{item.numeroDocumento}" />
+																	</p:column>
+																	<p:column headerText="Nombres" width="20%">
+																		<h:outputText
+																			value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.nombreCompleto}" />
+																	</p:column>
+																	<p:column width="6%" headerText="Seleccione">
+																		<p:selectOneRadio value="#{item.seleccionado}">
+																			<f:selectItem itemLabel="" itemValue="true" />
+																			<p:ajax
+																				listener="#{beanGrabacionMatriculas.cargarDatosPersonales(item)}"
+																				update="fGrabarMatricula:idPPanelDatosBasicosInter" />
+																		</p:selectOneRadio>
+																	</p:column>
+																</p:dataTable>
+															</div>
+														</div>
+													</p:outputPanel>
+													<p:panel id="idPPanelDatosBasicosInter"
+														header="#{messageBeanSNR.commonLabelDatosBasicosDelInterveniente}">
+														<div class="ui-g" align="left">
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelTipoDePersona}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:selectOneMenu id="idSOMTipoPersonaInter"
+																	style="width:100%"
+																	disabled="#{beanGrabacionMatriculas.deshabilitarDatosInterviniente}"
+																	value="#{beanGrabacionMatriculas.persona.idTipoPersona}">
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItems
+																		value="#{beanReference.findTipoPersona()}"
+																		var="tipoPersona"
+																		itemValue="#{tipoPersona.idTipoPersona}"
+																		itemLabel="#{tipoPersona.descripcion}" />
+																</p:selectOneMenu>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:selectOneMenu id="idSOMTipoDocInter"
+																	style="width:100%"
+																	disabled="#{beanGrabacionMatriculas.deshabilitarDatosInterviniente}"
+																	value="#{beanGrabacionMatriculas.persona.idDocumentoTipo}">
+																	<p:ajax
+																		listener="#{beanGrabacionMatriculas.deshabilitarCamposNit}"
+																		update="idOlDocumentoInter,idSOMNacionalidadInter,idSOMGeneroInter,idOlPNombreInter,idOlSNombreInter,idOlPApellidoInter,idOlSApellidoInter,idOlRazonSocialInter,idSOMTipoDocIdentidad,idItDocumentoID,idSOMTipoDocInter" />
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItems
+																		value="#{beanGrabacionMatriculas.findTipoDocumentoSecuencia()}"
+																		var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+																		itemLabel="#{tipoDoc.descripcion}" />
+																</p:selectOneMenu>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:inputText onblur="value=value.toUpperCase()"
+																	disabled="#{beanGrabacionMatriculas.deshabilitarDatosInterviniente}"
+																	id="idOlDocumentoInter"
+																	readonly="#{beanGrabacionMatriculas.renderedHabilitaSecuencia}"
+																	placeholder="#{messageBeanSNR.commonLabelDocumento}"
+																	maxlength="20"
+																	value="#{beanGrabacionMatriculas.persona.numeroDocumento}" />
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelNacionalidad}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:selectOneMenu id="idSOMNacionalidadInter"
+																	disabled="#{beanGrabacionMatriculas.deshabilitarDatosInterviniente}"
+																	style="width:100%"
+																	value="#{beanGrabacionMatriculas.persona.idPais}">
+																	<f:selectItem itemValue=""
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+																	<f:selectItems value="#{beanReference.findPaises()}"
+																		var="paises" itemValue="#{paises.idPais}"
+																		itemLabel="#{paises.nombre}" />
+																</p:selectOneMenu>
+															</div>
+														</div>
+														<div class="ui-g" align="left">
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel for="idOlPNombreInter"
+																	value="#{messageBeanSNR.commonLabelPrimerNombre}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idOlPNombreInter"
+																	placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+																	value="#{beanGrabacionMatriculas.persona.primerNombre}"
+																	disabled="#{beanGrabacionMatriculas.deshabilitarCamposPorNit or beanGrabacionMatriculas.deshabilitarDatosInterviniente}" />
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel for="idOlSNombreInter"
+																	value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+																<br />
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idOlSNombreInter"
+																	placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+																	value="#{beanGrabacionMatriculas.persona.segundoNombre}"
+																	disabled="#{beanGrabacionMatriculas.deshabilitarCamposPorNit or beanGrabacionMatriculas.deshabilitarDatosInterviniente}"
+																	style="width:160px;" />
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel for="idOlPApellidoInter"
+																	value="#{messageBeanSNR.commonLabelPrimerApellido}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idOlPApellidoInter"
+																	placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+																	value="#{beanGrabacionMatriculas.persona.primerApellido}"
+																	disabled="#{beanGrabacionMatriculas.deshabilitarCamposPorNit or beanGrabacionMatriculas.deshabilitarDatosInterviniente}" />
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel for="idOlSApellidoInter"
+																	value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+																<br />
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idOlSApellidoInter"
+																	placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+																	value="#{beanGrabacionMatriculas.persona.segundoApellido}"
+																	disabled="#{beanGrabacionMatriculas.deshabilitarCamposPorNit or beanGrabacionMatriculas.deshabilitarDatosInterviniente}" />
+															</div>
+														</div>
+														<div class="ui-g" align="left">
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel for="idOlRolInter"
+																	value="#{messageBeanSNR.commonLabelRol}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:selectOneMenu id="idOlRolInter" style="width:100%"
+																	title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesRol}"
+																	value="#{beanGrabacionMatriculas.solicitudInterviniente.rolPersona}">
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelDe}"
+																		itemValue="De" />
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelA}"
+																		itemValue="A" />
+																</p:selectOneMenu>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelGenero}" />
+																<br />
+																<p:selectOneMenu id="idSOMGeneroInter"
+																	style="width:100%"
+																	value="#{beanGrabacionMatriculas.persona.idNaturalGenero}"
+																	title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesGenero}"
+																	disabled="#{beanGrabacionMatriculas.deshabilitarCamposPorNit}">
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItems value="#{beanReference.findGeneros()}"
+																		var="generos" itemValue="#{generos.idNaturalGenero}"
+																		itemLabel="#{generos.ilicode}" />
+																</p:selectOneMenu>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-6">
+																<p:outputLabel for="idOlRazonSocialInter"
+																	value="#{messageBeanSNR.commonLabelRazonSocial}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idOlRazonSocialInter"
+																	placeholder="#{messageBeanSNR.commonLabelRazonSocial}"
+																	value="#{beanGrabacionMatriculas.persona.razonSocial}"
+																	title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesRazonSocial}"
+																	disabled="#{!beanGrabacionMatriculas.deshabilitarCamposPorNit or beanGrabacionMatriculas.deshabilitarDatosInterviniente}" />
+															</div>
+														</div>
+														<div class="ui-g" align="left">
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel for="idOlPropietario"
+																	value="#{messageBeanSNR.commonLabelPropietario}" />
+																<br />
+																<p:selectOneMenu id="idOlPropietario" style="width:100%"
+																	title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesPropietario}"
+																	value="#{beanGrabacionMatriculas.anotacionPredioCiudadano.propietario}">
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItem itemLabel="I" itemValue="I" />
+																	<f:selectItem itemLabel="X" itemValue="X" />
+																</p:selectOneMenu>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel for="idOlPorcentajePart"
+																	value="#{messageBeanSNR.commonLabelPorcentajeParticipacion}" />
+																<br />
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idOlPorcentajePart"
+																	placeholder="#{messageBeanSNR.commonLabelPorcentajeParticipacion}"
+																	title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesPorcentaje}"
+																	value="#{beanGrabacionMatriculas.anotacionPredioCiudadano.porcentajeParticipacion}">
+																	<p:keyFilter regEx="/[\d\.]/" preventPaste="false" />
+																</p:inputText>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel for="idOlCalidadInteresado"
+																	value="#{messageBeanSNR.commonLabelCalidadInterviniente}" />
+																<br />
+																<p:selectOneMenu id="idOlCalidadInteresado"
+																	style="width:100%"
+																	disabled="#{!beanGrabacionMatriculas.mostrarEditarIntervinientes() and beanGrabacionMatriculas.deshabilitarCalidadInterviniente}"
+																	value="#{beanGrabacionMatriculas.anotacionPredioCiudadano.idInteresadaRrr}">
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItems
+																		value="#{beanGrabacionMatriculas.findRrr()}"
+																		var="item" itemValue="#{item.idDocumentoTipo}"
+																		itemLabel="#{item.descripcion}" />
+																</p:selectOneMenu>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<br />
+																<p:commandButton
+																	value="#{beanGrabacionMatriculas.idAnotacion > 0 ? messageBeanSNR.commonLabelModificarInterviniente : messageBeanSNR.commonLabelAgregarInterviniente}"
+																	icon="fa fa-plus-circle" iconPos="left"
+																	update="fGrabarMatricula:pInterviniente,:fGrabarMatricula:globalMsg"
+																	title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesAgregar}"
+																	actionListener="#{beanGrabacionMatriculas.agregarIntervinientes}" />
+															</div>
+														</div>
+														<p:dataTable id="idDtListadoSolInter" var="item"
+															sortOrder="descending"
+															sortBy="#{item.solicitudInterviniente.rolPersona}"
+															value="#{beanGrabacionMatriculas.intervinientesAgregados}"
+															style="font-size: 11px;"
+															emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+															<f:facet name="header">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelIntervenientesAgregados}" />
+															</f:facet>
+															<p:column headerText="#{messageBeanSNR.commonLabelRol}"
+																style="width: 4%;">
+																<h:outputText
+																	value="#{item.solicitudInterviniente.rolPersona}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelPrimerNombre}">
+																<h:outputText value="#{item.persona.primerNombre}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelSegundoNombre}">
+																<h:outputText value="#{item.persona.segundoNombre}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelPrimerApellido}">
+																<h:outputText value="#{item.persona.primerApellido}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelSegundoApellido}">
+																<h:outputText value="#{item.persona.segundoApellido}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelRazonSocial}">
+																<h:outputText value="#{item.persona.razonSocial}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+																<h:outputText value="#{item.persona.idDocumentoTipo}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelDocumento}">
+																<h:outputText value="#{item.persona.numeroDocumento}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelPropietario}">
+																<h:outputText
+																	value="#{item.anotacionPredioCiudadano.propietario}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelPorcentaje}">
+																<h:outputText
+																	value="#{item.anotacionPredioCiudadano.porcentajeParticipacion}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelCalidadInterviniente}">
+																<h:outputText
+																	value="#{item.anotacionPredioCiudadano.nombreInteresadaRRR}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelAccion}">
+																<p:commandButton icon="fa fa-pencil" iconPos="center"
+																	update="fGrabarMatricula:idPPanelDatosBasicosInter"
+																	disabled="#{beanGrabacionMatriculas.bloquearModificarIntervenientes}"
+																	title="#{messageBeanSNR.commonLabelModificar}"
+																	actionListener="#{beanGrabacionMatriculas.modificarInterviniente(item)}" />
+																<p:commandButton icon="fa fa-trash" iconPos="center"
+																	update="idDtListadoSolInter"
+																	title="#{messageBeanSNR.commonLabelEliminar}"
+																	disabled="#{beanGrabacionMatriculas.bloquearModificarIntervenientes}"
+																	actionListener="#{beanGrabacionMatriculas.eliminarInterviniente(item)}" />
+															</p:column>
+														</p:dataTable>
+													</p:panel>
+												</p:panel>
+												<br />
+												<p:dataTable id="idDtAnotacionesAgregadas" var="item"
+													value="#{beanGrabacionMatriculas.anotacionesAgregadas}"
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+													<f:facet name="header">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelAnotacionesAgregadas}" />
+													</f:facet>
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelNumeroAnotacion}">
+														<h:outputText value="#{item.anotacionPredio.idAnotacion}" />
+													</p:column>
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelDescripcionActo}">
+														<h:outputText value="#{item.naturalezaJuridica}" />
+													</p:column>
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelDescripcion}">
+														<h:outputText
+															value="#{item.anotacionPredio.especificacion}" />
+													</p:column>
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelModificar}">
+														<p:commandButton icon="fa fa-pencil" iconPos="left"
+															disabled="#{beanGrabacionMatriculas.bloquearModificarAnotaciones}"
+															update="fGrabarMatricula:pInterviniente,fGrabarMatricula:pEspecificacion,fGrabarMatricula:idDtAnotacionesAgregadas,fGrabarMatricula:pDatosDocumento,fGrabarMatricula:pDatosAnotacion,fGrabarMatricula:idPPanelDatosBasicosInter,fGrabarMatricula:opPanelTerminarProceso,fGrabarMatricula:idDtAnotacionesAgregadas,fGrabarMatricula:opPanelTerminarProceso"
+															title="#{messageBeanSNR.commonLabelModificar}"
+															actionListener="#{beanGrabacionMatriculas.modificarAnotaciones(item)}" />
+													</p:column>
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelEliminar}">
+														<p:commandButton icon="fa fa-trash" iconPos="left"
+															disabled="#{beanGrabacionMatriculas.bloquearModificarAnotaciones}"
+															title="#{messageBeanSNR.commonLabelEliminar}"
+															actionListener="#{beanGrabacionMatriculas.setIdAnotacionParaEliminar(item.idAnotacion)}"
+															onclick="PF('dlgElimiarAnotacion').show()" />
+													</p:column>
+												</p:dataTable>
+												<br />
+												<p:outputPanel id="opPanelTerminarProceso">
+													<p:commandButton id="cbAgregarAnotacion"
+														value="#{beanGrabacionMatriculas.idAnotacionGeneral > 0 ? messageBeanSNR.commonLabelModificarAnotacion : messageBeanSNR.commonLabelAgregarAnotacion}"
+														rendered="#{!beanGrabacionMatriculas.procesoTerminadoCrearGrabar}"
+														icon="fa fa-check-circle" iconPos="left"
+														update="fGrabarMatricula:pDatosAnotacion,fGrabarMatricula:pDatosDocumento,fGrabarMatricula:pEspecificacion,fGrabarMatricula:pInterviniente,fGrabarMatricula:idPPanelDatosBasicosInter,fGrabarMatricula:globalMsg,fGrabarMatricula:idDtAnotacionesAgregadas,fGrabarMatricula:opPanelTerminarProceso,fGrabarMatricula:idDtAnotacionesAgregadas"
+														title="#{beanGrabacionMatriculas.idAnotacionGeneral > 0 ? tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesModificarAnotacion : tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesAgregarAnotacion}"
+														actionListener="#{beanGrabacionMatriculas.anotacionGrabacion}" />
+													<p:commandButton id="cbTerminar"
+														value="#{messageBeanSNR.commonLabelTerminarProceso}"
+														rendered="#{beanGrabacionMatriculas.anotacionAgregada and !beanGrabacionMatriculas.procesoTerminadoCrearGrabar and !(beanGrabacionMatriculas.idAnotacionGeneral > 0) and beanGrabacionMatriculas.anotacionesValidas}"
+														type="button" icon="fa fa-check-circle"
+														title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesTerminarProceso}"
+														iconPos="left" onclick="PF('dlg2').show();" />
+													<p:commandButton id="cbDescargarPdf"
+														value="#{messageBeanSNR.commonButtonVisualizarHojaDeRuta}"
+														update="opBotones"
+														actionListener="#{beanGrabacionMatriculas.pdfCrear()}"
+														onclick="PrimeFaces.monitorDownload(ocultarElemento('fGrabarMatricula:cbDescargarPdf'), stop);"
+														rendered="#{beanGrabacionMatriculas.procesoTerminadoCrearGrabar}"
+														title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDescargarPdf}"
+														ajax="false" icon="fa fa-arrow-down">
+														<p:fileDownload
+															value="#{beanGrabacionMatriculas.archivoPdf}" />
+													</p:commandButton>
+												</p:outputPanel>
+											</p:fragment>
+										</p:tab>
+									</p:wizard>
+									<p:outputPanel id="opBotonesCrearGrabar">
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+												<p:commandButton id="idCmBtnAnterior"
+													value="#{messageBeanSNR.commonLabelRegresar}"
+													icon="fa fa-arrow-circle-left" iconPos="left"
+													update="fGrabarMatricula:opBotonesCrearGrabar,fGrabarMatricula:idOlMatriculaDummy"
+													rendered="#{beanGrabacionMatriculas.mostrarAtrasCrearGrabar and not(beanGrabacionMatriculas.procesoTerminadoCrearGrabar)}"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaRegresar}"
+													onclick="PF('tramitesCrearGrabarMatriculaWidged').back()" />
+												<p:commandButton id="idCmBtnSiguiente"
+													value="#{messageBeanSNR.commonLabelSiguiente}"
+													icon="fa fa-arrow-circle-right" iconPos="right"
+													update="fGrabarMatricula:opBotonesCrearGrabar,fGrabarMatricula:idOlMatriculaDummy,fMatriculaCreada"
+													rendered="#{not(beanGrabacionMatriculas.ocultarSiguienteCrearGrabar) and not(beanGrabacionMatriculas.procesoTerminadoCrearGrabar)}"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaSiguiente}"
+													onclick="PF('tramitesCrearGrabarMatriculaWidged').next()">
+												</p:commandButton>
+											</div>
+										</div>
+									</p:outputPanel>
+								</p:panel>
+							</p:fragment>
+							<p:outputPanel id="opBtnGenerateFile">
+								<div align="center">
+									<div class="ui-g-6 ui-md-3 ui-lg-3" align="left">
+										<p:commandButton
+											value="#{messageBeanSNR.commonLabelRegresarDetalleTurno}"
+											icon="fa fa-arrow-circle-left" iconPos="left"
+											action="detalleGrabacion?faces-redirect=true">
+										</p:commandButton>
+									</div>
+									<div class="ui-g-12 ui-md-9 ui-lg-9" align="right">
+										<p:commandButton
+											value="#{messageBeanSNR.commonButtonEnviarAlAprobador}"
+											rendered="#{beanGrabacionMatriculas.procesoTerminadoCrearGrabar}"
+											iconPos="right" id="idCBAprobador" update="fGrabarMatricula"
+											action="#{beanGrabacionMatriculas.enviarAprobador()}"
+											icon="fa fa-chevron-right">
+										</p:commandButton>
+									</div>
+									<br />
+								</div>
+								<br />
+							</p:outputPanel>
+						</p:panel>
+					</p:outputPanel>
+				</center>
+			</h:form>
+			
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgElimiarAnotacion" modal="true" resizable="false">
+				<h:form id="fdlgEliminarAnotacion"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonMessagePreguntaEliminarAnotacionAntSis}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check"
+							update="fGrabarMatricula:idDtAnotacionesAgregadas"
+							actionListener="#{beanGrabacionMatriculas.eliminarAnotacion()}"
+							oncomplete="PF('dlgElimiarAnotacion').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close"
+							oncomplete="PF('dlgElimiarAnotacion').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog id="idMatriculaExitosa"
+				header="#{messageBeanSNR.commonLabelMatriculaDummyCreada}"
+				resizable="false" modal="true" appendTo="@(body)"
+				widgetVar="idMatriculaExitosa" width="50%">
+				<h:form id="fMatriculaCreada"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<center>
+						<p:outputLabel style="font-size: 20px;"
+							value="#{messageBeanSNR.commonLabelMatriculaDummyTemporal}" />
+						<br />
+						<strong>
+							<p:outputLabel style="font-size: 40px;"
+								value="#{beanGrabacionMatriculas.accPredioRegistro.idCirculo} - #{beanGrabacionMatriculas.accPredioRegistro.idMatricula}" />
+						</strong>
+					</center>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)" id="idDLimpiarDatosDoc"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="limpiarDatosDoc" modal="true" resizable="false"
+				width="50%">
+				<h:form id="fLimpiarDatosDoc"
+					style="font-size: large; top: 50%; left: 50%;">
+					<div align="center">
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelPreguntaLimpiarDatos}" />
+					</div>
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fGrabarMatricula:pDatosDocumento"
+							actionListener="#{beanGrabacionMatriculas.limpiarDatosDocumento}"
+							oncomplete="PF('limpiarDatosDoc').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('limpiarDatosDoc').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgAgregarMatriculaComplementacion" modal="true"
+				height="90" resizable="false">
+				<h:form id="dlgAgregarMatriculaComplementacion"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelAgregarMatriculaConstruirComplementacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check"
+							action="#{beanGrabacionMatriculas.agregarMatriculaComplementacion(false)}"
+							oncomplete="PF('dlgAgregarMatriculaComplementacion').hide();"
+							update="fGrabarMatricula" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close"
+							onclick="PF('dlgAgregarMatriculaComplementacion').hide();"
+							update="fGrabarMatricula:idPanelComplementacion,fGrabarMatricula:cabidaLinderosIdMatricula" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgAgregarMatriculaComplementacionAnotacion" modal="true"
+				height="90" resizable="false">
+				<h:form id="dlgAgregarMatriculaComplementacionAnotacion"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelAgregarMatriculaConstruirComplementacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check"
+							action="#{beanGrabacionMatriculas.agregarMatriculaComplementacion(false,true,false,false,false)}"
+							oncomplete="PF('dlgAgregarMatriculaComplementacionAnotacion').hide();"
+							update="fGrabarMatricula" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close"
+							onclick="PF('dlgAgregarMatriculaComplementacionAnotacion').hide();"
+							update="fGrabarMatricula:idPanelComplementacion,fGrabarMatricula:cabidaLinderosIdMatricula" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg2"
+				modal="true" height="90" resizable="false">
+				<h:form id="fDialog" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeTerminarElProceso}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" ajax="true"
+							update="fGrabarMatricula:idDtAnotacionesAgregadas,fGrabarMatricula:opBtnGenerateFile"
+							actionListener="#{beanGrabacionMatriculas.salvarAnotacion}"
+							oncomplete="PF('dlg2').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlg2').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

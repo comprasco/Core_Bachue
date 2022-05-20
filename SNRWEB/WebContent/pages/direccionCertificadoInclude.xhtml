@@ -1,0 +1,391 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+
+	<style type="text/css">
+.ui-autocomplete-query {
+	font-weight: inherit;
+}
+</style>
+	<h:form id="idFormDireccionCertificadoInclude">
+		<p:growl id="globalMsgDireccionPredioInclude" sticky="false"
+			showDetail="true" life="20000" globalOnly="true" redisplay="false" />
+		<p:outputPanel style="min-width:800px;">
+			<center>
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelTipoDePredio}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdTipoPredio"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idTipoPredio}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findTipoPredio()}"
+								var="var" itemValue="#{var.idTipoPredio}"
+								itemLabel="#{var.descripcion}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarEjeSecundarioPredio()}"
+								update="direccionCertificadoIdTipoEjePrincipal,direccionCertificadoIdTipoEjeSecundario,direccionCertificadoIdComplementoEjePrincipal,direccionCertificadoIdComplemento1EjeSecundario,direccionCertificadoIdComplemento2EjeSecundario,direccionCertificadoIdComplementoDireccion"
+								process="@this" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+				<br />
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-12 ui-lg-12">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelDireccionCompleta}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br />
+						<p:inputText id="direccionCertificadoIdDireccionCompleta"
+							onblur="value=value.toUpperCase()" readonly="true"
+							value="#{beanDireccion.direccionCertificado.direccion}" />
+					</div>
+				</div>
+				<br />
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdDepartamento"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idDepartamento}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findDepartamentos(beanDireccion.direccionCertificado.idPais)}"
+								var="var" itemValue="#{var.idDepartamento}"
+								itemLabel="#{var.nombre}" />
+							<p:ajax
+								update="direccionCertificadoIdMunicipio,direccionCertificadoIdVereda" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelIdMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdMunicipio"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idMunicipio}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findMunicipios(beanDireccion.direccionCertificado.idPais,beanDireccion.direccionCertificado.idDepartamento)}"
+								var="var" itemValue="#{var.idMunicipio}"
+								itemLabel="#{var.nombre}" />
+							<p:ajax update="direccionCertificadoIdDepartamento" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelVereda}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdVereda"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idVereda}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findVeredas(beanDireccion.direccionCertificado.idPais,beanDireccion.direccionCertificado.idDepartamento,beanDireccion.direccionCertificado.idMunicipio)}"
+								var="var" itemValue="#{var.idVereda}" itemLabel="#{var.nombre}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+				<br />
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-4 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelEjePrincipal}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdTipoEjePrincipal"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idTipoEjePrincipal}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findTipoEjeByTipoPredio(beanDireccion.direccionCertificado.idTipoPredio)}"
+								var="var" itemValue="#{var.idTipoEje}" itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarEjeSecundarioPredio(beanDireccion.direccionCertificado.idTipoEjePrincipal)}"
+								update="direccionCertificadoIdTipoEjeSecundario" process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-2">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelNumero}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br />
+						<p:inputText onblur="value=value.toUpperCase()"
+							readonly="#{beanDireccion.bloquearCamposCertificados}"
+							id="direccionCertificadoIdDatoEjePrincipal" maxlength="100"
+							value="#{beanDireccion.direccionCertificado.datoEjePrincipal}">
+							<p:keyFilter regEx="/^[0-9\a-zA-Z\s]*$/" preventPaste="false" />
+							<p:ajax global="false"
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:inputText>
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelLetra}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdLetraEjePrincipal"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idLetraEjePrincipal}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findAllLetraEjeActivo()}"
+								var="var" itemValue="#{var.idLetra}" itemLabel="#{var.letra}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelComplemento}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdComplementoEjePrincipal"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idComplementoEjePrincipal}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findAllComplementoDireccionByTipoPredio(beanDireccion.direccionCertificado.idTipoPredio)}"
+								var="var" itemValue="#{var.idTipoEje}" itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelCoordenada}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdCoordenadaEjePrincipal"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idCoordenadaEjePrincipal}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findAllCoordenadaActivo()}"
+								var="var" itemValue="#{var.idCoordenada}"
+								itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelEjeSecundario}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdTipoEjeSecundario"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idTipoEjeSecundario}">
+							<f:selectItems value="#{beanDireccion.tipoEjeSecundarioPredio}"
+								var="var" itemValue="#{var.idTipoEje}" itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelNumero1}" />
+						<br />
+						<p:inputText onblur="value=value.toUpperCase()"
+							readonly="#{beanDireccion.bloquearCamposCertificados}"
+							id="direccionCertificadoIdDatoEjeSecundario" maxlength="100"
+							value="#{beanDireccion.direccionCertificado.datoEjeSecundario}">
+							<p:keyFilter regEx="/^[0-9\a-zA-Z\s]*$/" preventPaste="false" />
+							<p:ajax global="false"
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:inputText>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelLetra1}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdLetra1EjeSecundario"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idLetra1EjeSecundario}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findAllLetraEjeActivo()}"
+								var="var" itemValue="#{var.idLetra}" itemLabel="#{var.letra}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelComplemento1}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdComplemento1EjeSecundario"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idComplemento1EjeSecundario}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findAllComplementoDireccionByTipoPredio(beanDireccion.direccionCertificado.idTipoPredio)}"
+								var="var" itemValue="#{var.idTipoEje}" itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelCoordenada1}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdCoordenada1EjeSecundario"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idCoordenada1EjeSecundario}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findAllCoordenadaActivo()}"
+								var="var" itemValue="#{var.idCoordenada}"
+								itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-6 ui-lg-4"></div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelNumero2}" />
+						<br />
+						<p:inputText onblur="value=value.toUpperCase()"
+							readonly="#{beanDireccion.bloquearCamposCertificados}"
+							id="direccionCertificadoIdNumero2EjeSecundario" maxlength="100"
+							value="#{beanDireccion.direccionCertificado.dato2EjeSecundario}">
+							<p:keyFilter regEx="/^[0-9\a-zA-Z\s]*$/" preventPaste="false" />
+							<p:ajax global="false"
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:inputText>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelLetra2}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdLetra2EjeSecundario"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idLetra2EjeSecundario}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findAllLetraEjeActivo()}"
+								var="var" itemValue="#{var.idLetra}" itemLabel="#{var.letra}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelComplemento2}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdComplemento2EjeSecundario"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idComplemento2EjeSecundario}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findAllComplementoDireccionByTipoPredio(beanDireccion.direccionCertificado.idTipoPredio)}"
+								var="var" itemValue="#{var.idTipoEje}" itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelCoordenada2}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdCoordenada2EjeSecundario"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idCoordenada2EjeSecundario}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findAllCoordenadaActivo()}"
+								var="var" itemValue="#{var.idCoordenada}"
+								itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelComplementoDireccion}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionCertificadoIdComplementoDireccion"
+							disabled="#{beanDireccion.bloquearCamposCertificados}"
+							value="#{beanDireccion.direccionCertificado.idComplementoDireccion}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findAllComplementoDireccionByTipoPredio(beanDireccion.direccionCertificado.idTipoPredio)}"
+								var="var" itemValue="#{var.idTipoEje}" itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelDescripcionComplemento}" />
+						<br />
+						<p:inputText id="direccionCertificadoIdDescripcionDireccion"
+							readonly="#{beanDireccion.bloquearCamposCertificados}"
+							onkeyup="value=value.toUpperCase()" size="30" maxlength="100"
+							value="#{beanDireccion.direccionCertificado.complementoDireccion}">
+							<p:keyFilter regEx="/^[0-9\a-zA-Z\s]*$/" preventPaste="false" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" process="@this" />
+						</p:inputText>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelNombreDelPredio}" />
+						<br />
+						<p:inputText id="direccionCertificadoIdNombrePredio"
+							readonly="#{beanDireccion.bloquearCamposCertificados}"
+							onkeyup="value=value.toUpperCase()" size="30"
+							value="#{beanDireccion.direccionCertificado.nombrePredio}">
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCertificadoCompleta()}"
+								update="direccionCertificadoIdDireccionCompleta" />
+						</p:inputText>
+					</div>
+				</div>
+			</center>
+		</p:outputPanel>
+	</h:form>
+
+</h:body>
+</html>

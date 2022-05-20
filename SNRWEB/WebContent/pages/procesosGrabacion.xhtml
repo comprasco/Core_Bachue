@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<p:outputPanel rendered="#{beanGrabacion.etapa eq 103}">
+				<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><p:outputLabel
+							value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+					<li class="breadcrumb-item"><p:outputLabel
+							value="#{messageBeanSNR.commonLabelGrabacion}" /></li>
+					<li class="breadcrumb-item"><p:outputLabel
+							value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" /></li>
+					<li class="breadcrumb-item"><p:outputLabel
+							value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" /></li>
+					<li class="breadcrumb-item"><p:outputLabel
+							value="#{messageBeanSNR.commonLabelDetalleTurno}" /></li>
+					<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+							value="#{beanGrabacion.migaPan}" /></li>
+				</ol>
+				</nav>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{beanGrabacion.etapa eq 104}">
+				<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><p:outputLabel
+							value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+					<li class="breadcrumb-item"><p:outputLabel
+							value="#{messageBeanSNR.commonLabelGrabacionMatriculas}" /></li>
+					<li class="breadcrumb-item"><p:outputLabel
+							value="#{messageBeanSNR.commonLabelBandejaDeGrabacion}" /></li>
+					<li class="breadcrumb-item"><p:outputLabel
+							value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" /></li>
+					<li class="breadcrumb-item"><p:outputLabel
+							value="#{messageBeanSNR.commonLabelDetalleTurno}" /></li>
+					<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+							value="#{beanGrabacion.migaPan}" /></li>
+				</ol>
+				</nav>
+			</p:outputPanel>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fProcesosGrabacion" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false"/>
+				<center>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionNIR}"
+								value="#{beanPredioDocumentoActo.predio.get('NIR')}" />
+						</div>
+						<div class="ui-g-12 ui-md-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionTurno}"
+								value="#{beanPredioDocumentoActo.predio.get('ID_TURNO')}" />
+						</div>
+						<div class="ui-g-12 ui-md-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelFechaCreacion}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionTurno}"
+								value="#{beanPredioDocumentoActo.predio.get('FECHA')}" />
+						</div>
+						<div class="ui-g-12 ui-md-3">
+							<br />
+							<div class="ui-g-12 ui-md-12">
+								<p:commandButton ajax="false"
+									value="#{messageBeanSNR.commonLabelConsultaSGD}"
+									icon="lupa" iconPos="left" update="globalMsg"
+									action="#{beanPredioDocumentoActo.consultaSGD()}">
+								</p:commandButton>
+							</div>
+						</div>
+					</div>
+					<ui:fragment rendered="#{!beanGrabacion.generar}">
+						<br />
+					</ui:fragment>
+					<p:panel id="idPPanelDatosBasicos" toggleable="true"
+						rendered="#{!beanGrabacion.generar}"
+						header="#{messageBeanSNR.commonLabelDatosBasicosDelInteresado}">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoDePersona}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMTipoPersona" style="width:100%"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoPersona}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.idTipoPersona}"
+									disabled="#{!beanGrabacion.editarDatosBasicos or beanGrabacion.deshabilitarTipoPersona or beanGrabacion.datosGuardados}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems value="#{beanReference.findTipoPersona()}"
+										var="tipoPersona" itemValue="#{tipoPersona.idTipoPersona}"
+										itemLabel="#{tipoPersona.descripcion}" />
+									<p:ajax event="change"
+										listener="#{beanGrabacion.validarTipoPersonaDocumento()}"
+										update="idPPanelDatosBasicos" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMTipoDoc" style="width:100%"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoDocumento}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.idDocumentoTipo}"
+									disabled="#{beanGrabacion.deshabilitarTipoDocumento or beanGrabacion.datosGuardados}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanReference.findTipoDocumentoActivo()}"
+										var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+										itemLabel="#{tipoDoc.descripcion}" />
+									<p:ajax event="change"
+										listener="#{beanGrabacion.validarTipoPersonaDocumento()}"
+										update="idPPanelDatosBasicos" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idOlDocumento"
+									readonly="#{!beanGrabacion.documento or beanGrabacion.datosGuardados}"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoDocumento}"
+									placeholder="#{messageBeanSNR.commonLabelDocumento}"
+									maxlength="20"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.numeroDocumento}">
+									<p:ajax update="@this" />
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelNacionalidad}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMNacionalidad" style="width:100%"
+									disabled="#{!beanGrabacion.editarDatosBasicos or beanGrabacion.datosGuardados}"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoNacionalidad}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.idPais}">
+									<p:ajax update="@this" />
+									<f:selectItem itemValue=""
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+									<f:selectItems value="#{beanReference.findPaises()}"
+										var="paises" itemValue="#{paises.idPais}"
+										itemLabel="#{paises.nombre}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+									value="#{messageBeanSNR.commonLabelCalidadEnQueActua}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idITCalidad" style="width:100%"
+									disabled="#{!beanGrabacion.calidadActua or beanGrabacion.datosGuardados}"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoCalidadActua}"
+									value="#{beanGrabacion.parametros.solicitud2.idCalidadSolicitante}">
+									<p:ajax update="@this" process="@this"/>
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanReference.findCalidadSolicitante()}" var="calSol"
+										itemValue="#{calSol.idCalidadSolicitante}"
+										itemLabel="#{calSol.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel for="idOlPNombre" id="idOLNombre"
+									indicateRequired="#{!beanGrabacion.deshabilitarCamposPorNit}"
+									value="#{messageBeanSNR.commonLabelPrimerNombre}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()" id="idOlPNombre"
+									maxlength="100"
+									readonly="#{!beanGrabacion.editarDatosBasicos or beanGrabacion.datosGuardados}"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerNombre}"
+									placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.primerNombre}">
+									<p:ajax update="@this" />
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel for="idOlSNombre"
+									value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()" id="idOlSNombre"
+									maxlength="100"
+									readonly="#{!beanGrabacion.editarDatosBasicos or beanGrabacion.datosGuardados}"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoNombre}"
+									placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.segundoNombre}">
+									<p:ajax update="@this" />
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel for="idOlPApellido" id="idOLApellido"
+									indicateRequired="#{!beanGrabacion.deshabilitarCamposPorNit}"
+									value="#{messageBeanSNR.commonLabelPrimerApellido}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idOlPApellido" maxlength="150"
+									readonly="#{!beanGrabacion.editarDatosBasicos or beanGrabacion.datosGuardados}"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerApellido}"
+									placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.primerApellido}">
+									<p:ajax update="@this" />
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel for="idOlSApellido"
+									value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idOlSApellido" maxlength="100"
+									readonly="#{!beanGrabacion.editarDatosBasicos or beanGrabacion.datosGuardados}"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoApellido}"
+									placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.segundoApellido}">
+									<p:ajax update="@this" />
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelGenero}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMGenero" style="width:100%"
+									disabled="#{!beanGrabacion.editarDatosBasicos or beanGrabacion.datosGuardados}"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoGenero}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.idNaturalGenero}">
+									<p:ajax update="@this" />
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems value="#{beanReference.findGeneros()}"
+										var="generos" itemValue="#{generos.idNaturalGenero}"
+										itemLabel="#{generos.ilicode}" />
+								</p:selectOneMenu>
+							</div>
+
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-6">
+								<p:outputLabel for="idOlRazonSocial" id="idOLRazon"
+									indicateRequired="#{beanGrabacion.deshabilitarCamposPorNit}"
+									value="#{messageBeanSNR.commonLabelRazonSocial}" />
+								<br />
+								<p:inputText
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoRazonSocial}"
+									onblur="value=value.toUpperCase()" id="idOlRazonSocial"
+									readonly="#{!beanGrabacion.razonSocial or beanGrabacion.datosGuardados}"
+									placeholder="#{messageBeanSNR.commonLabelRazonSocial}"
+									value="#{beanGrabacion.parametros.datosDelInteresado.persona.razonSocial}">
+									<p:ajax update="@this" />
+								</p:inputText>
+							</div>
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12">
+								<p:commandButton icon="fa fa-pencil" iconPos="left"
+									update="fProcesosGrabacion"
+									value="#{messageBeanSNR.commonButtonModificarDatosBasicos}"
+									rendered="#{!beanGrabacion.editarDatosBasicos and !beanGrabacion.datosGuardados}"
+									title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoSuspensionModificarDatosBasicos}"
+									actionListener="#{beanGrabacion.visualizarModificar}" />
+							</div>
+						</div>
+					</p:panel>
+					<ui:fragment rendered="#{!beanGrabacion.generar}">
+						<br />
+					</ui:fragment>
+					<p:panel id="idPanelDirRes" toggleable="true" collapsed="true"
+						widgetVar="wvPanelDireccionR" rendered="#{!beanGrabacion.generar}"
+						style="#{beanGrabacion.parametros.datosDelInteresado.persona.idTipoPersona eq 'J' ? 'display: none' : ''}"
+						header="#{messageBeanSNR.commonLabelDireccionDeResidencia}">
+						<ui:include src="direccionResidenciaInclude.xhtml" />
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12">
+								<p:commandButton icon="fa fa-pencil" iconPos="left"
+									update="fProcesosGrabacion,fProcesosGrabacion:idFormDireccionResidenciaInclude"
+									value="#{messageBeanSNR.commonButtonModificarDireccionResidencia}"
+									rendered="#{!beanGrabacion.editarDireccionResidencia and !beanGrabacion.datosGuardados}"
+									title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoSuspensionModificarDireccionResidencia}"
+									actionListener="#{beanGrabacion.editarDireccionResidencia}" />
+							</div>
+						</div>
+					</p:panel>
+					<ui:fragment rendered="#{!beanGrabacion.generar}">
+						<br />
+					</ui:fragment>
+					<p:panel id="idPanelDirCorr" toggleable="true" collapsed="true"
+						widgetVar="wvPanelDireccionC" rendered="#{!beanGrabacion.generar}"
+						header="#{messageBeanSNR.commonLabelDireccionDeCorrespondencia}">
+						<ui:include src="direccionCorrespondenciaInclude.xhtml" />
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12">
+								<p:commandButton icon="fa fa-pencil" iconPos="left"
+									update="fProcesosGrabacion"
+									value="#{messageBeanSNR.commonButtonModificarDireccionCorrespondencia}"
+									rendered="#{!beanGrabacion.editarDireccionCorrespondencia and !beanGrabacion.datosGuardados}"
+									title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoSuspensionModificarDireccionCorrespondencia}"
+									actionListener="#{beanGrabacion.editarDireccionCorrespondencia}" />
+							</div>
+						</div>
+					</p:panel>
+					<ui:fragment rendered="#{!beanGrabacion.generar}">
+						<br />
+					</ui:fragment>
+					<p:panel id="idPanelDatosContacto" widgetVar="wvPanelDatosC"
+						rendered="#{!beanGrabacion.generar}"
+						header="#{messageBeanSNR.commonLabelDatosDelContacto}"
+						toggleable="true" collapsed="true">
+						<p:outputPanel id="idOpTelFijo">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelPaisDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:selectOneMenu id="idSOMPaisTel" style="width:80%"
+											disabled="#{!beanGrabacion.editarDatosContacto or beanGrabacion.datosGuardados}"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoPaisTelefonoFijo}"
+											value="#{beanGrabacion.parametros.datosDelInteresado.telefonoFijo.idPais}">
+											<p:ajax update="@this" />
+											<p:ajax listener="#{beanGrabacion.cambiarPaisTelefono}"
+												update="idSOMDepTel,idItIndicativo" />
+											<f:selectItem itemValue=""
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+											<f:selectItems value="#{beanReference.findPaises()}"
+												var="paises" itemValue="#{paises.idPais}"
+												itemLabel="#{paises.nombre}" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDepartamentoDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:selectOneMenu id="idSOMDepTel" style="width:80%"
+											disabled="#{!beanGrabacion.editarDatosContacto or beanGrabacion.datosGuardados}"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoDepartamentoTelefonoFijo}"
+											value="#{beanGrabacion.parametros.datosDelInteresado.telefonoFijo.idDepartamento}">
+											<p:ajax
+												listener="#{beanGrabacion.findIndicativoDepartamento}"
+												update="idItIndicativo" />
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems
+												value="#{beanGrabacion.findDepartamentosTelefono()}"
+												var="depRes" itemValue="#{depRes.idDepartamento}"
+												itemLabel="#{depRes.nombre}" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<div class="ui-g-4 ui-md-4 ui-lg-3">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelIndicativo}" />
+									</div>
+									<div class="ui-g-2 ui-md-2 ui-lg-2">
+										<p:inputText onblur="value=value.toUpperCase()"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoIndicativo}"
+											id="idItIndicativo" readonly="true" size="4"
+											value="#{beanGrabacion.parametros.datosDelInteresado.telefonoFijo.indicativo}"
+											maxlength="15" />
+									</div>
+									<div class="ui-g-1 ui-md-1 ui-lg-1">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelSignoNumero}" />
+									</div>
+									<div class="ui-g-5 ui-md-5 ui-lg-4">
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idItTelefonoFijo" maxlength="7"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoTelefonoFijo}"
+											placeholder="#{messageBeanSNR.commonLabelTelefonoFijo}"
+											readonly="#{!beanGrabacion.editarDatosContacto or beanGrabacion.datosGuardados}"
+											value="#{beanGrabacion.parametros.datosDelInteresado.telefonoFijo.telefono}">
+											<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+										</p:inputText>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelPaisDelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:selectOneMenu id="idSOMPaisTelMov" style="width:80%"
+											disabled="#{!beanGrabacion.editarDatosContacto or beanGrabacion.datosGuardados}"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoPaisTelefonoMovil}"
+											value="#{beanGrabacion.parametros.datosDelInteresado.telefonoMovil.idPais}">
+											<p:ajax update="idItIndicativoMovil" />
+											<f:selectItem itemValue=""
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+											<f:selectItems value="#{beanReference.findPaises()}"
+												var="paises" itemValue="#{paises.idPais}"
+												itemLabel="#{paises.nombre}" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<div class="ui-g-4 ui-md-4 ui-lg-3">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelIndicativo}" />
+										<p:spacer />
+									</div>
+									<div class="ui-g-2 ui-md-2 ui-lg-2">
+										<p:inputText onblur="value=value.toUpperCase()"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoIndicativoMovil}"
+											id="idItIndicativoMovil" readonly="true" size="4"
+											value="#{beanGrabacion.parametros.datosDelInteresado.telefonoMovil.idPais}" />
+									</div>
+									<div class="ui-g-1 ui-md-1 ui-lg-1">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelSignoNumero}" />
+										<p:spacer />
+									</div>
+									<div class="ui-g-5 ui-md-5 ui-lg-5">
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idItTelefonoMovil"
+											readonly="#{!beanGrabacion.editarDatosContacto or beanGrabacion.datosGuardados}"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoTelefonoMovil}"
+											placeholder="#{messageBeanSNR.commonLabelTelefonoMovil}"
+											value="#{beanGrabacion.parametros.datosDelInteresado.telefonoMovil.telefono}"
+											maxlength="10">
+											<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+										</p:inputText>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelCorreoElectronico}#{messageBeanSNR.commonLabelObligatorio}" />
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:inputText onblur="value=value.toUpperCase()" id="idItEmail"
+											style="width:83% !important"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoCorreoElectronico}"
+											placeholder="#{messageBeanSNR.commonLabelEjemploCorreo}"
+											size="30" maxlength="100"
+											readonly="#{!beanGrabacion.editarDatosContacto or beanGrabacion.datosGuardados}"
+											value="#{beanGrabacion.parametros.datosDelInteresado.correoElectronico.correoElectronico}" />
+									</div>
+								</div>
+							</div>
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:commandButton icon="fa fa-pencil" iconPos="left"
+										update="fProcesosGrabacion"
+										value="#{messageBeanSNR.commonButtonModificarDatosContacto}"
+										rendered="#{!beanGrabacion.editarDatosContacto and !beanGrabacion.datosGuardados}"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoSuspensionModificarDatosContacto}"
+										actionListener="#{beanGrabacion.editarDatosContacto}" />
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:panel>
+					<br />
+					<p:panel
+						header="#{messageBeanSNR.commonLabelDatosParaLaGeneracionDeLaResolucion}">
+						<p:outputPanel id="opArticulo">
+							<ui:fragment rendered="#{beanGrabacion.motivoTramite eq '40'}">
+								<br />
+							</ui:fragment>
+							<p:outputPanel rendered="#{beanGrabacion.motivoTramite eq '40'}">
+								<div class="ui-g" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNoAnotaciones}" />
+									<p:spacer />
+									<p:spacer />
+									<p:spacer />
+									<p:spinner id="idSNoAnotaciones" min="0" size="5"
+										disabled="#{beanGrabacion.datosGuardados}"
+										value="#{beanGrabacion.numeroAnotaciones}" />
+								</div>
+							</p:outputPanel>
+							<br />
+							<p:outputPanel>
+								<div class="ui-g" align="left">
+									<p:outputLabel
+										value="#{beanGrabacion.motivoTramite eq '20' ? messageBeanSNR.commonLabelRazonesNegacion : messageBeanSNR.commonLabelJustificacion} #{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputTextarea rows="5" cols="240"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoSuspensionConsideraciones}"
+										counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+										onblur="value=value.toUpperCase()" id="idItaConsideraciones"
+										placeholder="#{messageBeanSNR.commonLabelConsideraciones}"
+										queryDelay="750" maxlength="4000" minQueryLength="4"
+										value="#{beanGrabacion.parametros.consideracion}"
+										counter="idNumeroCaracteresConsideraciones" />
+								</div>
+								<div align="right">
+									<h:outputText id="idNumeroCaracteresConsideraciones" />
+								</div>
+							</p:outputPanel>
+							<br />
+							<p:outputPanel id="idObservaciones">
+								<div align="left">
+									<strong> <p:outputLabel
+											value="#{messageBeanSNR.commonLabelObservaciones}" />
+									</strong> <br />
+									<p:inputTextarea rows="5" cols="240"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoSuspensionObservaciones}"
+										counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+										placeholder="#{messageBeanSNR.commonLabelObservaciones}"
+										value="#{beanGrabacion.observaciones}" queryDelay="750"
+										maxlength="4000" minQueryLength="4"
+										onblur="value=value.toUpperCase()"
+										counter="idNumeroCaracteres">
+									</p:inputTextarea>
+								</div>
+								<div align="right">
+									<h:outputText id="idNumeroCaracteres" />
+								</div>
+							</p:outputPanel>
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-12">
+									<p:outputPanel id="opPanelTerminarProceso">
+										<p:commandButton
+											value="#{messageBeanSNR.commonLabelGuardarInformacion}"
+											icon="fa fa-save" iconPos="left" update="fProcesosGrabacion"
+											onclick="PF('dlgConfirmacion').show();">
+										</p:commandButton>
+										<p:commandButton
+											rendered="#{beanGrabacion.datosGuardados}"
+											value="#{messageBeanSNR.commonButtonGenerarArchivo}"
+											icon="fa fa-file-o" iconPos="left"
+											update="fProcesosGrabacion"
+											actionListener="#{beanGrabacion.generarDocumento()}">
+										</p:commandButton>
+										<p:spacer />
+										<p:commandButton id="idCbDescargarDoc"
+											value="#{messageBeanSNR.commonButtonVisualizarDocumento}"
+											rendered="#{beanGrabacion.documentoGenerado}" ajax="false"
+											icon="fa fa-arrow-down"
+											actionListener="#{beanGrabacion.generarDescarga()}">
+											<p:fileDownload value="#{beanGrabacion.imagen}" />
+										</p:commandButton>
+									</p:outputPanel>
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:panel>
+					<p:spacer />
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+							<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="#{beanGrabacion.accionVolver}">
+							</p:commandButton>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+							<p:commandButton
+								value="#{messageBeanSNR.commonButtonEnviarAlAprobador}"
+								update=":fProcesosGrabacion:opPanelTerminarProceso,:fProcesosGrabacion:globalMsg"
+								rendered="#{beanGrabacion.documentoGenerado}"
+								icon="fa fa-chevron-right" iconPos="right"
+								onclick="PF('dlg2Confirmacion').show();">
+							</p:commandButton>
+						</div>
+					</div>
+					<br />
+					<p:confirmDialog global="true">
+						<div class="ui-g">
+							<div align="right" class="ui-g-6 ui-md-6 ui-lg-6">
+								<p:commandButton value="#{messageBeanSNR.commonLabelSi}"
+									type="button" styleClass="ui-confirmdialog-yes"
+									icon="fa fa-check" />
+							</div>
+							<div align="right" class="ui-g-6 ui-md-6 ui-lg-6">
+								<p:commandButton value="#{messageBeanSNR.commonLabelNo}"
+									type="button" styleClass="ui-confirmdialog-no"
+									icon="fa fa-close" />
+							</div>
+						</div>
+					</p:confirmDialog>
+				</center>
+			</h:form>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgConfirmacion" modal="true" height="90"
+				resizable="false">
+				<h:form id="fDialog" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText value="#{messageBeanSNR.commonLabelMensajeConfirmar}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fProcesosGrabacion"
+							actionListener="#{beanGrabacion.salvarGrabacionMatriculas()}"
+							oncomplete="PF('dlgConfirmacion').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlgConfirmacion').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlg2Confirmacion" modal="true" height="90"
+				resizable="false">
+				<h:form id="fDialog2" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeEnviarAprobador}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fProcesosGrabacion"
+							action="#{beanGrabacion.enviarAprobador()}"
+							oncomplete="PF('dlg2Confirmacion').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlg2Confirmacion').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,2784 @@
+<project name="Build" default="all" basedir=".">
+	<property name="expose.dir" location="C:\ear" />
+	<property name="dist.dir" location="${basedir}/dist" />
+	<property name="lib.dir" location="${dist.dir}/lib" />
+	<property name="plugins.dir" location="C:\eclipse\plugins" />
+	<property name="workspace.dir" location="${basedir}/.." />
+	<property name="prefijo.ear" value="TO_QA_8001" />
+	<tstamp>
+		<format property="dateTime.ear" pattern="yyyyMMdd_HHmm" />
+	</tstamp>
+	<property name="webinf.lib.dir" location="${workspace.dir}/SNRWEB/WebContent/WEB-INF/lib" />
+	<target name="all" depends="borrarViejos,exposeEAR,exposeCMF,clean" />
+	<target name="init">
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${lib.dir}" />
+		<copy todir="${lib.dir}" verbose="true">
+			<fileset dir="${workspace.dir}/SNREAR/EarContent/lib/">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="borrarViejos">
+		<delete dir="${expose.dir}" verbose="true" />
+	</target>
+	<target name="checkWEBINFLib">
+		<available property="no.asjava.dir" file="${webinf.lib.dir}" type="dir" />
+	</target>
+	<target name="createWEBINFLib" depends="checkWEBINFLib" unless="no.asjava.dir">
+		<mkdir dir="${webinf.lib.dir}" />
+	</target>
+	<target name="clean">
+		<delete dir="${dist.dir}" verbose="true" />
+	</target>
+	<target name="exposeEAR" depends="SNREAR">
+		<tstamp />
+		<move file="${dist.dir}/SNREAR.ear" tofile="${expose.dir}/SNREAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeEARCYN" depends="SNREARCYN">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCYNEAR.ear" tofile="${expose.dir}/SNRServicesCYNEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeEARCYNMR" depends="SNREARCYNMR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCYNMREAR.ear" tofile="${expose.dir}/SNRServicesCYNMREAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeEARN" depends="SNREARN">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesNEAR.ear" tofile="${expose.dir}/SNRServicesNEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeEARRNB" depends="SNREARRNB">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesRNBEAR.ear" tofile="${expose.dir}/SNRServicesRNBEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesBachue" depends="SNRServicesBachueEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesBachueEAR.ear" tofile="${expose.dir}/SNRServicesBachueEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCA" depends="SNRServicesCAEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCAEAR.ear" tofile="${expose.dir}/SNRServicesCAEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCC" depends="SNRServicesCCEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCCEAR.ear" tofile="${expose.dir}/SNRServicesCCEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesMTO" depends="SNRServicesMTOEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesMTOEAR.ear" tofile="${expose.dir}/SNRServicesMTOEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesMCO" depends="SNRServicesMCOEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesMCOEAR.ear" tofile="${expose.dir}/SNRServicesMCOEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesMQO" depends="SNRServicesMQOEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesMQOEAR.ear" tofile="${expose.dir}/SNRServicesMQOEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesAT" depends="SNRServicesATEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesATEAR.ear" tofile="${expose.dir}/SNRServicesATEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesNM" depends="SNRServicesNMEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesNMEAR.ear" tofile="${expose.dir}/SNRServicesNMEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesRRRM" depends="SNRServicesRRRMEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesRRRMEAR.ear" tofile="${expose.dir}/SNRServicesRRRMEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCS" depends="SNRServicesCSEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCSEAR.ear" tofile="${expose.dir}/SNRServicesCSEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesPI" depends="SNRServicesPIEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesPIEAR.ear" tofile="${expose.dir}/SNRServicesPIEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCHSP" depends="SNRServicesCHSPEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCHSPEAR.ear" tofile="${expose.dir}/SNRServicesCHSPEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCT" depends="SNRServicesCTEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCTEAR.ear" tofile="${expose.dir}/SNRServicesCTEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesEP" depends="SNRServicesEPEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesEPEAR.ear" tofile="${expose.dir}/SNRServicesEPEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesGAT" depends="SNRServicesGATEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesGATEAR.ear" tofile="${expose.dir}/SNRServicesGATEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeWorkflow" depends="SNRWorkflowEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRWorkflowEAR.ear" tofile="${expose.dir}/SNRWorkflowEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeCMF" depends="SNRCMFEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRCMFEAR.ear" tofile="${expose.dir}/SNRCMFEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesOF" depends="SNRServicesOFEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesOFEAR.ear" tofile="${expose.dir}/SNRServicesOFEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCD" depends="SNRServicesCDEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCDEAR.ear" tofile="${expose.dir}/SNRServicesCDEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCDR" depends="SNRServicesCDREAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCDREAR.ear" tofile="${expose.dir}/SNRServicesCDREAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesGCC" depends="SNRServicesGCCEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesGCCEAR.ear" tofile="${expose.dir}/SNRServicesGCCEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesGS" depends="SNRServicesGSEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesGSEAR.ear" tofile="${expose.dir}/SNRServicesGSEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCLP" depends="SNRServicesCLPEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCLPEAR.ear" tofile="${expose.dir}/SNRServicesCLPEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCP" depends="SNRServicesCPEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCPEAR.ear" tofile="${expose.dir}/SNRServicesCPEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCXA" depends="SNRServicesCXAEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCXAEAR.ear" tofile="${expose.dir}/SNRServicesCXAEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCXCM" depends="SNRServicesCXCMEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCXCMEAR.ear" tofile="${expose.dir}/SNRServicesCXCMEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCXCT" depends="SNRServicesCXCTEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCXCTEAR.ear" tofile="${expose.dir}/SNRServicesCXCTEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCXHP" depends="SNRServicesCXHPEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCXHPEAR.ear" tofile="${expose.dir}/SNRServicesCXHPEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCXIP" depends="SNRServicesCXIPEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCXIPEAR.ear" tofile="${expose.dir}/SNRServicesCXIPEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCXI" depends="SNRServicesCXIEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCXIEAR.ear" tofile="${expose.dir}/SNRServicesCXIEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCXMR" depends="SNRServicesCXMREAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCXMREAR.ear" tofile="${expose.dir}/SNRServicesCXMREAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCXS" depends="SNRServicesCXSEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCXSEAR.ear" tofile="${expose.dir}/SNRServicesCXSEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesCXTC" depends="SNRServicesCXTCEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesCXTCEAR.ear" tofile="${expose.dir}/SNRServicesCXTCEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesSC" depends="SNRServicesSCEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesSCEAR.ear" tofile="${expose.dir}/SNRServicesSCEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesSDC" depends="SNRServicesSDCEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesSDCEAR.ear" tofile="${expose.dir}/SNRServicesSDCEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="exposeServicesNDC" depends="SNRServicesNDCEAR">
+		<tstamp />
+		<move file="${dist.dir}/SNRServicesNDCEAR.ear" tofile="${expose.dir}/SNRServicesNDCEAR_${dateTime.ear}_${prefijo.ear}.ear" verbose="true" />
+	</target>
+	<target name="SNRBusiness" depends="init">
+		<jar basedir="${workspace.dir}/SNRBusiness/bin" destfile="${lib.dir}/SNRBusiness.jar" update="true" />
+	</target>
+	<target name="SNRCommon" depends="init">
+		<jar basedir="${workspace.dir}/SNRCommon/bin" destfile="${lib.dir}/SNRCommon.jar" update="true" />
+	</target>
+	<target name="SNRConfig" depends="init">
+		<jar basedir="${workspace.dir}/SNRConfig/bin" destfile="${lib.dir}/SNRConfig.jar" update="true">
+			<exclude name="**/*.dev" />
+			<exclude name="**/*.prd" />
+			<exclude name="**/PrimeFacesValidationMessages.properties" />
+		</jar>
+	</target>
+	<target name="SNRDao" depends="init">
+		<jar basedir="${workspace.dir}/SNRDao/bin" destfile="${lib.dir}/SNRDao.jar" update="true" />
+	</target>
+	<target name="SNRDelegate" depends="init">
+		<jar basedir="${workspace.dir}/SNRDelegate/bin" destfile="${lib.dir}/SNRDelegate.jar" update="true" />
+	</target>
+	<target name="SNREAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNREJBClient,SNREJB,SNRDelegate,SNRScheduler,SNREnvioDocumentosWEB,SNRWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/application.xml" destfile="${dist.dir}/SNREAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJB.jar" />
+				<include name="SNRWEB.war" />
+				<include name="SNREnvioDocumentosWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClient.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/SNRScheduler.jar" />
+				<include name="lib/aspose-words-16.3.0-jdk16.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/c3p0-0.9.1.1.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-io-1.4.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/commons-text-1.8.jar" />
+				<include name="lib/commons-lang3-3.9.jar" />
+				<include name="lib/core-3.2.1.jar" />
+				<include name="lib/itext-5.0.5.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/jbarcodebean-1.2.0.jar" />
+				<include name="lib/jsch-0.1.55.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/ojdbc7.jar" />
+				<include name="lib/gson-2.8.6.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/quartz-2.2.3.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/stellent.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNREARCYN" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCYN,SNREJBCYN,SNRWEBCYN">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCYN.xml" destfile="${dist.dir}/SNRServicesCYNEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCYN.jar" />
+				<include name="SNRServicesCYNWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClient.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/SNRScheduler.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/c3p0-0.9.1.1.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/javax.mail-1.6.2.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/quartz-2.2.3.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNREARCYNMR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCYNMR,SNREJBCYNMR,SNRWEBCYNMR">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCYNMR.xml" destfile="${dist.dir}/SNRServicesCYNMREAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCYNMR.jar" />
+				<include name="SNRServicesCYNMRWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClient.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNREARN" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientN,SNREJBN,SNRWEBN">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesN.xml" destfile="${dist.dir}/SNRServicesNEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBN.jar" />
+				<include name="SNRServicesNWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClient.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNREARRNB" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientRNB,SNREJBRNB,SNRWEBRNB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesRNB.xml" destfile="${dist.dir}/SNRServicesRNBEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBRNB.jar" />
+				<include name="SNRServicesRNBWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClient.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesBachueEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCB,SNREJBCB,SNRServicesBachueWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesBachue.xml" destfile="${dist.dir}/SNRServicesBachueEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCB.jar" />
+				<include name="SNRServicesBachueWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCB.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/aspose-words-16.3.0-jdk16.jar" />
+				<include name="lib/itext-5.0.5.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/core-3.2.1.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/jbarcodebean-1.2.0.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCAEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCA,SNREJBCA,SNRServicesCAWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCA.xml" destfile="${dist.dir}/SNRServicesCAEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCA.jar" />
+				<include name="SNRServicesCAWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCA.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCCEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCC,SNREJBCC,SNRServicesCCWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCC.xml" destfile="${dist.dir}/SNRServicesCCEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCC.jar" />
+				<include name="SNRServicesCCWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCC.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesMTOEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientMTO,SNREJBMTO,SNRServicesMTOWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesMTO.xml" destfile="${dist.dir}/SNRServicesMTOEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBMTO.jar" />
+				<include name="SNRServicesMTOWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientMTO.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesMCOEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientMCO,SNREJBMCO,SNRServicesMCOWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesMCO.xml" destfile="${dist.dir}/SNRServicesMCOEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBMCO.jar" />
+				<include name="SNRServicesMCOWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientMCO.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesMQOEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientMQO,SNREJBMQO,SNRServicesMQOWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesMQO.xml" destfile="${dist.dir}/SNRServicesMQOEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBMQO.jar" />
+				<include name="SNRServicesMQOWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientMQO.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesATEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientAT,SNREJBAT,SNRServicesATWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesAT.xml" destfile="${dist.dir}/SNRServicesATEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBAT.jar" />
+				<include name="SNRServicesATWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientAT.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesNMEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientNM,SNREJBNM,SNRServicesNMWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesNM.xml" destfile="${dist.dir}/SNRServicesNMEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBNM.jar" />
+				<include name="SNRServicesNMWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientNM.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesRRRMEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientRRRM,SNREJBRRRM,SNRServicesRRRMWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesRRRM.xml" destfile="${dist.dir}/SNRServicesRRRMEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBRRRM.jar" />
+				<include name="SNRServicesRRRMWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientRRRM.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCSEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCS,SNREJBCS,SNRServicesCSWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCS.xml" destfile="${dist.dir}/SNRServicesCSEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCS.jar" />
+				<include name="SNRServicesCSWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCS.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesPIEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientPI,SNREJBPI,SNRServicesPIWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesPI.xml" destfile="${dist.dir}/SNRServicesPIEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBPI.jar" />
+				<include name="SNRServicesPIWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientPI.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCHSPEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCHSP,SNREJBCHSP,SNRServicesCHSPWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCHSP.xml" destfile="${dist.dir}/SNRServicesCHSPEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCHSP.jar" />
+				<include name="SNRServicesCHSPWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCHSP.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/itext-5.0.5.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/core-3.2.1.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCTEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCT,SNREJBCT,SNRServicesCTWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCT.xml" destfile="${dist.dir}/SNRServicesCTEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCT.jar" />
+				<include name="SNRServicesCTWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCT.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/aspose-words-16.3.0-jdk16.jar" />
+				<include name="lib/itext-5.0.5.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/core-3.2.1.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesEPEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientEP,SNREJBEP,SNRServicesEPWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesEP.xml" destfile="${dist.dir}/SNRServicesEPEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBEP.jar" />
+				<include name="SNRServicesEPWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientEP.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/aspose-words-16.3.0-jdk16.jar" />
+				<include name="lib/itext-5.0.5.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/core-3.2.1.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesGATEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientGAT,SNREJBGAT,SNRServicesGATWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesGAT.xml" destfile="${dist.dir}/SNRServicesGATEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBGAT.jar" />
+				<include name="SNRServicesGATWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientGAT.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/aspose-words-16.3.0-jdk16.jar" />
+				<include name="lib/itext-5.0.5.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/core-3.2.1.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRWorkflowEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientWorkflow,SNREJBWorkflow,SNRWorkflowWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationWorkflowWeb.xml" destfile="${dist.dir}/SNRWorkflowEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBWorkflow.jar" />
+				<include name="SNRWorkflowWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientWorkflow.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/SNRScheduler.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/c3p0-0.9.1.1.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/gson-2.8.6.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/quartz-2.2.3.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRCMFEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCMF,SNREJBCMF,SNRCMFWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationCMF.xml" destfile="${dist.dir}/SNRCMFEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCMF.jar" />
+				<include name="SNRCMFWEB.war" />
+				<include name="lib/core-3.2.1.jar" />
+				<include name="lib/itext-5.0.5.jar" />
+				<include name="lib/zxing.jar" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCMF.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/SNRScheduler.jar" />
+				<include name="lib/icu4j-67.1.jar" />
+				<include name="lib/aspose-words-16.3.0-jdk16.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/c3p0-0.9.1.1.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-io-1.4.jar" />
+				<include name="lib/commons-lang3-3.9.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/gson-2.8.6.jar" />
+				<include name="lib/jsch-0.1.55.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/quartz-2.2.3.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesOFEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientOF,SNREJBOF,SNRServicesOFWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesOF.xml" destfile="${dist.dir}/SNRServicesOFEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBOF.jar" />
+				<include name="SNRServicesOFWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientOF.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCDEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCD,SNREJBCD,SNRServicesCDWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCD.xml" destfile="${dist.dir}/SNRServicesCDEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCD.jar" />
+				<include name="SNRServicesCDWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCD.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCDREAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCDR,SNREJBCDR,SNRServicesCDRWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCDR.xml" destfile="${dist.dir}/SNRServicesCDREAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCDR.jar" />
+				<include name="SNRServicesCDRWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCDR.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/gson-2.8.6.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesGCCEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientGCC,SNREJBGCC,SNRServicesGCCWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesGCC.xml" destfile="${dist.dir}/SNRServicesGCCEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBGCC.jar" />
+				<include name="SNRServicesGCCWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientGCC.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesGSEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientGS,SNREJBGS,SNRServicesGSWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesGS.xml" destfile="${dist.dir}/SNRServicesGSEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBGS.jar" />
+				<include name="SNRServicesGSWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientGS.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/aspose-words-16.3.0-jdk16.jar" />
+				<include name="lib/itext-5.0.5.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/core-3.2.1.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/gson-2.8.6.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCLPEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCLP,SNREJBCLP,SNRServicesCLPWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCLP.xml" destfile="${dist.dir}/SNRServicesCLPEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCLP.jar" />
+				<include name="SNRServicesCLPWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCLP.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCPEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCP,SNREJBCP,SNRServicesCPWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCP.xml" destfile="${dist.dir}/SNRServicesCPEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCP.jar" />
+				<include name="SNRServicesCPWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCP.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCXAEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCXA,SNREJBCXA,SNRServicesCXAWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCXA.xml" destfile="${dist.dir}/SNRServicesCXAEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCXA.jar" />
+				<include name="SNRServicesCXAWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCXA.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCXCMEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCXCM,SNREJBCXCM,SNRServicesCXCMWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCXCM.xml" destfile="${dist.dir}/SNRServicesCXCMEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCXCM.jar" />
+				<include name="SNRServicesCXCMWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCXCM.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCXCTEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCXCT,SNREJBCXCT,SNRServicesCXCTWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCXCT.xml" destfile="${dist.dir}/SNRServicesCXCTEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCXCT.jar" />
+				<include name="SNRServicesCXCTWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCXCT.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCXHPEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCXHP,SNREJBCXHP,SNRServicesCXHPWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCXHP.xml" destfile="${dist.dir}/SNRServicesCXHPEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCXHP.jar" />
+				<include name="SNRServicesCXHPWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCXHP.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCXIPEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCXIP,SNREJBCXIP,SNRServicesCXIPWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCXIP.xml" destfile="${dist.dir}/SNRServicesCXIPEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCXIP.jar" />
+				<include name="SNRServicesCXIPWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCXIP.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/gson-2.8.6.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCXIEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCXI,SNREJBCXI,SNRServicesCXIWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCXI.xml" destfile="${dist.dir}/SNRServicesCXIEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCXI.jar" />
+				<include name="SNRServicesCXIWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCXI.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCXMREAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCXMR,SNREJBCXMR,SNRServicesCXMRWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCXMR.xml" destfile="${dist.dir}/SNRServicesCXMREAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCXMR.jar" />
+				<include name="SNRServicesCXMRWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCXMR.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCXSEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCXS,SNREJBCXS,SNRServicesCXSWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCXS.xml" destfile="${dist.dir}/SNRServicesCXSEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCXS.jar" />
+				<include name="SNRServicesCXSWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCXS.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesCXTCEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientCXTC,SNREJBCXTC,SNRServicesCXTCWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesCXTC.xml" destfile="${dist.dir}/SNRServicesCXTCEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBCXTC.jar" />
+				<include name="SNRServicesCXTCWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientCXTC.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesSCEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientSC,SNREJBSC,SNRServicesSCWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesSC.xml" destfile="${dist.dir}/SNRServicesSCEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBSC.jar" />
+				<include name="SNRServicesSCWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientSC.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/zxing.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/jbarcodebean-1.2.0.jar" />
+				<include name="lib/jsch-0.1.55.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+				<include name="lib/aspose-words-16.3.0-jdk16.jar" />
+				<include name="lib/itext-5.0.5.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesSDCEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientSDC,SNREJBSDC,SNRServicesSDCWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesSDC.xml" destfile="${dist.dir}/SNRServicesSDCEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBSDC.jar" />
+				<include name="SNRServicesSDCWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientSDC.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNRServicesNDCEAR" depends="init,SNRConfig,SNRCommon,SNRModel,SNRDao,SNRIntegration,SNRBusiness,SNRDelegate,SNREJBClientNDC,SNREJBNDC,SNRServicesNDCWEB">
+		<ear appxml="${workspace.dir}/SNREAR/EarContent/META-INF/applicationServicesNDC.xml" destfile="${dist.dir}/SNRServicesNDCEAR.ear" update="true">
+			<fileset dir="${dist.dir}">
+				<include name="SNREJBNDC.jar" />
+				<include name="SNRServicesNDCWEB.war" />
+				<include name="lib/SNRConfig.jar" />
+				<include name="lib/SNRCommon.jar" />
+				<include name="lib/SNRModel.jar" />
+				<include name="lib/SNRDao.jar" />
+				<include name="lib/SNRIntegration.jar" />
+				<include name="lib/SNRBusiness.jar" />
+				<include name="lib/SNREJBClientNDC.jar" />
+				<include name="lib/SNRDelegate.jar" />
+				<include name="lib/axis.jar" />
+				<include name="lib/commons-cli-1.2.jar" />
+				<include name="lib/commons-discovery-0.2.jar" />
+				<include name="lib/commons-logging-1.1.2.jar" />
+				<include name="lib/dom4j-1.6.1.jar" />
+				<include name="lib/jaxrpc.jar" />
+				<include name="lib/log4j-1.2.14.jar" />
+				<include name="lib/perf4j-0.9.16.jar" />
+				<include name="lib/poi-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-3.7-20101029.jar" />
+				<include name="lib/poi-ooxml-schemas-3.7-20101029.jar" />
+				<include name="lib/poi-scratchpad-3.7-20101029.jar" />
+				<include name="lib/saaj.jar" />
+				<include name="lib/slf4j-api-1.6.1.jar" />
+				<include name="lib/slf4j-log4j12-1.6.1.jar" />
+				<include name="lib/wsdl4j.jar" />
+				<include name="lib/xmlbeans-2.4.0_2.jar" />
+			</fileset>
+		</ear>
+	</target>
+	<target name="SNREJB" depends="init">
+		<jar destfile="${dist.dir}/SNREJB.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr01/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCYN" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCYN.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr16/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+				<exclude name="com/bachue/snr/prosnr16/ejb/session/stateless/cyn/MotorRecepcionBean.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCYNMR" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCYNMR.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr16/ejb/session/stateless/cyn/MotorRecepcionBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBN" depends="init">
+		<jar destfile="${dist.dir}/SNREJBN.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr20/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBRNB" depends="init">
+		<jar destfile="${dist.dir}/SNREJBRNB.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/RegistrarReintentoServicioBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClient" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClient.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr01/" />
+				<include name="com/bachue/snr/ejb/session/stateless/reference/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCYN" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClient.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr16/" />
+				<include name="com/bachue/snr/ejb/session/stateless/reference/" />
+				<exclude name="com/bachue/snr/prosnr16/ejb/session/stateless/cyn/MotorRecepcionRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCYNMR" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClient.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr16/ejb/session/stateless/cyn/MotorRecepcionRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientN" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClient.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr20/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientRNB" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClient.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/RegistrarReintentoServicioRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCC" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCC.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr05/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCLP" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCLP.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/CambioLinderosPredioBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCP" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCP.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/CambioPropietarioBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCXA" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCXA.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/AnotacionesBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCXCM" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCXCM.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/ConsultaMigracionBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCXCT" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCXCT.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/CertificadoTradicionPDFBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCXHP" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCXHP.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/HistoricoPropietariosBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCXIP" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCXIP.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/IndicePropietariosBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCXI" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCXI.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/InmueblesBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCXMR" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCXMR.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/MatriculasRelacionadasBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCXS" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCXS.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/SalvedadesBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCXTC" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCXTC.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/TramitesEnCursoBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBSC" depends="init">
+		<jar destfile="${dist.dir}/SNREJBSC.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr17/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBSDC" depends="init">
+		<jar destfile="${dist.dir}/SNREJBSDC.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr18/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBNDC" depends="init">
+		<jar destfile="${dist.dir}/SNREJBNDC.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr22/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBMTO" depends="init">
+		<jar destfile="${dist.dir}/SNREJBMTO.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/MutacionesTercerOrdenBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBMCO" depends="init">
+		<jar destfile="${dist.dir}/SNREJBMCO.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/MutacionesCuartoOrdenBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBMQO" depends="init">
+		<jar destfile="${dist.dir}/SNREJBMQO.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/MutacionesQuintoOrdenBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBAT" depends="init">
+		<jar destfile="${dist.dir}/SNREJBAT.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr19/ejb/session/stateless/alertaTierras/AlertaTierrasBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBNM" depends="init">
+		<jar destfile="${dist.dir}/SNREJBNM.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/NuevasMatriculasBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBRRRM" depends="init">
+		<jar destfile="${dist.dir}/SNREJBRRRM.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/RRRMatriculasBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCS" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCS.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/SalvedadesBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBPI" depends="init">
+		<jar destfile="${dist.dir}/SNREJBPI.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/PartesInteresadasBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCC" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCC.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr05/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCLP" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCLP.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/CambioLinderosPredioRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCP" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCP.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/CambioPropietarioRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCXA" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCXA.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/AnotacionesRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCXCM" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCXCM.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/ConsultaMigracionRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCXCT" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCXCT.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/CertificadoTradicionPDFRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCXHP" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCXHP.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/HistoricoPropietariosRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCXIP" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCXIP.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/IndicePropietariosRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCXI" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCXI.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/InmueblesRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCXMR" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCXMR.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/MatriculasRelacionadasRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCXS" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCXS.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/SalvedadesRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCXTC" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCXTC.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr14/ejb/session/stateless/coexistencia/TramitesEnCursoRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientSC" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientSC.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr17/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientSDC" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientSDC.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr18/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientNDC" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientNDC.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr22/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientMTO" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientMTO.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/MutacionesTercerOrdenRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientMCO" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientMCO.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/MutacionesCuartoOrdenRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientMQO" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientMQO.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/MutacionesQuintoOrdenRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientAT" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientAT.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr19/ejb/session/stateless/alertaTierras/AlertaTierrasRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientNM" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientNM.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/NuevasMatriculasRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientRRRM" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientRRRM.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/RRRMatriculasRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCS" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCS.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/SalvedadesRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientPI" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientPI.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr10/ejb/session/stateless/catastro/PartesInteresadasRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCA" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCA.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr03/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCA" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCA.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr03/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCB" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCB.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr04/ejb/session/stateless/operacionesFinancieras/OperacionesFinancierasBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCB" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCB.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr04/ejb/session/stateless/operacionesFinancieras/OperacionesFinancierasRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCT" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCT.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr06/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCT" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCT.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr06/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCHSP" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCHSP.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr07/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCHSP" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCHSP.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr07/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBEP" depends="init">
+		<jar destfile="${dist.dir}/SNREJBEP.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr08/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientEP" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientEP.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr08/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBGAT" depends="init">
+		<jar destfile="${dist.dir}/SNREJBGAT.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr09/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientGAT" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientGAT.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr09/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBWorkflow" depends="init">
+		<jar destfile="${dist.dir}/SNREJBWorkflow.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr02/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientWorkflow" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientWorkflow.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr02/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCMF" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCMF.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr21/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCMF" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCMF.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/ejb/session/stateless/reference/" />
+				<include name="com/bachue/snr/prosnr21/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBOF" depends="init">
+		<jar destfile="${dist.dir}/SNREJBOF.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr04/ejb/session/stateless/operacionesFinancieras/NotificacionDePagosBean.class" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientOF" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientOF.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr04/ejb/session/stateless/operacionesFinancieras/NotificacionDePagosRemote.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCD" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCD.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr11/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBCDR" depends="init">
+		<jar destfile="${dist.dir}/SNREJBCDR.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr15/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBGCC" depends="init">
+		<jar destfile="${dist.dir}/SNREJBGCC.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr12/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBGS" depends="init">
+		<jar destfile="${dist.dir}/SNREJBGS.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJB/build/classes">
+				<exclude name="META-INF/ejb-jar.xml" />
+				<exclude name="META-INF/sun-ejb-jar.xml" />
+				<include name="com/bachue/snr/prosnr13/" />
+				<include name="com/bachue/snr/prosnr01/ejb/session/stateless/Logger.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCD" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCD.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr11/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientCDR" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientCDR.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr15/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientGCC" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientGCC.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr12/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNREJBClientGS" depends="init">
+		<jar destfile="${lib.dir}/SNREJBClientGS.jar" update="true">
+			<fileset dir="${workspace.dir}/SNREJBClient/build/classes">
+				<include name="com/bachue/snr/prosnr13/" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="SNRIntegration" depends="init">
+		<jar basedir="${workspace.dir}/SNRIntegration/bin" destfile="${lib.dir}/SNRIntegration.jar" update="true" />
+	</target>
+	<target name="SNRModel" depends="init">
+		<jar basedir="${workspace.dir}/SNRModel/bin" destfile="${lib.dir}/SNRModel.jar" update="true" />
+	</target>
+	<target name="SNRScheduler" depends="init">
+		<jar basedir="${workspace.dir}/SNRScheduler/bin" destfile="${lib.dir}/SNRScheduler.jar" update="true" />
+	</target>
+	<target name="SNRWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRWEB.war" webxml="${workspace.dir}/SNRWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRWEB/build" />
+			<fileset dir="${workspace.dir}/SNRWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="**/*.xhtml" />
+				<include name="**/*.css" />
+				<include name="**/*.png" />
+				<include name="**/*.jpeg" />
+				<include name="**/*.jpg" />
+				<include name="**/*.gif" />
+				<include name="**/*.js" />
+				<include name="**/*.ttf" />
+				<include name="**/*.woff" />
+				<include name="**/*.woff2" />
+				<include name="WEB-INF/faces-config-application.xml" />
+				<include name="WEB-INF/weblogic.xml" />
+			</fileset>
+			<lib dir="${webinf.lib.dir}" />
+		</war>
+	</target>
+	<target name="SNRWEBCYN" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCYNWEB.war" webxml="${workspace.dir}/SNRServicesCYNWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCYNWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCYNWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+			<lib dir="${webinf.lib.dir}" />
+		</war>
+	</target>
+	<target name="SNRWEBCYNMR" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCYNMRWEB.war" webxml="${workspace.dir}/SNRServicesCYNMRWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCYNMRWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCYNMRWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+			<lib dir="${webinf.lib.dir}" />
+		</war>
+	</target>
+	<target name="SNRWEBN" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesNWEB.war" webxml="${workspace.dir}/SNRServicesNWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesNWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesNWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+			<lib dir="${webinf.lib.dir}" />
+		</war>
+	</target>
+	<target name="SNRWEBRNB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesRNBWEB.war" webxml="${workspace.dir}/SNRServicesRNBWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesRNBWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesRNBWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+			<lib dir="${webinf.lib.dir}" />
+		</war>
+	</target>
+	<target name="SNRWorkflowWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRWorkflowWEB.war" webxml="${workspace.dir}/SNRWorkflowWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRWorkflowWEB/build" />
+			<fileset dir="${workspace.dir}/SNRWorkflowWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="**/*.xhtml" />
+				<include name="**/*.css" />
+				<include name="**/*.png" />
+				<include name="**/*.gif" />
+				<include name="**/*.js" />
+				<include name="**/*.ttf" />
+				<include name="**/*.woff" />
+				<include name="**/*.woff2" />
+				<include name="WEB-INF/faces-config-application.xml" />
+				<include name="WEB-INF/weblogic.xml" />
+			</fileset>
+			<lib dir="${workspace.dir}/SNRWorkflowWEB/WebContent/WEB-INF/lib" />
+		</war>
+	</target>
+	<target name="SNRCMFWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRCMFWEB.war" webxml="${workspace.dir}/SNRCMFWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRCMFWEB/build" />
+			<fileset dir="${workspace.dir}/SNRCMFWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="**/*.xhtml" />
+				<include name="**/*.css" />
+				<include name="**/*.png" />
+				<include name="**/*.gif" />
+				<include name="**/*.js" />
+				<include name="**/*.ttf" />
+				<include name="**/*.woff" />
+				<include name="**/*.woff2" />
+				<include name="WEB-INF/faces-config-application.xml" />
+				<include name="WEB-INF/weblogic.xml" />
+			</fileset>
+			<lib dir="${workspace.dir}/SNRCMFWEB/WebContent/WEB-INF/lib" />
+		</war>
+	</target>
+	<target name="SNRServicesOFWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesOFWEB.war" webxml="${workspace.dir}/SNRServicesOFWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesOFWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesOFWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesBachueWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesBachueWEB.war" webxml="${workspace.dir}/SNRServicesBachueWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesBachueWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesBachueWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNREnvioDocumentosWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNREnvioDocumentosWEB.war" webxml="${workspace.dir}/SNREnvioDocumentosWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNREnvioDocumentosWEB/build" />
+			<fileset dir="${workspace.dir}/SNREnvioDocumentosWEB/WebContent/">
+				<include name="**/*.xhtml" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCAWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCAWEB.war" webxml="${workspace.dir}/SNRServicesCAWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCAWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCAWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCCWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCCWEB.war" webxml="${workspace.dir}/SNRServicesCCWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCCWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCCWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCLPWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCLPWEB.war" webxml="${workspace.dir}/SNRServicesCLPWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCLPWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCLPWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCPWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCPWEB.war" webxml="${workspace.dir}/SNRServicesCPWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCPWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCPWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCXAWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCXAWEB.war" webxml="${workspace.dir}/SNRServicesCXAWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCXAWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCXAWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCXCMWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCXCMWEB.war" webxml="${workspace.dir}/SNRServicesCXCMWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCXCMWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCXCMWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCXCTWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCXCTWEB.war" webxml="${workspace.dir}/SNRServicesCXCTWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCXCTWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCXCTWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCXHPWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCXHPWEB.war" webxml="${workspace.dir}/SNRServicesCXHPWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCXHPWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCXHPWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCXIPWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCXIPWEB.war" webxml="${workspace.dir}/SNRServicesCXIPWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCXIPWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCXIPWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCXIWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCXIWEB.war" webxml="${workspace.dir}/SNRServicesCXIWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCXIWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCXIWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCXMRWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCXMRWEB.war" webxml="${workspace.dir}/SNRServicesCXMRWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCXMRWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCXMRWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCXSWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCXSWEB.war" webxml="${workspace.dir}/SNRServicesCXSWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCXSWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCXSWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCXTCWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCXTCWEB.war" webxml="${workspace.dir}/SNRServicesCXTCWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCXTCWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCXTCWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesSCWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesSCWEB.war" webxml="${workspace.dir}/SNRServicesSCWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesSCWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesSCWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesSDCWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesSDCWEB.war" webxml="${workspace.dir}/SNRServicesSDCWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesSDCWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesSDCWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesNDCWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesNDCWEB.war" webxml="${workspace.dir}/SNRServicesNDCWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesNDCWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesNDCWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesMTOWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesMTOWEB.war" webxml="${workspace.dir}/SNRServicesMTOWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesMTOWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesMTOWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesMCOWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesMCOWEB.war" webxml="${workspace.dir}/SNRServicesMCOWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesMCOWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesMCOWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesMQOWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesMQOWEB.war" webxml="${workspace.dir}/SNRServicesMQOWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesMQOWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesMQOWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesATWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesATWEB.war" webxml="${workspace.dir}/SNRServicesATWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesATWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesATWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesNMWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesNMWEB.war" webxml="${workspace.dir}/SNRServicesNMWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesNMWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesNMWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesRRRMWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesRRRMWEB.war" webxml="${workspace.dir}/SNRServicesRRRMWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesRRRMWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesRRRMWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCSWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCSWEB.war" webxml="${workspace.dir}/SNRServicesCSWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCSWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCSWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesPIWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesPIWEB.war" webxml="${workspace.dir}/SNRServicesPIWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesPIWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesPIWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesGATWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesGATWEB.war" webxml="${workspace.dir}/SNRServicesGATWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesGATWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesGATWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCHSPWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCHSPWEB.war" webxml="${workspace.dir}/SNRServicesCHSPWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCHSPWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCHSPWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCDWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCDWEB.war" webxml="${workspace.dir}/SNRServicesCDWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCDWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCDWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCDRWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCDRWEB.war" webxml="${workspace.dir}/SNRServicesCDRWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCDRWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCDRWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesGCCWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesGCCWEB.war" webxml="${workspace.dir}/SNRServicesGCCWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesGCCWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesGCCWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesGSWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesGSWEB.war" webxml="${workspace.dir}/SNRServicesGSWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesGSWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesGSWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesCTWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesCTWEB.war" webxml="${workspace.dir}/SNRServicesCTWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesCTWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesCTWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+	<target name="SNRServicesEPWEB" depends="init,createWEBINFLib">
+		<war destfile="${dist.dir}/SNRServicesEPWEB.war" webxml="${workspace.dir}/SNRServicesEPWEB/WebContent/WEB-INF/web.xml">
+			<classes dir="${workspace.dir}/SNRServicesEPWEB/build" />
+			<fileset dir="${workspace.dir}/SNRServicesEPWEB/WebContent/">
+				<include name="**/*.html" />
+				<include name="wsdl/**/*.wsdl" />
+				<include name="WEB-INF/server-config.wsdd" />
+			</fileset>
+		</war>
+	</target>
+</project>

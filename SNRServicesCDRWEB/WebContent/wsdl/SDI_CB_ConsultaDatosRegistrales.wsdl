@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/consultadatosregistrales/v1"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/cb/consultadatosregistrales/consultardatosregistrales/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/consultadatosregistrales/v1">
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/consultadatosregistrales/consultardatosregistrales/v1">
+			<xsd:complexType
+				name="tipoEntradaConsultarDatosRegistrales">
+				<xsd:sequence>
+					<xsd:element name="modulo" type="xsd:string" />
+					<xsd:element name="criterioBusqueda" type="xsd:string" />
+					<xsd:element name="valorCriterioBusqueda"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="entradaConsultarDatosRegistrales"
+				type="bachue1:tipoEntradaConsultarDatosRegistrales" />
+
+			<xsd:complexType
+				name="tipoSalidaConsultarDatosRegistrales">
+				<xsd:sequence>
+					<xsd:element name="cantidadRegistros" type="xsd:string" />
+					<xsd:element name="matriculas">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="matricula"
+									type="bachue1:matricula" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200" />
+								<xsd:enumeration value="409" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<!-- Tipo complejo Matricula -->
+			<xsd:complexType name="matricula">
+				<xsd:sequence>
+					<xsd:element name="numero" type="xsd:string" />
+					<xsd:element name="matricula" type="xsd:string" />
+					<xsd:element name="codigoOrip" type="xsd:string" />
+					<xsd:element name="nombreOrip" type="xsd:string" />
+					<xsd:element name="chip" type="xsd:string"
+						minOccurs="0" nillable="true" />
+					<xsd:element name="estadoNupre" type="xsd:string"
+						minOccurs="0" nillable="true" />
+					<xsd:element name="nupre" type="xsd:string"
+						minOccurs="0" nillable="true" />
+					<xsd:element name="cedulaCatastral" type="xsd:string" />
+					<xsd:element name="direccionPredio" type="xsd:string" />
+					<xsd:element name="departamento" type="xsd:string" />
+					<xsd:element name="municipio" type="xsd:string" />
+					<xsd:element name="grupo" type="xsd:string" />
+					<xsd:element name="titulares">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="titular" type="bachue1:titular"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="anotaciones">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="anotacion"
+									type="bachue1:anotacion" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<!-- Tipo complejo Titular -->
+			<xsd:complexType name="titular">
+				<xsd:sequence>
+					<xsd:element name="tipoIdentificacionTitular"
+						type="xsd:string" />
+					<xsd:element name="identificacionTitular"
+						type="xsd:string" />
+					<xsd:element name="primerNombreTitular"
+						type="xsd:string" />
+					<xsd:element name="segundoNombreTitular"
+						type="xsd:string" minOccurs="0" nillable="true" />
+					<xsd:element name="primerApellidoTitular"
+						type="xsd:string" />
+					<xsd:element name="segundoApellidoTitular"
+						type="xsd:string" minOccurs="0" nillable="true" />
+					<xsd:element name="porcentajeParticipacion"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<!-- Tipo complejo Anotaci�n -->
+			<xsd:complexType name="anotacion">
+				<xsd:sequence>
+					<xsd:element name="consecutivoAnotacion"
+						type="xsd:string" />
+					<xsd:element name="tipoDocumentoAnotacion"
+						type="xsd:string" />
+					<xsd:element name="actoJuridico" type="xsd:string" />
+					<xsd:element name="drr" type="xsd:string" />
+					<xsd:element name="valorActo" type="xsd:string" />
+					<xsd:element name="fechaAnotacion" type="xsd:string" />
+					<xsd:element name="intervinientes">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="interviniente"
+									type="bachue1:interviniente" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<!-- Tipo complejo Interviniente -->
+			<xsd:complexType name="interviniente">
+				<xsd:sequence>
+					<xsd:element name="tipoIdentificacionInterviniente"
+						type="xsd:string" />
+					<xsd:element name="identificacionInterviniente"
+						type="xsd:string" />
+					<xsd:element name="primerNombreInterviniente"
+						type="xsd:string" />
+					<xsd:element name="segundoNombreInterviniente"
+						type="xsd:string" minOccurs="0" nillable="true" />
+					<xsd:element name="primerApellidoInterviniente"
+						type="xsd:string" />
+					<xsd:element name="segundoApellidoInterviniente"
+						type="xsd:string" minOccurs="0" nillable="true" />
+					<xsd:element name="rol" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="salidaConsultarDatosRegistrales"
+				type="bachue1:tipoSalidaConsultarDatosRegistrales" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="ConsultarDatosRegistrales_Request">
+		<wsdl:part name="entrada"
+			element="bachue1:entradaConsultarDatosRegistrales" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarDatosRegistrales_Response">
+		<wsdl:part name="salida"
+			element="bachue1:salidaConsultarDatosRegistrales" />
+	</wsdl:message>
+
+	<wsdl:portType name="SDI_CB_ConsultaDatosRegistrales">
+		<wsdl:operation name="ConsultarDatosRegistrales">
+			<wsdl:input
+				message="bachue:ConsultarDatosRegistrales_Request" />
+			<wsdl:output
+				message="bachue:ConsultarDatosRegistrales_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding
+		name="SDI_CB_ConsultaDatosRegistralesSOAP12Binding"
+		type="bachue:SDI_CB_ConsultaDatosRegistrales">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="ConsultarDatosRegistrales">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/consultadatosregistrales/v1/ConsultarDatosRegistrales" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SDI_CB_ConsultaDatosRegistrales">
+		<wsdl:port name="SDI_CB_ConsultaDatosRegistralesPort"
+			binding="bachue:SDI_CB_ConsultaDatosRegistralesSOAP12Binding">
+			<soap:address
+				location="http://localhost:7001/SNRServicesCDRWEB/services/SDI_CB_ConsultaDatosRegistralesPort" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+
+	<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+	<h:form id="confrontacion">
+		<p:growl id="idGrowl" sticky="false" showDetail="true" life="20000"
+			globalOnly="true" redisplay="false" />
+		<p:outputPanel style="min-width:800px;">
+			<!-- Datos del predio -->
+			<div class="ui-g">
+				<div class="ui-g-12 ui-md-3">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+					<br />
+					<p:inputText readonly="true"
+						title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeNir}"
+						value="#{beanPredioDocumentoActo.predio.get('NIR')}" />
+				</div>
+				<div class="ui-g-12 ui-md-3">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelIdTurno}" />
+					<br />
+					<p:inputText readonly="true"
+						title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTurno}"
+						value="#{beanPredioDocumentoActo.predio.get('ID_TURNO')}" />
+				</div>
+				<div class="ui-g-12 ui-md-3">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelFechaCreacion}" />
+					<br />
+					<p:inputText readonly="true"
+						title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeFechaCreacion}"
+						value="#{beanPredioDocumentoActo.turno.fechaCreacion}" />
+				</div>
+				<div class="ui-g-12 ui-md-3">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelFechaCreacion}" />
+					<br />
+					<p:inputText readonly="true"
+						title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeFechaCreacion}"
+						value="#{beanPredioDocumentoActo.turno.fechaCreacion}" />
+				</div>
+				<div class="ui-g-12 ui-md-3">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelDecisionCalificacion}" />
+					<br />
+					<p:inputText readonly="true"
+						title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeDecisionCalificacion}"
+						value="#{beanPredioDocumentoActo.decisionCalificacion}" />
+				</div>
+				<div class="ui-g-12 ui-md-3">
+					<br />
+					<div class="ui-g-12 ui-md-12">
+						<p:commandButton ajax="false"
+							value="#{messageBeanSNR.commonButtonVisualizarDocumentos}"
+							icon="fa fa-newspaper-o" iconPos="left" update="idGrowl"
+							actionListener="#{beanPredioDocumentoActo.descargarArchivoZip}">
+							<p:fileDownload value="#{beanPredioDocumentoActo.imagen}" />
+						</p:commandButton>
+					</div>
+				</div>
+				<script type="text/javascript">
+					function start()
+					{
+						PF('statusDownload').show();
+					}
+
+					function stop()
+					{
+						PF('statusDownload').hide();
+					}
+				</script>
+			</div>
+			<br />
+			<br />
+			<!-- Datos de Documento -->
+			<p:panel header="#{messageBeanSNR.commonLabelDocumento}"
+				toggleable="true" style="text-align:center">
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelTipoDeDocumento}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoDocumento}"
+							value="#{beanPredioDocumentoActo.documentos.get(0)['TIPO_DOCUMENTO']}" />
+						<br />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelNumeroDelDocumento}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeNumeroDocumento}"
+							value="#{beanPredioDocumentoActo.documentos.get(0)['NUMERO']}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+							value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeFechaDocumento}"
+							value="#{beanPredioDocumentoActo.documentos.get(0)['FECHA_DOCUMENTO']}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:inputText>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelOficinaDeOrigen}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeOficinaOrigen}"
+							value="#{beanPredioDocumentoActo.documentos.get(0)['NOMBRE_OFICINA']}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelTipoOficina}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoOficina}"
+							value="#{beanPredioDocumentoActo.documentos.get(0)['TIPO_OFICINA']}" />
+					</div>
+				</div>
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelPais}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludePais}"
+							value="#{beanPredioDocumentoActo.documentos.get(0)['PAIS']}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelDepartamento}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeDepartamento}"
+							value="#{beanPredioDocumentoActo.documentos.get(0)['DEPARTAMENTO']}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeMunicipio}"
+							value="#{beanPredioDocumentoActo.documentos.get(0)['MUNICIPIO']}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelEntidadExenta}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeEntidadExenta}"
+							value="#{beanPredioDocumentoActo.documentos.get(0)['ENTIDAD_EXENTA']}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelTipoEntidad}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoEntidad}"
+							value="#{beanPredioDocumentoActo.documentos.get(0)['TIPO_ENTIDAD']}" />
+					</div>
+				</div>
+			</p:panel>
+			<br />
+			<!-- Fin Datos de Documento -->
+
+			<!-- inicio Datos de turno-->
+
+			<p:panel header="#{messageBeanSNR.commonLabelIdTurno}"
+				toggleable="true" style="text-align:center">
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelIdTurno}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTurno}"
+							value="#{beanPredioDocumentoActo.documentos.get(0)['ID_TURNO_REPRODUCCION']}" />
+					</div>
+				</div>
+			</p:panel>
+			<br />
+			<br />
+
+			<!-- Fin Datos de turno-->
+
+		</p:outputPanel>
+	</h:form>
+</h:body>
+</html>

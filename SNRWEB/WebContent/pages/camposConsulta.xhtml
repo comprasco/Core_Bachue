@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelNegocio}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelCamposConsulta}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fCamposConsulta" style="width: 100%;"
+				onkeypress="return event.keyCode!=13">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:panel style="min-width:800px;">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonInsertarCamposConsulta}"
+									icon="fa fa-plus-circle" iconPos="left" update="globalMsg"
+									actionListener="#{beanCamposConsulta.cambiarEstado()}"
+									action="camposConsultaDetalle?faces-redirect=true">
+									<f:param name="pInsertarCamposConsulta" value="true" />
+								</p:commandButton>
+							</div>
+						</div>
+						<p:dataTable id="idBandeja" var="item"
+							value="#{beanCamposConsulta.findAllCamposConsulta()}"
+							emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+							<f:facet name="header">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelCamposConsulta}" />
+							</f:facet>
+							<p:column headerText="#{messageBeanSNR.commonLabelIdConsulta}"
+								filterBy="#{item.idConsulta}" width="8%">
+								<p:commandLink id="idConsulta" styleClass="subrayado"
+									actionListener="#{beanCamposConsulta.consultaDetallada(item)}"
+									action="camposConsultaDetalle?faces-redirect=true">
+
+									<h:outputText value="#{item.idConsulta}" />
+									<f:param name="idConsulta" value="#{item.idConsulta}" />
+								</p:commandLink>
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelIdCampo}"
+								filterBy="#{item.idCampo}" width="8%">
+								<h:outputText value="#{item.idCampo}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelTipoCampo}"
+								filterBy="#{item.tipoCampo}">
+								<h:outputText value="#{item.tipoCampo}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelNombreCampo}"
+								filterBy="#{item.nombreCampo}" width="20%">
+								<h:outputText value="#{item.nombreCampo}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelObligatory}"
+								filterBy="#{item.obligatorio}">
+								<h:outputText value="#{messageBeanSNR.commonSi}"
+									rendered="#{item.obligatorio=='S'}" />
+								<h:outputText value="#{messageBeanSNR.commonNo}"
+									rendered="#{item.obligatorio=='N'}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelEstado}"
+								filterBy="#{item.estado}" width="8%">
+								<h:outputText value="#{messageBeanSNR.commonLabelActivo}"
+									rendered="#{item.estado=='S'}" />
+								<h:outputText value="#{messageBeanSNR.commonLabelInactivo}"
+									rendered="#{item.estado=='N'}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelOrden}"
+								filterBy="#{item.orden}" width="8%">
+								<h:outputText value="#{item.orden}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelCampoTabla}"
+								filterBy="#{item.campoTabla}" width="20%">
+								<h:outputText value="#{item.campoTabla}" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</center>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

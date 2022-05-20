@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTarifa}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelRangoCuantia}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleRangoCuantia}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fRangoCuantiaDetalle" style="width: 100%;">
+				<p:growl id="gRangoCuantiaDetMsg" globalOnly="true"
+					showDetail="true" sticky="false" life="30000" redisplay="false"/>
+				<center>
+
+					<p:panel id="idPInsertUpdate"
+						header="#{beanRagoCuantia.insert ? messageBeanSNR.pageInsertarRangoCuantia : messageBeanSNR.pageEditarRangoCuantia}">
+						<div class="ui-g" align="center">
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelOperadorInferior}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText id="idItOperadorInferior" maxlength="2"
+									title="#{tooltipBeanSNR.administracionRangoCuantiaRangoCuantiaDetalleOperadorInferior}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelOperadorInferior}"
+									value="#{beanRangoCuantia.parametros.operadorInferior}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelRangoInferior}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputNumber id="idItRangoInferior"
+									title="#{tooltipBeanSNR.administracionRangoCuantiaRangoCuantiaDetalleRangoInferior}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelRangoInferior}"
+									value="#{beanRangoCuantia.parametros.rangoInferior}"
+									maxValue="99999.99" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelOperadorSuperior}" />
+								<br />
+								<p:inputText id="idItOperadorSuperior" maxlength="2"
+									title="#{tooltipBeanSNR.administracionRangoCuantiaRangoCuantiaDetalleOperadorSuperior}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelOperadorSuperior}"
+									value="#{beanRangoCuantia.parametros.operadorSuperior}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelRangoSuperior}" />
+								<br />
+								<p:inputNumber id="idItRangoSuperior"
+									title="#{tooltipBeanSNR.administracionRangoCuantiaRangoCuantiaDetalleRangoSuperior}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelRangoSuperior}"
+									value="#{beanRangoCuantia.parametros.rangoSuperior}"
+									maxValue="99999.99" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelPorcentaje}" />
+								<br />
+								<p:inputText id="idItPorcentaje"
+									title="#{tooltipBeanSNR.administracionRangoCuantiaRangoCuantiaDetallePorcentaje}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelPorcentaje}"
+									value="#{beanRangoCuantia.parametros.porcentaje}" maxlength="9" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelValor}" />
+								<br />
+								<p:inputText id="idItValor"
+									title="#{tooltipBeanSNR.administracionRangoCuantiaRangoCuantiaDetalleValor}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelValor}"
+									value="#{beanRangoCuantia.parametros.valor}" maxlength="16" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelFechaDesde} #{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:calendar id="idItFechaDesde" size="10" mask="true"
+									locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+									title="#{tooltipBeanSNR.administracionRangoCuantiaUpdateInsertFechaDesde}"
+									value="#{beanRangoCuantia.parametros.fechaDesde}"
+									showOn="button" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelFechaHasta}" />
+								<br />
+								<p:calendar id="idItFechaHasta" size="10" mask="true"
+									locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+									title="#{tooltipBeanSNR.administracionRangoCuantiaUpdateInsertFechaHasta}"
+									value="#{beanRangoCuantia.parametros.fechaHasta}"
+									showOn="button" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelActivo}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMActivo" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionRangoCuantiaRangoCuantiaDetalleActivo}"
+									value="#{beanRangoCuantia.parametros.activo}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelActivo}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelInactivo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<br />
+							<p:dataTable id="idDetalle" var="item"
+								rendered="#{!beanRangoCuantia.insertar}"
+								value="#{beanRangoCuantia.parametros}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+								<f:facet name="header">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+								</f:facet>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+									<h:outputText value="#{item.idUsuarioCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<h:outputText value="#{item.fechaCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+									<h:outputText value="#{item.idUsuarioModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+									<h:outputText value="#{item.fechaModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIpModificación}">
+									<h:outputText value="#{item.ipModificacion}" />
+								</p:column>
+							</p:dataTable>
+						<br />
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="right"
+									update="gRangoCuantiaDetMsg"
+									action="rangoCuantia?faces-redirect=true" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelActualizarRangoCuantia}"
+									rendered="#{!beanRangoCuantia.insertar}"
+									icon="fa fa-check-circle" iconPos="left"
+									update="gRangoCuantiaDetMsg"
+									action="#{beanRangoCuantia.insertUpdateRangoCuantia(false)}"
+									ajax="false" />
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelCrearRangoCuantia}"
+									rendered="#{beanRangoCuantia.insertar}"
+									icon="fa fa-check-circle" iconPos="left"
+									update="gRangoCuantiaDetMsg"
+									action="#{beanRangoCuantia.insertUpdateRangoCuantia(true)}"
+									ajax="false" />
+							</div>
+
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/co/creadorturno/v1"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/co/creadorturno/crearturno/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/co/creadorturno/v1">
+
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/co/creadorturno/crearturno/v1">
+			<xsd:complexType name="tipoEntradaCrearTurno">
+				<xsd:sequence>
+
+					<xsd:element name="sistemaOrigen" type="xsd:string" />
+					<xsd:element name="parametros">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="0"
+									name="parametro" type="bachue1:tipoParametroCT" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="tipoParametroCT">
+				<xsd:sequence>
+					<xsd:element name="nombre" type="xsd:string" />
+					<xsd:element name="valor" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+
+			<xsd:element name="entradaCrearTurno"
+				type="bachue1:tipoEntradaCrearTurno" />
+
+			<xsd:complexType name="tipoSalidaCrearTurno">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element maxOccurs="1" minOccurs="0"
+						name="descripcionMensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="salidaCrearTurno"
+				type="bachue1:tipoSalidaCrearTurno" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="CrearTurno_Request">
+		<wsdl:part element="bachue1:entradaCrearTurno"
+			name="entrada" />
+	</wsdl:message>
+	<wsdl:message name="CrearTurno_Response">
+		<wsdl:part element="bachue1:salidaCrearTurno" name="salida" />
+	</wsdl:message>
+
+	<wsdl:portType name="SUT_CO_CreadorTurno">
+		<wsdl:operation name="CrearTurno">
+			<wsdl:input message="bachue:CrearTurno_Request" />
+			<wsdl:output message="bachue:CrearTurno_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SUT_CO_CreadorTurnoSOAP12Binding"
+		type="bachue:SUT_CO_CreadorTurno">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="CrearTurno">
+			<soap:operation
+				soapAction="https://www.supenotariado.gov.co/services/bachue/co/creadorturno/v1/CrearTurno"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SUT_CO_CreadorTurno">
+		<wsdl:port binding="bachue:SUT_CO_CreadorTurnoSOAP12Binding"
+			name="SUT_CO_CreadorTurnoPort">
+			<soap:address
+				location="http://localhost:7001/SNREnvioDocumentosWEB/services/SUT_CO_CreadorTurnoPort" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

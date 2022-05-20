@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="formDialogOpenDiagram"
+				style="font-size: medium; top: 40%; left: 40%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="10000" widgetVar="globalMsg" redisplay="false" />
+				<p:wizard flowListener="#{beanWorkflow.flowListenerAprobacion}"
+					id="wizardWorkflow" widgetVar="wizardWorkflow"
+					showStepStatus="false" showNavBar="false">
+					<p:tab id="procesoTab">
+						<p:panel>
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<p:dataTable id="procesos"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{beanWorkflow.procesos}" var="item"
+										sortBy="#{item.nombre}">
+										<p:column headerText="#{messageBeanSNR.commonLabelProceso}"
+											width="20%" sortBy="#{item.id}">
+											<div align="center">
+												<h:outputText value="#{item.id}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelNombre}"
+											width="20%" sortBy="#{item.nombre}">
+											<div align="left">
+												<h:outputText value="#{item.nombre}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelDetalle}"
+											width="20%">
+											<div align="center">
+												<p:commandButton
+													actionListener="#{beanWorkflow.accionProceso(item)}"
+													update="formDialogOpenDiagram:botonesBandeja"
+													icon="fa fa-search">
+												</p:commandButton>
+											</div>
+										</p:column>
+									</p:dataTable>
+								</div>
+							</div>
+						</p:panel>
+					</p:tab>
+					<p:tab id="subprocesoTab">
+						<p:panel>
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<p:dataTable id="subprocesos"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{beanWorkflow.subprocesos}" var="item"
+										sortBy="#{item.idSubprocesoInt}">
+										<p:column headerText="#{messageBeanSNR.commonLabelSubproceso}"
+											width="20%" sortBy="#{item.idSubprocesoInt}">
+											<div align="center">
+												<h:outputText value="#{item.idSubprocesoInt}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelNombre}"
+											width="20%" sortBy="#{item.nombre}">
+											<div align="left">
+												<h:outputText value="#{item.nombre}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelDetalle}"
+											width="20%">
+											<div align="center">
+												<p:commandButton
+													actionListener="#{beanWorkflow.accionSubproceso(item)}"
+													update="formDialogOpenDiagram:botonesBandeja"
+													icon="fa fa-search" />
+											</div>
+										</p:column>
+									</p:dataTable>
+								</div>
+							</div>
+						</p:panel>
+					</p:tab>
+					<p:tab id="versionTab">
+						<p:panel>
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<p:dataTable id="versiones"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{beanWorkflow.versiones}" var="item"
+										sortBy="#{item.version}">
+										<p:column headerText="#{messageBeanSNR.commonLabelProceso}"
+											width="20%">
+											<div align="center">
+												<h:outputText value="#{item.idProceso}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelNombre}"
+											width="20%">
+											<div align="center">
+												<h:outputText
+													value="#{beanWorkflow.nombreProcesoSeleccionado}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelSubproceso}"
+											width="20%">
+											<div align="center">
+												<h:outputText value="#{item.idSubproceso}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelNombre}"
+											width="20%">
+											<div align="center">
+												<h:outputText
+													value="#{beanWorkflow.nombreSubProcesoSeleccionado}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelVersion}"
+											width="20%" sortBy="#{item.version}">
+											<div align="center">
+												<h:outputText value="#{item.version}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelEstado}"
+											width="20%">
+											<div align="center">
+												<h:outputText value="#{item.estadoFlujo}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelDetalle}"
+											width="20%">
+											<div align="center">
+												<p:commandButton
+													action="#{beanWorkflow.accionVersion(item,true)}"
+													update="formDialogOpenDiagram:botonesBandeja"
+													icon="fa fa-search">
+												</p:commandButton>
+											</div>
+										</p:column>
+									</p:dataTable>
+								</div>
+							</div>
+						</p:panel>
+					</p:tab>
+				</p:wizard>
+				<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+					<p:outputPanel id="botonesBandeja">
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+							<p:commandButton value="#{messageBeanSNR.commonButtonRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								onclick="PF('wizardWorkflow').back()"
+								rendered="#{beanWorkflow.tabActual ne null and not(beanWorkflow.tabActual eq 'procesoTab')}"
+								update="formDialogOpenDiagram:botonesBandeja" />
+
+						</div>
+					</p:outputPanel>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

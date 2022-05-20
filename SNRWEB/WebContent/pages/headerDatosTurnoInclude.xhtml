@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtmltransitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<p:panel header="#{messageBeanSNR.commonLabelDatosDelTurno}"
+	style="text-align:center;" toggleable="true">
+	<p:panelGrid style="width:100%;text-align:center;">
+		<p:row>
+			<p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelNIR}</p:column>
+			<p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelIdTurno}</p:column>
+			<p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelFechaCreacion}</p:column>
+			<p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonButtonVisualizarDocumentos}</p:column>
+		</p:row>
+		<p:row>
+			<p:column>
+				<p:outputLabel style="font-weight: 400;"
+					value="#{bean.predio.get('NIR')}" escape="false" />
+			</p:column>
+			<p:column>
+				<h:commandLink action="#{bean.dirigirTrazabilidad()}"
+					target="_blank">
+					<p:outputLabel style="font-weight: 400;"
+						value="#{bean.predio.get('ID_TURNO')}" escape="false" />
+				</h:commandLink>
+			</p:column>
+			<p:column>
+				<p:outputLabel style="font-weight: 400;"
+					value="#{bean.turno.fechaCreacion}" escape="false" />
+			</p:column>
+			<p:column rowspan="3">
+				<p:commandButton ajax="false"
+					value="#{messageBeanSNR.commonLabelConsultaSGD}" icon="lupa"
+					iconPos="left" update="idGrowl" action="#{bean.consultaSGD()}">
+				</p:commandButton>
+			</p:column>
+		</p:row>
+		<p:row>
+			<p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelDecisionCalificacionTramite}</p:column>
+			<p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelTipoDeExpediente}</p:column>
+			<p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelExpediente}</p:column>
+		</p:row>
+		<p:row>
+			<p:column>
+				<p:outputLabel style="font-weight: 400;"
+					value="#{bean.decisionCalificacion}" escape="false" />
+			</p:column>
+			<p:column>
+				<p:outputLabel style="font-weight: 400;"
+					value="#{bean.turno.nombreTipoExpediente}" escape="false" />
+			</p:column>
+			<p:column>
+				<p:outputLabel style="font-weight: 400;"
+					value="#{bean.turno.expediente}" escape="false" />
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+</p:panel>
+</html>

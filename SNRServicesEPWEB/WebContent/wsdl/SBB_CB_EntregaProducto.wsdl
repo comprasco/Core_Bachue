@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/entregaproducto/v1"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/cb/entregaproducto/verificarproducto/v1"
+	xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/cb/entregaproducto/obtenerproducto/v1"
+	xmlns:bachue3="https://www.supernotariado.gov.co/schemas/bachue/cb/entregaproducto/obtenerturnosrefpago/v1"
+	xmlns:bachue4="https://www.supernotariado.gov.co/schemas/bachue/cb/entregaproducto/registrarentregaproducto/v1"
+	xmlns:bachue5="https://www.supernotariado.gov.co/schemas/bachue/cb/entregaproducto/obtenerrecibocaja/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/entregaproducto/v1">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/entregaproducto/verificarproducto/v1">
+			<xsd:complexType name="tipoEntradaVerificarProducto">
+				<xsd:sequence>
+					<xsd:element name="CodigoVerificacion"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaVerificarProducto"
+				type="bachue1:tipoEntradaVerificarProducto" />
+			<xsd:complexType name="tipoSalidaVerificarProducto">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element maxOccurs="1" minOccurs="0"
+						name="descripcionMensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaVerificarProducto"
+				type="bachue1:tipoSalidaVerificarProducto" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/entregaproducto/obtenerproducto/v1">
+			<xsd:complexType name="tipoEntradaObtenerProducto">
+				<xsd:sequence>
+					<xsd:element name="Turno" type="xsd:string" />
+					<xsd:element name="CodigoVerificacion"
+						type="xsd:string" />
+					<xsd:element name="ReferenciaPago" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaObtenerProducto"
+				type="bachue2:tipoEntradaObtenerProducto" />
+			<xsd:complexType name="tipoSalidaObtenerProducto">
+				<xsd:sequence>
+					<xsd:element name="docName" type="xsd:string" />
+					<xsd:element name="dID" type="xsd:string" />
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element maxOccurs="1" minOccurs="0"
+						name="descripcionMensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerProducto"
+				type="bachue2:tipoSalidaObtenerProducto" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/entregaproducto/obtenerturnosrefpago/v1">
+			<xsd:complexType
+				name="tipoEntradaObtenerTurnosRefPago">
+				<xsd:sequence>
+					<xsd:element name="ReferenciaPago" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaObtenerTurnosRefPago"
+				type="bachue3:tipoEntradaObtenerTurnosRefPago" />
+			<xsd:complexType
+				name="tipoSalidaObtenerTurnosRefPago">
+				<xsd:sequence>
+					<xsd:element name="turnos">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="0"
+									name="turno" type="bachue3:tipoTurno" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element maxOccurs="1" minOccurs="0"
+						name="descripcionMensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<!-- Tipo complejo turno -->
+			<xsd:complexType name="tipoTurno">
+				<xsd:sequence>
+					<xsd:element name="identificadorTurno"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerTurnosRefPago"
+				type="bachue3:tipoSalidaObtenerTurnosRefPago" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/entregaproducto/registrarentregaproducto/v1">
+			<xsd:complexType
+				name="tipoEntradaRegistrarEntregaProducto">
+				<xsd:sequence>
+					<xsd:element name="Turno" type="xsd:string" />
+					<xsd:element name="CodigoVerificacion"
+						type="xsd:string" />
+					<xsd:element name="ReferenciaPago" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaRegistrarEntregaProducto"
+				type="bachue4:tipoEntradaRegistrarEntregaProducto" />
+			<xsd:complexType
+				name="tipoSalidaRegistrarEntregaProducto">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element maxOccurs="1" minOccurs="0"
+						name="descripcionMensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaRegistrarEntregaProducto"
+				type="bachue4:tipoSalidaRegistrarEntregaProducto" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/entregaproducto/obtenerrecibocaja/v1">
+			<xsd:complexType name="tipoEntradaObtenerReciboCaja">
+				<xsd:sequence>
+					<xsd:element name="NIR" type="xsd:string" />
+					<xsd:element name="ReferenciaPago" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaObtenerReciboCaja"
+				type="bachue5:tipoEntradaObtenerReciboCaja" />
+			<xsd:complexType name="tipoSalidaObtenerReciboCaja">
+				<xsd:sequence>
+					<xsd:element name="docName" type="xsd:string" />
+					<xsd:element name="dID" type="xsd:string" />
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element maxOccurs="1" minOccurs="0"
+						name="descripcionMensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerReciboCaja"
+				type="bachue5:tipoSalidaObtenerReciboCaja" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="VerificarProducto_Request">
+		<wsdl:part element="bachue1:entradaVerificarProducto"
+			name="entrada" />
+	</wsdl:message>
+	<wsdl:message name="VerificarProducto_Response">
+		<wsdl:part element="bachue1:salidaVerificarProducto"
+			name="salida" />
+	</wsdl:message>
+
+	<wsdl:message name="ObtenerProducto_Request">
+		<wsdl:part element="bachue2:entradaObtenerProducto"
+			name="entrada" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerProducto_Response">
+		<wsdl:part element="bachue2:salidaObtenerProducto"
+			name="salida" />
+	</wsdl:message>
+
+	<wsdl:message name="ObtenerTurnosRefPago_Request">
+		<wsdl:part element="bachue3:entradaObtenerTurnosRefPago"
+			name="entrada" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerTurnosRefPago_Response">
+		<wsdl:part element="bachue3:salidaObtenerTurnosRefPago"
+			name="salida" />
+	</wsdl:message>
+
+	<wsdl:message name="RegistrarEntregaProducto_Request">
+		<wsdl:part element="bachue4:entradaRegistrarEntregaProducto"
+			name="entrada" />
+	</wsdl:message>
+	<wsdl:message name="RegistrarEntregaProducto_Response">
+		<wsdl:part element="bachue4:salidaRegistrarEntregaProducto"
+			name="salida" />
+	</wsdl:message>
+
+	<wsdl:message name="ObtenerReciboCaja_Request">
+		<wsdl:part element="bachue5:entradaObtenerReciboCaja"
+			name="entrada" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerReciboCaja_Response">
+		<wsdl:part element="bachue5:salidaObtenerReciboCaja"
+			name="salida" />
+	</wsdl:message>
+
+	<wsdl:portType name="SBB_CB_EntregaProducto">
+		<wsdl:operation name="VerificarProducto">
+			<wsdl:input message="bachue:VerificarProducto_Request" />
+			<wsdl:output message="bachue:VerificarProducto_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerProducto">
+			<wsdl:input message="bachue:ObtenerProducto_Request" />
+			<wsdl:output message="bachue:ObtenerProducto_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerTurnosRefPago">
+			<wsdl:input message="bachue:ObtenerTurnosRefPago_Request" />
+			<wsdl:output
+				message="bachue:ObtenerTurnosRefPago_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="RegistrarEntregaProducto">
+			<wsdl:input
+				message="bachue:RegistrarEntregaProducto_Request" />
+			<wsdl:output
+				message="bachue:RegistrarEntregaProducto_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerReciboCaja">
+			<wsdl:input message="bachue:ObtenerReciboCaja_Request" />
+			<wsdl:output message="bachue:ObtenerReciboCaja_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SBB_CB_EntregaProductoSOAP12Binding"
+		type="bachue:SBB_CB_EntregaProducto">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="VerificarProducto">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/entregaproducto/v1/VerificarProducto"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerProducto">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/entregaproducto/v1/ObtenerProducto"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerTurnosRefPago">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/entregaproducto/v1/ObtenerTurnosRefPago"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="RegistrarEntregaProducto">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/entregaproducto/v1/RegistrarEntregaProducto"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerReciboCaja">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/entregaproducto/v1/ObtenerReciboCaja"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SBB_CB_EntregaProducto">
+		<wsdl:port
+			binding="bachue:SBB_CB_EntregaProductoSOAP12Binding"
+			name="SBB_CB_EntregaProductoPort">
+			<soap:address
+				location="http://localhost:7001/SNRServicesEPWEB/services/SBB_CB_EntregaProducto" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

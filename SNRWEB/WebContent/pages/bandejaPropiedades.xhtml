@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelPropiedades}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fBandejaPropiedades" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:panel>
+						<p:dataTable id="idDtListado" var="item"
+							value="#{beanPropiedades.listaPropiedades}"
+							widgetVar="dataTable"
+							emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+							<f:facet name="header">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelPropiedades}" />
+								<p:outputLabel style="float:right" value="#{messageBeanSNR.commonLabelSeleccionarTodos}" />
+								<p:selectBooleanCheckbox style="float:right" value="#{beanPropiedades.seleccione}">
+									<p:ajax listener="#{beanPropiedades.seleccionarTodos()}" update="idDtListado"/>
+								</p:selectBooleanCheckbox>
+							</f:facet>
+							<p:columnGroup type="header">
+					            <p:row>
+					                <p:column headerText="#{messageBeanSNR.commonLabelNombrePropiedad}" />
+					                <p:column headerText="#{messageBeanSNR.commonLabelSeleccione}" >
+					                </p:column>
+					            </p:row>
+					        </p:columnGroup>
+							<p:column 
+								filterBy="#{item.nombrePropiedad}">
+								<h:outputText value="#{item.nombrePropiedad}" />
+							</p:column>
+							<p:column
+								filterBy="#{item.seleccione}">
+								<p:selectBooleanCheckbox value="#{item.seleccione}"/>
+							</p:column>
+						</p:dataTable>
+						<br/>
+						<p:commandButton
+							value="#{messageBeanSNR.commonButtonLimpiarCache}"
+							actionListener="#{beanPropiedades.limpiarCache()}"
+							icon="fa fa-times" update="idDtListado,fBandejaPropiedades:globalMsg">
+						</p:commandButton>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

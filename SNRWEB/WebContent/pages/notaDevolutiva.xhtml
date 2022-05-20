@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{beanNotaDevolutiva.testamentos ? messageBeanSNR.commonLabelTestamentos : messageBeanSNR.commonLabelCalificacion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" /></li>
+				<ui:fragment rendered="#{!beanNotaDevolutiva.testamentos}">
+					<li class="breadcrumb-item"><p:outputLabel
+							value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" /></li>
+				</ui:fragment>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleTurno}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelNotaDevolutiva}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fNotaDevolutiva" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:outputPanel style="min-width:800px;">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+								<br />
+								<p:inputText readonly="true" value="#{beanNotaDevolutiva.nir}" />
+							</div>
+							<div class="ui-g-12 ui-md-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}" />
+								<br />
+								<p:inputText readonly="true" value="#{beanNotaDevolutiva.turno}" />
+							</div>
+						</div>
+
+						<p:panel id="idPMedidasCautelares"
+							header="#{messageBeanSNR.commonLabelInformacionMedidaCautelar}"
+							rendered="#{beanNotaDevolutiva.habilitarMedidaCautelar}">
+							<br />
+							<p:panel>
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelReferencia}" />
+										<br />
+										<p:inputText
+											disabled="#{!beanNotaDevolutiva.habilitarCamposMedidaCautelar}"
+											title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRealizarRegistroDetalleRegistroCalificacionTipoProceso}"
+											id="idItReferencia" maxlength="100"
+											onblur="value=value.toUpperCase()"
+											placeholder="#{messageBeanSNR.commonLabelReferencia}"
+											value="#{beanNotaDevolutiva.referencia}" />
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelNumeroProceso}"
+											indicateRequired="true" />
+										<br />
+										<p:inputText
+											disabled="#{!beanNotaDevolutiva.habilitarCamposMedidaCautelar}"
+											title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRealizarRegistroDetalleRegistroCalificacionNumeroProceso}"
+											id="idItNumeroProceso" maxlength="100"
+											onblur="value=value.toUpperCase()"
+											placeholder="#{messageBeanSNR.commonLabelNumeroProceso}"
+											value="#{beanNotaDevolutiva.numeroProceso}" />
+									</div>
+								</div>
+								<div class="ui-g" align="left">
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelFechaDeOrigen}" />
+										<br />
+										<p:inputText id="idITNombreOficina" style="width:100%"
+											disabled="true"
+											title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRealizarRegistroDetalleRegistroCalificacionNombreOficina}"
+											value="#{beanNotaDevolutiva.oficinaMedidaCautelar.nombre}">
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelPais}" />
+										<br />
+										<p:selectOneMenu id="idSOMPaisDirReOficina" style="width:100%"
+											title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRealizarRegistroDetalleRegistroCalificacionPaisOficina}"
+											value="#{beanNotaDevolutiva.oficinaMedidaCautelar.idPais}"
+											disabled="true">
+											<p:ajax
+												listener="#{beanNotaDevolutiva.cambiarPaisResidencia}"
+												update="idSOMPaisDirReOficina" />
+											<f:selectItem itemValue=""
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+											<f:selectItems value="#{beanReference.findPaises()}"
+												var="paises" itemValue="#{paises.idPais}"
+												itemLabel="#{paises.nombre}" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-12 ui-md-5 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelDepartamento}" />
+										<br />
+										<p:selectOneMenu id="idSOMDepDirReOficina" style="width:100%"
+											title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRealizarRegistroDetalleRegistroCalificacionDepartamentoOficina}"
+											value="#{beanNotaDevolutiva.oficinaMedidaCautelar.idDepartamento}"
+											disabled="true">
+											<p:ajax
+												listener="#{beanNotaDevolutiva.cambiarDepartamentoResidencia}"
+												update="idSOMMunDirReOficina" />
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems
+												value="#{beanNotaDevolutiva.findDepartamentosResidencia()}"
+												var="depRes" itemValue="#{depRes.idDepartamento}"
+												itemLabel="#{depRes.nombre}" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-12 ui-md-4 ui-lg-3">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}" />
+										<br />
+										<p:selectOneMenu id="idSOMMunDirReOficina" style="width:100%"
+											title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRealizarRegistroDetalleRegistroCalificacionMunicipioOficina}"
+											value="#{beanNotaDevolutiva.oficinaMedidaCautelar.idMunicipio}"
+											disabled="true">
+											<p:ajax update="idSOMMunDirReOficina" />
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems
+												value="#{beanNotaDevolutiva.findMunicipioResidencia()}"
+												var="munRes" itemValue="#{munRes.idMunicipio}"
+												itemLabel="#{munRes.nombre}" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-6">
+										<p:outputLabel indicateRequired="true"
+											value="#{messageBeanSNR.commonLabelDireccion}" />
+										<br />
+										<p:inputText id="idITDireccionOficina"
+											onblur="value=value.toUpperCase()" maxlength="100"
+											style="width:100%"
+											disabled="#{!beanNotaDevolutiva.habilitarCamposMedidaCautelar}"
+											placeholder="#{messageBeanSNR.commonLabelDireccion}"
+											title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRealizarRegistroDetalleRegistroCalificacionDireccionOficina}"
+											value="#{beanNotaDevolutiva.oficinaMedidaCautelar.direccion}">
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelTelefono}" />
+										<br />
+										<p:inputText id="idITTelefonoOficina"
+											onblur="value=value.toUpperCase()" maxlength="15"
+											style="width:100%"
+											disabled="#{!beanNotaDevolutiva.habilitarCamposMedidaCautelar}"
+											placeholder="#{messageBeanSNR.commonLabelTelefono}"
+											title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRealizarRegistroDetalleRegistroCalificacionTelefonoOficina}"
+											value="#{beanNotaDevolutiva.oficinaMedidaCautelar.telefono}">
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelCorreoElectronico}" />
+										<br />
+										<p:inputText id="idITEmailOficina"
+											onblur="value=value.toUpperCase()" maxlength="100"
+											style="width:100%"
+											disabled="#{!beanNotaDevolutiva.habilitarCamposMedidaCautelar}"
+											placeholder="#{messageBeanSNR.commonLabelEjemploCorreo}"
+											title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRealizarRegistroDetalleRegistroCalificacionCorreoElectronicoOficina}"
+											value="#{beanNotaDevolutiva.oficinaMedidaCautelar.correoElectronico}">
+										</p:inputText>
+									</div>
+								</div>
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+										<p:commandButton id="idCBEditarInfoOficina"
+											actionListener="#{beanNotaDevolutiva.setHabilitarCamposMedidaCautelar(true)}"
+											disabled="#{beanNotaDevolutiva.habilitarCamposMedidaCautelar}"
+											icon="fa fa-pencil" iconPos="left"
+											value="#{messageBeanSNR.commonLabelModificar}"
+											update="idITDireccionOficina,idITTelefonoOficina,idITEmailOficina,idCBEditarInfoOficina,idCBGuardarInfoOficina,idItReferencia,idItNumeroProceso,globalMsg">
+										</p:commandButton>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+										<p:commandButton id="idCBGuardarInfoOficina"
+											actionListener="#{beanNotaDevolutiva.guardarCambiosParaPdfMedidaCautelar}"
+											disabled="#{!beanNotaDevolutiva.habilitarCamposMedidaCautelar}"
+											icon="fa fa-save" iconPos="left"
+											value="#{messageBeanSNR.commonLabelGuardar}"
+											update="idITDireccionOficina,idITTelefonoOficina,idITEmailOficina,idCBGuardarInfoOficina,idCBEditarInfoOficina,idItReferencia,idItNumeroProceso,globalMsg">
+										</p:commandButton>
+									</div>
+								</div>
+							</p:panel>
+						</p:panel>
+						<p:outputPanel
+							rendered="#{beanNotaDevolutiva.habilitarMedidaCautelar}">
+							<br />
+						</p:outputPanel>
+						<p:panel>
+							<p:outputPanel id="opNotaDevolutiva">
+								<div align="right">
+
+									<p:dataTable var="tipoCausal"
+										value="#{beanNotaDevolutiva.tiposCausalesFiltro}"
+										widgetVar="tipoCausalTable"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}."
+										filteredValue="#{beanNotaDevolutiva.filtroTiposCausales}">
+
+										<f:facet name="header">
+											<p:outputPanel>
+												<h:outputText value="Buscar:" />
+												<p:inputText id="globalFilter"
+													onkeyup="PF('tipoCausalTable').filter()"
+													placeholder="Buscar" />
+											</p:outputPanel>
+										</f:facet>
+
+										<p:column style="width:20px;text-align:center;"
+											headerText="Seleccione">
+											<p:selectBooleanCheckbox id="idSbcDerechoPet"
+												disabled="tipoCausal.bloqueado"
+												value="#{tipoCausal.seleccionado}" />
+										</p:column>
+
+										<p:column style="width:20px;text-align:center;"
+											filterBy="#{tipoCausal.idTipoCausal}" headerText="Código"
+											filterMatchMode="contains">
+											<h:outputText value="#{tipoCausal.idTipoCausal}" />
+										</p:column>
+
+										<p:column style="width:70px" filterBy="#{tipoCausal.nombre}"
+											headerText="Descripción" filterMatchMode="contains">
+											<h:outputText value="#{tipoCausal.nombre}" />
+										</p:column>
+									</p:dataTable>
+								</div>
+							</p:outputPanel>
+
+							<br />
+							<p:outputPanel id="idComplementacion">
+								<div align="left">
+									<strong> <p:outputLabel
+											value="#{messageBeanSNR.commonLabelComplementacion}#{messageBeanSNR.commonLabelObligatorio}" />
+									</strong>
+									<p:inputTextarea rows="10" cols="240" id="idITAComplementacion"
+										title="#{tooltipBeanSNR.procesosCalificacionNotaDevolutivaComplementacionCausales}"
+										onblur="value=value.toUpperCase()"
+										value="#{beanNotaDevolutiva.complementacionCausales}"
+										queryDelay="750" maxlength="400" minQueryLength="4"
+										counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+										counter="idNumeroCaracteres">
+									</p:inputTextarea>
+								</div>
+								<div align="right">
+									<h:outputText id="idNumeroCaracteres" />
+								</div>
+							</p:outputPanel>
+
+							<p:outputPanel id="idObservaciones"
+								rendered="#{!beanNotaDevolutiva.indVinculado}">
+								<div align="left">
+									<strong> <p:outputLabel
+											value="#{messageBeanSNR.commonLabelObservaciones}" />
+									</strong>
+									<p:inputTextarea rows="10" cols="240" id="idITAObservaciones"
+										title="#{tooltipBeanSNR.procesosCalificacionNotaDevolutivaObservaciones}"
+										onblur="value=value.toUpperCase()"
+										value="#{beanNotaDevolutiva.observaciones}" queryDelay="750"
+										maxlength="1000" minQueryLength="4"
+										counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+										counter="idNumeroCaracteresObs">
+									</p:inputTextarea>
+								</div>
+								<div align="right">
+									<h:outputText id="idNumeroCaracteresObs"
+										value="#{beanNotaDevolutiva.contar('C')}" align="right" />
+								</div>
+							</p:outputPanel>
+							<br />
+							<p:outputPanel id="opBtnGenerateFile">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-4 ui-lg-4" align="left">
+										<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+											icon="fa fa-arrow-circle-left" iconPos="left"
+											action="#{beanNotaDevolutiva.accionRegresarNotaDevolutiva}">
+											<f:param name="idTurno"
+												value="#{beanPredioDocumentoActo.idTurno}" />
+											<f:param name="idMotivo"
+												value="#{beanPredioDocumentoActo.motivoTramite}" />
+											<f:param name="idConfrontacion"
+												value="#{beanPredioDocumentoActo.confrontacion}" />
+											<f:param name="datosBasicos"
+												value="#{beanPredioDocumentoActo.datosBasicos}" />
+											<f:param name="insertarMatricula"
+												value="#{beanPredioDocumentoActo.insertaMatricula}" />
+											<f:param name="eliminarMatricula"
+												value="#{beanPredioDocumentoActo.eliminaMatricula}" />
+											<f:param name="varificarFolioCerrado"
+												value="#{beanPredioDocumentoActo.verificaFolioCerrado}" />
+										</p:commandButton>
+									</div>
+									<div class="ui-g-12 ui-md-8 ui-lg-8" align="right">
+										<p:commandButton
+											value="#{messageBeanSNR.commonButtonGenerarMedidaCautelar}"
+											iconPos="left" style="width: 200px;" icon="fa fa-file-o"
+											ajax="false"
+											onclick="mostrarElemento('fNotaDevolutiva:idCBNotaDev');"
+											rendered="#{beanNotaDevolutiva.habilitarMedidaCautelar and !beanNotaDevolutiva.indVinculado}"
+											actionListener="#{beanNotaDevolutiva.generateFileCancelacion(false)}"
+											update="btnSalvarMedidaCautelar idCBMedidaCautelar">
+											<p:fileDownload
+												value="#{beanNotaDevolutiva.imageCancelacion}" />
+										</p:commandButton>
+										&nbsp;&nbsp;&nbsp;
+										<p:commandButton
+											value="#{messageBeanSNR.commonButtonGenerarCancelacion}"
+											iconPos="left" style="width: 200px;" icon="fa fa-file-o"
+											ajax="false"
+											rendered="#{beanNotaDevolutiva.pdfCancelacion and !beanNotaDevolutiva.indVinculado}"
+											actionListener="#{beanNotaDevolutiva.generateFileCancelacion(true)}"
+											update="btnSalvarMedidaCautelar idCBMedidaCautelar">
+											<p:fileDownload
+												value="#{beanNotaDevolutiva.imageCancelacion}" />
+										</p:commandButton>
+										&nbsp;&nbsp;&nbsp;
+										<p:commandButton
+											value="#{beanNotaDevolutiva.registroParcial ? messageBeanSNR.commonButtonGenerarNotaDevolutivaParcial : messageBeanSNR.commonButtonGenerarNotaDevolutiva}"
+											iconPos="left" style="width: 200px;display: none"
+											icon="fa fa-file-o" update="opBtnGenerateFile"
+											id="idCBNotaDev"
+											actionListener="#{beanNotaDevolutiva.generateFile()}"
+											ajax="false"
+											onclick="mostrarElemento('fNotaDevolutiva:btnSalvar');">
+											<p:fileDownload value="#{beanNotaDevolutiva.imagen}" />
+										</p:commandButton>
+										&nbsp;&nbsp;&nbsp;
+										<p:commandButton
+											value="#{beanNotaDevolutiva.registroParcial ? messageBeanSNR.commonButtonGenerarNotaDevolutivaParcial : messageBeanSNR.commonButtonGenerarNotaDevolutiva}"
+											iconPos="left" icon="fa fa-file-o" style="width: 220px"
+											rendered="#{!beanNotaDevolutiva.habilitarMedidaCautelar or beanNotaDevolutiva.indVinculado}"
+											update="opBtnGenerateFile" id="idCBNotaDevdf"
+											actionListener="#{beanNotaDevolutiva.generateFile()}"
+											ajax="false"
+											onclick="PrimeFaces.monitorDownload(mostrarElemento('fNotaDevolutiva:btnSalvar'), stop);">
+											<p:fileDownload value="#{beanNotaDevolutiva.imagen}" />
+										</p:commandButton>
+										&nbsp;&nbsp;&nbsp;
+										<p:commandButton id="btnSalvar"
+											style="width: 200px;display: none" icon="fa fa-chevron-right"
+											update="idITAObservaciones"
+											rendered="#{!beanNotaDevolutiva.indVinculado}"
+											value="#{beanNotaDevolutiva.registroParcial ? messageBeanSNR.commonButtonGuardarNotaDevolutivaParcial : messageBeanSNR.commonButtonEnviarAlAprobador}"
+											iconPos="right" action="#{beanNotaDevolutiva.saveCausales}" />
+										<p:commandButton id="idCmBtnRevisado"
+											value="#{messageBeanSNR.commonButtonRevisado}"
+											rendered="#{beanNotaDevolutiva.indVinculado}"
+											icon="fa fa-chevron-right" iconPos="right"
+											action="#{beanNotaDevolutiva.revisionNotaDevolutiva}" />
+									</div>
+								</div>
+							</p:outputPanel>
+						</p:panel>
+					</p:outputPanel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

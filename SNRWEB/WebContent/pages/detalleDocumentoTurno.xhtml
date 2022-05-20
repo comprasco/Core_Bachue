@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBuscar}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultaDocumento}" /></li>
+				<li class="breadcrumb-item" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultaDocumentoDetalle}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultaTrazabilidadPorDocumento}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<h:form id="fConsultaTrazabilidadDetalle" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false"/>
+				<center>
+					<p:panel header="#{messageBeanSNR.commonLabelConsultaTrazabilidad}"
+						style="min-width:800px;">
+						<p:panel
+							header="#{messageBeanSNR.commonLabelInformacionDelDocumento}">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-2 ui-lg-2">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelTipo}" />
+									<br />
+									<p:inputText size="40"
+										title="#{tooltipBeanSNR.buscarConsultaPorDocumentoDetalleDocumentoTurnoTipo}"
+										placeholder="#{messageBeanSNR.commonLabelTipo}"
+										value="#{beanConsultaDocumento.informacionDocumento.tipoDocumentoPublico.nombre}"
+										readonly="true" />
+								</div>
+								<div class="ui-g-12 ui-md-2 ui-lg-2">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNumeroDelDocumento}" />
+									<br />
+									<p:inputText size="40"
+										title="#{tooltipBeanSNR.buscarConsultaPorDocumentoDetalleDocumentoTurnoNumeroDocumento}"
+										placeholder="#{messageBeanSNR.commonLabelNumeroDelDocumento}"
+										value="#{beanConsultaDocumento.informacionDocumento.documento.numero}"
+										readonly="true" />
+								</div>
+								<div class="ui-g-12 ui-md-2 ui-lg-2">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+									<br />
+									<p:inputText size="40"
+										title="#{tooltipBeanSNR.buscarConsultaPorDocumentoDetalleDocumentoTurnoFechaDocumento}"
+										placeholder="#{messageBeanSNR.commonLabelFechaDelDocumento}"
+										value="#{beanConsultaDocumento.informacionDocumento.documento.fechaDocumento}"
+										readonly="true" />
+								</div>
+								<div class="ui-g-12 ui-md-2 ui-lg-2">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelOficinaOrigen}" />
+									<br />
+									<p:inputText size="40"
+										title="#{tooltipBeanSNR.buscarConsultaPorDocumentoDetalleDocumentoTurnoOficinaOrigen}"
+										placeholder="#{messageBeanSNR.commonLabelOficinaOrigen}"
+										value="#{beanConsultaDocumento.informacionDocumento.oficinaOrigen.nombre}"
+										readonly="true" />
+								</div>
+								<div class="ui-g-12 ui-md-2 ui-lg-2">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelTipoOficina}" />
+									<br />
+									<p:inputText size="40"
+										title="#{tooltipBeanSNR.buscarConsultaPorDocumentoDetalleDocumentoTurnoTipoOficina}"
+										placeholder="#{messageBeanSNR.commonLabelTipoOficina}"
+										value="#{beanConsultaDocumento.informacionDocumento.tipoOficina.nombre}"
+										readonly="true" />
+								</div>
+							</div>
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-2 ui-lg-2">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelPais}" />
+									<br />
+									<p:inputText size="40"
+										title="#{tooltipBeanSNR.buscarConsultaPorDocumentoDetalleDocumentoTurnoPais}"
+										placeholder="#{messageBeanSNR.commonLabelPais}"
+										value="#{beanConsultaDocumento.informacionDocumento.pais.nombre}"
+										readonly="true" />
+								</div>
+								<div class="ui-g-12 ui-md-2 ui-lg-2">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDepartamento}" />
+									<br />
+									<p:inputText size="40"
+										title="#{tooltipBeanSNR.buscarConsultaPorDocumentoDetalleDocumentoTurnoDepartamento}"
+										placeholder="#{messageBeanSNR.commonLabelDepartamento}"
+										value="#{beanConsultaDocumento.informacionDocumento.departamento.nombre}"
+										readonly="true" />
+								</div>
+								<div class="ui-g-12 ui-md-2 ui-lg-2">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}" />
+									<br />
+									<p:inputText size="40"
+										title="#{tooltipBeanSNR.buscarConsultaPorDocumentoDetalleDocumentoTurnoMunicipio}"
+										placeholder="#{messageBeanSNR.commonLabelMunicipio}"
+										value="#{beanConsultaDocumento.informacionDocumento.municipio.nombre}"
+										readonly="true" />
+								</div>
+								<div class="ui-g-12 ui-md-2 ui-lg-2">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelTipoEntidad}" />
+									<br />
+									<p:inputText size="40"
+										title="#{tooltipBeanSNR.buscarConsultaPorDocumentoDetalleDocumentoTurnoTipoEntidad}"
+										placeholder="#{messageBeanSNR.commonLabelTipoEntidad}"
+										value="#{beanConsultaDocumento.informacionDocumento.tipoEntidad.nombre}"
+										readonly="true" />
+								</div>
+							</div>
+						</p:panel>
+
+						<p:panel header="#{messageBeanSNR.commonLabelTrazabilidad}">
+							<p:dataTable id="idDtListado"
+								value="#{beanConsultaDocumento.consultaTrazabilidad}" var="item"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}"
+								tableStyle="width:auto"
+								rowStyleClass="#{item.turnoHistoria.estadoActividad eq 'ASG' ? 'estadoActividad' : null}">
+								<p:column style="width:100px;"
+									headerText="#{messageBeanSNR.commonLabelVerDetalle}">
+									<p:rowToggler />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelIdTurno}">
+									<h:outputText value="#{item.turnoHistoria.idTurno}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelIdEtapa}">
+									<h:outputText value="#{item.turnoHistoria.idEtapa}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelNombre}">
+									<h:outputText value="#{item.etapa.nombre}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelEstadoActividad}">
+									<h:outputText value="#{item.turnoHistoria.estadoActividad}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelIdUsuario}">
+									<h:outputText value="#{item.turnoHistoria.idUsuario}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaInsercion}">
+									<h:outputText value="#{item.turnoHistoria.fechaCreacion}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="GMT-5" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelFechaReparto}">
+									<h:outputText value="#{item.turnoHistoria.fechaReparto}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="GMT-5" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelFechaInicial}">
+									<h:outputText value="#{item.turnoHistoria.fechaInicial}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="GMT-5" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelFechaFinal}">
+									<h:outputText value="#{item.turnoHistoria.fechaFinal}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="GMT-5" />
+									</h:outputText>
+								</p:column>
+
+								<p:rowExpansion>
+									<p:panelGrid columns="3" style="width:auto;">
+										<p:dataTable id="detalleTurno" tableStyle="width:auto"
+											emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+											value="#{item}" var="detalle">
+
+											<p:column headerText="#{messageBeanSNR.commonLabelMotivo}">
+												<h:outputText value="#{detalle.turnoHistoria.motivo}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelMotivoNoTramite}">
+												<h:outputText
+													value="#{detalle.turnoHistoria.motivoNoTramite}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelObservaciones}">
+												<h:outputText value="#{detalle.turnoHistoria.observaciones}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelObservacionesNoTramite}">
+												<h:outputText
+													value="#{detalle.turnoHistoria.observacionesNoTramite}" />
+											</p:column>
+
+										</p:dataTable>
+									</p:panelGrid>
+								</p:rowExpansion>
+
+							</p:dataTable>
+						</p:panel>
+
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<p:commandButton value="#{messageBeanSNR.commonButtonVolver}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									update="globalMsg"
+									action="detalleDocumentoNIR?faces-redirect=true" />
+							</div>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

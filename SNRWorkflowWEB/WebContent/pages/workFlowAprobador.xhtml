@@ -1,0 +1,591 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="content">
+			<script type="text/javascript"
+				src="#{facesContext.externalContext.requestContextPath}/js/bpmn_viewer.js"></script>
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" appendTo="@(body)" />
+			<p:sidebar widgetVar="SBEtapa" baseZIndex="10000" appendTo="@(body)"
+				style="width:26%" blockScroll="true" id="SBEtapa">
+				<h1 style="font-weight: normal">#{messageBeanSNR.commonLabelPropiedades}</h1>
+				<p:panel id="panelScrollWorkflow">
+					<p:outputPanel id="outputPanelScrollWorkflow">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelEtapaDosPuntos} #{messageBeanSNR.commonLabelAsterisco}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectOneMenu id="etapa" appendTo="SBEtapa"
+									onchange="controlNuevaEtapa();" disabled="true"
+									title="#{tooltipBeanSNR.workflowEtapa}" style="width:100%;"
+									widgetVar="etapaSOM">
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelNueva}"
+										itemValue="" />
+									<f:selectItems value="#{beanWorkflow.etapas}" var="etapa"
+										itemValue="#{etapa.idEtapa}"
+										itemLabel="#{etapa.idEtapa} - #{etapa.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center"
+								style="display: none" id="divLabelEtapa">
+								<h:outputText id="labelEtapa"
+									value="#{messageBeanSNR.commonLabelEtapaDosPuntos} #{messageBeanSNR.commonLabelAsterisco}"
+									style="display:none" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center"
+								style="display: none" id="divEtapa">
+								<p:inputText id="etapaNueva" style="display:none"
+									disabled="true" title="#{tooltipBeanSNR.workflowEtapa}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelNombreDosPuntos} #{messageBeanSNR.commonLabelAsterisco}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="nombreEtapa" disabled="true"
+									title="#{tooltipBeanSNR.workflowNombre} #{messageBeanSNR.commonLabelAsterisco}" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelEstadoDosPuntos} #{messageBeanSNR.commonLabelAsterisco}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectOneMenu id="estadoEtapa" appendTo="SBEtapa"
+									disabled="true" title="#{tooltipBeanSNR.workflowEtapa}"
+									style="width:100%;" widgetVar="estadoEtapa">
+									<f:selectItem itemLabel="ACTIVO" itemValue="A" />
+									<f:selectItem itemLabel="INACTIVO" itemValue="I" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="Estado actividad: #{messageBeanSNR.commonLabelAsterisco}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectOneMenu id="estadoActividad" appendTo="SBEtapa"
+									disabled="true" title="#{tooltipBeanSNR.workflowEtapa}"
+									style="width:100%;" widgetVar="estadoActividad">
+									<f:selectItem itemLabel="Seleccione" itemValue="" />
+									<f:selectItem itemLabel="ASIGNADA" itemValue="ASG" />
+									<f:selectItem itemLabel="AUTOMÁTICA" itemValue="AUT" />
+									<f:selectItem itemLabel="BLOQUEADA" itemValue="BLQ" />
+									<f:selectItem itemLabel="EN ESPERA" itemValue="ESP" />
+									<f:selectItem itemLabel="POR REPARTIR" itemValue="XRP" />
+									<f:selectItem itemLabel="TERMINADA" itemValue="TER" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelFaseDosPuntos} #{messageBeanSNR.commonLabelAsterisco}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectOneMenu id="faseEtapa" appendTo="SBEtapa"
+									disabled="true" widgetVar="faseEtapa"
+									title="#{tooltipBeanSNR.workflowFase}" style="width:100%;">
+									<f:selectItem itemLabel="Seleccione" itemValue="">
+									</f:selectItem>
+									<f:selectItems value="#{beanWorkflow.fases}" var="fase"
+										itemValue="#{fase.idFase}"
+										itemLabel="#{fase.idFase} - #{fase.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelTipoRepartoDosPuntos} #{messageBeanSNR.commonLabelAsterisco}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectOneMenu id="tipoRepartoEtapa" appendTo="SBEtapa"
+									disabled="true" title="#{tooltipBeanSNR.workflowEtapa}"
+									style="width:100%;" widgetVar="TipoRepartoSOM">
+									<f:selectItem itemLabel="Seleccione" itemValue="" />
+									<f:selectItem itemLabel="BALANCEO" itemValue="B" />
+									<f:selectItem itemLabel="LINEA DE PRODUCCIÓN" itemValue="L" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelDescripcionDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="descripcionEtapa" disabled="true"
+									title="#{tooltipBeanSNR.workflowDescripcion}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelUnidadTiempoEsperaDosPuntos}" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectOneMenu id="unidadTiempoEsperaEtapa" appendTo="SBEtapa"
+									widgetVar="unidadTiempoEsperaEtapa" disabled="true"
+									title="#{tooltipBeanSNR.workflowUnidadTiempoEspera}"
+									style="width:100%;">
+									<f:selectItem itemLabel="Seleccione" itemValue="">
+									</f:selectItem>
+									<f:selectItems
+										value="#{beanWorkflow.cargarUnidadTiempoVencimiento()}"
+										var="unidadEspera" itemValue="#{unidadEspera.idUnidadTiempo}"
+										itemLabel="#{unidadEspera.descripcion}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelCantidadTiempoEsperaDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="cantidadTiempoEsperaEtapa" disabled="true"
+									title="#{tooltipBeanSNR.workflowDescripcion}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelDiasHabilesNormalDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="diasHabilesNormalEtapa" disabled="true"
+									title="#{tooltipBeanSNR.workflowDescripcion}" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelIndicadorPesoDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectBooleanCheckbox id="indPesoEtapa" disabled="true"
+									widgetVar="indPesoEtapa" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelIndicadorBloqueoDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectBooleanCheckbox id="indBloqueoEtapa" disabled="true"
+									widgetVar="indBloqueoEtapa" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelIndicadorDesbordeDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectBooleanCheckbox id="indDesbordeEtapa" disabled="true"
+									widgetVar="indDesbordeEtapa" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelIndicadorTopeDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectBooleanCheckbox id="indTopeEtapa" disabled="true"
+									widgetVar="indTopeEtapa" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelGenerarQRDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectBooleanCheckbox id="generarQREtapa" disabled="true"
+									widgetVar="indGenerarQREtapa" />
+							</div>
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<p:commandButton value="#{messageBeanSNR.commonButtonCancelar}"
+									icon="fa fa-remove" iconPos="left"
+									onclick="PF('SBEtapa').hide()" global="false" />
+							</div>
+						</div>
+					</p:outputPanel>
+				</p:panel>
+			</p:sidebar>
+			<p:sidebar widgetVar="SBEtapaMonitoreo" baseZIndex="10000"
+				appendTo="@(body)" style="width:26%" blockScroll="true"
+				id="SBEtapaMonitoreo">
+				<h1 style="font-weight: normal">#{messageBeanSNR.commonLabelPropiedades}</h1>
+				<p:panel id="panelScrollMonitoreo">
+					<p:outputPanel id="outputPanelScrollMonitoreo">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelUsuarioDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="idUsuario"
+									title="#{tooltipBeanSNR.workflowMotivo}" disabled="true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelFechaCreacionDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="fechaCreacion"
+									title="#{tooltipBeanSNR.workflowMotivo}" disabled="true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelFechaRepartoDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="fechaReparto"
+									title="#{tooltipBeanSNR.workflowMotivo}" disabled="true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelFechaInicialDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="fechaInicial"
+									title="#{tooltipBeanSNR.workflowMotivo}" disabled="true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelFechaFinalDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="fechaFinal"
+									title="#{tooltipBeanSNR.workflowMotivo}" disabled="true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelMotivoTramiteDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="motivoTramite"
+									title="#{tooltipBeanSNR.workflowMotivo}" disabled="true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelIndicadorDevolucionDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="indicadorDevolucion"
+									title="#{tooltipBeanSNR.workflowMotivo}" disabled="true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelEstadoDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="estadoActividadEtapa"
+									title="#{tooltipBeanSNR.workflowMotivo}" disabled="true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelObservacionesDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:commandButton style="width: 23%;" icon="fa fa-id-card-o"
+									onclick="accionObservaciones();" />
+							</div>
+						</div>
+					</p:outputPanel>
+				</p:panel>
+			</p:sidebar>
+			<p:sidebar widgetVar="SBMotivoTramite" baseZIndex="10000"
+				id="SBMotivoTramite" appendTo="@(body)">
+				<h1 style="font-weight: normal">#{messageBeanSNR.commonLabelPropiedades}</h1>
+				<div class="ui-g" align="center">
+					<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelMotivoDosPuntos} #{messageBeanSNR.commonLabelAsterisco}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+						<p:inputText id="motivo" title="#{tooltipBeanSNR.workflowMotivo}"
+							disabled="true" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+						<h:outputText
+							value="Descripcion: #{messageBeanSNR.commonLabelAsterisco}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+						<p:inputText id="descripcionMotivo" disabled="true"
+							title="#{tooltipBeanSNR.workflowMotivo}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelEstadoDosPuntos} #{messageBeanSNR.commonLabelAsterisco}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+						<p:selectOneMenu id="estadoMotivo" appendTo="SBMotivoTramite"
+							disabled="true" title="#{tooltipBeanSNR.workflowEtapa}"
+							style="width:100%;" widgetVar="estadoMotivo">
+							<f:selectItem itemLabel="ACTIVO" itemValue="A" />
+							<f:selectItem itemLabel="INACTIVO" itemValue="I" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelDecisionCalificacion}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+						<p:inputText id="decisionCalificacion" disabled="true"
+							title="#{tooltipBeanSNR.workflowMotivo}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelIndicadorDevolucionDosPuntos}" />
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+						<p:selectBooleanCheckbox id="indDevolucionMotivo" disabled="true"
+							widgetVar="indDevolucionMotivo" />
+					</div>
+
+					<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+						<p:commandButton value="#{messageBeanSNR.commonButtonCancelar}"
+							icon="fa fa-remove" iconPos="left"
+							onclick="PF('SBMotivoTramite').hide()" global="false" />
+					</div>
+				</div>
+			</p:sidebar>
+			<p:sidebar id="SBProceso" appendTo="@(body)" widgetVar="SBProceso"
+				style="width:320px" baseZIndex="10000">
+				<h1 style="font-weight: normal">#{messageBeanSNR.commonLabelPropiedades}</h1>
+				<p:accordionPanel id="tabProceso" widgetVar="tabProceso">
+					<p:tab title="Proceso">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelProcesoDosPuntos} #{messageBeanSNR.commonLabelAsterisco}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText widgetVar="itId" id="idProceso" disabled="true"
+									value="#{beanWorkflow.cargarDatosProceso ? beanWorkflow.procesoTrabajoSeleccionado.id : null}"
+									title="#{tooltipBeanSNR.workflowProceso}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelNombreDosPuntos} #{messageBeanSNR.commonLabelAsterisco}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="nombreProceso" disabled="true"
+									value="#{beanWorkflow.cargarDatosProceso ? beanWorkflow.procesoTrabajoSeleccionado.nombre: null}"
+									title="#{tooltipBeanSNR.workflowNombre}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelRecepcionDocumentosDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectBooleanCheckbox id="recepcionDocumentos"
+									disabled="true" widgetVar="recepcionDocumentos" />
+							</div>
+						</div>
+					</p:tab>
+					<p:tab title="Subproceso">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelSubprocesoDosPuntos} #{messageBeanSNR.commonLabelAsterisco}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="idSubproceso" disabled="true"
+									value="#{beanWorkflow.cargarDatosSubproceso ? beanWorkflow.subprocesoTrabajoSeleccionado.idSubproceso : null}"
+									title="#{tooltipBeanSNR.workflowProceso}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelNombreDosPuntos} #{messageBeanSNR.commonLabelAsterisco}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="nombreSubproceso" disabled="true"
+									value="#{beanWorkflow.cargarDatosSubproceso ? beanWorkflow.subprocesoTrabajoSeleccionado.nombre : null}"
+									title="#{tooltipBeanSNR.workflowNombre}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelSolicitudCertificadoDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectBooleanCheckbox id="solicitudCertificado"
+									disabled="true" widgetVar="solicitudCertificado" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText value="#{messageBeanSNR.commonLabelPlantilla}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:inputText id="plantillaSubproceso" disabled="true"
+									value="#{beanWorkflow.cargarDatosSubproceso ? beanWorkflow.subprocesoVersionTrabajoSeleccionado.plantilla : null}"
+									title="#{tooltipBeanSNR.workflowNombre}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelReciboDeCajaDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectBooleanCheckbox id="reciboCajaSubproceso"
+									disabled="true" widgetVar="reciboCajaSubproceso" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelConservacionDocumetalDosPuntos}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:selectBooleanCheckbox id="conservacionDocumental"
+									disabled="true" widgetVar="conservacionDocumental" />
+							</div>
+						</div>
+					</p:tab>
+				</p:accordionPanel>
+				<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+					<p:commandButton value="#{messageBeanSNR.commonButtonCancelar}"
+						icon="fa fa-remove" iconPos="left"
+						onclick="PF('SBProceso').hide()" global="false" />
+				</div>
+			</p:sidebar>
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fPrincipal">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="10000" widgetVar="globalMsg" redisplay="false" />
+				<p:panel>
+					<div id="canvas" />
+				</p:panel>
+				<div class="ui-g" align="center">
+					<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+							<p:commandButton value="#{messageBeanSNR.commonButtonRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="#{beanWorkflow.accionRegresar}" />
+
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-5" align="right">
+							<p:commandButton value="#{messageBeanSNR.commonButtonDevolver}"
+								rendered="#{!beanWorkflow.monitoreo}" id="botonDevolverFlujo"
+								onclick="PF('dialogDevolverFlujo').show();"
+								icon="fa fa-arrow-circle-left" />
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-1" align="left">
+							<p:commandButton value="#{messageBeanSNR.commonButtonAprobar}"
+								rendered="#{!beanWorkflow.monitoreo}" id="botonEnviarAprobador"
+								onclick="PF('dialogEnviarAlAprobador').show();"
+								icon="fa fa-send" />
+						</div>
+					</div>
+				</div>
+				<p:remoteCommand name="procesar" partialSubmit="true"
+					actionListener="#{beanWorkflow.procesar}" update="globalMsg" />
+				<p:remoteCommand name="abrirDiagrama"
+					actionListener="#{beanWorkflow.cargarDiagrama}"
+					oncomplete="cargarXML(xhr, status, args)" update="globalMsg" />
+			</h:form>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dialogEnviarAlAprobador" modal="true" resizable="false"
+				width="20%">
+				<h:form id="formEnviarAlAprobador"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<center>
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelEstaSeguroDeAprobar}" />
+					</center>
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonButtonNo}"
+							icon="fa fa-close"
+							onclick="PF('dialogEnviarAlAprobador').hide(); return false;" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonButtonSi}"
+							icon="fa fa-check" action="#{beanWorkflow.accionAprobar}" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dialogDevolverFlujo" modal="true" resizable="false"
+				width="20%">
+				<h:form id="formDevolverFlujo"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<center>
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelEstaSeguroDeDevolver}" />
+					</center>
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonButtonNo}"
+							icon="fa fa-close"
+							onclick="PF('dialogDevolverFlujo').hide(); return false;" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonButtonSi}"
+							icon="fa fa-check"
+							action="#{beanWorkflow.retornarAEstadoDevuelto}" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog id="dialogObservaciones" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelObservacionesDosPuntos}"
+				widgetVar="dialogObservaciones" modal="true" resizable="false"
+				position="center" width="600px" styleClass="dialogWorkflow">
+				<h:form id="fDialog" style="font-size: medium; top: 40%; left: 40%;">
+					<p:panel id="panelObservaciones">
+						<p:outputPanel id="outputPanelObservaciones">
+							<h:outputText id="observaciones" />
+						</p:outputPanel>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+			<p:dialog id="dialogInfoColores" appendTo="@(body)"
+				header="Convenciones"
+				widgetVar="dialogInfoColores" modal="true" resizable="false"
+				position="center" width="600px" styleClass="dialogWorkflow">
+				<h:form id="formInfoColores"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<p:outputPanel id="opInfoColores">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-12 ui-lg-12">
+								<div class="ui-g-6 ui-md-6 ui-lg-6" align="center">
+									<div class="etapaFinalizadaATiempo" />
+								</div>
+								<div class="ui-g-6 ui-md-6 ui-lg-6">
+									<p:outputLabel value="Finalizado en tiempo" />
+								</div>
+							</div>
+							<div class="ui-g-12 ui-md-12 ui-lg-12">
+								<div class="ui-g-6 ui-md-6 ui-lg-6" align="center">
+									<div class="etapaFinalizadaFueraDeTiempo" />
+								</div>
+								<div class="ui-g-6 ui-md-6 ui-lg-6">
+									<p:outputLabel value="Finalizado fuera de tiempo" />
+								</div>
+							</div>
+							<div class="ui-g-12 ui-md-12 ui-lg-12">
+								<div class="ui-g-6 ui-md-6 ui-lg-6" align="center">
+									<div class="etapaAsignadaEnEtapa" />
+								</div>
+								<div class="ui-g-6 ui-md-6 ui-lg-6">
+									<p:outputLabel value="Asignada en etapas" />
+								</div>
+							</div>
+							<div class="ui-g-12 ui-md-12 ui-lg-12">
+								<div class="ui-g-6 ui-md-6 ui-lg-6" align="center">
+									<div class="etapaNoIncluida" />
+								</div>
+								<div class="ui-g-6 ui-md-6 ui-lg-6">
+									<p:outputLabel value="El flujo no incluye la etapa" />
+								</div>
+							</div>
+							<div class="ui-g-12 ui-md-12 ui-lg-12">
+								<div class="ui-g-6 ui-md-6 ui-lg-6" align="center">
+									<div class="etapaPendienteReparto" />
+								</div>
+								<div class="ui-g-6 ui-md-6 ui-lg-6">
+									<p:outputLabel value="Pendiente de reparto" />
+								</div>
+							</div>
+						</div>
+					</p:outputPanel>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

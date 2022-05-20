@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelVisitasIVC}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelSolicitudVisitaEIntervencion}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fSolicitudVisitas" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<center>
+					<p:wizard flowListener="#{beanSolicitudVisitas.flowListener}"
+						id="myWizard" widgetVar="myWizard" showNavBar="false">
+						<p:tab id="informacionVisitas" titleStyle="font-size:15px;"
+							title="#{messageBeanSNR.commonLabelInformacionVisita}">
+							<p:panel
+								header="#{messageBeanSNR.commonLabelSolicitudVisitaEIntervencion}"
+								style="width:100%">
+								<div class="ui-g">
+									<div class="ui-g-6 ui-md-6 ui-lg-6">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelOrip}#{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:selectOneMenu id="idSOMOrip" style="width:85%;"
+											title="#{tooltipBeanSNR.administracionDesbordesDesbordesDetalleOrip}"
+											value="#{beanSolicitudVisitas.idCirculo}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems
+												value="#{beanReference.findCirculoRegistral(true)}"
+												var="item" itemValue="#{item.idCirculo}"
+												itemLabel="#{item.nombre} - #{item.idCirculo}" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-6 ui-md-6 ui-lg-6">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTipoVisita}#{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:selectOneMenu id="idSOMTipoVisita" style="width:85%;"
+											title="#{tooltipBeanSNR.procesosVisitasIngresoSolicitudTipoVisita}"
+											value="#{beanSolicitudVisitas.idTipoVisita}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems
+												value="#{beanReference.findSubprocesosByProceso('62')}"
+												var="item" itemValue="#{item.idSubproceso}"
+												itemLabel="#{item.idSubproceso} - #{item.nombre}" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+								<div class="ui-g">
+									<div class="ui-g-6 ui-md-6 ui-lg-6">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelDependencia}#{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:selectOneMenu id="idSOMDependencia" style="width:85%;"
+											title="#{tooltipBeanSNR.procesosVisitasIngresoSolicitudDependencia}"
+											value="#{beanSolicitudVisitas.idDependencia}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems value="#{beanSolicitudVisitas.dependencias}"
+												var="item" itemValue="#{item.idDependencia}"
+												itemLabel="#{item.nombreDependencia} - #{item.idDependencia}" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+								<div class="ui-g">
+									<div class="ui-g-6 ui-md-6 ui-lg-6">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelFechaDesde}#{messageBeanSNR.commonLabelObligatorio}"
+											style="font-size: 100%;" />
+										<br />
+										<p:calendar id="idFechaDesde" size="40" mask="true"
+											style="width:100% !important; height:100px"
+											title="#{tooltipBeanSNR.administracionComponenteDetalleFechaDesde}"
+											locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+											value="#{beanSolicitudVisitas.fechaDesde}" showOn="button" />
+									</div>
+									<div class="ui-g-6 ui-md-6 ui-lg-6">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelFechaHasta}#{messageBeanSNR.commonLabelObligatorio}"
+											style="font-size: 100%;" />
+										<br />
+										<p:calendar id="idFechaHasta" size="40" mask="true"
+											style="width:100% !important"
+											title="#{tooltipBeanSNR.administracionComponenteDetalleFechaHasta}"
+											locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+											value="#{beanSolicitudVisitas.fechaHasta}" showOn="button" />
+									</div>
+								</div>
+							</p:panel>
+						</p:tab>
+
+						<p:tab id="usuariosVisitadores" titleStyle="font-size:15px;"
+							title="#{messageBeanSNR.commonLabelUsuariosVisitadores}">
+							<p:outputPanel id="idOpUsuariosVisitadores">
+								<p:dataTable id="usuarios" widgetVar="usuarios"
+									value="#{beanSolicitudVisitas.usuarios}" var="usuario">
+									<f:facet name="header">
+										<p:outputLabel value="Usuarios" />
+									</f:facet>
+									<p:column headerText="Nombre funcionario"
+										filterBy="#{usuario.nombreCompleto}">
+										<f:facet name="filter">
+											<p:inputText onchange="PF('usuarios').filter()" />
+										</f:facet>
+										<p:outputLabel value="#{usuario.nombreCompleto}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelDependencia}">
+										<p:selectOneMenu id="idSOMDependenciaUsuario"
+											title="#{tooltipBeanSNR.procesosVisitasIngresoSolicitudDependencia}"
+											style="width:100%;" value="#{usuario.idDependencia}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems value="#{beanSolicitudVisitas.dependencias}"
+												var="item" itemValue="#{item.idDependencia}"
+												itemLabel="#{item.idDependencia} - #{item.nombreDependencia}" />
+										</p:selectOneMenu>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelSeleccione}">
+										<center>
+											<p:selectBooleanCheckbox value="#{usuario.seleccionado}" />
+										</center>
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelUsuarioVisitdorPrincipal}">
+										<center>
+											<p:selectBooleanCheckbox id="radioVisitadorPrincipal"
+												value="#{usuario.visitadorPrincipal}">
+											</p:selectBooleanCheckbox>
+										</center>
+									</p:column>
+								</p:dataTable>
+							</p:outputPanel>
+						</p:tab>
+						<p:tab id="proyeccionActoAdministrativo"
+							titleStyle="font-size:15px;"
+							title="#{messageBeanSNR.commonLabelProyeccionActoAdministrativo}">
+							<p:panel>
+								<center>
+									<h:panelGroup id="layoutsContainer2">
+										<h:panelGrid id="layoutsGrid2" columns="2"
+											style="margin-top: 15px;" cellpadding="0" cellspacing="0"
+											layout="responsive">
+											<p:layout style="min-width:170vh;min-height:100vh;">
+												<p:layoutUnit position="west" resizable="true" size="50%">
+													<div class="ui-g" align="center" style="max-width: 100%">
+														<div class="ui-g-12 ui-md-6 ui-lg-12">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelConsideraciones}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:textEditor widgetVar="wbConsideraciones" height="200"
+																value="#{beanSolicitudVisitas.consideraciones}"
+																style="margin-bottom:10px; max-width:20hv">
+																<f:facet name="toolbar">
+																	<span class="ql-formats">
+																		<button class="ql-bold" />
+																		<button class="ql-italic" />
+																		<button class="ql-underline" />
+																	</span>
+																</f:facet>
+															</p:textEditor>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-12">
+															<p:outputLabel
+																value="#{beanSolicitudVisitas.isAuto() ? messageBeanSNR.commonLabelOrdena : messageBeanSNR.commonLabelResuelve}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:textEditor widgetVar="wbResuelve" height="200"
+																value="#{beanSolicitudVisitas.resuelve}"
+																style="margin-bottom:10px; max-width:20hv">
+																<f:facet name="toolbar">
+																	<span class="ql-formats">
+																		<button class="ql-bold" />
+																		<button class="ql-italic" />
+																		<button class="ql-underline" />
+																	</span>
+																</f:facet>
+															</p:textEditor>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-12">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelMotivoVisita}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:textEditor widgetVar="wbMotivoVisita" height="200"
+																value="#{beanSolicitudVisitas.razon1}"
+																style="margin-bottom:10px; max-width:20hv">
+																<f:facet name="toolbar">
+																	<span class="ql-formats">
+																		<button class="ql-bold" />
+																		<button class="ql-italic" />
+																		<button class="ql-underline" />
+																	</span>
+																</f:facet>
+															</p:textEditor>
+														</div>
+														<div class="ui-g-6 ui-md-6 ui-lg-6" align="center">
+															<p:commandButton icon="fa fa-check"
+																rendered="#{beanSolicitudVisitas.renderGenerarDocumento}"
+																value="#{messageBeanSNR.commonButtonGenerarDocumentos}"
+																update="globalMsg"
+																action="#{beanSolicitudVisitas.accionBotonGenerarDocumentos}" />
+														</div>
+														<div class="ui-g-6 ui-md-6 ui-lg-6" align="center">
+															<p:commandButton icon="fa fa-save"
+																rendered="#{beanSolicitudVisitas.renderGuardarDocumento}"
+																value="#{messageBeanSNR.commonButtonGuardarDocumento}"
+																action="#{beanSolicitudVisitas.accionGuardarDocumento}" />
+														</div>
+														<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+															<p:commandButton icon="fa fa-search"
+																id="botonConsultaSGD"
+																rendered="#{beanSolicitudVisitas.renderConsultaSGD}"
+																value="#{messageBeanSNR.commonLabelConsultaSGD}"
+																action="#{beanSolicitudVisitas.accionConsultaSGD}" />
+														</div>
+													</div>
+												</p:layoutUnit>
+												<p:layoutUnit position="center">
+													<p:outputPanel id="PanelDocumento2"
+														style="margin-left: 30px;">
+														<pe:documentViewer height="690px" id="documento"
+															width="98%"
+															value="#{beanSolicitudVisitas.imagenDocumento}" />
+													</p:outputPanel>
+												</p:layoutUnit>
+											</p:layout>
+										</h:panelGrid>
+									</h:panelGroup>
+								</center>
+							</p:panel>
+						</p:tab>
+					</p:wizard>
+				</center>
+				<div class="ui-g-12 ui-md-12 ui-lg-12" align="left">
+					<p:outputPanel id="botonesBandeja">
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+							<p:commandButton value="#{messageBeanSNR.commonButtonRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								rendered="#{beanSolicitudVisitas.renderRegresar}"
+								onclick="PF('myWizard').back()" />
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+							<p:commandButton value="#{messageBeanSNR.commonLabelSiguiente}"
+								rendered="#{beanSolicitudVisitas.renderSiguiente}"
+								icon="fa fa-arrow-circle-right" iconPos="right"
+								onclick="PF('myWizard').next()" />
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+							<p:commandButton icon="fa fa-check"
+								rendered="#{beanSolicitudVisitas.renderEnviarDelegado}"
+								value="#{messageBeanSNR.commonButtonEnviarDelegadoRegistro}"
+								onclick="PF('dlgEnviarDelegadoRegistro').show();" />
+						</div>
+					</p:outputPanel>
+				</div>
+			</h:form>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgEnviarDelegadoRegistro" modal="true" height="90"
+				resizable="false">
+				<h:form id="fEnviarDelegadoRegistro"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeEnviarDelegadoRegistro}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check"
+							action="#{beanSolicitudVisitas.accionEnviarDelegadoRegistro}"
+							oncomplete="PF('dlgEnviarDelegadoRegistro').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close"
+							onclick="PF('dlgEnviarDelegadoRegistro').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelNIRCreado}"
+				widgetVar="idDialogNir" modal="true" height="100" resizable="false">
+				<h:form id="fDialog2"
+					style="font-size: large; top: 100%; left: 100%;">
+					<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+						<h:outputText id="otMensaje"
+							value="#{messageBeanSNR.commonLabelNIRCreadoSatisfactoriamente}#{beanSolicitudVisitas.nir}" />
+					</div>
+					<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+						<p:commandButton value="#{messageBeanSNR.commonButtonCerrar}"
+							icon="fa fa-close" onclick="PF('idDialogNir').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

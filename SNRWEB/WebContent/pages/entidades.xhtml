@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministrativo}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelEntidades}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fEntidades" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="5000" redisplay="false"/>
+				<center>
+					<p:panel style="min-width:900px;">
+						<div class="ui-g" align="left">
+						<div class="ui-g-12 ui-md-6 ui-lg-12">
+							<div class="ui-g-12 ui-md-6 ui-lg-2"/>
+							<div class="ui-g-12 ui-md-12 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelIdTipoEntidad}"
+									style="font-size: 100%;" align="center" />
+								<p:selectOneMenu id="idTipoEntidad" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionEntidadesTipoEntidad}"
+										value="#{beanEntidades.tipoEntidad}">
+										<f:selectItem itemValue=""
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+										<f:selectItems value="#{beanEntidades.cargarTipoEntidad()}"
+											var="tipoEntidad" itemValue="#{tipoEntidad.idTipoEntidad}"
+											itemLabel="#{tipoEntidad.idTipoEntidad}-#{tipoEntidad.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2"/>
+							<div class="ui-g-12 ui-md-12 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelNombreEntidad}"
+									style="font-size: 100%;" align="center" />
+								<p:inputText
+									title="#{tooltipBeanSNR.administracionEntidadesNombreEntidad}"
+									placeholder="#{messageBeanSNR.commonLabelNombreEntidad}"
+									id="idEntidad" value="#{beanEntidades.nombreEntidad}">
+								<p:ajax listener="#{beanEntidades.consultarEntidadesNombre(beanEntidades.nombreEntidad)}"
+										event="keyup" delay="1000" process="@this"/>
+								</p:inputText>
+							</div>
+						</div>	
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGroup>
+									<p:commandButton style="width: 15%;"
+										title="#{tooltipBeanSNR.administracionEntidadesConsultar}"
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										actionListener="#{beanEntidades.consultarEntidades()}"
+										icon="lupa" update="fEntidades:crearEntidad" />
+									<p:commandButton style="width: 15%;"
+										id="crearEntidad"
+										title="#{tooltipBeanSNR.administracionEntidadesCrearEntidad}"
+										value="#{messageBeanSNR.commonButtonCrearEntidad}"
+										action="entidadesDetalle?faces-redirect=true"
+										icon="fa fa-plus-circle" />
+								</h:panelGroup>
+							</div>
+						</div>
+						<p:outputPanel id="idPanelListados"
+							rendered="#{beanEntidades.tablaActiva}">
+							<p:dataTable
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}"
+								class="tabla-usuarios" id="idDtListado" var="item"
+								value="#{beanEntidades.entidadExterna}" paginator="true"
+								rows="50">
+
+								<p:column headerText="#{messageBeanSNR.commonLabelNombreEntidad}"
+									filterBy="#{item.nombre}">
+									<div align="left">
+										<p:commandLink id="idClickIdUsuario" ajax="false"
+											title="#{tooltipBeanSNR.administracionEntidadesNombreEntidad}"
+											actionListener="#{beanEntidades.consultaDetallada(item)}"
+											action="entidadesModificarDetalle?faces-redirect=true"
+											value="#{item.nombre}" styleClass="subrayado">
+										</p:commandLink>
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIdTipoEntidad}">
+									<div align="left">
+										<h:outputText value="#{item.nombreTipoEntidad}"/>
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIdEntidad}">
+									<div align="left">
+										<h:outputText value="#{item.idEntidadExterna}" />
+									</div>
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelEntidadExenta}">
+									<div align="left">
+										<h:outputText value="#{messageBeanSNR.commonLabelSi}"
+									rendered="#{item.entidadExenta=='S'}" />
+								<h:outputText value="#{messageBeanSNR.commonLabelNo}"
+									rendered="#{item.entidadExenta=='N'}" />
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<div align="left">
+										<h:outputText
+											value="#{item.fechaCreacion}" />
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIdPais}">
+									<div align="left">
+										<h:outputText
+											value="#{item.nombrePais}" />
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIdDepartamento}">
+									<div align="left">
+										<h:outputText
+											value="#{item.nombreDepartamento}" />
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIdMunicipio}">
+									<div align="left">
+										<h:outputText
+											value="#{item.nombreMunicipio}" />
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelRepresentanteLegal}">
+									<div align="left">
+										<h:outputText value="#{item.nombreRepresentanteLegal}" />
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelDocumento}">
+									<div align="left">
+										<h:outputText value="#{item.numeroDocumento}" />
+									</div>
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

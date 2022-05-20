@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/consultamigracion/v1"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/consultamigracion/v1"
+	xmlns:bachueCMP="https://www.supernotariado.gov.co/services/bachue/cb/consultamigracion/consultarMigracionPredio/v1"
+	xmlns:bachueCMO="https://www.supernotariado.gov.co/services/bachue/cb/consultamigracion/consultarMigracionORIP/v1"
+	xmlns:bachueCMM="https://www.supernotariado.gov.co/services/bachue/cb/consultamigracion/consultarMigracionMatriculas/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/consultamigracion/consultarMigracionPredio/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaConsultaMigracionPredio">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de entrada para saber si la información del Predio ha sido
+						migrada a Bachue o si todavía se debe consultar en Nodo Central
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="tipoIdentificacionPredio"
+						minOccurs="0" nillable="false">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al tipo de identificacion por el
+								cual podemos buscar un predio.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="matricula">
+									<xsd:annotation>
+										<xsd:documentation>En el campo numIdentificacionPredio deberá
+											venir los
+											tres primeros caracteres del cículo y luego si el
+											número de
+											matrícula
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredial">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al CHIP, si es Bogotá o a la
+											referencia o cédula catastral del predio.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredialAnterior">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al anterior numero de
+											Identifiación Predial.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="NUPRE">
+									<xsd:annotation>
+										<xsd:documentation>Número Único Predial
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numIdentificacionPredio"
+						minOccurs="0" nillable="false">
+						<xsd:annotation>
+							<xsd:documentation>Al seleccionar un tipo de Identificación
+								predio,
+								se espera en este campo el número correspondiente; para
+								el caso
+								de
+								matricula, el sistema toma los tres primeros caracteres
+								como
+								Código Circulo Registral y los siguientes como el Número de
+								Matrícula Inmobiliaria.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType
+				name="tipoSalidaConsultaMigracionPredio">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de salida para la operacion Consulta Migracion Predio
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="informacionMigrada" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>True cuando la información del Predio ha sido
+								migrada,
+								false si no está migrada.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:boolean"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="codMensaje">
+						<xsd:annotation>
+							<xsd:documentation>200 cuando no hay error, 4* por errores de
+								validación de campos de entrada o validación de negocio y 500
+								cuando existen errores de sistema
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer" />
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="descripcionMensaje">
+						<xsd:annotation>
+							<xsd:documentation>En caso de que se presente un error en la
+								ejecución del servicio se envía un texto explicativo
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultaMigracionPredio"
+				type="bachueCMP:tipoEntradaConsultaMigracionPredio" />
+			<xsd:element name="salidaConsultaMigracionPredio"
+				type="bachueCMP:tipoSalidaConsultaMigracionPredio" />
+			<!-- Últimas modificaciones 2020-02-03 16:26 -->
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/consultamigracion/consultarMigracionORIP/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaConsultaMigracionORIP">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de entrada para saber si se busca en Nodo Central o en los
+						Servicios de Bachué dado el código de la ORIP
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="codCirculoRegistral" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Código de la ORIP
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType
+				name="tipoSalidaConsultaMigracionORIP">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de salida para la operacion Consulta Migracion ORIP
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="informacionMigrada" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>True cuando la información del Predio ha sido
+								migrada,
+								false si no está migrada.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:boolean"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="codMensaje" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>200 cuando no hay error, 4* por errores de
+								validación de campos de entrada o validación de negocio y 500
+								cuando existen errores de sistema
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer" />
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="descripcionMensaje" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>En caso de que se presente un error en la
+								ejecución del servicio se envía un texto explicativo
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultaMigracionORIP"
+				type="bachueCMO:tipoEntradaConsultaMigracionORIP" />
+			<xsd:element name="salidaConsultaMigracionORIP"
+				type="bachueCMO:tipoSalidaConsultaMigracionORIP" />
+			<!-- Últimas modificaciones 2020-03-11 16:59 -->
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/consultamigracion/consultarMigracionMatriculas/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaConsultaMigracionMatriculas">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de entrada para la operacion Consulta Migracion Matriculas
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="matriculasConsultadas" minOccurs="0"
+						maxOccurs="unbounded" type="bachueCMM:tipoMatriculaConsultada" />
+					<xsd:element name="usuario" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoMatriculaConsultada">
+				<xsd:sequence>
+					<xsd:element name="matricula" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>tres primeros caractares para código del
+								circulo
+								registral, a partir del cuarto caracter el número de
+								matrícula
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType
+				name="tipoSalidaConsultaMigracionMatriculas">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de salida para saber con cada una de las matrículas
+						recibidas,
+						si se busca en Nodo Central o en los
+						Servicios de Bachué
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence minOccurs="0">
+					<xsd:element name="datosMatriculasMigracion"
+						minOccurs="0" maxOccurs="unbounded"
+						type="bachueCMM:tipoDatosMatriculasMigracion" />
+					<xsd:element name="codMensaje">
+						<xsd:annotation>
+							<xsd:documentation>200 cuando no hay error, 4* por errores de
+								validación de campos de entrada o validación de negocio y 500
+								cuando existen errores de sistema
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer" />
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="descripcionMensaje">
+						<xsd:annotation>
+							<xsd:documentation>En caso de que se presente un error en la
+								ejecución del servicio se envía un texto explicativo
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoDatosMatriculasMigracion">
+				<xsd:sequence>
+					<xsd:element name="matricula" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>En cada de las matrículas recibidas,
+								los tres
+								primeros caractares deben corresponder al circulo
+								registral; a
+								partir del
+								cuarto caracter el número de matrícula
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="infoMatriculaMigrada" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>True cuando la información de la matrícula
+								ha
+								sido migrada,
+								false en cualquier otro caso
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:boolean"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultaMigracionMatriculas"
+				type="bachueCMM:tipoEntradaConsultaMigracionMatriculas" />
+			<xsd:element name="salidaConsultaMigracionMatriculas"
+				type="bachueCMM:tipoSalidaConsultaMigracionMatriculas" />
+			<!-- Últimas modificaciones 2020-02-03 16:26 -->
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- INICIO sección Message -->
+
+	<!-- ConsultarDatosMigracionPredio -->
+	<wsdl:message name="ConsultarDatosMigracionPredio_Request">
+		<wsdl:part name="entrada"
+			element="bachueCMP:entradaConsultaMigracionPredio"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message
+		name="ConsultarDatosMigracionPredio_Response">
+		<wsdl:part name="salida"
+			element="bachueCMP:salidaConsultaMigracionPredio"></wsdl:part>
+	</wsdl:message>
+
+	<!-- ConsultarDatosMigracionORIP -->
+	<wsdl:message name="ConsultarDatosMigracionORIP_Request">
+		<wsdl:part name="entrada"
+			element="bachueCMO:entradaConsultaMigracionORIP"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="ConsultarDatosMigracionORIP_Response">
+		<wsdl:part name="salida"
+			element="bachueCMO:salidaConsultaMigracionORIP"></wsdl:part>
+	</wsdl:message>
+
+	<!-- ConsultarDatosMigracionMatriculas -->
+	<wsdl:message
+		name="ConsultarDatosMigracionMatriculas_Request">
+		<wsdl:part name="entrada"
+			element="bachueCMM:entradaConsultaMigracionMatriculas"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message
+		name="ConsultarDatosMigracionMatriculas_Response">
+		<wsdl:part name="salida"
+			element="bachueCMM:salidaConsultaMigracionMatriculas"></wsdl:part>
+	</wsdl:message>
+
+	<!-- FIN sección Message -->
+
+	<!-- INICIO PortType SUT_CB_ConsultaMigracion -->
+	<wsdl:portType name="SUT_CB_ConsultaMigracion">
+
+		<!-- Inicio Operacion consultarMigracionPredio -->
+		<wsdl:operation name="consultarMigracionPredio">
+			<wsdl:input
+				message="bachue:ConsultarDatosMigracionPredio_Request"></wsdl:input>
+			<wsdl:output
+				message="bachue:ConsultarDatosMigracionPredio_Response"></wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Operacion consultarMigracionPredio -->
+
+		<!-- Inicio Operacion consultarMigracionORIP -->
+		<wsdl:operation name="consultarMigracionORIP">
+			<wsdl:input
+				message="bachue:ConsultarDatosMigracionORIP_Request"></wsdl:input>
+			<wsdl:output
+				message="bachue:ConsultarDatosMigracionORIP_Response"></wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Operacion consultarMigracionORIP -->
+
+		<!-- Inicio Operacion consultarMigracionMatriculas -->
+		<wsdl:operation name="consultarMigracionMatriculas">
+			<wsdl:input
+				message="bachue:ConsultarDatosMigracionMatriculas_Request"></wsdl:input>
+			<wsdl:output
+				message="bachue:ConsultarDatosMigracionMatriculas_Response"></wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Operacion consultarMigracionMatriculas -->
+
+	</wsdl:portType>
+
+	<!-- INICIO WSDL:binding -->
+	<wsdl:binding name="SUT_CB_ConsultaMigracionSOAP12Binding"
+		type="bachue:SUT_CB_ConsultaMigracion">
+		<!-- Inicio Binding ConsultaMigracionPredio -->
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="consultarMigracionPredio">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/consultamigracion/v1/consultarMigracionPredio" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Binding ConsultaMigracionPredio -->
+
+		<!-- Inicio Binding ConsultaMigracionORIP -->
+		<wsdl:operation name="consultarMigracionORIP">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/consultamigracion/v1/consultarMigracionORIP" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Binding ConsultaMigracionORIP -->
+
+		<!-- Inicio Binding ConsultaMigracionMatriculas -->
+		<wsdl:operation name="consultarMigracionMatriculas">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/consultamigracion/v1/consultarMigracionMatriculas" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Binding ConsultaMigracionMatriculas -->
+
+	</wsdl:binding>
+
+	<wsdl:service name="SUT_CB_ConsultaMigracion">
+		<wsdl:port name="SUT_CB_ConsultaMigracionPort"
+			binding="bachue:SUT_CB_ConsultaMigracionSOAP12Binding">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+	<!-- Últimas modificaciones 2020-02-27 16:24 -->
+</wsdl:definitions>

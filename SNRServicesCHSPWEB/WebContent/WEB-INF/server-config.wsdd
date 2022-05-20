@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+	xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+	<globalConfiguration>
+		<parameter name="attachments.implementation"
+			value="org.apache.axis.attachments.AttachmentsImpl" />
+		<parameter name="disablePrettyXML" value="false" />
+		<parameter name="sendMultiRefs" value="true" />
+		<parameter name="sendXMLDeclaration" value="true" />
+		<parameter name="sendXsiTypes" value="true" />
+		<requestFlow>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="session" />
+			</handler>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="request" />
+				<parameter name="extension" value=".jwr" />
+			</handler>
+		</requestFlow>
+	</globalConfiguration>
+	<handler name="Authenticate"
+		type="java:org.apache.axis.handlers.SimpleAuthenticationHandler" />
+	<handler name="LocalResponder"
+		type="java:org.apache.axis.transport.local.LocalResponder" />
+	<handler name="URLMapper"
+		type="java:org.apache.axis.handlers.http.URLMapper" />
+	<service name="AdminService" provider="java:MSG">
+		<parameter name="allowedMethods" value="AdminService" />
+		<parameter name="enableRemoteAdmin" value="false" />
+		<parameter name="className"
+			value="org.apache.axis.utils.Admin" />
+		<namespace>http://xml.apache.org/axis/wsdd/</namespace>
+	</service>
+	<service name="Version" provider="java:RPC">
+		<parameter name="allowedMethods" value="getVersion" />
+		<parameter name="className" value="org.apache.axis.Version" />
+	</service>
+
+	<!-- Services from SBB_CB_ConsultaHistorialSolicitudesPagadas WSDL service -->
+
+	<service name="SBB_CB_ConsultaHistorialSolicitudesPagadas"
+		provider="java:RPC" style="document" use="literal">
+		<parameter name="wsdlTargetNamespace"
+			value="https://www.supernotariado.gov.co/services/bachue/cb/consultahistorialsolicitudespagadas/v1" />
+		<parameter name="wsdlServiceElement"
+			value="SBB_CB_ConsultaHistorialSolicitudesPagadasService" />
+		<parameter name="schemaQualified"
+			value="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/buscarsolicitudes/v1,https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/consultardetallesolicitud/v1" />
+		<parameter name="wsdlServicePort"
+			value="SBB_CB_ConsultaHistorialSolicitudesPagadas" />
+		<parameter name="className"
+			value="co.gov.supernotariado.www.services.bachue.cb.consultahistorialsolicitudespagadas.v1.SBB_CB_ConsultaHistorialSolicitudesPagadasSOAP12BindingSkeleton" />
+		<parameter name="wsdlPortType"
+			value="SBB_CB_ConsultaHistorialSolicitudesPagadas" />
+		<parameter name="typeMappingVersion" value="1.2" />
+		<parameter name="allowedMethods" value="*" />
+		<wsdlFile>./SBB_CB_ConsultaHistorialSolicitudesPagadas.wsdl</wsdlFile>
+
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/consultardetallesolicitud/v1"
+			qname="ns:tipoSalidaConsultarDetalleSolicitud"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.consultahistorialsolicitudespagadas.consultardetallesolicitud.v1.TipoSalidaConsultarDetalleSolicitud"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/consultardetallesolicitud/v1"
+			qname="ns:tipoTurno"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.consultahistorialsolicitudespagadas.consultardetallesolicitud.v1.TipoTurno"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/buscarsolicitudes/v1"
+			qname="ns:>tipoEntradaBuscarSolicitudes>solicitante"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.consultahistorialsolicitudespagadas.buscarsolicitudes.v1.TipoEntradaBuscarSolicitudesSolicitante"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/consultardetallesolicitud/v1"
+			qname="ns:>tipoSalidaConsultarDetalleSolicitud>codigoMensaje"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.consultahistorialsolicitudespagadas.consultardetallesolicitud.v1.TipoSalidaConsultarDetalleSolicitudCodigoMensaje"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/buscarsolicitudes/v1"
+			qname="ns:>tipoSalidaBuscarSolicitudes>codigoMensaje"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.consultahistorialsolicitudespagadas.buscarsolicitudes.v1.TipoSalidaBuscarSolicitudesCodigoMensaje"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/consultardetallesolicitud/v1"
+			qname="ns:tipoEntradaConsultarDetalleSolicitud"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.consultahistorialsolicitudespagadas.consultardetallesolicitud.v1.TipoEntradaConsultarDetalleSolicitud"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/buscarsolicitudes/v1"
+			qname="ns:tipoEntradaBuscarSolicitudes"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.consultahistorialsolicitudespagadas.buscarsolicitudes.v1.TipoEntradaBuscarSolicitudes"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/consultardetallesolicitud/v1"
+			qname="ns:>tipoSalidaConsultarDetalleSolicitud>turnos"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.consultahistorialsolicitudespagadas.consultardetallesolicitud.v1.TipoTurno[]"
+			innerType="cmp-ns:tipoTurno"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/consultardetallesolicitud/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/buscarsolicitudes/v1"
+			qname="ns:tipoSolicitud"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.consultahistorialsolicitudespagadas.buscarsolicitudes.v1.TipoSolicitud"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/consultardetallesolicitud/v1"
+			qname="ns:>tipoEntradaConsultarDetalleSolicitud>solicitante"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.consultahistorialsolicitudespagadas.consultardetallesolicitud.v1.TipoEntradaConsultarDetalleSolicitudSolicitante"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/buscarsolicitudes/v1"
+			qname="ns:>tipoSalidaBuscarSolicitudes>solicitudes"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.consultahistorialsolicitudespagadas.buscarsolicitudes.v1.TipoSolicitud[]"
+			innerType="cmp-ns:tipoSolicitud"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/buscarsolicitudes/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/buscarsolicitudes/v1"
+			qname="ns:tipoSalidaBuscarSolicitudes"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.consultahistorialsolicitudespagadas.buscarsolicitudes.v1.TipoSalidaBuscarSolicitudes"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+	</service>
+	<transport name="http">
+		<requestFlow>
+			<handler type="URLMapper" />
+			<handler
+				type="java:org.apache.axis.handlers.http.HTTPAuthHandler" />
+		</requestFlow>
+		<parameter name="qs:list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs:wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+		<parameter name="qs.list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs.method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs:method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs.wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+	</transport>
+	<transport name="local">
+		<responseFlow>
+			<handler type="LocalResponder" />
+		</responseFlow>
+	</transport>
+</deployment>

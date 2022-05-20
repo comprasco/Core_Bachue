@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelTarifa}" /></li>						
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelParametrizacionTarifasParaAlertas}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fTarifasParaAlertas" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+
+					<p:panel
+						header="#{messageBeanSNR.commonLabelTablaParametrizacionTarifasParaAlertas}"
+						toggleable="false">
+						<p:outputPanel id="tblParametrizacionAlertas">
+							<p:dataTable paginator="false" id="idTablaParametrizacionTarifas"
+								value="#{beanTarifasParaAlertas.tarifaAlertaCollection}"
+								var="tA" emptyMessage="#{errorBeanSNR.errorSinRegistros}"
+								style="width: 100%;">
+								<p:column headerText="#{messageBeanSNR.commonLabelTarifa}"
+									style="text-align: center">
+									<h:outputText value="#{tA.idTarifa}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelCantidadInicial}"
+									style="text-align: center">
+									<h:outputText value="#{tA.cantidadInicialMatriculas}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelCantidadFinal}"
+									id="idcantFinal" style="text-align: center">
+									<p:inputNumber value="#{tA.cantidadFinalMatriculas}"
+										disabled="#{!tA.editable}" minValue="0"
+										maxValue="999999999999999"
+										rendered="#{tA.mostrarCamposCantidadFAgregar}"
+										placeholder="#{messageBeanSNR.commonLabelCantidadFinal}"
+										title="#{tooltipBeanSNR.administracionTarifasParaAlertasCantidadFinal}">
+										<p:ajax event="change"
+											listener="#{beanTarifasParaAlertas.revisarCantidadFinalIngresada(tA)}"
+											update="fTarifasParaAlertas:globalMsg, idTablaParametrizacionTarifas" />
+									</p:inputNumber>
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelValorTarifa}"
+									style="text-align: center">
+									<p:inputNumber onKeyPress="return soloNumeros(event)"
+										disabled="#{!tA.editable}" maxlength="17"
+										maxValue="9999999999"
+										title="#{tooltipBeanSNR.administracionTarifasParaAlertasValorTarifa}"
+										placeholder="#{messageBeanSNR.commonLabelValorTarifa}"
+										symbol="$" value="#{tA.valorTarifa}">
+										<p:keyFilter regEx="/[\d\-\.]/" preventPaste="false" />
+									</p:inputNumber>
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+									style="text-align: center">
+									<p:commandButton
+										action="#{beanTarifasParaAlertas.modificarRegistro(tA)}"
+										update="fTarifasParaAlertas:globalMsg, idTablaParametrizacionTarifas"
+										title="#{tooltipBeanSNR.administracionTarifasParaAlertasEditarRegistro}"
+										icon="fa fa-pencil" iconPos="center" />
+									<p:commandButton rendered="#{tA.mostrarCamposCantidadFAgregar}"
+										action="#{beanTarifasParaAlertas.agregarRegistro(tA)}"
+										update="fTarifasParaAlertas:globalMsg, idTablaParametrizacionTarifas"
+										title="#{tooltipBeanSNR.administracionTarifasParaAlertasAgregarRegistro}"
+										icon="fa fa-plus-circle" iconPos="center" />
+									<p:commandButton rendered="#{tA.mostrarCamposCantidadFAgregar}"
+										iconPos="center"
+										actionListener="#{beanTarifasParaAlertas.setTarifaAlertaTemporal(tA)}"
+										onclick="PF('cdrConfirmacionEliminacion').show();"
+										icon="fa fa-trash"
+										title="#{tooltipBeanSNR.administracionTarifasParaAlertasEliminarRegistro}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUltimoRegistro}"
+									style="text-align: center">
+									<p:selectBooleanCheckbox value="#{tA.ultimoRegistro}"
+										disabled="#{tA.bloquearCasillaUltimoRegistro}">
+										<p:ajax event="change"
+											listener="#{beanTarifasParaAlertas.setUltimoRegistroConfirmado(tA.ultimoRegistro)}"
+											update="fTarifasParaAlertas:globalMsg" />
+									</p:selectBooleanCheckbox>
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+						<br />
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-10" align="right">
+								<h:panelGrid columns="1">
+									<p:commandButton icon="fa fa-check"
+										value="#{messageBeanSNR.commonLabelGuardar}"
+										action="#{beanTarifasParaAlertas.guardar()}"
+										update="cuadroResumen" />
+								</h:panelGrid>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-1" align="left">
+								<h:panelGrid columns="1">
+									<p:commandButton icon="fa fa-times"
+										value="#{messageBeanSNR.commonLabelCancelar}"
+										actionListener="#{beanTarifasParaAlertas.cargarData()}"
+										update="fTarifasParaAlertas:idTablaParametrizacionTarifas" />
+								</h:panelGrid>
+							</div>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+			<p:dialog id="cuadroResumen" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelResumen}" widgetVar="cdrResumen"
+				modal="true" resizable="false" width="800">
+				<h:form id="fDialog2"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+						sticky="false" life="30000" redisplay="false" />
+					<div align="center">
+						<p:outputPanel id="tblParametrizacionAlertas">
+
+							<table id="tablaCuadroRepartoAutomaticoUsuarioInactivo"
+								style="width: 100%;" border="0" bgcolor="#dcdcdc" align="center">
+								<tr>
+									<td style="width: 53%;">
+										<div align="center">
+											<strong> <h:outputText
+													value="#{messageBeanSNR.commonLabelPorAlertasInscritas}" />
+											</strong>
+										</div>
+									</td>
+									<td>
+										<div align="center">
+											<strong> <h:outputText
+													value="#{messageBeanSNR.commonLabelTarifaAnualAlertaInscrita}" />
+											</strong>
+										</div>
+									</td>
+								</tr>
+							</table>
+							<p:dataTable paginator="false" id="idTablaResumen"
+								value="#{beanTarifasParaAlertas.tarifaAlertaCollection}"
+								var="tA" emptyMessage="#{errorBeanSNR.errorSinRegistros}"
+								style="width: 100%;" tableStyleClass="datatableSinHeader">
+								<p:column
+									style="text-align: center; border-color: transparent; width:10%">
+									<h:outputText
+										value="#{tA.cantidadFinalMatriculas lt 9999999999999999 ? messageBeanSNR.commonMessageEntre : messageBeanSNR.commonMessageMasDe}" />
+								</p:column>
+								<p:column
+									style="text-align: center; border-color: transparent; width:10%">
+									<h:outputText value="#{tA.cantidadInicialMatriculas}" />
+								</p:column>
+								<p:column
+									style="text-align: center; border-color: transparent; width:3%">
+									<h:outputText
+										value="#{tA.cantidadFinalMatriculas lt 9999999999999999 ? messageBeanSNR.commonMessageY : ''}" />
+								</p:column>
+								<p:column
+									style="text-align: center; border-color: transparent; width:22%">
+									<h:outputText
+										value="#{tA.cantidadFinalMatriculas lt 9999999999999999 ? tA.cantidadFinalMatriculas : ''}" />
+								</p:column>
+								<p:column
+									style="text-align: center;  border-color: transparent; width:12%">
+									<h:outputText value="#{messageBeanSNR.commonMessageMatriculas}" />
+								</p:column>
+								<p:column style="text-align: center; border-color: transparent;">
+									<h:outputText value="#{tA.valorTarifaString}" />
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+						<br />
+						<p:commandButton icon="fa fa-check"
+							value="#{messageBeanSNR.commonLabelAceptar}"
+							onclick="PF('cdrResumen').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog id="cuadroConfirmacionEliminacion" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="cdrConfirmacionEliminacion" modal="true"
+				resizable="false" width="500">
+				<h:form id="fDialog3"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaConfirmacionEliminacion" maxwidth="280"
+						cellspacing="1" cellpadding="20" border="0" align="center">
+						<tr>
+							<div align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelEstaSeguroDeEliminarRegistro}" />
+							</div>
+						</tr>
+						<tr>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-check"
+										value="#{messageBeanSNR.commonLabelSi}"
+										action="#{beanTarifasParaAlertas.eliminarRegistro()}"
+										onclick="PF('cdrConfirmacionEliminacion').hide();" />
+								</div>
+							</td>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-times"
+										value="#{messageBeanSNR.commonLabelNo}"
+										onclick="PF('cdrConfirmacionEliminacion').hide();" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

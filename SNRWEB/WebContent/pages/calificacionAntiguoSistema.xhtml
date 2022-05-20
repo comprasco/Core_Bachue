@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelCalificacion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultaPorCriterios}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fcalificacionAntiguoSistema">
+				<p:growl id="idGrowl" sticky="false" showDetail="true" life="20000"
+					globalOnly="true" redisplay="false"/>
+				<!-- Datos del predio -->
+				<p:panel style="min-width:800px;">
+					<p:panel>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+								<br />
+								<p:inputText readonly="true"
+									title="#{tooltipBeanSNR.calificacionAntiguoSistemaNIR}"
+									value="#{predioDocumentoActoAntiguo.predio.get('NIR')}" />
+							</div>
+							<div class="ui-g-12 ui-md-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}" />
+								<br />
+								<p:inputText readonly="true"
+									title="#{tooltipBeanSNR.calificacionAntiguoSistemaTurno}"
+									value="#{predioDocumentoActoAntiguo.predio.get('ID_TURNO')}" />
+							</div>
+							<div class="ui-g-12 ui-md-3">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonAbrirVisor}"
+									icon="fa fa-newspaper-o" iconPos="left"
+									actionListener="#{predioDocumentoActoAntiguo.abrirVisor}" />
+							</div>
+						</div>
+					</p:panel>
+					<!-- Fin Datos del predio -->
+					<br />
+					<p:panel id="idPanelCriteriosAntSistema"
+						header="#{messageBeanSNR.commonLabelConsultaPorCriteriosAntSistema}"
+						toggleable="true" style="text-align:center">
+						<p:panel id="idPanelConsultaCriteriosAntSistema">
+							<div class="ui-c" align="left">
+								<div class="ui-g-12 ui-md-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelCirculoRegistral}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMCirculoRegistralAntSistema"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAntSistemaCirculoRegistral}"
+										style="width:100%;"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.idCirculo}">
+										<p:ajax event="change"
+											update="idSOMDepAntSistema,idSOMMunAntSistema"
+											listener="#{predioDocumentoActoAntiguo.filtrarPorCirculo(false)}" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanReference.findCirculoRegistral(true)}"
+											var="circuloAntSistema"
+											itemValue="#{circuloAntSistema.idCirculo}"
+											itemLabel="#{circuloAntSistema.idCirculo} - #{circuloAntSistema.nombre}" />
+										<p:ajax event="change" update="idSOMMunAntSistema"/>
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDePredio}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoPredioAntSistema"
+										style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAntSistemaTipoPredio}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.idTipoPredio}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanReference.findTipoPredio()}"
+											var="tipoPredioAntSistema"
+											itemValue="#{tipoPredioAntSistema.idTipoPredio}"
+											itemLabel="#{tipoPredioAntSistema.descripcion}" />
+									</p:selectOneMenu>
+								</div>
+
+								<div class="ui-g-12 ui-md-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNombreDelPredio}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()"
+										id="idItNomAntSistema"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAntSistemaNombreDelPredio}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.nombrePredio}" />
+								</div>
+							</div>
+
+							<div class="ui-c" align="left">
+								<div class="ui-g-12 ui-md-4">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelPais}" />
+									<br />
+									<p:selectOneMenu id="idSOMPaisAntSistema" style="width:100%;"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.idPais}"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAntSistemaPais}"
+										disabled="true">
+										<p:ajax update="idSOMDepAntSistema,idSOMMunAntSistema" />
+										<f:selectItem itemValue="57" itemLabel="COLOMBIA" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDepartamento}" />
+									<br />
+									<p:selectOneMenu id="idSOMDepAntSistema" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAntSistemaDepartamento}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.idDepartamento}">
+										<p:ajax event="change" update="idSOMMunAntSistema" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{predioDocumentoActoAntiguo.findDepartamentosAntSistema(false)}"
+											var="depAntSistema"
+											itemValue="#{depAntSistema.idDepartamento}"
+											itemLabel="#{depAntSistema.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-4">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}" />
+									<br />
+									<p:selectOneMenu id="idSOMMunAntSistema" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAntSistemaMunicipio}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.idMunicipio}">
+										<p:ajax event="change"
+											listener="#{predioDocumentoActoAntiguo.filtrarPorDepYMun(false)}" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{predioDocumentoActoAntiguo.findMunicipiosByCirculo(predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.idCirculo)}"
+											var="munAntSistema" itemValue="#{munAntSistema.idMunicipio}"
+											itemLabel="#{munAntSistema.nombre}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+
+							<div class="ui-c" align="left">
+								<div class="ui-g-12 ui-md-5 ui-lg-4">
+									<p:outputLabel id="idOlLibro2"
+										value="#{messageBeanSNR.commonLabelLibro}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMLibro" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAntSistemaLibro}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.idLibroAntSistema}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findLibroAntiguoSistema()}"
+											var="libro" itemValue="#{libro.idLibroAntiguoSistema}"
+											itemLabel="#{libro.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-4">
+									<p:outputLabel id="idOltomo2"
+										value="#{messageBeanSNR.commonLabelTomo}" />
+									<br />
+									<p:selectOneMenu id="idSOMTomo" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAntSistemaTomo}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.tomo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{predioDocumentoActoAntiguo.getTomos()}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-4">
+									<p:outputLabel id="idOlFolio2"
+										value="#{messageBeanSNR.commonLabelFolio}" />
+									<br />
+									<p:selectOneMenu id="idSOMFolio" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAntSistemaFolio}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.folio}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{predioDocumentoActoAntiguo.getFolios()}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+
+							<div class="ui-c" align="left">
+								<div class="ui-g-12 ui-md-4">
+									<p:outputLabel id="idOlPartida2"
+										value="#{messageBeanSNR.commonLabelNumeroDePartida}" />
+									<br />
+									<p:selectOneMenu id="idSOMPartida" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAntSistemaNumeroDePartida}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.partida}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="PAR" itemValue="PAR" />
+										<f:selectItem itemLabel="IMPAR" itemValue="IMPAR" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-4">
+									<p:outputLabel id="idOlano2"
+										value="#{messageBeanSNR.commonLabelAnio}" />
+									<br />
+									<p:selectOneMenu id="idSOMAno2" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAntSistemaAnio}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.anio}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{predioDocumentoActoAntiguo.getYearsAgo()}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-2">
+									<br />
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonConsultar}" ajax="true"
+										update="dataConsultaDatosAntSistema,fcalificacionAntiguoSistema:idGrowl,idPanelCriteriosAntSistema"
+										actionListener="#{predioDocumentoActoAntiguo.consultaAntiguoSistema(false)}"
+										icon="lupa" />
+								</div>
+								<div class="ui-g-12 ui-md-2">
+									<br />
+									<p:commandButton value="#{messageBeanSNR.commonButtonLimpiar}"
+										icon="fa fa-undo"
+										update="dataConsultaDatosAntSistema,idPanelConsultaCriteriosAntSistema"
+										actionListener="#{predioDocumentoActoAntiguo.clearConsulta('CalificacionAntSistema')}" />
+								</div>
+							</div>
+						</p:panel>
+						<br />
+						<p:dataTable id="dataConsultaDatosAntSistema"
+							value="#{predioDocumentoActoAntiguo.dataConsultaAntSistema}"
+							var="item" emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+							<p:column style="width:100px;"
+								headerText="#{messageBeanSNR.commonLabelVerDetalle}">
+								<p:rowToggler />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+								<h:outputText value="#{item.solicitud.nir}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+								<h:outputText value="#{item.solicitud.fechaCreacion}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+										timeZone="GMT-5" />
+								</h:outputText>
+							</p:column>
+
+							<p:rowExpansion>
+								<p:panelGrid columns="4" style="width:auto;">
+									<p:dataTable id="detalleTurno"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{item.dataConsultaPorCriterio}" var="detalle">
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelMatriculasInmobiliarias}"
+											style="text-align:left">
+											<h:outputText
+												value="#{detalle.idCirculo} - #{detalle.idMatricula}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}"
+											style="text-align:left">
+											<h:outputText value="#{detalle.direccion}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelNumeroAnotacion}"
+											style="text-align:left">
+											<h:outputText value="#{detalle.idAnotacion}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelFechaAnotacion}"
+											style="text-align:left">
+											<h:outputText value="#{detalle.fechaRegistro}" />
+										</p:column>
+									</p:dataTable>
+								</p:panelGrid>
+							</p:rowExpansion>
+						</p:dataTable>
+					</p:panel>
+					<br />
+					<!--Consulta datos de documento -->
+					<p:panel id="idPanelCriteriosDocumento"
+						header="#{messageBeanSNR.commonLabelConsultaPorCriteriosDocumento}"
+						toggleable="true" style="text-align:center">
+						<p:panel id="idPanelConsultaCriteriosDocumento">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelCirculoRegistral}#{messageBeanSNR.commonLabelObligatorio}"
+										styleClass="textosConsultaEstadoPredio" />
+									<br />
+									<p:selectOneMenu id="circuloRegistral"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosDocumentoCirculoRegistral}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.idCirculo}"
+										effect="fade" var="c" style="width:100%;" filter="true"
+										filterMatchMode="startsWith">
+										<f:selectItems value="#{beanReference.findCirculoRegistral(true)}"
+											var="circulo"
+											itemLabel="#{circulo.idCirculo} - #{circulo.nombre}"
+											itemValue="#{circulo.idCirculo}" />
+										<p:column>
+											<h:outputText value="#{c}" />
+										</p:column>
+									<p:ajax event="change" update="idSOMMunicipio"/>
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}">
+									</p:outputLabel>
+									<br />
+									<p:selectOneMenu id="idSOMEscritura" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosDocumentoTipoDeDocumento}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.documento.idTipoDocumento}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findTipoDocumentoPublicoActivo()}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoDocumento}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNumeroDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosDocumentoNumeroDeDocumento}"
+										id="idItDocuActo"
+										placeholder="#{messageBeanSNR.commonLabelDocumento}"
+										maxlength="20"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.documento.numero}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelFechaDelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:calendar id="idCalFechaDoc" size="10" mask="true"
+										style="width:90%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosDocumentoFechaDelDocumento}"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.documento.fechaDocumento}"
+										showOn="button">
+										<p:ajax event="dateSelect" update="idGrowl" />
+									</p:calendar>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeOficina}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoOficina" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosDocumentoTipoDeOficina}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.documento.idTipoOficina}">
+										<p:ajax
+											listener="#{predioDocumentoActoAntiguo.tipoOficina(false)}"
+											update="idSOMTipoEntidad,idPaisDocumento,idSOMDepartamento,idSOMMunicipio,idSOMOficinaOrigen" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanReference.findTipoOficina()}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoOficina}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeEntidad}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoEntidad" style="width:100%;"
+										disabled="true"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosDocumentoTipoDeEntidad}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.documento.tipoEntidad}">
+										<f:selectItems value="#{beanReference.findTipoEntidad()}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoEntidad}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelPais}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idPaisDocumento" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosDocumentoPais}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.documento.idPais}">
+										<p:ajax listener="#{predioDocumentoActoAntiguo.pais(false)}"
+											update="idSOMDepartamento,idSOMMunicipio,idSOMOficinaOrigen" />
+										<f:selectItem itemValue=""
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+										<f:selectItems value="#{beanReference.findPaises()}"
+											var="paises" itemValue="#{paises.idPais}"
+											itemLabel="#{paises.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMDepartamento" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosDocumentoDepartamento}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.documento.idDepartamento}">
+										<p:ajax
+											listener="#{predioDocumentoActoAntiguo.departamento(false)}"
+											update="idSOMMunicipio,idSOMOficinaOrigen" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{predioDocumentoActoAntiguo.findDepartamentos(false)}"
+											var="item" itemValue="#{item.idDepartamento}"
+											itemLabel="#{item.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMMunicipio" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosDocumentoMunicipio}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.documento.idMunicipio}">
+										<p:ajax
+											listener="#{predioDocumentoActoAntiguo.oficinaOrigen(false)}"
+											update="idSOMOficinaOrigen" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{predioDocumentoActoAntiguo.findMunicipiosByCirculo(predioDocumentoActoAntiguo.datosEtapa101.datosAntiguoSistema.idCirculo)}"
+											var="munRes" itemValue="#{munRes.idMunicipio}"
+											itemLabel="#{munRes.nombre}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelOficinaDeOrigen}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMOficinaOrigen" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosDocumentoOficinaDeOrigen}"
+										value="#{predioDocumentoActoAntiguo.datosEtapa101.documento.idOficinaOrigen}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{predioDocumentoActoAntiguo.getOficinaOrigen(false)}"
+											var="orig" itemLabel="#{orig.nombre}"
+											itemValue="#{orig.idOficinaOrigen}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-2">
+									<br />
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonConsultar}" icon="lupa"
+										update="dataConsultaDatosDocumento,fcalificacionAntiguoSistema:idGrowl,idPanelConsultaCriteriosDocumento"
+										actionListener="#{predioDocumentoActoAntiguo.consultaDatosDocumento(false)}"
+										ajax="true" />
+								</div>
+								<div class="ui-g-12 ui-md-2">
+									<br />
+									<p:commandButton value="#{messageBeanSNR.commonButtonLimpiar}"
+										icon="fa fa-undo"
+										update="dataConsultaDatosDocumento,idPanelConsultaCriteriosDocumento"
+										actionListener="#{predioDocumentoActoAntiguo.clearConsulta('CalificacionDocumento')}" />
+								</div>
+							</div>
+						</p:panel>
+						<br />
+						<p:dataTable id="dataConsultaDatosDocumento"
+							value="#{predioDocumentoActoAntiguo.dataConsultaDatosDocumento}"
+							var="item" emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+							<p:column style="width:100px;" headerText="#{messageBeanSNR.commonLabelVerDetalle}">
+								<p:rowToggler />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+								<h:outputText value="#{item.solicitud.nir}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+								<h:outputText value="#{item.solicitud.fechaCreacion}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+										timeZone="GMT-5" />
+								</h:outputText>
+							</p:column>
+
+							<p:rowExpansion>
+								<p:panelGrid columns="4" style="width:auto;">
+									<p:dataTable id="detalleTurno"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{item.dataConsultaPorCriterio}" var="detalle">
+
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelMatriculasInmobiliarias}"
+											style="text-align:left">
+											<h:outputText
+												value="#{detalle.idCirculo} - #{detalle.idMatricula}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}"
+											style="text-align:left">
+											<h:outputText value="#{detalle.direccion}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelNumeroAnotacion}"
+											style="text-align:left">
+											<h:outputText value="#{detalle.idAnotacion}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelFechaAnotacion}"
+											style="text-align:left">
+											<h:outputText value="#{detalle.fechaRegistro}" />
+										</p:column>
+
+									</p:dataTable>
+								</p:panelGrid>
+							</p:rowExpansion>
+						</p:dataTable>
+					</p:panel>
+					<!-- Fin consulta datos dDocumento -->
+					<br />
+					<p:outputPanel id="idObservaciones">
+						<div align="left">
+							<strong> <p:outputLabel
+									value="#{messageBeanSNR.commonLabelObservacionesMayus}" />
+							</strong>
+							<p:inputTextarea rows="10" cols="240"
+								onblur="value=value.toUpperCase()"
+								title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosDocumentoObservacionesMayus}"
+								value="#{predioDocumentoActoAntiguo.observacionesCalificacion}"
+								queryDelay="750" minQueryLength="4" readonly="true" />
+						</div>
+					</p:outputPanel>
+					<!-- Fin Consulta criterios para Antiguo sistema -->
+
+					<br />
+
+					<p:panel id="tramitesAntiguoSistema" style="text-align:center"
+						header="#{messageBeanSNR.commonLabelTramitesARealizarPorAnalistaAntiguoSistema}"
+						toggleable="true">
+						<p:panelGrid columns="6" layout="grid">
+							<p:outputLabel for="@next"
+								value="#{messageBeanSNR.commonLabelCrearMatricula}"
+								styleClass="otherStyle" />
+							<p:selectBooleanCheckbox
+								value="#{predioDocumentoActoAntiguo.crearMatricula}" />
+							<p:outputLabel for="@next"
+								value="#{messageBeanSNR.commonLabelAsociarMatricula}"
+								styleClass="otherStyle" />
+							<p:selectBooleanCheckbox
+								value="#{predioDocumentoActoAntiguo.asociarMatricula}" />
+							<p:outputLabel for="@next"
+								value="#{messageBeanSNR.commonLabelRechazarSolicitud}"
+								styleClass="otherStyle" />
+							<p:selectBooleanCheckbox
+								value="#{predioDocumentoActoAntiguo.rechazarSolicitud}" />
+							<p:outputLabel for="@next"
+								value="#{messageBeanSNR.commonLabelGrabarMatricula}"
+								styleClass="otherStyle" />
+							<p:selectBooleanCheckbox
+								value="#{predioDocumentoActoAntiguo.grabarMatricula}" />
+							<p:outputLabel for="@next"
+								value="#{messageBeanSNR.commonLabelInformeDeResultados}"
+								styleClass="otherStyle" />
+							<p:selectBooleanCheckbox
+								value="#{predioDocumentoActoAntiguo.reporteResultados}" />
+							<p:outputLabel for="@next"
+								value="#{messageBeanSNR.commonLabelSolicitudInformacionDeOtroCirculoRegistral}"
+								styleClass="otherStyle" />
+							<p:selectBooleanCheckbox
+								value="#{predioDocumentoActoAntiguo.solicitudInformacion}" />
+						</p:panelGrid>
+					</p:panel>
+					<br />
+					<div align="left">
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="#{predioDocumentoActoAntiguo.accionVolver}">
+						</p:commandButton>
+						<p:commandButton value="#{messageBeanSNR.commonButtonContinuar}"
+							action="#{predioDocumentoActoAntiguo.enviaPagina}" ajax="false"
+							update="tramitesAntiguoSistema" icon="fa fa-arrow-circle-right" />
+					</div>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

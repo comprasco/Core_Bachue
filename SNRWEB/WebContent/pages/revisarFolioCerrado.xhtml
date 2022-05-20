@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fRevisFolioCerr" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true" redisplay="false" />
+				<center>
+					<p:outputLabel value="Revisar Folio Cerrado" />
+					<br />
+					<p:panel style="min-width:800px;">
+						<p:panel>
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel value="Círculo" />
+									<br />
+									<p:inputText id="idCalNumRadicado" placeholder="Círculo"
+										value="#{beanCalifTemp.bgnDocumento.radicado}" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel value="Folio" />
+									<br />
+									<p:inputText id="idCalNroDocumento" placeholder="Folio"
+										value="#{beanCalifTemp.bgnDocumento.numero}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3" align="center">
+									<p:commandButton value="Activar Folio" icon="fa fa-plus-circle"
+										iconPos="left"
+										actionListener="#{beanCalifTemp.enviarCalifTemp}" />
+								</div>
+							</div>
+						</p:panel>
+
+						<p:panel>
+							<div align="left">
+								<h5>Justificación:</h5>
+								<p:inputTextarea rows="6" cols="140"
+									onblur="value=value.toUpperCase()" />
+
+							</div>
+						</p:panel>
+						<br />
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

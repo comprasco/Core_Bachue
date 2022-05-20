@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTarifa}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelRangoCuantia}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fRangoCuantiass" style="width: 100%;">
+				<p:growl id="gCuantiaMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false"/>
+
+				<p:panel id="idPRangoCuantia" style="min-width:800px;">
+
+					<div class="ui-g" align="left">
+						<div class="ui-g-12 ui-md-6 ui-lg-4">
+							<p:commandButton
+								value="#{messageBeanSNR.commonLabelInsertarRangoCuantia}"
+								icon="fa fa-plus-circle" iconPos="left"
+								action="#{beanRangoCuantia.botonInsertar(null, true)}" />
+						</div>
+					</div>
+
+					<p:dataTable
+						emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+						id="idDRCuantia" var="item"
+						value="#{beanRangoCuantia.cargarRangosCuantia()}" paginator="true"
+						rows="50">
+						<f:facet name="header">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelRangoCuantia}" />
+						</f:facet>
+						<p:column headerText="#{messageBeanSNR.commonLabelIdRango}"
+							filterBy="#{item.idRango}">
+							<div align="left">
+								<p:commandLink id="idRGRango" ajax="false"
+									update="fRangoCuantia,gRangoCuantiaMsg" value="#{item.idRango}"
+									styleClass="subrayado" color="blue"
+									action="#{beanRangoCuantia.botonInsertar(item, false)}">
+								</p:commandLink>
+							</div>
+						</p:column>
+
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelOperadorInferior}"
+							filterBy="#{item.operadorInferior}">
+							<div align="left">
+								<h:outputText value="#{item.operadorInferior}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="#{messageBeanSNR.commonLabelRangoInferior}"
+							filterBy="#{item.rangoInferior}">
+							<div align="left">
+								<h:outputText value="#{item.rangoInferior}" />
+							</div>
+						</p:column>
+
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelOperadorSuperior}"
+							filterBy="#{item.operadorSuperior}">
+							<div align="left">
+								<h:outputText value="#{item.operadorSuperior}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="#{messageBeanSNR.commonLabelRangoSuperior}"
+							filterBy="#{item.rangoSuperior}">
+							<div align="left">
+								<h:outputText value="#{item.rangoSuperior}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="#{messageBeanSNR.commonLabelPorcentaje}"
+							filterBy="#{item.procentaje}">
+							<div align="left">
+								<h:outputText value="#{item.porcentaje}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="#{messageBeanSNR.commonLabelValor}"
+							filterBy="#{item.valor}">
+							<div align="left">
+								<h:outputText value="#{item.valor}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="#{messageBeanSNR.commonLabelFechaDesde}"
+							filterBy="#{item.fechaDesde}">
+							<div align="left">
+								<h:outputText value="#{item.fechaDesde}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="#{messageBeanSNR.commonLabelFechaHasta}"
+							filterBy="#{item.fechaHasta}">
+							<div align="left">
+								<h:outputText value="#{item.fechaHasta}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="#{messageBeanSNR.commonLabelActivo}"
+							filterBy="#{item.activo}">
+							<div align="left">
+								<h:outputText value="#{item.activo}" />
+							</div>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

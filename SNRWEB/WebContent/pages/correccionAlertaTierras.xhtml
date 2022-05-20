@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelSolicitarCorreccionAlertaTierras}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fOpcionDetalle" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<center>
+					<p:panel>
+						<p:panel id="alertaTierrasPanel"
+							header="#{messageBeanSNR.commonLabelCorreccionAlertaTierras}"
+							style="width:100%">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelOpcion}" />
+									<br />
+									<p:inputText id="idOpcion" onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionOpcionDetalleOpcion}"
+										placeholder="#{messageBeanSNR.commonLabelOpcion}"
+										value="#{beanCorreccionAlertaTierras.idAlerta}" >
+									<p:ajax event="blur" update="alertaTierrasPanel" listener="#{beanCorreccionAlertaTierras.consultaDetallada()}"/>
+									</p:inputText>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-12">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelDescripcion}" />
+									<br />
+									<p:inputText id="idDescripcion"
+										title="#{tooltipBeanSNR.administracionOpcionDetalleDescripcion}"
+										placeholder="#{messageBeanSNR.commonLabelDescripcion}"
+										value="#{beanCorreccionAlertaTierras.textoCorregir}" >
+									<p:ajax event="blur" update="alertaTierrasPanel" listener="#{beanCorreccionAlertaTierras.consultaDetallada()}"/>
+									</p:inputText>
+								</div>
+							</div>
+							<br />
+							<p:outputPanel id="consultaRecibosCajaLiquidacion">
+									<p:dataTable id="idDtListado" style="min-width:500px;"
+										value="#{beanCorreccionAlertaTierras.componentes}" var="item"
+										emptyMessage="#{errorBeanSNR.errorSinRegistros}"
+										 rendered="#{beanCorreccionAlertaTierras.alertaEncontrada}">
+										<p:column headerText="#{messageBeanSNR.commonLabelComponente}"
+												>
+											<h:outputText value="#{item.idComponente}" />
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelNombre}"
+												>
+											<h:outputText value="#{item.nombre}" />
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelEstado}"
+											>
+											<h:outputText value="#{messageBeanSNR.commonLabelActivo}"
+												rendered="#{item.activo=='S'}" />
+											<h:outputText value="#{messageBeanSNR.commonLabelInactivo}"
+												rendered="#{item.activo=='N'}" />
+										</p:column>
+									</p:dataTable>
+							</p:outputPanel>
+						</p:panel>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

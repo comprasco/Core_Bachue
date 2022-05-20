@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/consultatrazabilidad/v1" xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/cb/consultatrazabilidad/consultartrazabilidad/v1" xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/cb/consultatrazabilidad/consultaActosTurno/v1" xmlns:bachue3="https://www.supernotariado.gov.co/schemas/bachue/cb/consultatrazabilidad/consultaDetalleCertificado/v1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/consultatrazabilidad/v1">
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/consultatrazabilidad/consultartrazabilidad/v1" version="1.3">
+			<xsd:complexType name="tipoEntradaConsultarTrazabilidad">
+				<xsd:annotation>
+					<xsd:appinfo>Bachué</xsd:appinfo>
+					<xsd:documentation xml:lang="es">Esquema que contiene
+						los atributos de entrada de la operación consultar trazabilidad
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="modulo" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Campo que identifica la aplicación que realiza
+								la consulta.
+								Posibles valores SEDE_ELECTRONICA
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="criterioBusqueda">
+						<xsd:annotation>
+							<xsd:documentation>Campo que identifica los criterios de
+								búsqueda. Los valores:
+								-NIR
+								-TURNO
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="NIR">
+									<xsd:annotation>
+										<xsd:documentation>El nir por el que se consulta
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="TURNO">
+									<xsd:annotation>
+										<xsd:documentation>El turno por el que se consulta
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="valorCriterioBusqueda" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Campo que identifica los valores
+								correspondientes a los criterios de búsqueda.
+								Condición especia
+								NIR: El campo está compuesto por números y letras
+								snraño00000xxxx
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="entradaConsultarTrazabilidad" type="bachue1:tipoEntradaConsultarTrazabilidad"/>
+
+			<xsd:complexType name="tipoSalidaConsultarTrazabilidad">
+				<xsd:annotation>
+					<xsd:appinfo>Bachué</xsd:appinfo>
+					<xsd:documentation xml:lang="es">Salida de la
+						consultar trazabilidadad usada desde Sede electrónica
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="nir" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Número de identificación registral asociado a
+								la solicitud
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="faseActualNIR" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Fase actual de la solicitud
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="nirVinculado" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Número de identificación registral asociado a
+								la solicitud
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="tramiteVinculado" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Circunstancia dentro del proceso
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="elementosnir" nillable="true">
+						<xsd:annotation>
+							<xsd:documentation>
+								Lista detallada de NIRs
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="1" name="elementonir" type="bachue1:tipoElementoNir"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje">
+						<xsd:annotation>
+							<xsd:documentation>Código que representa el mensaje de salida
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200">
+									<xsd:annotation>
+										<xsd:documentation>No hubo error</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="409">
+									<xsd:annotation>
+										<xsd:documentation>Código del resultado de la transacción
+											(ERROR, PERMISOS_INSUFICIENTES, NO_HAY_RESULTADOS)
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="descripcionMensaje" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Descripción del mensaje de salida. Vacío si no
+								hubo error.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<!-- Tipo complejo elementonir -->
+			<xsd:complexType name="tipoElementoNir">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="turno" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Turno del tramite</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="orip" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Nombre de la ORIP asignada al turno
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="decisionCalificacion" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Decisión del calificador sobre el tramite
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="faseActualTurno" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Fase actual en la que se encuentra el tramite
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="procesoTurno" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Proceso del turno</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="documentos" nillable="true">
+						<xsd:annotation>
+							<xsd:documentation>
+								Listado de los criterios para el servicio a
+								liquidar
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="1" name="documento" type="bachue1:tipoDocumento"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="matriculas" nillable="true">
+						<xsd:annotation>
+							<xsd:documentation>
+								matriculas relacionadas
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="1" name="matricula" type="bachue1:tipoMatricula"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="trazabilidades" nillable="true">
+						<xsd:annotation>
+							<xsd:documentation>
+								Lista de cada item de trazabilidad
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="1" name="trazabilidad" type="bachue1:tipoTrazabilidad"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<!-- Tipo complejo Documento -->
+			<xsd:complexType name="tipoDocumento">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="tipo" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al tipo de documento.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="numeroDocumento" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Número de identificación del tipo de documento
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="fechaDocumento" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Fecha de creación del documento
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="oficinaOrigen" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Oficina donde se encuentra asentado el tipo de
+								documento
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="tipoOficina" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Tipo de la oficina donde se encuentra asentado
+								el documento
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="departamento" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Departamento de donde pertenece el documento
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="municipio" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Municipio de donde pertenece el documento
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="tipoEntidad" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Tipo de entidad de donde pertenece el
+								documento
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<!-- Tipo complejo Matricula -->
+			<xsd:complexType name="tipoMatricula">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="orip" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Nombre de la ORIP asignada al turno
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="numeroMatricula" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Número de la matricula inmobiliaria
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="estado" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Estado de la matricula</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="alertaVigente" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Si tiene alertas vigentes, posibles valores:
+								-
+								SI
+								- NO
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<!-- Tipo complejo Trazabilidad -->
+			<xsd:complexType name="tipoTrazabilidad">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="etapa" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Consecutivo numérico de la etapa donde se
+								encuentra el trámite
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="nombreEtapa" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Nombre de la etapa. Ej: Proceso de Registro
+								terminado, Certificados
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="estadoActividad" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Estado en el que se encuentra el trámite
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="usuario" nillable="true" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Usuario de red del cajero quien generó el
+								trámite
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="fechaAsignacion" nillable="true" type="xsd:dateTime">
+						<xsd:annotation>
+							<xsd:documentation>Fecha de asignación del trámite
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="fechaReparto" nillable="true" type="xsd:dateTime">
+						<xsd:annotation>
+							<xsd:documentation>Fecha en la que se realizó el reparto
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="fechaInicioEtapa" nillable="true" type="xsd:dateTime">
+						<xsd:annotation>
+							<xsd:documentation>Fecha en la que inicio la etapa en la que se
+								encuentra el trámite
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="fechaFinalEtapa" nillable="true" type="xsd:dateTime">
+						<xsd:annotation>
+							<xsd:documentation>Fecha en la que finalizó inicio la etapa en la
+								que se encuentra el trámite
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="salidaConsultarTrazabilidad" type="bachue1:tipoSalidaConsultarTrazabilidad"/>
+		</xsd:schema>
+
+
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/consultatrazabilidad/consultaActosTurno/v1" version="1.3">
+			<xsd:complexType name="tipoEntradaConsultaActosTurno">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="modulo" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="criterioBusqueda" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="valorCriterioBusqueda" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultaActosTurno" type="bachue2:tipoEntradaConsultaActosTurno"/>
+			<xsd:complexType name="tipoSalidaConsultaActosTurno">
+				<xsd:sequence>
+					<xsd:element name="nir" type="xsd:string"/>
+					<xsd:element name="actos">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="0" name="acto">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="codigoActo" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="codigoTipoActo" type="xsd:string"/>
+											<xsd:element name="nombreTipoActo" type="xsd:string"/>
+											<xsd:element name="tieneCuantia" type="xsd:string"/>
+											<xsd:element name="tarifaExenta" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="valorCuantia" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="valorAvaluo" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="cantidadActos" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="valorDerechos" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="valorConservacionDocumental" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="valorTotal" type="xsd:string"/>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:string"/>
+					<xsd:element name="descripcionMensaje" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultaActosTurno" type="bachue2:tipoSalidaConsultaActosTurno"/>
+		</xsd:schema>
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/consultatrazabilidad/consultaDetalleCertificado/v1" version="1.3">
+			<xsd:complexType name="tipoEntradaConsultaDetalleCertificado">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="modulo" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="criterioBusqueda" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="valorCriterioBusqueda" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultaDetalleCertificado" type="bachue3:tipoEntradaConsultaDetalleCertificado"/>
+			<xsd:complexType name="tipoSalidaConsultaDetalleCertificado">
+				<xsd:sequence>
+					<xsd:element name="nir" type="xsd:string"/>
+					<xsd:element name="certificados">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="0" name="certificado">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="proceso" type="xsd:string"/>
+											<xsd:element name="subproceso" type="xsd:string"/>
+											<xsd:element name="nombre" type="xsd:string"/>
+											<xsd:element name="codCirculoRegistral" type="xsd:string"/>
+											<xsd:element name="numMatriculaInmobiliaria" type="xsd:string"/>
+											<xsd:element name="tipoTarifa" type="xsd:string"/>
+											<xsd:element name="cantidad" type="xsd:string"/>
+											<xsd:element name="valor" type="xsd:string"/>
+											<xsd:element name="valorTotal" type="xsd:string"/>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:string"/>
+					<xsd:element name="descripcionMensaje" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultaDetalleCertificado" type="bachue3:tipoSalidaConsultaDetalleCertificado"/>
+		</xsd:schema>
+
+	</wsdl:types>
+	<wsdl:message name="ConsultarTrazabilidad_Request">
+		<wsdl:part element="bachue1:entradaConsultarTrazabilidad" name="entrada"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultarTrazabilidad_Response">
+		<wsdl:part element="bachue1:salidaConsultarTrazabilidad" name="salida"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultaActosTurno_Request">
+		<wsdl:part element="bachue2:entradaConsultaActosTurno" name="entrada"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultaActosTurno_Response">
+		<wsdl:part element="bachue2:salidaConsultaActosTurno" name="salida"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultaDetalleCertificado_Request">
+		<wsdl:part element="bachue3:entradaConsultaDetalleCertificado" name="entrada"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultaDetalleCertificado_Response">
+		<wsdl:part element="bachue3:salidaConsultaDetalleCertificado" name="salida"/>
+	</wsdl:message>
+	<wsdl:portType name="SDI_CB_ConsultaTrazabilidad">
+		<wsdl:operation name="ConsultarTrazabilidad">
+			<wsdl:input message="bachue:ConsultarTrazabilidad_Request"/>
+			<wsdl:output message="bachue:ConsultarTrazabilidad_Response"/>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultaActosTurno">
+			<wsdl:input message="bachue:ConsultaActosTurno_Request"/>
+			<wsdl:output message="bachue:ConsultaActosTurno_Response"/>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultaDetalleCertificado">
+			<wsdl:input message="bachue:ConsultaDetalleCertificado_Request"/>
+			<wsdl:output message="bachue:ConsultaDetalleCertificado_Response"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SDI_CB_ConsultaTrazabilidadSOAP12Binding" type="bachue:SDI_CB_ConsultaTrazabilidad">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="ConsultarTrazabilidad">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/services/bachue/cb/consultatrazabilidad/v1/ConsultarTrazabilidad" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultaActosTurno">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/services/bachue/cb/consultatrazabilidad/v1/ConsultaActosTurno" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultaDetalleCertificado">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/services/bachue/cb/consultatrazabilidad/v1/ConsultaDetalleCertificado" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+	</wsdl:binding>
+	<wsdl:service name="SDI_CB_ConsultaTrazabilidad">
+		<wsdl:port binding="bachue:SDI_CB_ConsultaTrazabilidadSOAP12Binding" name="SDI_CB_ConsultaTrazabilidadPort">
+			<soap:address location="http://localhost:7001/SNRServicesCTWEB/services/SDI_CB_ConsultaTrazabilidadPort"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/salvedades/v1"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/salvedades/v1"
+	xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/ee/salvedades/registrarcambioSalvedades/v1"
+	xmlns:bachue3="https://www.supernotariado.gov.co/schemas/bachue/ee/salvedades/registrarIdentificadoresCatastrales/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/salvedades/registrarcambioSalvedades/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaregistrarCambioSalvedades">
+				<xsd:sequence>
+					<xsd:element name="listaPredios" minOccurs="0">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="predio" minOccurs="0"
+									maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="tipoIdentificacionPredio"
+												minOccurs="0">
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:enumeration value="matricula" />
+														<xsd:enumeration value="numeroPredial" />
+														<xsd:enumeration
+															value="numeroPredialAnterior" />
+														<xsd:enumeration value="NUPRE" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="numIdentificacionPredio"
+												type="xsd:string" minOccurs="0" />
+											<xsd:element name="codCirculoRegistral"
+												type="xsd:string" minOccurs="0" />
+											<xsd:element name="numMatriculaInmobiliaria"
+												type="xsd:string" minOccurs="0" />
+											<xsd:element name="direccionPredio"
+												type="xsd:string" minOccurs="0" />
+											<xsd:element name="comentarioSalvedad"
+												type="xsd:string" minOccurs="0" />
+											<xsd:element name="descripcionSalvedad"
+												type="xsd:string" minOccurs="0" />
+											<xsd:element name="fechaSalvedad"
+												type="xsd:dateTime" minOccurs="0" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="documentoSoporte"
+						type="xsd:base64Binary" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaregistrarCambioSalvedades"
+				type="bachue2:tipoEntradaregistrarCambioSalvedades" />
+			<xsd:complexType
+				name="tipoSalidaregistrarCambioSalvedades">
+				<xsd:sequence>
+					<xsd:element name="codMensaje" type="xsd:integer"
+						minOccurs="1" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaregistrarCambioSalvedades"
+				type="bachue2:tipoSalidaregistrarCambioSalvedades" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/salvedades/registrarIdentificadoresCatastrales/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaRegistrarIdentificadoresCatastrales">
+				<xsd:sequence>
+					<xsd:element name="listaPredios" minOccurs="0">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="predio" minOccurs="0"
+									maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="tipoIdentificacionPredio"
+												minOccurs="0">
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:string">
+														<xsd:enumeration value="matricula" />
+														<xsd:enumeration value="numeroPredial" />
+														<xsd:enumeration
+															value="numeroPredialAnterior" />
+														<xsd:enumeration value="NUPRE" />
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="numIdentificacionPredio"
+												type="xsd:string" minOccurs="0" />
+											<xsd:element name="codCirculoRegistral"
+												type="xsd:string" minOccurs="0" />
+											<xsd:element name="numMatriculaInmobiliaria"
+												type="xsd:string" minOccurs="0" />
+											<xsd:element name="comentarioSalvedad"
+												type="xsd:string" minOccurs="0" />
+											<xsd:element name="descripcionSalvedad"
+												type="xsd:string" minOccurs="0" />
+											<xsd:element name="fechaSalvedad"
+												type="xsd:dateTime" minOccurs="0" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="documentoSoporte"
+						type="xsd:base64Binary" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element
+				name="entradaRegistrarIdentificadoresCatastrales"
+				type="bachue3:tipoEntradaRegistrarIdentificadoresCatastrales" />
+			<xsd:complexType
+				name="tipoSalidaRegistrarIdentificadoresCatastrales">
+				<xsd:sequence>
+					<xsd:element name="codMensaje" type="xsd:integer"
+						minOccurs="1" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element
+				name="salidaRegistrarIdentificadoresCatastrales"
+				type="bachue3:tipoSalidaRegistrarIdentificadoresCatastrales" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="RegistraCambioSalvedades_Request">
+		<wsdl:part name="entrada"
+			element="bachue2:entradaregistrarCambioSalvedades" />
+	</wsdl:message>
+	<wsdl:message name="RegistraCambioSalvedades_Response">
+		<wsdl:part name="salida"
+			element="bachue2:salidaregistrarCambioSalvedades" />
+	</wsdl:message>
+	<wsdl:message
+		name="RegistraIdentificadoresCatastrales_Request">
+		<wsdl:part name="entrada"
+			element="bachue3:entradaRegistrarIdentificadoresCatastrales" />
+	</wsdl:message>
+	<wsdl:message
+		name="RegistraIdentificadoresCatastrales_Response">
+		<wsdl:part name="salida"
+			element="bachue3:salidaRegistrarIdentificadoresCatastrales" />
+	</wsdl:message>
+	<wsdl:portType name="BS_SBB_CB_Salvedades">
+		<wsdl:operation name="RegistraCambioSalvedades">
+			<wsdl:input
+				message="bachue:RegistraCambioSalvedades_Request" />
+			<wsdl:output
+				message="bachue:RegistraCambioSalvedades_Response" />
+		</wsdl:operation>
+		<wsdl:operation
+			name="RegistraIdentificadoresCatastrales">
+			<wsdl:input
+				message="bachue:RegistraIdentificadoresCatastrales_Request" />
+			<wsdl:output
+				message="bachue:RegistraIdentificadoresCatastrales_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="BS_SBB_CB_Salvedades"
+		type="bachue:BS_SBB_CB_Salvedades">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="RegistraCambioSalvedades">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/schemas/bachue/ee/salvedades/registrarcambioSalvedades/v1" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation
+			name="RegistraIdentificadoresCatastrales">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/schemas/bachue/ee/salvedades/registrarIdentificadoresCatastrales/v1" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="BS_SBB_CB_Salvedades">
+		<wsdl:port name="BS_SBB_CB_SalvedadesPort"
+			binding="bachue:BS_SBB_CB_Salvedades">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

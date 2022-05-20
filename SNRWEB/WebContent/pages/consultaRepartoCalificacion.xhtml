@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="content">
+			<h:form id="fConsultaReparto" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<center>
+					<p:panel style="min-width:800px;"
+						header="#{messageBeanSNR.commonButtonConsultaRepartoCalificacion}">
+						<br />
+						<p:pickList id="pickList"
+							value="#{beanConsultaRepartoCalificacion.usuariosConsulta}"
+							var="usuarios" itemValue="#{usuarios}"
+							itemLabel="#{usuarios.nombreCompleto}" addLabel="Añadir"
+							addAllLabel="Añadir todos" removeLabel="Quitar"
+							removeAllLabel="Quitar todos" responsive="true"
+							converter="usuariosConsultaConverter">
+
+
+							<f:facet name="sourceCaption">Usuarios de la ORIP</f:facet>
+							<f:facet name="targetCaption">Usuarios a consultar</f:facet>
+						</p:pickList>
+
+
+						<br />
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<p:commandButton value="#{messageBeanSNR.commonLabelConsultar}"
+									icon="lupa" iconPos="left"
+									actionListener="#{beanConsultaRepartoCalificacion.consultaDetallada}"
+									update="idDtListado" />
+							</div>
+						</div>
+						<br />
+						<p:panel header="#{messageBeanSNR.commonLabelUsuariosConsultados}">
+							<p:dataTable id="idDtListado"
+								value="#{beanConsultaRepartoCalificacion.usuariosConsultados}"
+								var="item" emptyMessages="#{errorBeanSNR.errorSinRegistros}">
+								<p:column style="width:100px;"
+									headerText="#{messageBeanSNR.commonLabelVerDetalle}">
+									<p:rowToggler />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelUsuarios}">
+									<h:outputText value="#{item.nombreCompleto}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelCantidadDeTurnosAsgBlq}">
+									<h:outputText value="#{item.cantidadTurnos}" />
+								</p:column>
+								<p:rowExpansion>
+									<p:dataTable id="detallePersona"
+										emptyMessages="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{item.consultaRepartoCalificacion}" var="detalle">
+										<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+											<h:outputText value="#{detalle.solicitud.nir}" />
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+											<h:outputText value="#{detalle.turnoHistoria.idTurno}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelOficinaDeOrigen}">
+											<h:outputText value="#{detalle.circuloRegistral.nombre}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelFechaInsercion}">
+											<h:outputText value="#{detalle.turnoHistoria.fechaInsercion}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+													timeZone="GMT-5" />
+											</h:outputText>
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelFechaReparto}">
+											<h:outputText value="#{detalle.turnoHistoria.fechaReparto}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+													timeZone="GMT-5" />
+											</h:outputText>
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelEstadoActividad}">
+											<h:outputText
+												value="#{detalle.turnoHistoria.estadoActividad}" />
+										</p:column>
+									</p:dataTable>
+								</p:rowExpansion>
+							</p:dataTable>
+						</p:panel>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

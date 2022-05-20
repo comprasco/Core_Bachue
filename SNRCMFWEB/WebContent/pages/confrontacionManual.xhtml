@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelConciliacion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelConfrontacionDeLaInformacion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelConfrontacionManual}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fConfrontacionManual" style="width: 100%;">
+				<p:growl id="idGrowl" globalOnly="true" showDetail="true"
+					sticky="false" life="10000" redisplay="false" />
+				<center>
+					<p:panel>
+						<p:panel header="#{messageBeanSNR.commonLabelConfrontacionManual}"
+							style="width:100%">
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-3 ui-lg-3" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelEntidadRecaudadora}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idEntidadRecaudadoraCuenta"
+										style="width:100%;"
+										title="#{tooltipBeanSNR.conciliacionConfrontacionDeLaInformacionEntidadRecaudadora}"
+										value="#{beanConfrontacionManual.idEntidadRecaudadora}">
+										<p:ajax event="change"
+											listener="#{beanConfrontacionManual.buscarEntidadRecaudadoraCuentaDeUsuario()}"
+											update="idNumeroCuenta" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanConfrontacionManual.buscarEntidadRecaudadoraConciliacion()}"
+											var="item" itemValue="#{item.idEntidadRecaudadora}"
+											itemLabel="#{item.codigoEntidadRecaudadora} - #{item.nombreEntidadRecaudadora}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-3 ui-lg-3" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNumeroCuenta}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idNumeroCuenta" style="width:100%;"
+										title="#{tooltipBeanSNR.conciliacionConfrontacionDeLaInformacionNumeroCuenta}"
+										value="#{beanConfrontacionManual.idCuenta}">
+										<p:ajax event="change"
+											listener="#{beanConfrontacionManual.cambiarTipoArchivo()}"
+											update="idTipoArchivo" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanConfrontacionManual.entidadRecaudadoraCuentas}"
+											var="item" itemValue="#{item.idCuenta}"
+											itemLabel="#{item.numeroCuenta}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-3 ui-lg-3" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoArchivo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idTipoArchivo" disabled="true"
+										title="#{tooltipBeanSNR.conciliacionConfrontacionDeLaInformacionTipoArchivo}"
+										value="#{beanConfrontacionManual.idTipoArchivo}"
+										style="width:100%;">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelACH}"
+											itemValue="AC" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelMulticash}"
+											itemValue="MU" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelAsobancaria}"
+											itemValue="AS" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-3 ui-lg-3" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelFechaAConfrontar}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:calendar id="idFechaAConciliar" size="10" mask="true"
+										title="#{tooltipBeanSNR.conciliacionConfrontacionDeLaInformacionFechaAConfrontar}"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										value="#{beanConfrontacionManual.fechaConfrontar}"
+										showOn="button" />
+								</div>
+							</div>
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<h:panelGroup>
+										<p:commandButton update="fConfrontacionManual"
+											value="#{messageBeanSNR.commonButtonConfrontar}" icon="lupa"
+											action="#{beanConfrontacionManual.validarConfrontacion()}" />
+									</h:panelGroup>
+								</div>
+							</div>
+						</p:panel>
+
+						<br />
+					</p:panel>
+					<p:spacer />
+					<div align="left">
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="principal?faces-redirect=true">
+						</p:commandButton>
+					</div>
+					<br />
+				</center>
+			</h:form>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgConfirmar" modal="true" height="90" resizable="false">
+				<h:form id="dlgConfirmar"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{beanConfrontacionManual.mensajeConfirmacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fConfrontacionManual"
+							actionListener="#{beanConfrontacionManual.realizarConfrontacion()}"
+							oncomplete="PF('dlgConfirmar').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlgConfirmar').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTablaBasica}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTipoDeOficina}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fTipoOficina" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:panel style="min-width:800px;">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:commandButton icon="fa fa-plus-circle" iconPos="left"
+									action="#{beanTipoOficina.showDialog}"
+									title="#{tooltipBeanSNR.administracionTipoOficinaInsertar}"
+									value="#{messageBeanSNR.commonButtonInsertarTipoOficina}" />
+							</div>
+						</div>
+						<p:dataTable id="idDtListado" var="item" style="width: 100%;"
+							value="#{beanTipoOficina.allOficinas}"
+							emptyMessage="#{errorBeanSNR.errorSinRegistros}" editable="true">
+
+							<f:facet name="header">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoDeOficina}" />
+								<p:ajax event="rowEdit" listener="#{beanTipoOficina.onRowEdit}" />
+							</f:facet>
+							<p:column headerText="#{messageBeanSNR.commonLabelIdTipoOficina}"
+								filterBy="#{item.idTipoOficina}">
+								<h:outputText value="#{item.idTipoOficina}"
+									title="#{tooltipBeanSNR.administracionTipoOficinaIdTipoOficina }" />
+							</p:column>
+							
+							<p:column headerText="#{messageBeanSNR.commonLabelActivo}"
+								filterBy="#{item.activa}"> 
+ 								<p:cellEditor>
+ 									<f:facet name="output">
+ 										<h:outputText value="#{messageBeanSNR.commonLabelSi}"
+											rendered="#{item.activa=='S'}" />
+										<h:outputText value="#{messageBeanSNR.commonLabelNo}"
+											rendered="#{item.activa=='N'}" />
+									</f:facet>
+									<f:facet name="input"> 
+ 										<p:selectOneMenu id="idActiva" style="width:100%;"
+ 											value="#{item.activa}">
+ 											<f:selectItem 
+ 												itemLabel="#{messageBeanSNR.commonLabelSeleccione}" 
+												itemValue="" /> 
+ 											<f:selectItem itemLabel="#{messageBeanSNR.commonLabelActivo}"
+ 												itemValue="S" />
+											<f:selectItem 
+ 												itemLabel="#{messageBeanSNR.commonLabelInactivo}" 
+ 												itemValue="N" /> 
+ 										</p:selectOneMenu> 
+ 									</f:facet> 
+ 								</p:cellEditor>
+ 							</p:column> 
+
+							<p:column headerText="#{messageBeanSNR.commonLabelNombre}"
+								filterBy="#{item.nombre}">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{item.nombre}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{item.nombre}" maxlength="100"
+											title="#{tooltipBeanSNR.administracionTipoOficinaNombre}"
+											label="#{messageBeanSNR.commonLabelNombre}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="#{messageBeanSNR.commonLabelIdTipoEntidad}"
+								filterBy="#{item.idTipoEntidad}">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{item.descripcionTipoEntidad}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:selectOneMenu id="idSTipoOficina" style="width:100%;"
+											title="#{tooltipBeanSNR.administracionTipoOficinaIdTipoEntidad}"
+											value="#{item.idTipoEntidad}">
+											<f:selectItems value="#{beanReference.findTipoEntidad()}"
+												var="item" itemLabel="#{item.idTipoEntidad} - #{item.nombre}"
+												itemValue="#{item.idTipoEntidad}" />
+										</p:selectOneMenu>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column style="width:32px">
+								<p:rowEditor
+									editTitle="#{tooltipBeanSNR.administracionTipoOficinaModificar}" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</center>
+			</h:form>
+
+			<p:dialog id="DialogTipoOficina"
+				header="#{messageBeanSNR.commonButtonInsertarTipoOficina}"
+				resizable="false" modal="true" appendTo="@(body)"
+				widgetVar="idDataTipoOficina" width="50%">
+				<h:form id="TipoAdquisicionForm"
+					style="font-size: medium; top: 20%; left: 20%;">
+					<p:panel>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelNombre}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									title="#{tooltipBeanSNR.administracionTipoOficinaInsertarNombre}"
+									label="#{messageBeanSNR.commonLabelNombre}" maxlength="100"
+									placeholder="#{messageBeanSNR.commonLabelNombre}"
+									value="#{beanTipoOficina.detalleTipoOficina.nombre}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelIdTipoEntidad}" />
+								<br />
+								<p:selectOneMenu id="idsSTipoOficina" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTipoOficinaInsertarIdTipoEntidad}"
+									value="#{beanTipoOficina.detalleTipoOficina.idTipoEntidad}">
+									<f:selectItems value="#{beanReference.findTipoEntidad()}"
+										var="item" itemLabel="#{item.nombre}"
+										itemValue="#{item.idTipoEntidad}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+ 								<p:outputLabel value="#{messageBeanSNR.commonLabelActivo}" /> 
+ 								<br /> 
+ 								<p:selectOneMenu id="idActiva" style="width:100%;" 
+ 									value="#{beanTipoOficina.detalleTipoOficina.activa}"> 
+									<f:selectItem 
+ 										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+ 										itemValue="" /> 
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelActivo}" 
+ 										itemValue="S" /> 
+ 									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelInactivo}"
+ 										itemValue="N" />
+								</p:selectOneMenu>
+ 							</div>
+						</div>
+						<br />
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+								<p:commandButton value="#{messageBeanSNR.commonLabelCancelar}"
+									title="#{tooltipBeanSNR.administracionTipoOficinaInsertarCancelar}"
+									icon="fa fa-close" onclick="PF('DialogTipoOficina').hide();"
+									ajax="false">
+								</p:commandButton>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+								<p:commandButton id="btnInsertarTipo" icon="fa fa-save"
+									iconPos="right" value="#{messageBeanSNR.commonButtonSalvar}"
+									title="#{tooltipBeanSNR.administracionTipoOficinaInsertarSalvar}"
+									actionListener="#{beanTipoOficina.insertarRegistro}"
+									ajax="false" />
+							</div>
+						</div>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+	xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+	<globalConfiguration>
+		<parameter name="attachments.implementation"
+			value="org.apache.axis.attachments.AttachmentsImpl" />
+		<parameter name="disablePrettyXML" value="false" />
+		<parameter name="sendMultiRefs" value="true" />
+		<parameter name="sendXMLDeclaration" value="true" />
+		<parameter name="sendXsiTypes" value="true" />
+		<requestFlow>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="session" />
+			</handler>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="request" />
+				<parameter name="extension" value=".jwr" />
+			</handler>
+		</requestFlow>
+	</globalConfiguration>
+	<handler name="Authenticate"
+		type="java:org.apache.axis.handlers.SimpleAuthenticationHandler" />
+	<handler name="LocalResponder"
+		type="java:org.apache.axis.transport.local.LocalResponder" />
+	<handler name="URLMapper"
+		type="java:org.apache.axis.handlers.http.URLMapper" />
+	<service name="AdminService" provider="java:MSG">
+		<parameter name="allowedMethods" value="AdminService" />
+		<parameter name="enableRemoteAdmin" value="false" />
+		<parameter name="className"
+			value="org.apache.axis.utils.Admin" />
+		<namespace>http://xml.apache.org/axis/wsdd/</namespace>
+	</service>
+	<service name="Version" provider="java:RPC">
+		<parameter name="allowedMethods" value="getVersion" />
+		<parameter name="className" value="org.apache.axis.Version" />
+	</service>
+
+	<!-- Services from SUT_CB_GestionUsuarios WSDL service -->
+
+	<service name="SUT_CB_GestionUsuariosPort" provider="java:RPC"
+		style="document" use="literal">
+		<parameter name="wsdlTargetNamespace"
+			value="https://www.supernotariado.gov.co/services/bachue/cb/gestionusuarios/v1" />
+		<parameter name="wsdlServiceElement"
+			value="SUT_CB_GestionUsuarios" />
+		<parameter name="schemaQualified"
+			value="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerentidadesconvenio/v1,https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolescomponente/v1,https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerorips/v1,https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerroles/v1,https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerconveniosentidad/v1,https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolesusuario/v1,https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/registrarusuario/v1,https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obteneraccesosporrol/v1,https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenermodulosporrol/v1,https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerusuariosrolorip/v1" />
+		<parameter name="wsdlServicePort"
+			value="SUT_CB_GestionUsuariosPort" />
+		<parameter name="className"
+			value="co.gov.supernotariado.www.services.bachue.cb.gestionusuarios.v1.SUT_CB_GestionUsuariosSOAP12BindingSkeleton" />
+		<parameter name="wsdlPortType"
+			value="SUT_CB_GestionUsuarios" />
+		<parameter name="typeMappingVersion" value="1.2" />
+		<parameter name="allowedMethods" value="*" />
+		<wsdlFile>./SUT_CB_GestionUsuariosPort.wsdl</wsdlFile>
+
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerroles/v1"
+			qname="ns:>entradaObtenerRoles"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerroles.v1.EntradaObtenerRoles"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/registrarusuario/v1"
+			qname="ns:tipoSalidaRegistrarUsuario"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.registrarusuario.v1.TipoSalidaRegistrarUsuario"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerusuariosrolorip/v1"
+			qname="ns:>tipoSalidaObtenerUsuariosRolOrip>usuarios"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerusuariosrolorip.v1.TipoUsuario[]"
+			innerType="cmp-ns:tipoUsuario"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerusuariosrolorip/v1"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerroles/v1"
+			qname="ns:>tipoSalidaObtenerRoles>roles"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerroles.v1.RolTypeOR[]"
+			innerType="cmp-ns:rolTypeOR"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerroles/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerroles/v1"
+			qname="ns:rolTypeOR"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerroles.v1.RolTypeOR"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerorips/v1"
+			qname="ns:>entradaObtenerORIPs"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerorips.v1.EntradaObtenerORIPs"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/registrarusuario/v1"
+			qname="ns:>tipoEntradaRegistrarUsuario>tipoCambio"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.registrarusuario.v1.TipoEntradaRegistrarUsuarioTipoCambio"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenermodulosporrol/v1"
+			qname="ns:tipoModulo"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenermodulosporrol.v1.TipoModulo"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerentidadesconvenio/v1"
+			qname="ns:>entradaObtenerEntidadesConvenio"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerentidadesconvenio.v1.EntradaObtenerEntidadesConvenio"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obteneraccesosporrol/v1"
+			qname="ns:tipoEntradaObtenerAccesosPorRol"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obteneraccesosporrol.v1.TipoEntradaObtenerAccesosPorRol"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/registrarusuario/v1"
+			qname="ns:>tipoEntradaRegistrarUsuario>estadoUsuario"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.registrarusuario.v1.TipoEntradaRegistrarUsuarioEstadoUsuario"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolesusuario/v1"
+			qname="ns:tipoEntradaObtenerRolesUsuario"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerrolesusuario.v1.TipoEntradaObtenerRolesUsuario"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obteneraccesosporrol/v1"
+			qname="ns:>tipoSalidaObtenerAccesosPorRol>accesos"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obteneraccesosporrol.v1.TipoAcceso[]"
+			innerType="cmp-ns:tipoAcceso"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obteneraccesosporrol/v1"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerorips/v1"
+			qname="ns:>tipoSalidaObtenerORIPs>orips"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerorips.v1.TipoOrip[]"
+			innerType="cmp-ns:tipoOrip"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerorips/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolescomponente/v1"
+			qname="ns:tipoSalidaObtenerRolesComponente"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerrolescomponente.v1.TipoSalidaObtenerRolesComponente"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerroles/v1"
+			qname="ns:tipoSalidaObtenerRoles"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerroles.v1.TipoSalidaObtenerRoles"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obteneraccesosporrol/v1"
+			qname="ns:tipoSalidaObtenerAccesosPorRol"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obteneraccesosporrol.v1.TipoSalidaObtenerAccesosPorRol"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerconveniosentidad/v1"
+			qname="ns:tipoEntradaObtenerConveniosEntidad"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerconveniosentidad.v1.TipoEntradaObtenerConveniosEntidad"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/registrarusuario/v1"
+			qname="ns:>tipoEntradaRegistrarUsuario>codigosORIPs"
+			type="java:java.lang.String[]" innerType="cmp-ns:string"
+			xmlns:cmp-ns="http://www.w3.org/2001/XMLSchema" encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerconveniosentidad/v1"
+			qname="ns:>tipoSalidaObtenerConveniosEntidad>convenios"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerconveniosentidad.v1.TipoConvenio[]"
+			innerType="cmp-ns:tipoConvenio"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerconveniosentidad/v1"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/registrarusuario/v1"
+			qname="ns:>tipoEntradaRegistrarUsuario>codigosRoles"
+			type="java:java.lang.String[]" innerType="cmp-ns:string"
+			xmlns:cmp-ns="http://www.w3.org/2001/XMLSchema" encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolescomponente/v1"
+			qname="ns:rolTypeORC"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerrolescomponente.v1.RolTypeORC"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenermodulosporrol/v1"
+			qname="ns:tipoEntradaObtenerModulosPorRol"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenermodulosporrol.v1.TipoEntradaObtenerModulosPorRol"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerusuariosrolorip/v1"
+			qname="ns:tipoEntradaObtenerUsuariosRolOrip"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerusuariosrolorip.v1.TipoEntradaObtenerUsuariosRolOrip"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerconveniosentidad/v1"
+			qname="ns:tipoConvenio"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerconveniosentidad.v1.TipoConvenio"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerconveniosentidad/v1"
+			qname="ns:tipoSalidaObtenerConveniosEntidad"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerconveniosentidad.v1.TipoSalidaObtenerConveniosEntidad"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/registrarusuario/v1"
+			qname="ns:>tipoEntradaRegistrarUsuario>segundoFactor"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.registrarusuario.v1.TipoEntradaRegistrarUsuarioSegundoFactor"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obteneraccesosporrol/v1"
+			qname="ns:tipoAcceso"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obteneraccesosporrol.v1.TipoAcceso"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerentidadesconvenio/v1"
+			qname="ns:>tipoSalidaObtenerEntidadesConvenio>entidades"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerentidadesconvenio.v1.TipoEntidad[]"
+			innerType="cmp-ns:tipoEntidad"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerentidadesconvenio/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerorips/v1"
+			qname="ns:tipoOrip"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerorips.v1.TipoOrip"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/registrarusuario/v1"
+			qname="ns:tipoEntradaRegistrarUsuario"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.registrarusuario.v1.TipoEntradaRegistrarUsuario"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenermodulosporrol/v1"
+			qname="ns:>tipoSalidaObtenerModulosPorRol>modulos"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenermodulosporrol.v1.TipoModulo[]"
+			innerType="cmp-ns:tipoModulo"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenermodulosporrol/v1"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolescomponente/v1"
+			qname="ns:>tipoSalidaObtenerRolesComponente>roles"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerrolescomponente.v1.RolTypeORC[]"
+			innerType="cmp-ns:rolTypeORC"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolescomponente/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/registrarusuario/v1"
+			qname="ns:>tipoEntradaRegistrarUsuario>cargo"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerusuariosrolorip/v1"
+			qname="ns:tipoUsuario"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerusuariosrolorip.v1.TipoUsuario"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolesusuario/v1"
+			qname="ns:tipoSalidaObtenerRolesUsuario"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerrolesusuario.v1.TipoSalidaObtenerRolesUsuario"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerusuariosrolorip/v1"
+			qname="ns:tipoSalidaObtenerUsuariosRolOrip"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerusuariosrolorip.v1.TipoSalidaObtenerUsuariosRolOrip"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerentidadesconvenio/v1"
+			qname="ns:tipoEntidad"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerentidadesconvenio.v1.TipoEntidad"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenermodulosporrol/v1"
+			qname="ns:tipoSalidaObtenerModulosPorRol"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenermodulosporrol.v1.TipoSalidaObtenerModulosPorRol"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerentidadesconvenio/v1"
+			qname="ns:tipoSalidaObtenerEntidadesConvenio"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerentidadesconvenio.v1.TipoSalidaObtenerEntidadesConvenio"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerorips/v1"
+			qname="ns:tipoSalidaObtenerORIPs"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerorips.v1.TipoSalidaObtenerORIPs"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolesusuario/v1"
+			qname="ns:>tipoSalidaObtenerRolesUsuario>roles"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerrolesusuario.v1.RolTypeORU[]"
+			innerType="cmp-ns:rolTypeORU"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolesusuario/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolescomponente/v1"
+			qname="ns:tipoEntradaObtenerRolesComponente"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerrolescomponente.v1.TipoEntradaObtenerRolesComponente"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolesusuario/v1"
+			qname="ns:rolTypeORU"
+			type="java:co.gov.supernotariado.www.schemas.bachue.cb.gestionusuarios.obtenerrolesusuario.v1.RolTypeORU"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+	</service>
+	<transport name="http">
+		<requestFlow>
+			<handler type="URLMapper" />
+			<handler
+				type="java:org.apache.axis.handlers.http.HTTPAuthHandler" />
+		</requestFlow>
+		<parameter name="qs:list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs:wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+		<parameter name="qs.list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs.method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs:method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs.wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+	</transport>
+	<transport name="local">
+		<responseFlow>
+			<handler type="LocalResponder" />
+		</responseFlow>
+	</transport>
+</deployment>

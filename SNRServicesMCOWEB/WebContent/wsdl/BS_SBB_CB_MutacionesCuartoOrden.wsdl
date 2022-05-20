@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/ee/mutacionescuartoOrden/v1"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/ee/mutacionescuartoOrden/v1"
+	xmlns:bachue5="https://www.supernotariado.gov.co/schemas/bachue/ee/mutacionesCuartoOrden/registrarCambioCuartoOrden/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/mutacionesCuartoOrden/registrarCambioCuartoOrden/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaRegistrarCambioCuartoOrden">
+				<xsd:sequence>
+					<xsd:element name="codDepartamento" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="codMunicipio" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="tipoIdentificacionPredio"
+						minOccurs="0">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="matricula" />
+								<xsd:enumeration value="numeroPredial" />
+								<xsd:enumeration value="numeroPredialAnterior" />
+								<xsd:enumeration value="NUPRE" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numIdentificacionPredio"
+						type="xsd:string" minOccurs="0" />
+					<xsd:element name="avaluoPredio" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="fechaAvaluo" type="xsd:dateTime"
+						minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaRegistrarCambioCuartoOrden"
+				type="bachue5:tipoEntradaRegistrarCambioCuartoOrden" />
+			<xsd:complexType
+				name="tipoSalidaRegistrarCambioCuartoOrden">
+				<xsd:sequence>
+					<xsd:element name="codMensaje" type="xsd:string" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaRegistrarCambioCuartoOrden"
+				type="bachue5:tipoSalidaRegistrarCambioCuartoOrden" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="RegistraCambioCuartoOrden_Request">
+		<wsdl:part name="entrada"
+			element="bachue5:entradaRegistrarCambioCuartoOrden" />
+	</wsdl:message>
+	<wsdl:message name="RegistraCambioCuartoOrden_Response">
+		<wsdl:part name="salida"
+			element="bachue5:salidaRegistrarCambioCuartoOrden" />
+	</wsdl:message>
+	<wsdl:portType name="BS_SBB_CB_MutacionesCuartoOrden">
+		<wsdl:operation name="RegistraCambioCuartoOrden">
+			<wsdl:input
+				message="bachue:RegistraCambioCuartoOrden_Request" />
+			<wsdl:output
+				message="bachue:RegistraCambioCuartoOrden_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="BS_SBB_CB_MutacionesCuartoOrden"
+		type="bachue:BS_SBB_CB_MutacionesCuartoOrden">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="RegistraCambioCuartoOrden">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/mutacionescuartoOrden/v1/RegistraCambioCuartoOrden" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="BS_SBB_CB_MutacionesCuartoOrden">
+		<wsdl:port name="BS_SBB_CB_MutacionesCuartoOrdenPort"
+			binding="bachue:BS_SBB_CB_MutacionesCuartoOrden">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,520 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelEntrega}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelImpresionDocumentos}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<p:dialog widgetVar="statusDispositivo" modal="true"
+				draggable="false" closable="false" resizable="false"
+				showHeader="false" appendTo="@(body)" width="16%">
+				<p:progressBar id="progressBar" mode="indeterminate"
+					widgetVar="progressBar" rendered="true" />
+			</p:dialog>
+
+			<h:form id="fDetalleEntrega" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true"
+					redisplay="false" life="1500">
+					<p:autoUpdate />
+				</p:growl>
+				<p:remoteCommand name="fail"
+					actionListener="#{beanDetalleImpresionDocumentosCorrespondencia.error}"
+					update="idGrowl" partialSubmit="true" global="false" />
+				<p:remoteCommand name="firma"
+					actionListener="#{beanDetalleImpresionDocumentosCorrespondencia.firma}"
+					update="idGrowl" partialSubmit="true" global="false" />
+				<p:remoteCommand name="failImpresion"
+					actionListener="#{beanDetalleImpresionDocumentosCorrespondencia.errorImpresion('fDetalleEntrega')}"
+					update="idGrowl" partialSubmit="true" global="false" />
+				<p:remoteCommand name="imprimirDocumento"
+					actionListener="#{beanDetalleImpresionDocumentosCorrespondencia.imprimirDocumentos('fDetalleEntrega')}"
+					update="idGrowl" partialSubmit="true" global="false" />
+				
+
+				<center>
+					<p:outputPanel style="min-width:800px;">
+						<p:panel style="min-width:800px;"
+							rendered="#{beanDetalleImpresionDocumentosCorrespondencia.bandejaentrada}">
+							<div class="ui-g">
+								<p:dataTable id="idDtTurnos" sortOrder="ascending"
+									value="#{beanDetalleImpresionDocumentosCorrespondencia.datosTramiteTurno}" var="row"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									paginator="true" rows="50" style="font-size: 73%;">
+	
+									<p:column style="width: 11%;"
+										headerText="#{messageBeanSNR.commonLabelFiltrarTurno}"
+										filterBy="#{row.idTurno}" filterMatchMode="contains">
+										<h:outputText value="#{row.idTurno}"
+											title="#{tooltipBeanSNR.procesosAprobacionFiltrarTurno}" />
+									</p:column>
+	
+									<p:column style="width: 10%;"
+										sortBy="#{row.turno.fechaCreacion}"
+										headerText="#{messageBeanSNR.commonLabelFechaRadicacion}">
+										<h:outputText value="#{row.fechaCreacion}" />
+									</p:column>
+	
+									<p:column style="width: 14%;"
+										headerText="#{messageBeanSNR.commonLabelFiltrarNir}"
+										filterBy="#{row.nir}" filterMatchMode="contains">
+										<h:outputText value="#{row.nir}"
+											title="#{tooltipBeanSNR.procesosAprobacionFiltrarNIR}" />
+									</p:column>
+	
+									<p:column style="width: 8%;"
+										headerText="#{messageBeanSNR.commonLabelFechaAsignacion}">
+										<h:outputText value="#{row.fechaAsignacion != null ? row.fechaAsignacion : row.fechaCreacionEtapa}" />
+									</p:column>
+	
+									<p:column style="width: 13%;"
+										headerText="#{messageBeanSNR.commonLabelMotivo}">
+										<h:outputText value="#{row.motivoNoTramite}" />
+									</p:column>
+									
+									<p:column style="width: 13%;"
+										headerText="#{messageBeanSNR.commonLabelTipificacionTurno}">
+										<h:outputText value="#{row.tipificacionTurno}" />
+									</p:column>
+	
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+										style="width: 13%;">
+										<div align="center">
+											<p:commandButton id="abrirObsProcesoAnterior"
+												icon="fa fa-id-card-o" disabled="#{row.estadoActividad eq 'BLQ'}"
+												actionListener="#{beanDetalleImpresionDocumentosCorrespondencia.mostrarObservacionesProcesoAnterior(row)}"
+												title="#{tooltipBeanSNR.procesosAprobacionObservacionesProcesoAnterior}"
+												style="width: 23%;" />
+										</div>
+									</p:column>
+	
+									<p:column style="width: 10%;"
+										headerText="#{messageBeanSNR.commonLabelCertificadosAsociados}">
+										<h:outputText value="#{row.turnosAsociados}" />
+									</p:column>
+	
+									<p:column style="width: 7%;"
+										headerText="#{messageBeanSNR.commonLabelDetalle}">
+										<div align="center">
+											<h:commandButton rendered="#{row.estadoActividad eq 'ASG'}"
+												id="idVerDetalle"
+												value="#{messageBeanSNR.commonLabelVerDetalle}"
+												action="#{beanDetalleImpresionDocumentosCorrespondencia.cargarTurno(row,true)}"
+												image="../images/find.png">
+												<p:ajax update="fDetalleEntrega"></p:ajax>
+											</h:commandButton>
+											<h:commandButton
+												value="#{messageBeanSNR.commonLabelVerDetalle}"
+												immediate="true"
+												image="../images/reestringido.png"
+												rendered="#{row.estadoActividad eq 'BLQ'}">
+											</h:commandButton>
+										</div>
+									</p:column>
+	
+									<p:column style="width: 8%;"
+										headerText="#{messageBeanSNR.commonLabelGenerarRelacion}">
+										<div align="center">
+											<p:selectBooleanCheckbox value="#{row.generarRelacion}"
+												disabled="true" id="idCBGenerarRelacion">
+												<p:ajax
+													update=":fDetalleEntrega:idCBBotonSalvar,:fDetalleEntrega:idBotonVisualizarReliacion" />
+											</p:selectBooleanCheckbox>
+										</div>
+									</p:column>
+	
+								</p:dataTable>
+							</div>
+							<div class="ui-g" align="center">
+								<div class="ui-g-6 ui-md-6 ui-lg-5" align="left">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										title="#{tooltipBeanSNR.procesosAprobacionRegresar}"
+										action="#{beanDetalleImpresionDocumentosCorrespondencia.accionVolver()}">
+									</p:commandButton>
+								</div>
+								<div class="ui-g-6 ui-md-6 ui-lg-7" align="right">
+									<p:commandButton id="idCBGenerarRealacion"
+										rendered="#{beanDetalleImpresionDocumentosCorrespondencia.idEtapa eq 210}"
+										value="#{messageBeanSNR.commonLabelGenerarRelacion}"
+										actionListener="#{beanDetalleImpresionDocumentosCorrespondencia.generarDocumentoRelacionAprobacion(false)}"
+										icon="fa fa-check" update="fDetalleEntrega" />
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonVisualizarDocumentos}"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										actionListener="#{beanDetalleImpresionDocumentosCorrespondencia.descargarArchivoZip}"
+										icon="fa fa-file-o" style="display: none;"
+										id="idBotonVisualizarReliacion" ajax="false">
+										<p:fileDownload value="#{beanDetalleImpresionDocumentosCorrespondencia.zipDocumentosRelacion}" />
+									</p:commandButton>
+									<p:commandButton style="display: none;"
+										widgetVar="wvBotonSalvar" id="idCBBotonSalvar"
+										value="#{messageBeanSNR.commonLabelEnviar}"
+										actionListener="#{beanDetalleImpresionDocumentosCorrespondencia.generarDocumentoRelacionAprobacion(true)}"
+										title="#{tooltipBeanSNR.procesosAprobacionSalvar}"
+										update=":fDetalleEntrega:idDtTurnos,:fDetalleEntrega:idDtTurnos,fDialogConfirmacionRelaciones"
+										icon="fa fa-save" />
+								</div>
+								<script type="text/javascript">
+									function start()
+									{
+										mostrarElemento('fDetalleEntrega:idCBBotonSalvar');
+										PF('statusDialog').show();
+									}
+	
+									function stop()
+									{
+										PF('statusDialog').hide();
+									}
+								</script>
+							</div>
+						</p:panel>
+						
+						<!-- Impresión -->
+						<p:panel id="idPDetalleTurno"
+							rendered="#{!beanDetalleImpresionDocumentosCorrespondencia.bandejaentrada}">
+							<p:panel header="#{messageBeanSNR.commonLabelDatosDelTurno}"
+								toggleable="true"
+								collapsed="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.idTurno eq null}">
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-4 ui-lg-4" align="center">
+										<h:panelGrid columns="1">
+											<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}"
+												style="font-size: 100%;" />
+											<p:inputText
+												value="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.idTurno}"
+												readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosTurnoTurno}">
+											</p:inputText>
+										</h:panelGrid>
+									</div>
+									<div class="ui-g-12 ui-md-4 ui-lg-4" align="center">
+										<h:panelGrid columns="1">
+											<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+												style="font-size: 100%;" />
+											<p:inputText
+												value="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.nir}"
+												readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosTurnoNir}">
+											</p:inputText>
+										</h:panelGrid>
+									</div>
+									<div class="ui-g-12 ui-md-4 ui-lg-4" align="center">
+										<h:panelGrid columns="1">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelFechaEntrega}"
+												style="font-size: 100%;" />
+											<p:inputText
+												value="#{beanDetalleImpresionDocumentosCorrespondencia.fechaEntrega}"
+												readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosTurnoFechaEntrega}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</p:inputText>
+										</h:panelGrid>
+									</div>
+								</div>
+							</p:panel>
+							<!-- Fin Seccion Datos Turno -->
+							<br />
+							<!-- Inicio Seccion Matriculas -->
+							<p:panel header="#{messageBeanSNR.commonLabelMatriculas}"
+								rendered="#{beanDetalleImpresionDocumentosCorrespondencia.isValidCollection(beanDetalleImpresionDocumentosCorrespondencia.entrega.datosMatriculas)}"
+								toggleable="true">
+								<div class="ui-g">
+									<p:dataTable
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.datosMatriculas}"
+										var="item">
+										<p:column headerText="#{messageBeanSNR.commonLabelMatriculas}">
+											<div align="center">
+												<h:outputText value="#{item.matriculaConcatenada}" />
+											</div>
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}"
+											groupRow="true">
+											<div align="center">
+												<h:outputText value="#{item.direccionCompleta}" />
+											</div>
+										</p:column>
+									</p:dataTable>
+								</div>
+								<p:dialog modal="true" widgetVar="statusDownload"
+									draggable="false" closable="false" resizable="false">
+									<p:graphicImage value="/images/ajaxloadingbar.gif" />
+								</p:dialog>
+							</p:panel>
+							<!-- Fin Seccion Matriculas -->
+							<br />
+							<!-- Inicio Seccion Documento -->
+							<p:panel>
+								<p:panel header="#{messageBeanSNR.commonLabelDocumento}"
+									toggleable="true"
+									collapsed="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.datosPredioEntrega.tipoDocumento eq null}">
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTipoDeDocumento}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoTipoDocumento}"
+												value="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.datosPredioEntrega.tipoDocumento}" />
+											<br />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelNumeroDelDocumento}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoNumeroDocumento}"
+												value="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.datosPredioEntrega.numero}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+												value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoFechaDocumento}"
+												value="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.datosPredioEntrega.fechaDocumento}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</p:inputText>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelOficinaOrigen}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoOficinaOrigen}"
+												value="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.datosPredioEntrega.nombreOficina}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTipoOficina}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoTipoOficina}"
+												value="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.datosPredioEntrega.tipoOficina}" />
+										</div>
+									</div>
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel value="#{messageBeanSNR.commonLabelPais}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoPais}"
+												value="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.datosPredioEntrega.pais}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelDepartamento}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoDepartamento}"
+												value="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.datosPredioEntrega.departamento}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoMunicipio}"
+												value="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.datosPredioEntrega.municipio}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTipoEntidad}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoTipoEntidad}"
+												value="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.datosPredioEntrega.tipoEntidad}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelEntidadExenta}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoEntidadExenta}"
+												value="#{beanDetalleImpresionDocumentosCorrespondencia.entrega.datosPredioEntrega.entidadExenta}" />
+										</div>
+
+									</div>
+								</p:panel>
+								<br />
+							</p:panel>
+							<!-- Fin Seccion Documento -->
+							<br />
+							<p:outputPanel id="idPanelDocsImprimir">
+								<p:panel
+									header="#{messageBeanSNR.commonLabelDocumentosAImprimir}"
+									toggleable="true"
+									rendered="#{beanDetalleImpresionDocumentosCorrespondencia.isValidCollection(beanDetalleImpresionDocumentosCorrespondencia.documentosImprimir)}">
+									<p:outputPanel>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<p:dataTable id="idDtDocsImprimir" var="item"
+													value="#{beanDetalleImpresionDocumentosCorrespondencia.documentosImprimir}"
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelDocumento}">
+														<h:outputText value="#{item.tipo}" />
+													</p:column>
+													<p:column headerText="#{messageBeanSNR.commonLabelEstado}">
+														<h:outputText id="estadoDocumento"
+															value="#{item.estadoImpresion}" />
+													</p:column>
+												</p:dataTable>
+											</div>
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<p:commandButton
+													value="#{messageBeanSNR.commonLabelImprimir}"
+													global="false" icon="fa fa-print" id="botonImprimir"
+													widgetVar="botonImprimir"
+													onclick="mostrarElementos('fDetalleEntrega:idCBEnviar');"
+													actionListener="#{beanDetalleImpresionDocumentosCorrespondencia.imprimirDocumentos(true,'fDetalleEntrega')}" />
+											</div>
+										</div>
+									</p:outputPanel>
+								</p:panel>
+							</p:outputPanel>
+							<br />
+							<!-- Inicia Seccion Botones -->
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										update="fDetalleEntrega"
+										icon="fa fa-arrow-circle-left" iconPos="left" ajax="false"
+										actionListener="#{beanDetalleImpresionDocumentosCorrespondencia.accionVolverDetalle(true)}">
+									</p:commandButton>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton id="idCBEnviarEntrega"
+										value="#{messageBeanSNR.commonButtonEnviar}" icon="fa fa-save"
+										iconPos="left" ajax="false" style="#{beanDetalleImpresionDocumentosCorrespondencia.documentosImprimir eq null ? '' : 'display:none'}"
+										action="#{beanDetalleImpresionDocumentosCorrespondencia.accionSalvar()}">
+									</p:commandButton>
+									<p:commandButton id="idCBEnviar"
+										value="#{messageBeanSNR.commonButtonEnviar}" icon="fa fa-save"
+										iconPos="left" ajax="false" style="display:none"
+										action="#{beanDetalleImpresionDocumentosCorrespondencia.accionSalvar()}">
+									</p:commandButton>
+								</div>
+							</div>
+							<!-- Fin Seccion Botones -->
+						</p:panel>
+					</p:outputPanel>
+					
+					<p:dialog appendTo="@(body)"
+						header="#{messageBeanSNR.commonLabelConfirmacion}"
+						closable="false"
+						widgetVar="confirmacionRelaciones" modal="true" resizable="false">
+						<h:form id="fDialogConfirmacionRelaciones"
+							style="font-size: large; top: 50%; left: 50%;">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelRelacionesAprobacionGeneradas}" />
+							<p:outputLabel value="#{beanDetalleImpresionDocumentosCorrespondencia.relacionesCreadasString}" />
+							<br />
+							<br />
+							<div align="center">
+								<p:remoteCommand name="regresarPantalla"
+									action="#{beanDetalleImpresionDocumentosCorrespondencia.accionVolver(true)}"
+									partialSubmit="true" global="false" />
+								<p:commandButton value="#{messageBeanSNR.commonButtonAceptar}" ajax="true"
+									icon="fa fa-check" onclick="regresarPantalla()" >
+									<p:ajax
+										listener="#{beanDetalleImpresionDocumentosCorrespondencia.accionVolver(true)}"
+										event="click" />
+								</p:commandButton>
+									
+							</div>
+						</h:form>
+					</p:dialog>
+					
+					<p:dialog id="cuadroObsProcesoAnterior" appendTo="@(body)"
+						header="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+						widgetVar="obsProcesoAnterior" modal="true" resizable="false"
+						width="700">
+						<h:form id="fDialogo"
+							style="font-size: medium; top: 40%; left: 40%;">
+							<table id="tablaCuadroProcesoAnterior" maxwidth="280"
+								cellspacing="1" cellpadding="20" border="1" bgcolor="#1E679A"
+								align="center">
+								<tr>
+									<td id="fila1TablaCuadroProcesoAnterior" bgcolor="#ffffff">
+										<h:outputText value="#{beanDetalleImpresionDocumentosCorrespondencia.observaciones}"
+											id="id_observacionesProcesoAnterior" />
+									</td>
+								</tr>
+							</table>
+						</h:form>
+					</p:dialog>
+					
+					<p:dialog appendTo="@(body)" id="idDPreguntaAprobarRelaciones"
+						header="#{messageBeanSNR.commonLabelConfirmacion}"
+						widgetVar="preguntaAprobarRelaciones" modal="true" resizable="false">
+						<h:form id="fDialogPreguntaAprobarRelaciones"
+							style="font-size: large; top: 50%; left: 50%;">
+							<div align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelAprobarRelaciones}" />
+							</div>
+							<br />
+							<div align="center">
+								<p:commandButton value="#{messageBeanSNR.commonSi}" type="button"
+									onclick="mostrarElemento('fDetalleEntrega:idBotonVisualizarReliacion'); PF('preguntaAprobarRelaciones').hide();"
+									icon="fa fa-check" />
+								<p:spacer />
+								<p:commandButton value="#{messageBeanSNR.commonNo}" type="button"
+									actionListener="#{beanDetalleImpresionDocumentosCorrespondencia.setDocumentosGenerados(null)}"
+									icon="fa fa-close"
+									onclick="PF('preguntaAprobarRelaciones').hide();" />
+							</div>
+						</h:form>
+					</p:dialog>
+					
+					<p:dialog appendTo="@(body)"
+						header="#{messageBeanSNR.commonLabelAdvertencia}" closable="false"
+						widgetVar="dlgSuspension" modal="true" resizable="false"
+						width="750" height="170">
+						<h:form id="fDialogSuspension"
+							style="font-size: large; text-align: justify; top: 30%; left: 30%;">
+							<h:outputText value="#{beanAprobacion.observacionesTemporales}" />
+							<br />
+							<br />
+							<div align="center">
+								<p:commandButton value="#{messageBeanSNR.commonLabelConfirmar}"
+									icon="fa fa-check" oncomplete="PF('dlgSuspension').hide();"
+									action="#{beanAprobacion.returnBandeja()}" />
+							</div>
+						</h:form>
+					</p:dialog>
+
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

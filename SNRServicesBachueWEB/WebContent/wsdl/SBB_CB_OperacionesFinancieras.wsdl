@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/operacionesfinancieras/v2"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/operacionesfinancieras/v2"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/cb/operacionesfinancieras/consultartarifaservicio/v2"
+	xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/cb/operacionesfinancieras/generarliquidacion/v2"
+	xmlns:bachue3="https://www.supernotariado.gov.co/schemas/bachue/cb/operacionesfinancieras/registrarpago/v2"
+	xmlns:bachue4="https://www.supernotariado.gov.co/schemas/bachue/cb/operacionesfinancieras/obtenerclavepdfliquidacion/v2"
+	xmlns:bachue5="https://www.supernotariado.gov.co/schemas/bachue/cb/operacionesfinancieras/actualizardatossolicitante/v2"
+	xmlns:bachue6="https://www.supernotariado.gov.co/schemas/bachue/cb/operacionesfinancieras/validaractualizaciondatossolicitante/v2"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/operacionesfinancieras/consultartarifaservicio/v2">
+			<xsd:complexType
+				name="tipoEntradaConsultarTarifaServicio">
+				<xsd:sequence>
+					<xsd:element name="tipoDocSolicitante"
+						type="xsd:string" />
+					<xsd:element name="numeroDocSolicitante"
+						type="xsd:string" />
+					<xsd:element name="codigoConvenio" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="canalOrigen">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="fisico" />
+								<xsd:enumeration value="electronico" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="servicios">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="servicio"
+									type="bachue1:tipoServicioCTSI" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoServicioCTSI">
+				<xsd:sequence>
+					<xsd:element name="tipoServicio" type="xsd:string" />
+					<xsd:element name="subtipoServicio" type="xsd:string" />
+					<xsd:element name="criterios">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="criterio"
+									type="bachue1:tipoCriterioCTSI" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoCriterioCTSI">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="valor" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarTarifaServicio"
+				type="bachue1:tipoEntradaConsultarTarifaServicio" />
+			<xsd:complexType
+				name="tipoSalidaConsultarTarifaServicio">
+				<xsd:sequence>
+					<xsd:element name="serviciosTarifados">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="servicioTarifado"
+									type="bachue1:tipoServicioCTSO" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoServicioCTSO">
+				<xsd:sequence>
+					<xsd:element name="tipoServicio" type="xsd:string" />
+					<xsd:element name="subtipoServicio" type="xsd:string" />
+					<xsd:element name="valorServicio" type="xsd:decimal" />
+					<xsd:element name="direccionPredio" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="estadoPredio" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarTarifaServicio"
+				type="bachue1:tipoSalidaConsultarTarifaServicio" />
+		</xsd:schema>
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/operacionesfinancieras/generarliquidacion/v2">
+			<xsd:complexType name="tipoEntradaGenerarLiquidacion">
+				<xsd:sequence>
+					<xsd:element name="codigoConvenio" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="codigoCanal" type="xsd:string" />
+					<xsd:element name="codigoSucursalCanal"
+						type="xsd:string" />
+					<xsd:element name="oripSolicitud" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="tipoPersona" type="xsd:string" />
+					<xsd:element name="tipoDocSolicitante"
+						type="xsd:string" />
+					<xsd:element name="numeroDocSolicitante"
+						type="xsd:string" />
+					<xsd:element name="primerNombreSolicitante"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="segundoNombreSolicitante"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="primerApellidoSolicitante"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="segundoApellidoSolicitante"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="razonSocial" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="servicios">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="servicio"
+									type="bachue2:tipoServicioGLI" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoServicioGLI">
+				<xsd:sequence>
+					<xsd:element name="tipoServicio" type="xsd:string" />
+					<xsd:element name="subtipoServicio" type="xsd:string" />
+					<xsd:element name="cantidadSolicitada"
+						type="xsd:integer" />
+					<xsd:element name="valorServicio" type="xsd:decimal" />
+					<xsd:element name="criterios">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="criterio"
+									type="bachue2:tipoCriterioGLI" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoCriterioGLI">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="valor" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaGenerarLiquidacion"
+				type="bachue2:tipoEntradaGenerarLiquidacion" />
+			<xsd:complexType name="tipoSalidaGenerarLiquidacion">
+				<xsd:sequence>
+					<xsd:element name="numeroReferencia" type="xsd:string" />
+					<xsd:element name="nir" type="xsd:string" />
+					<xsd:element name="fechaLiquidacion"
+						type="xsd:dateTime" />
+					<xsd:element name="fechaVencimiento"
+						type="xsd:dateTime" />
+					<xsd:element name="valorTotalServicio"
+						type="xsd:decimal" />
+					<xsd:element name="serviciosLiquidados">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="servicioLiquidado"
+									type="bachue2:tipoServicioGLO" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoServicioGLO">
+				<xsd:sequence>
+					<xsd:element name="tipoServicio" type="xsd:string" />
+					<xsd:element name="subtipoServicio" type="xsd:string" />
+					<xsd:element name="cantidadSolicitada"
+						type="xsd:integer" />
+					<xsd:element name="valorServicio" type="xsd:decimal" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaGenerarLiquidacion"
+				type="bachue2:tipoSalidaGenerarLiquidacion" />
+		</xsd:schema>
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/operacionesfinancieras/registrarpago/v2">
+			<xsd:complexType name="tipoEntradaRegistrarPago">
+				<xsd:sequence>
+					<xsd:element name="codigoEntidadRecaudadora"
+						type="xsd:string" />
+					<xsd:element name="codigoPuntoRecaudoEntidad"
+						type="xsd:string" />
+					<xsd:element name="codigoTipoRecaudo" type="xsd:string" />
+					<xsd:element name="fechaTransaccion"
+						type="xsd:dateTime" />
+					<xsd:element name="fechaBancaria" type="xsd:dateTime" />
+					<xsd:element name="codigoTransaccionRecaudador"
+						type="xsd:string" />
+					<xsd:element name="montoTransaccion" type="xsd:decimal" />
+					<xsd:element name="numeroReferenciaBachue"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaRegistrarPago"
+				type="bachue3:tipoEntradaRegistrarPago" />
+			<xsd:complexType name="tipoSalidaRegistrarPago">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaRegistrarPago"
+				type="bachue3:tipoSalidaRegistrarPago" />
+		</xsd:schema>
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/operacionesfinancieras/obtenerclavepdfliquidacion/v2">
+			<xsd:complexType
+				name="tipoEntradaObtenerClavePDFLiquidacion">
+				<xsd:sequence>
+					<xsd:element name="numeroReferencia" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaObtenerClavePDFLiquidacion"
+				type="bachue4:tipoEntradaObtenerClavePDFLiquidacion" />
+			<xsd:complexType
+				name="tipoSalidaObtenerClavePDFLiquidacion">
+				<xsd:sequence>
+					<xsd:element name="claveDocumento" type="xsd:string" />
+					<xsd:element name="nombreDocumento" type="xsd:string" />
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerClavePDFLiquidacion"
+				type="bachue4:tipoSalidaObtenerClavePDFLiquidacion" />
+		</xsd:schema>
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/operacionesfinancieras/actualizardatossolicitante/v2">
+			<xsd:complexType
+				name="tipoEntradaActualizarDatosSolicitante">
+				<xsd:sequence>
+					<xsd:element name="numeroReferencia" type="xsd:string" />
+					<xsd:element name="tipoDocSolicitante"
+						type="xsd:string" />
+					<xsd:element name="numeroDocSolicitante"
+						type="xsd:string" />
+					<xsd:element name="primerNombreSolicitante"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="segundoNombreSolicitante"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="primerApellidoSolicitante"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="segundoApellidoSolicitante"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="razonSocial" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaActualizarDatosSolicitante"
+				type="bachue5:tipoEntradaActualizarDatosSolicitante" />
+			<xsd:complexType
+				name="tipoSalidaActualizarDatosSolicitante">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaActualizarDatosSolicitante"
+				type="bachue5:tipoSalidaActualizarDatosSolicitante" />
+		</xsd:schema>
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/operacionesfinancieras/validaractualizaciondatossolicitante/v2">
+			<xsd:complexType
+				name="tipoEntradaValidarActualizacionDatosSolicitante">
+				<xsd:sequence>
+					<xsd:element name="numeroReferencia" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element
+				name="entradaValidarActualizacionDatosSolicitante"
+				type="bachue6:tipoEntradaValidarActualizacionDatosSolicitante" />
+			<xsd:complexType
+				name="tipoSalidaValidarActualizacionDatosSolicitante">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element
+				name="salidaValidarActualizacionDatosSolicitante"
+				type="bachue6:tipoSalidaValidarActualizacionDatosSolicitante" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="ConsultarTarifaServicio_Request">
+		<wsdl:part name="entrada"
+			element="bachue1:entradaConsultarTarifaServicio" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarTarifaServicio_Response">
+		<wsdl:part name="salida"
+			element="bachue1:salidaConsultarTarifaServicio" />
+	</wsdl:message>
+	<wsdl:message name="GenerarLiquidacion_Request">
+		<wsdl:part name="entrada"
+			element="bachue2:entradaGenerarLiquidacion" />
+	</wsdl:message>
+	<wsdl:message name="GenerarLiquidacion_Response">
+		<wsdl:part name="salida"
+			element="bachue2:salidaGenerarLiquidacion" />
+	</wsdl:message>
+	<wsdl:message name="RegistrarPago_Request">
+		<wsdl:part name="entrada"
+			element="bachue3:entradaRegistrarPago" />
+	</wsdl:message>
+	<wsdl:message name="RegistrarPago_Response">
+		<wsdl:part name="salida"
+			element="bachue3:salidaRegistrarPago" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerClavePDFLiquidacion_Request">
+		<wsdl:part name="entrada"
+			element="bachue4:entradaObtenerClavePDFLiquidacion" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerClavePDFLiquidacion_Response">
+		<wsdl:part name="salida"
+			element="bachue4:salidaObtenerClavePDFLiquidacion" />
+	</wsdl:message>
+	<wsdl:message name="ActualizarDatosSolicitante_Request">
+		<wsdl:part name="entrada"
+			element="bachue5:entradaActualizarDatosSolicitante" />
+	</wsdl:message>
+	<wsdl:message name="ActualizarDatosSolicitante_Response">
+		<wsdl:part name="salida"
+			element="bachue5:salidaActualizarDatosSolicitante" />
+	</wsdl:message>
+	<wsdl:message
+		name="ValidarActualizacionDatosSolicitante_Request">
+		<wsdl:part name="entrada"
+			element="bachue6:entradaValidarActualizacionDatosSolicitante" />
+	</wsdl:message>
+	<wsdl:message
+		name="ValidarActualizacionDatosSolicitante_Response">
+		<wsdl:part name="salida"
+			element="bachue6:salidaValidarActualizacionDatosSolicitante" />
+	</wsdl:message>
+
+	<wsdl:portType name="SBB_CB_OperacionesFinancieras">
+		<wsdl:operation name="ConsultarTarifaServicio">
+			<wsdl:input
+				message="bachue:ConsultarTarifaServicio_Request" />
+			<wsdl:output
+				message="bachue:ConsultarTarifaServicio_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="GenerarLiquidacion">
+			<wsdl:input message="bachue:GenerarLiquidacion_Request" />
+			<wsdl:output message="bachue:GenerarLiquidacion_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="RegistrarPago">
+			<wsdl:input message="bachue:RegistrarPago_Request" />
+			<wsdl:output message="bachue:RegistrarPago_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerClavePDFLiquidacion">
+			<wsdl:input
+				message="bachue:ObtenerClavePDFLiquidacion_Request" />
+			<wsdl:output
+				message="bachue:ObtenerClavePDFLiquidacion_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ActualizarDatosSolicitante">
+			<wsdl:input
+				message="bachue:ActualizarDatosSolicitante_Request" />
+			<wsdl:output
+				message="bachue:ActualizarDatosSolicitante_Response" />
+		</wsdl:operation>
+		<wsdl:operation
+			name="ValidarActualizacionDatosSolicitante">
+			<wsdl:input
+				message="bachue:ValidarActualizacionDatosSolicitante_Request" />
+			<wsdl:output
+				message="bachue:ValidarActualizacionDatosSolicitante_Response" />
+		</wsdl:operation>
+
+	</wsdl:portType>
+	<wsdl:binding
+		name="SBB_CB_OperacionesFinancierasSOAP12Binding"
+		type="bachue:SBB_CB_OperacionesFinancieras">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="ConsultarTarifaServicio">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/operacionesfinancieras/v2/ConsultarTarifaServicio" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GenerarLiquidacion">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/operacionesfinancieras/v2/GenerarLiquidacion" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="RegistrarPago">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/operacionesfinancieras/v2/RegistrarPago" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerClavePDFLiquidacion">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/operacionesfinancieras/v2/ObtenerClavePDFLiquidacion" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ActualizarDatosSolicitante">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/operacionesfinancieras/v2/ActualizarDatosSolicitante" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation
+			name="ValidarActualizacionDatosSolicitante">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/operacionesfinancieras/v2/ValidarActualizacionDatosSolicitante" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SBB_CB_OperacionesFinancieras">
+		<wsdl:port name="SBB_CB_OperacionesFinancierasPort"
+			binding="bachue:SBB_CB_OperacionesFinancierasSOAP12Binding">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

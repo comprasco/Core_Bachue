@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelHomologacionActosLiquidacion}" />
+				</li>
+				<li class="breadcrumb-item" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" /></li>
+				<li class="breadcrumb-item" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" /></li>
+				<li class="breadcrumb-item" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleTurno}" /></li>
+				<li class="breadcrumb-item active"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleHomologacionActosLiquidacion}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fHomologacionActosLiquidacion" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true"
+					redisplay="false" />
+				<center>
+					<p:outputPanel id="opPanelHomologacion" style="padding: 0.5em 1em">
+						<p:outputLabel style="font-size: 30px;"
+							value="#{beanHomologacionActosLiquidacion.idTurno}" />
+						<br />
+						<p:dataTable id="idDtHomologacionActosLiquidacion" var="item"
+							tableStyle="width:auto;"
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+							value="#{beanHomologacionActosLiquidacion.admHomologacion}"
+							rowIndexVar="rowKey">
+
+							<f:facet name="header">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelInformacionActosMigrados}" />
+							</f:facet>
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column style="width:5%;" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelCodigoDelActoMigrado}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelNombreActo}" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelCuantiaCantidadActo}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelTipoTarifa}" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelValorLiquidado}" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelCodigoActoNaturalezaJuridica}" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelActoNaturalezaJuridica}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelAgregarActo}" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelActoHomologado}" />
+								</p:row>
+							</p:columnGroup>
+							<p:column style="width:5%;">
+								<h:outputText value="#{rowKey + 1}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.admLiquidaciones.idCirculo}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.admLiquidaciones.acto}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.admActos.descripcion}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.admActos.cuantia}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.admLiquidaciones.tipoLiq}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.admLiquidaciones.valor}">
+									<f:convertNumber pattern="¤#,##0.00"
+										currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<h:commandButton rendered="#{item.certificado}"
+									style="width: 15%;" image="../images/check.png" disabled="true">
+								</h:commandButton>
+								<p:commandLink
+									rendered="#{!item.homologado and !item.certificado}"
+									id="idHomologacionActos" styleClass="subrayado"
+									actionListener="#{beanHomologacionActosLiquidacion.findAllTiposActoActivos(item)}">
+									<h:outputText
+										value="#{messageBeanSNR.commonLabelHomologacionActos}" />
+								</p:commandLink>
+								<h:outputText
+									rendered="#{item.homologado and !item.certificado}"
+									value="#{item.tipoActo.idTipoActo}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText rendered="#{item.homologado}"
+									value="#{item.tipoActo.nombre}" />
+							</p:column>
+							<p:column>
+								<p:commandButton
+									update="fHomologacionActosLiquidacion:opPanelHomologacion"
+									icon="fa fa-plus-circle" iconPos="left"
+									rendered="#{item.homologado and !item.certificado}"
+									actionListener="#{beanHomologacionActosLiquidacion.agregarActo(item)}" />
+							</p:column>
+							<p:column>
+								<p:selectBooleanCheckbox value="#{item.homologado}"
+									disabled="true" />
+							</p:column>
+						</p:dataTable>
+						<br />
+						<p:dataTable id="idDtHomologacionPagosLiquidacion" var="item"
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+							rowIndexVar="rowKey"
+							value="#{beanHomologacionActosLiquidacion.pagos}">
+							<f:facet name="header">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelInformacionPagos}" />
+							</f:facet>
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column style="width:5%;" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelTurno}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelConcepto}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelFecha}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelReciboPago}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelFormaPago}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelCodigoBanco}" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelNumeroCheque}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelAprobacion}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelValor}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelCanal}" />
+								</p:row>
+							</p:columnGroup>
+							<p:column style="width:5%;">
+								<h:outputText value="#{rowKey + 1}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.idCirculo}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.idTurno}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.concepto}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.fecha}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.reciboPago}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.formaPago}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.banco}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.cheque}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.aprobacion}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.valor}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.canal}" />
+							</p:column>
+						</p:dataTable>
+						<br />
+						<p:dataTable id="idDtActo" var="item"
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+							value="#{beanHomologacionActosLiquidacion.datosActo}"
+							rowIndexVar="rowKey">
+							<f:facet name="header">
+								<h:outputText value="#{messageBeanSNR.commonLabelActos}" />
+							</f:facet>
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column style="width:5%;" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelCodigoDelActo}" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelEspecificacion}" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelTipoDeCuantia}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelCuantia}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelAccion}" />
+								</p:row>
+							</p:columnGroup>
+							<p:column style="width:5%;">
+								<h:outputText value="#{rowKey + 1}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.idTipoActo}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.idCirculo}" />
+							</p:column>
+
+							<p:column
+								style="max-width:400px;min-width:350px;white-space:normal">
+								<h:outputText value="#{item.tipoActo.nombre}" />
+							</p:column>
+
+							<p:column headerText="#{messageBeanSNR.commonLabelTipoDeCuantia}">
+								<h:outputText
+									value="#{item.tipoActo.actoSinCuantia == 'S' ? messageBeanSNR.commonLabelSinCuantia : messageBeanSNR.commonLabelConCuantia}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.cuantia}">
+									<f:convertNumber pattern="¤#,##0.00"
+										currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+								</h:outputText>
+							</p:column>
+
+							<p:column style="width: 10%;">
+								<p:commandButton icon="fa fa-trash"
+									title="#{messageBeanSNR.commonLabelEliminar}" iconPos="center"
+									update="fHomologacionActosLiquidacion:opPanelHomologacion"
+									actionListener="#{beanHomologacionActosLiquidacion.mostrarMensajeActoEliminar(item)}" />
+							</p:column>
+						</p:dataTable>
+						<br />
+						<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+							<p:commandButton
+								value="#{messageBeanSNR.commonLabelAsociarMatriculasActos}"
+								rendered="#{!beanHomologacionActosLiquidacion.administracionHomologacionActosLiquidacion}"
+								icon="fa fa-check-circle" iconPos="left"
+								onclick="PF('wVAsociarMatriculasActos').show();" />
+						</div>
+						<br />
+						<p:outputPanel id="idOPObservaciones">
+							<br />
+							<div class="ui-g">
+								<br />
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:outputLabel id="idOLObservaciones"
+										value="#{messageBeanSNR.commonLabelObservaciones}" />
+									<p:inputTextarea id="idItaObservaciones" rows="6" cols="50"
+										onmouseover="contarCaracteres('fHomologacionActosLiquidacion:idItaObservaciones','fHomologacionActosLiquidacion:idOTNumCaracteres')"
+										onkeydown="contarCaracteres('fHomologacionActosLiquidacion:idItaObservaciones','fHomologacionActosLiquidacion:idOTNumCaracteres')"
+										onkeyup="contarCaracteres('fHomologacionActosLiquidacion:idItaObservaciones','fHomologacionActosLiquidacion:idOTNumCaracteres')"
+										onblur="value=value.toUpperCase()" maxlength="400"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoMayorValorObservacionesAprobacion}"
+										value="#{beanHomologacionActosLiquidacion.observaciones}" />
+									<p:outputPanel>
+										<div align="right">
+											<h:outputText id="idOTNumCaracteres" align="right"
+												value="#{beanHomologacionActosLiquidacion.contarCaracteres(beanHomologacionActosLiquidacion.observaciones)}" />
+											<h:outputText
+												value=" #{messageBeanSNR.commonLabelCaracteres}" />
+										</div>
+									</p:outputPanel>
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:outputPanel>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+							<p:commandButton
+								value="#{messageBeanSNR.commonLabelRegresarDetalleTurno}"
+								title="#{messageBeanSNR.commonLabelRegresarDetalleTurno}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="detalleActo?faces-redirect=true">
+								<f:param name="idTurno"
+									value="#{beanPredioDocumentoActo.idTurno}" />
+								<f:param name="idMotivo"
+									value="#{beanPredioDocumentoActo.motivoTramite}" />
+								<f:param name="idConfrontacion"
+									value="#{beanPredioDocumentoActo.confrontacion}" />
+								<f:param name="datosBasicos"
+									value="#{beanPredioDocumentoActo.datosBasicos}" />
+								<f:param name="insertarMatricula"
+									value="#{beanPredioDocumentoActo.insertaMatricula}" />
+								<f:param name="eliminarMatricula"
+									value="#{beanPredioDocumentoActo.eliminaMatricula}" />
+								<f:param name="varificarFolioCerrado"
+									value="#{beanPredioDocumentoActo.verificaFolioCerrado}" />
+							</p:commandButton>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+							<p:commandButton
+								value="#{beanHomologacionActosLiquidacion.administracionHomologacionActosLiquidacion ? messageBeanSNR.commonButtonRegresarHomologacionActosLiquidacion : messageBeanSNR.commonButtonEnviarACalificacion}"
+								update="fHomologacionActosLiquidacion:opPanelHomologacion"
+								icon="fa fa-chevron-right" iconPos="left"
+								action="#{beanHomologacionActosLiquidacion.terminarProcesoHomologacion()}" />
+						</div>
+					</div>
+					<br />
+				</center>
+			</h:form>
+			<p:dialog appendTo="@(body)" id="idDTiposActos"
+				header="#{messageBeanSNR.commonLabelHomologacionActosNaturalezaJuridica}"
+				draggable="false" widgetVar="wVTiposActos" modal="true"
+				resizable="false" position="center" width="70%" height="530">
+				<h:form id="fTiposActos">
+					<p:dataTable id="idDtHomologacion" var="item"
+						emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+						value="#{beanHomologacionActosLiquidacion.homologacion}"
+						rowIndexVar="rowKey" scrollable="true" scrollHeight="400">
+
+						<f:facet name="header">
+							<h:outputText
+								value="#{messageBeanSNR.commonLabelHomologacionActosNaturalezaJuridica}" />
+						</f:facet>
+						<p:columnGroup type="header">
+							<p:row>
+								<p:column headerText="#{messageBeanSNR.commonLabelSeleccione}"
+									width="10%" />
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelCodigoDelActo}"
+									width="15%" filterBy="#{item.tipoActo.idTipoActo}" />
+								<p:column headerText="#{messageBeanSNR.commonLabelNombreActo}"
+									filterBy="#{item.tipoActo.nombre}" />
+							</p:row>
+						</p:columnGroup>
+
+						<p:column width="10%">
+							<p:selectBooleanCheckbox value="#{item.homologado}">
+								<p:ajax
+									listener="#{beanHomologacionActosLiquidacion.validarActoNatJuridicaActoMigrado(item.tipoActo.idTipoActo)}"
+									update="fHomologacionActosLiquidacion:idGrowl"></p:ajax>
+							</p:selectBooleanCheckbox>
+						</p:column>
+
+						<p:column width="15%">
+							<h:outputText value="#{item.tipoActo.idTipoActo}" />
+						</p:column>
+
+						<p:column>
+							<h:outputText value="#{item.tipoActo.nombre}" />
+						</p:column>
+					</p:dataTable>
+					<p:commandButton value="#{messageBeanSNR.commonLabelHomologarActo}"
+						update="fHomologacionActosLiquidacion:opPanelHomologacion"
+						icon="fa fa-plus-circle" iconPos="left"
+						actionListener="#{beanHomologacionActosLiquidacion.homologarActo}" />
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)" id="idDEliminar"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="wVEliminar" modal="true" width="380" resizable="false"
+				draggable="false" position="center">
+				<h:form id="fDialogEliminar"
+					style="font-size: large; top: 50%; left: 50%; text-align: center;">
+					<h:outputText
+						value="#{messageBeanSNR.commonMessagePreguntaEliminarActo}" />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							actionListener="#{beanHomologacionActosLiquidacion.eliminarActo()}"
+							icon="fa fa-check"
+							update="fHomologacionActosLiquidacion:opPanelHomologacion"
+							oncomplete="PF('wVEliminar').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onsuccess="PF('wVEliminar').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)" id="idPFAsociarMatriculasActos"
+				header="#{messageBeanSNR.commonLabelAsociarMatriculasActos}"
+				widgetVar="wVAsociarMatriculasActos" draggable="false" modal="true"
+				width="90%" resizable="false" position="center" closable="false">
+				<h:form id="fDialogAsociarMatriculasActos"
+					style="text-align: center;">
+					<h:form id="fAsociarMatriculasActos">
+						<br />
+						<p:dataTable id="idDtHomologacionMatriculas" var="item"
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+							rowIndexVar="rowKey"
+							value="#{beanHomologacionActosLiquidacion.matriculas}"
+							rendered="#{!beanHomologacionActosLiquidacion.administracionHomologacionActosLiquidacion}">
+							<f:facet name="header">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelAsociarMatriculasActos}" />
+							</f:facet>
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column style="width:5%;" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelMatricula}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelNupre}" />
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelActo}"
+										style="width:30%;" />
+								</p:row>
+							</p:columnGroup>
+							<p:column style="width:5%;">
+								<h:outputText value="#{rowKey + 1}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.nombreCirculo}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.idMatricula}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.numeroPredial}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.direccionCompleta}" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="idActoMatricula" style="width: 420px;"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoTipoDocumentoIdentidad}"
+									value="#{item.idActoSeleccionado}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanHomologacionActosLiquidacion.datosActo}"
+										var="acto" itemValue="#{acto.idActo}"
+										itemLabel="#{acto.idTipoActo} - #{acto.tipoActo.nombre}" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:dataTable>
+						<br />
+						<p:commandButton value="#{messageBeanSNR.commonLabelContinuar}"
+							icon="fa fa-check" iconPos="left"
+							onclick="PF('wVAsociarMatriculasActos').close();" />
+					</h:form>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{beanPredioDocumentoActo.idEtapa eq 130 ? messageBeanSNR.commonLabelCorrecciones : beanPredioDocumentoActo.idEtapa eq 170 ? 
+						messageBeanSNR.commonLabelResponsableActuacionesAdministrativas : beanPredioDocumentoActo.idEtapa eq 175 ? messageBeanSNR.commonLabelSustanciadorActuacionesAdministrativas :
+						beanDetalleCorreccion.esCertificadosEspeciales ? messageBeanSNR.commonLabelCertificados : beanPredioDocumentoActo.idEtapa eq 175 ? messageBeanSNR.commonLabelCoordinadorSegundaInstancia : messageBeanSNR.commonLabelProrrogaEntregaDocumentacion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{beanDetalleCorreccion.esCertificadosEspeciales ? messageBeanSNR.commonLabelModificarMatricula : messageBeanSNR.commonLabelDetalleCorrecciones}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<ui:include src="detalleActoInclude.xhtml" />
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="confrontacion5">
+				<p:growl id="idGrowl" sticky="false" showDetail="true" life="20000"
+					globalOnly="true" redisplay="false"/>
+				<!-- Tabs a modificar de acuerdo a la seleccion de correcciones -->
+				<br />
+				<p:tabView id="idCorregirDatBasicos">
+					<!-- Inicio insertar matricula -->
+					<p:tab id="datosPredio_id" titleStyle="font-size:15px;"
+						title="#{(beanDetalleCorreccion.idEtapa eq 170 or beanDetalleCorreccion.idEtapa eq 175) ? messageBeanSNR.commonLabelAsociarMatricula : messageBeanSNR.commonLabelInsertarMatricula}"
+						rendered="#{beanDetalleCorreccion.insertaMatricula}">
+						<p:fragment>
+							<p:autoUpdate />
+							<p:panel header="" toggleable="true">
+								<div class="ui-c" align="center">
+									<div class="ui-g-12">
+										<p:panelGrid id="idPgTipoMatriculaCert" rendered="#{beanDetalleCorreccion.esCertificadosEspeciales}">
+											<p:selectOneRadio id="idSorIndividualMasivaCert"
+												value="#{beanDetalleCorreccion.seccionTipoMatricula}">
+												<f:selectItem itemLabel="Matrícula inmobiliaria individual"
+													itemValue="S" />
+												<p:ajax update="idPMostrarMasiva,idPnActosResumen" />
+											</p:selectOneRadio>
+										</p:panelGrid>
+										<p:panelGrid id="idPgTipoMatricula" rendered="#{!beanDetalleCorreccion.esCertificadosEspeciales}">
+											<p:selectOneRadio id="idSorIndividualMasiva"
+												value="#{beanDetalleCorreccion.seccionTipoMatricula}">
+												<f:selectItem itemLabel="Matrícula inmobiliaria individual"
+													itemValue="S" />
+												<br />
+												<f:selectItem itemLabel="Matrículas masivas" itemValue="N" />
+												<p:ajax update="idPMostrarMasiva,idPnActosResumen" />
+											</p:selectOneRadio>
+										</p:panelGrid>
+									</div>
+								</div>
+								<div class="ui-c">
+									<div class="ui-g-12">
+										<p:panelGrid>
+											<div class="ui-c">
+												<div class="ui-g-12 ui-md-1" align="left">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelCirculoDosPuntos}" />
+												</div>
+												<div class="ui-g-12 ui-md-11" align="left">
+													<p:inputText value="#{beanDetalleCorreccion.circulo}"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaCirculo}"
+														readonly="true" />
+												</div>
+											</div>
+										</p:panelGrid>
+									</div>
+								</div>
+							</p:panel>
+							<br />
+							<p:panel header="Matrículas masivas" toggleable="true"
+								rendered="#{beanDetalleCorreccion.seccionTipoMatricula eq 'N'}"
+								id="idPMostrarMasiva">
+								<div class="ui-c">
+									<div class="ui-g-12 ui-md-4">
+										<p:outputLabel value="Desde" />
+										<p:inputText onblur="value=value.toUpperCase()" id="idItDesde"
+											placeholder="Desde"
+											title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaMatriculasMasivasDesde}"
+											value="#{beanDetalleCorreccion.rangoInicio}">
+											<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-4">
+										<p:outputLabel value="Hasta" />
+										<p:inputText onblur="value=value.toUpperCase()" id="idItHasta"
+											placeholder="Hasta"
+											title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaMatriculasMasivasHasta}"
+											value="#{beanDetalleCorreccion.rangoFin}">
+											<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-4">
+										<p:commandButton
+											value="#{messageBeanSNR.commonLabelAgregarActosAsociados}"
+											update="idDtActoAsociadoGeneral,confrontacion5:idGrowl,confrontacion5:idPanelObservacionesPredio" icon="fa fa-plus-circle"
+											iconPos="left"
+											title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaMatriculasMasivasAgregarActosAsociados}"
+											actionListener="#{beanDetalleCorreccion.agregarActosMasivos}" />
+									</div>
+								</div>
+								<div class="ui-g" align="left">
+									<div class="ui-g-12 ui-md-12" align="right">
+										<p:commandButton id="idCLDescargarPlantilla"
+											value="#{messageBeanSNR.commonLabelDescargarPlantilla}"
+											ajax="false" icon="fa fa-file-excel-o" iconPos="left"
+											actionListener="#{beanRegistro.descargarPlantillaMatriculas()}">
+											<p:fileDownload value="#{beanRegistro.imagen}" />
+										</p:commandButton>
+									</div>
+								</div>
+								<div class="ui-c">
+									<div class="ui-g-12">
+										<p:fileUpload
+											fileUploadListener="#{beanDetalleCorreccion.processFile}"
+											mode="advanced" dragDropSupport="true"
+											cancelLabel="#{messageBeanSNR.commonLabelCancelar}"
+											uploadLabel="#{messageBeanSNR.commonLabelCargar}"
+											fileLimitMessage="#{messageBeanSNR.commonLabelSoloCargarUnArchivoALaVez}"
+											invalidFileMessage="#{messageBeanSNR.commonLabelElArchivoCargueDebeSerExcel}"
+											label="#{messageBeanSNR.commonLabelCargarExcelDeActos}"
+											sizeLimit="#{beanDetalleCorreccion.cargarConstanteTamanoLimiteArchivo()}"
+											invalidSizeMessage="#{messageBeanSNR.commonLabelElArchivoCargueNoPuedeExcederLos500Kb}"
+											id="idFuLoadFile" widgetVar="idFuLoadFile"
+											update="idPnActosResumen,idPMostrarMasiva,idClnkRespuesta,confrontacion5:idGrowl,confrontacion5:idPanelObservacionesPredio"
+											fileLimit="1" allowTypes="/(\.|\/)(xls?x)$/"
+											oncomplete="PF('idFuLoadFile').clear();" />
+									</div>
+									<div class="ui-g-12" align="center">
+										<p:commandLink id="idClnkRespuesta" ajax="false"
+											title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaMatriculasMasivasArchivoSalida}"
+											onclick="PrimeFaces.monitorDownload(start, stop);"
+											rendered="#{beanDetalleCorreccion.file != null}">
+											<p:graphicImage value="/images/excel_ico.png" width="48" />
+											<p:fileDownload value="#{beanDetalleCorreccion.file}" />
+										</p:commandLink>
+										<br></br>
+										<p:outputLabel id="idOlLinkExcel" value="Archivo de Salida"
+											rendered="#{beanDetalleCorreccion.file != null}">
+										</p:outputLabel>
+									</div>
+								</div>
+
+								<script type="text/javascript">
+									function start()
+									{
+										PF('statusDownload').show();
+									}
+
+									function stop()
+									{
+										PF('statusDownload').hide();
+									}
+								</script>
+
+								<p:dialog modal="true" widgetVar="statusDownload"
+									header="Status" draggable="false" closable="false"
+									resizable="false">
+									<p:graphicImage value="/images/ajaxloadingbar.gif" />
+								</p:dialog>
+							</p:panel>
+							<br />
+							<p:panel id="idPnActosResumen"
+								header="#{messageBeanSNR.commonLabelActosRelacionMatriculas}"
+								toggleable="true">
+								<p:dataTable id="idDtActoAsociadoGeneral"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									value="#{beanDetalleCorreccion.actosAsociadosGeneral}"
+									var="item" scrollable="true">
+									<p:column headerText="Matrículas">
+										<p:inputText onblur="value=value.toUpperCase()"
+											title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaActosAsociadosMatriculas}"
+											maxlength="10" value="#{item.matricula}">
+											<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+											<p:ajax
+												listener="#{beanDetalleCorreccion.cargarDireccionPredio(item)}"
+												event="blur"
+												update="idDtActoAsociadoGeneral,confrontacion5:idGrowl,confrontacion5:idPanelObservacionesPredio" />
+										</p:inputText>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelNupre}">
+										<p:inputText onblur="value=value.toUpperCase()"
+											title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaActosAsociadosNupre}"
+											disabled="true" maxlength="18" value="#{item.nupre}">
+											<p:ajax
+												listener="#{beanDetalleCorreccion.cargarDireccionPredio(item)}"
+												event="blur" update="idDtActoAsociadoGeneral" />
+											<p:keyFilter regEx="/[a-z0-9_]/i" preventPaste="false" />
+										</p:inputText>
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}">
+										<p:outputLabel id="idOlDireccionPredio"
+											value="#{item.direccion}" />
+									</p:column>
+									<p:columns value="#{beanDetalleCorreccion.columns}"
+										var="column">
+										<f:facet name="header">
+											<h:outputText value="#{column.header}" />
+											<br />
+											<h:outputText value="Cuantía $ #{column.cuantia}" />
+										</f:facet>
+										<p:selectBooleanCheckbox id="idSbcbActosAsociados"
+											title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaActosAsociadosCuantia}"
+											value="#{item.actos[column.idActo]}" />
+										<p:tooltip id="idTtActosAsociados" for="idSbcbActosAsociados"
+											value="#{column.name}" trackMouse="true" />
+									</p:columns>
+									<p:column headerText="Acción">
+										<p:commandButton id="btnEliminiar"
+											title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaActosAsociadosEliminar}"
+											update="idDtActoAsociadoGeneral,confrontacion5:idPanelObservacionesPredio,confrontacion5:idCorregirDatBasicos:btnAgregar" icon="fa fa-trash"
+											actionListener="#{beanDetalleCorreccion.deleteActoSelected(item)}" />
+									</p:column>
+								</p:dataTable>
+								<div class="ui-c">
+									<div class="ui-g-12">
+										<p:commandButton id="btnAgregar"
+											value="#{messageBeanSNR.commonLabelAgregarActoAsociadoIndividual}"
+											update="idDtActoAsociadoGeneral,btnAgregar" icon="fa fa-plus-circle"
+											disabled="#{beanDetalleCorreccion.agregoUnamatriculaCertificados}"
+											iconPos="left"
+											actionListener="#{beanDetalleCorreccion.agregarActosIndividual}"
+											rendered="#{beanDetalleCorreccion.seccionTipoMatricula == 'S'}" />
+									</div>
+								</div>
+							</p:panel>
+						</p:fragment>
+					</p:tab>
+					<!-- Fin insertar matricula -->
+					<!-- Inicio eliminar matricula -->
+					<p:tab title="#{messageBeanSNR.commonLabelDesasociarMatricula}"
+						rendered="#{beanDetalleCorreccion.eliminaMatricula}">
+						<p:fragment>
+							<p:autoUpdate />
+							<p:panel>
+								<p:panel id="idPnActosResumenEliminar"
+									header="#{messageBeanSNR.commonLabelFoliosDeMatricula}"
+									toggleable="true">
+									<p:dataTable id="idDtFoliosEliminar"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{beanDetalleCorreccion.matriculasActos}" var="item"
+										scrollable="true"
+										selection="#{beanDetalleCorreccion.selectedMatriculas}"
+										rowKey="#{item.matricula}">
+										<p:column selectionMode="multiple"
+											headerText="#{messageBeanSNR.commonLabelSeleccione}"
+											style="width:70px;text-align:center">
+										</p:column>
+										<p:column headerText="Matrículas">
+											<p:outputLabel id="idOlMatriculaPredioEliminar"
+												value="#{item.matricula}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}">
+											<p:outputLabel id="idOlDireccionPredioEliminar"
+												value="#{item.direccion}" />
+										</p:column>
+										<p:columns value="#{beanDetalleCorreccion.columns}"
+											var="column">
+											<f:facet name="header">
+												<h:outputText value="#{column.header}" />
+												<br />
+												<h:outputText value="Cuantía $ #{column.cuantia}" />
+											</f:facet>
+											<p:selectBooleanCheckbox id="idSbcbActosAsociadosEliminar"
+												value="#{item.actos[column.idActo]}" disabled="true" />
+											<p:tooltip id="idTtActosAsociadosEliminar"
+												for="idSbcbActosAsociadosEliminar" value="#{column.name}"
+												trackMouse="true" />
+										</p:columns>
+									</p:dataTable>
+								</p:panel>
+							</p:panel>
+						</p:fragment>
+					</p:tab>
+					<!-- Fin eliminar matricula -->
+					<!-- Tab para verificar folio -->
+					<p:tab title="#{messageBeanSNR.commonLabelVerificarFolioCerrado}"
+						rendered="#{beanDetalleCorreccion.verificaFolioCerrado}">
+						<p:fragment>
+							<p:autoUpdate />
+							<p:panel id="idPnActosResumenReabrirFolio"
+								header="#{messageBeanSNR.commonLabelReabrirFoliosMatricula}"
+								toggleable="true">
+								<p:dataTable id="idDtFoliosReabrirFolio"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									value="#{beanDetalleCorreccion.reabrirMatriculas}" var="item"
+									scrollable="true">
+									<p:column headerText="#{messageBeanSNR.commonLabelMatriculas}"
+										style="text-align:center">
+										<p:outputLabel id="idOlreabrirMatriculaPredio"
+											value="#{item.matricula}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}"
+										style="text-align:center">
+										<p:outputLabel id="idOlreabrirDireccionPredio"
+											value="#{item.direccion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelEstadoDelPredio}"
+										style="text-align:center">
+										<p:outputLabel id="idOlreabrirEstadoPredio"
+											value="#{item.estado}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelReabrirMatricula}"
+										style="text-align:center">
+										<p:selectBooleanCheckbox value="#{item.certificadoAsociado}"
+											rendered="#{item.estado == 'CERRADO'}" />
+									</p:column>
+								</p:dataTable>
+							</p:panel>
+						</p:fragment>
+					</p:tab>
+				</p:tabView>
+				<br />
+				<p:panel>
+					<div align="left">
+						<p:outputPanel>
+							<strong>
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}" />
+							</strong>
+							<p:inputTextarea rows="6" cols="170" maxlength="400"
+								disabled="true"
+								value="#{beanDetalleCorreccion.observacionesProcesoAnterior}"
+								style="font-weight: inherit;width: 100%;height: 50%;" />
+						</p:outputPanel>
+						<br />
+						
+						<p:outputPanel id="idPanelObservacionesPredio">
+							<div align="left">
+								<h:outputLabel id="idObservacionesPredioInconsistente"
+									value="#{beanDetalleCorreccion.mensajePredioInconsistente}" />
+								<br />
+							</div>
+						</p:outputPanel>
+						
+						<strong>
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelJustificacion}#{messageBeanSNR.commonLabelObligatorio}" />
+						</strong>
+						<p:inputTextarea id="idJustificacion" rows="6" cols="140"
+							onblur="value=value.toUpperCase()"
+							title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaJustificacion}"
+							label="Justificación"
+							value="#{beanDetalleCorreccion.justificacion}" maxlength="400"
+							counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+							counter="idNumeroCaracteres1" />
+						<div align="right">
+							<h:outputText id="idNumeroCaracteres1" />
+						</div>
+						<div class="ui-g">
+							<div align="left" class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									action="#{beanDetalleCorreccion.regresarDetalleCorreccion()}">
+									<f:param name="idTurno"
+										value="#{beanPredioDocumentoActo.idTurno}" />
+									<f:param name="idMotivo"
+										value="#{beanPredioDocumentoActo.motivoTramite}" />
+									<f:param name="idConfrontacion"
+										value="#{beanPredioDocumentoActo.confrontacion}" />
+									<f:param name="datosBasicos"
+										value="#{beanPredioDocumentoActo.datosBasicos}" />
+									<f:param name="insertarMatricula"
+										value="#{beanPredioDocumentoActo.insertaMatricula}" />
+									<f:param name="eliminarMatricula"
+										value="#{beanPredioDocumentoActo.eliminaMatricula}" />
+									<f:param name="varificarFolioCerrado"
+										value="#{beanPredioDocumentoActo.verificaFolioCerrado}" />
+								</p:commandButton>
+							</div>
+							<div align="right" class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:commandButton value="#{(beanDetalleCorreccion.idEtapa eq 170 or beanDetalleCorreccion.idEtapa eq 175 or beanDetalleCorreccion.idEtapa eq 460) ? messageBeanSNR.commonButtonGuardar : messageBeanSNR.commonButtonEnviar}"
+									id="idCbEnviar"
+									actionListener="#{beanPredioDocumentoActo.mensajeConfirmacion()}"
+									icon="fa fa-check-circle" iconPos="left" ajax="true">
+								</p:commandButton>
+							</div>
+						</div>
+					</div>
+				</p:panel>
+			</h:form>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg"
+				modal="true" height="90" resizable="false">
+				<h:form id="fDialogActo"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText id="idMensaje"
+						value="#{beanPredioDocumentoActo.mensajeConfirmacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							action="#{beanDetalleCorreccion.salvar}" icon="fa fa-check"
+							update="confrontacion5" oncomplete="PF('dlg').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onsuccess="PF('dlg').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

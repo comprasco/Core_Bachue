@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/gestionusuarios/v1" xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerconveniosentidad/v1" xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerentidadesconvenio/v1" xmlns:bachue3="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerorips/v1" xmlns:bachue4="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerroles/v1" xmlns:bachue5="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/registrarusuario/v1" xmlns:bachue6="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolesusuario/v1" xmlns:bachue7="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolescomponente/v1" xmlns:bachue8="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerusuariosrolorip/v1" xmlns:bachue9="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obteneraccesosporrol/v1" xmlns:bachue10="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenermodulosporrol/v1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/gestionusuarios/v1">
+	<wsdl:types>
+		<xsd:schema targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerconveniosentidad/v1" elementFormDefault="qualified">
+			<xsd:complexType name="tipoEntradaObtenerConveniosEntidad">
+				<xsd:sequence>
+					<xsd:element name="codigoEntidad" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaObtenerConveniosEntidad" type="bachue1:tipoEntradaObtenerConveniosEntidad" />
+			<xsd:complexType name="tipoSalidaObtenerConveniosEntidad">
+				<xsd:sequence>
+					<xsd:element name="convenios">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="convenio" type="bachue1:tipoConvenio" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoConvenio">
+				<xsd:sequence>
+					<xsd:element name="codigoConvenio" type="xsd:string" />
+					<xsd:element name="descripcionConvenio" type="xsd:string" />
+					<xsd:element name="fechaInicio" type="xsd:string" />
+					<xsd:element name="fechaFinalizacion" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerConveniosEntidad" type="bachue1:tipoSalidaObtenerConveniosEntidad" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerentidadesconvenio/v1" elementFormDefault="qualified">
+			<xsd:element name="entradaObtenerEntidadesConvenio">
+				<xsd:complexType />
+			</xsd:element>
+			<xsd:complexType name="tipoSalidaObtenerEntidadesConvenio">
+				<xsd:sequence>
+					<xsd:element name="entidades">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="entidad" type="bachue2:tipoEntidad" minOccurs="0" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoEntidad">
+				<xsd:sequence>
+					<xsd:element name="codigoEntidad" type="xsd:string" />
+					<xsd:element name="nombreEntidad" type="xsd:string" />
+					<xsd:element name="codigoPais" type="xsd:integer" />
+					<xsd:element name="codigoDepartamento" type="xsd:integer" />
+					<xsd:element name="codigoMunicipio" type="xsd:integer" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerEntidadesConvenio" type="bachue2:tipoSalidaObtenerEntidadesConvenio" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerorips/v1" elementFormDefault="qualified">
+			<xsd:element name="entradaObtenerORIPs">
+				<xsd:complexType />
+			</xsd:element>
+			<xsd:complexType name="tipoSalidaObtenerORIPs">
+				<xsd:sequence>
+					<xsd:element name="orips">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="orip" type="bachue3:tipoOrip" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoOrip">
+				<xsd:sequence>
+					<xsd:element name="codigoORIP" type="xsd:string" />
+					<xsd:element name="nombreORIP" type="xsd:string" />
+					<xsd:element name="codigoDepartamento" type="xsd:integer" />
+					<xsd:element name="nombreDepartamento" type="xsd:string" />
+					<xsd:element name="codigoMunicipio" type="xsd:integer" />
+					<xsd:element name="nombreMunicipio" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerORIPs" type="bachue3:tipoSalidaObtenerORIPs" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerroles/v1" elementFormDefault="qualified">
+			<xsd:element name="entradaObtenerRoles">
+				<xsd:complexType />
+			</xsd:element>
+			<xsd:complexType name="tipoSalidaObtenerRoles">
+				<xsd:sequence>
+					<xsd:element name="roles">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="rol" type="bachue4:rolTypeOR" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="rolTypeOR">
+				<xsd:sequence>
+					<xsd:element name="codigoRol" type="xsd:string" />
+					<xsd:element name="nombreRol" type="xsd:string" />
+					<xsd:element name="componente" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerRoles" type="bachue4:tipoSalidaObtenerRoles" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/registrarusuario/v1" elementFormDefault="qualified">
+			<xsd:complexType name="tipoEntradaRegistrarUsuario">
+				<xsd:sequence>
+					<xsd:element name="numeroSolicitud" type="xsd:string" />
+					<xsd:element name="loginUsuario" type="xsd:string" />
+					<xsd:element name="tipoDocumento" type="xsd:string" />
+					<xsd:element name="numeroDocumento" type="xsd:string" />
+					<xsd:element name="primerNombreUsuario" type="xsd:string" />
+					<xsd:element name="segundoNombreUsuario" type="xsd:string" />
+					<xsd:element name="primerApellidoUsuario" type="xsd:string" />
+					<xsd:element name="segundoApellidoUsuario" type="xsd:string" />
+					<xsd:element name="correoElectronicoCorporativo" type="xsd:string" minOccurs="0" nillable="true" />
+					<xsd:element name="correoElectronicoPersonal" type="xsd:string" />
+					<xsd:element name="tipoCambio">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="Creacion" />
+								<xsd:enumeration value="Modificacion" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="segundoFactor">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="Huella" />
+								<xsd:enumeration value="SegundaClave" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="codigosRoles">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="codigoRol" type="xsd:string" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigosORIPs">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="codigoORIP" type="xsd:string" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoConvenio" type="xsd:string" minOccurs="0" nillable="true" />
+					<xsd:element name="idEntidadExterna" type="xsd:string" minOccurs="0" nillable="true" />
+					<xsd:element name="estadoUsuario">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="A" />
+								<xsd:enumeration value="P" />
+								<xsd:enumeration value="L" />
+								<xsd:enumeration value="I" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="cargo" type="xsd:string" />
+					<xsd:element name="justificacionCambio" type="xsd:string" />
+					<xsd:element name="fechaInicio" type="xsd:dateTime" />
+					<xsd:element name="fechaFin" type="xsd:dateTime" />
+					<xsd:element name="fechaVigenciaSegundaClave" type="xsd:dateTime" />
+					<xsd:element name="idPolitica" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaRegistrarUsuario" type="bachue5:tipoEntradaRegistrarUsuario" />
+			<xsd:complexType name="tipoSalidaRegistrarUsuario">
+				<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaRegistrarUsuario" type="bachue5:tipoSalidaRegistrarUsuario" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolesusuario/v1" elementFormDefault="qualified">
+			<xsd:complexType name="tipoEntradaObtenerRolesUsuario">
+				<xsd:sequence>
+					<xsd:element name="loginUsuario" type="xsd:string" />
+					<xsd:element name="componente" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaObtenerRolesUsuario" type="bachue6:tipoEntradaObtenerRolesUsuario" />
+			<xsd:complexType name="tipoSalidaObtenerRolesUsuario">
+				<xsd:sequence>
+					<xsd:element name="roles">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="rol" type="bachue6:rolTypeORU" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="rolTypeORU">
+				<xsd:sequence>
+					<xsd:element name="codigoRol" type="xsd:string" />
+					<xsd:element name="nombreRol" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerRolesUsuario" type="bachue6:tipoSalidaObtenerRolesUsuario" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerrolescomponente/v1" elementFormDefault="qualified">
+			<xsd:complexType name="tipoEntradaObtenerRolesComponente">
+				<xsd:sequence>
+					<xsd:element name="componente" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaObtenerRolesComponente" type="bachue7:tipoEntradaObtenerRolesComponente" />
+			<xsd:complexType name="tipoSalidaObtenerRolesComponente">
+				<xsd:sequence>
+					<xsd:element name="roles">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="rol" type="bachue7:rolTypeORC" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="rolTypeORC">
+				<xsd:sequence>
+					<xsd:element name="codigoRol" type="xsd:string" />
+					<xsd:element name="nombreRol" type="xsd:string" />
+					<xsd:element name="componente" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerRolesComponente" type="bachue7:tipoSalidaObtenerRolesComponente" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenerusuariosrolorip/v1" elementFormDefault="qualified">
+			<xsd:complexType name="tipoEntradaObtenerUsuariosRolOrip">
+				<xsd:sequence>
+					<xsd:element name="codigoCirculo" type="xsd:string" />
+					<xsd:element name="codigoRol" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaObtenerUsuariosRolOrip" type="bachue8:tipoEntradaObtenerUsuariosRolOrip" />
+			<xsd:complexType name="tipoSalidaObtenerUsuariosRolOrip">
+				<xsd:sequence>
+					<xsd:element name="usuarios">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="usuario" type="bachue8:tipoUsuario" minOccurs="0" nillable="true" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoUsuario">
+				<xsd:sequence>
+					<xsd:element name="primerNombre" type="xsd:string" />
+					<xsd:element name="segundoNombre" type="xsd:string" />
+					<xsd:element name="primerApellido" type="xsd:string" />
+					<xsd:element name="segundoApellido" type="xsd:string" />
+					<xsd:element name="idUsuario" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerUsuariosRolOrip" type="bachue8:tipoSalidaObtenerUsuariosRolOrip" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obteneraccesosporrol/v1" elementFormDefault="qualified">
+			<xsd:complexType name="tipoEntradaObtenerAccesosPorRol">
+				<xsd:sequence>
+					<xsd:element name="codigoRol" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaObtenerAccesosPorRol" type="bachue9:tipoEntradaObtenerAccesosPorRol" />
+			<xsd:complexType name="tipoSalidaObtenerAccesosPorRol">
+				<xsd:sequence>
+					<xsd:element name="accesos">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="acceso" type="bachue9:tipoAcceso" minOccurs="0" nillable="true" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoAcceso">
+				<xsd:sequence>
+					<xsd:element name="idOpcion" type="xsd:string" />
+					<xsd:element name="opcion" type="xsd:string" />
+					<xsd:element name="descripcion" type="xsd:string" />
+					<xsd:element name="opcionPadre" type="xsd:string" />
+					<xsd:element name="tipo" type="xsd:string" />
+					<xsd:element name="url" type="xsd:string" />
+					<xsd:element name="fechaDesde" type="xsd:string" />
+					<xsd:element name="fechaHasta" type="xsd:string" />
+					<xsd:element name="activo" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerAccesosPorRol" type="bachue9:tipoSalidaObtenerAccesosPorRol" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionusuarios/obtenermodulosporrol/v1" elementFormDefault="qualified">
+			<xsd:complexType name="tipoEntradaObtenerModulosPorRol">
+				<xsd:sequence>
+					<xsd:element name="codigoRol" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaObtenerModulosPorRol" type="bachue10:tipoEntradaObtenerModulosPorRol" />
+			<xsd:complexType name="tipoSalidaObtenerModulosPorRol">
+				<xsd:sequence>
+					<xsd:element name="modulos">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="modulo" type="bachue10:tipoModulo" minOccurs="0" nillable="true" maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje" type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoModulo">
+				<xsd:sequence>
+					<xsd:element name="idComponente" type="xsd:string" />
+					<xsd:element name="nombre" type="xsd:string" />
+					<xsd:element name="activo" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerModulosPorRol" type="bachue10:tipoSalidaObtenerModulosPorRol" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="ObtenerConveniosEntidad_Request">
+		<wsdl:part name="entrada" element="bachue1:entradaObtenerConveniosEntidad" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerConveniosEntidad_Response">
+		<wsdl:part name="salida" element="bachue1:salidaObtenerConveniosEntidad" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerEntidadesConvenio_Request">
+		<wsdl:part name="entrada" element="bachue2:entradaObtenerEntidadesConvenio" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerEntidadesConvenio_Response">
+		<wsdl:part name="salida" element="bachue2:salidaObtenerEntidadesConvenio" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerORIPs_Request">
+		<wsdl:part name="entrada" element="bachue3:entradaObtenerORIPs" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerORIPs_Response">
+		<wsdl:part name="salida" element="bachue3:salidaObtenerORIPs" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerRoles_Request">
+		<wsdl:part name="entrada" element="bachue4:entradaObtenerRoles" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerRoles_Response">
+		<wsdl:part name="salida" element="bachue4:salidaObtenerRoles" />
+	</wsdl:message>
+	<wsdl:message name="RegistrarUsuario_Request">
+		<wsdl:part name="entrada" element="bachue5:entradaRegistrarUsuario" />
+	</wsdl:message>
+	<wsdl:message name="RegistrarUsuario_Response">
+		<wsdl:part name="salida" element="bachue5:salidaRegistrarUsuario" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerRolesUsuario_Request">
+		<wsdl:part name="entrada" element="bachue6:entradaObtenerRolesUsuario" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerRolesUsuario_Response">
+		<wsdl:part name="salida" element="bachue6:salidaObtenerRolesUsuario" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerRolesComponente_Request">
+		<wsdl:part name="entrada" element="bachue7:entradaObtenerRolesComponente" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerRolesComponente_Response">
+		<wsdl:part name="salida" element="bachue7:salidaObtenerRolesComponente" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerUsuariosRolOrip_Request">
+		<wsdl:part name="entrada" element="bachue8:entradaObtenerUsuariosRolOrip" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerUsuariosRolOrip_Response">
+		<wsdl:part name="salida" element="bachue8:salidaObtenerUsuariosRolOrip" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerAccesosPorRol_Request">
+		<wsdl:part name="entrada" element="bachue9:entradaObtenerAccesosPorRol" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerAccesosPorRol_Response">
+		<wsdl:part name="salida" element="bachue9:salidaObtenerAccesosPorRol" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerModulosPorRol_Request">
+		<wsdl:part name="entrada" element="bachue10:entradaObtenerModulosPorRol" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerModulosPorRol_Response">
+		<wsdl:part name="salida" element="bachue10:salidaObtenerModulosPorRol" />
+	</wsdl:message>
+	<wsdl:portType name="SUT_CB_GestionUsuarios">
+		<wsdl:operation name="ObtenerRoles">
+			<wsdl:input message="bachue:ObtenerRoles_Request" />
+			<wsdl:output message="bachue:ObtenerRoles_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerORIPs">
+			<wsdl:input message="bachue:ObtenerORIPs_Request" />
+			<wsdl:output message="bachue:ObtenerORIPs_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="RegistrarUsuario">
+			<wsdl:input message="bachue:RegistrarUsuario_Request" />
+			<wsdl:output message="bachue:RegistrarUsuario_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerEntidadesConvenio">
+			<wsdl:input message="bachue:ObtenerEntidadesConvenio_Request" />
+			<wsdl:output message="bachue:ObtenerEntidadesConvenio_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerConveniosEntidad">
+			<wsdl:input message="bachue:ObtenerConveniosEntidad_Request" />
+			<wsdl:output message="bachue:ObtenerConveniosEntidad_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerRolesUsuario">
+			<wsdl:input message="bachue:ObtenerRolesUsuario_Request" />
+			<wsdl:output message="bachue:ObtenerRolesUsuario_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerRolesComponente">
+			<wsdl:input message="bachue:ObtenerRolesComponente_Request" />
+			<wsdl:output message="bachue:ObtenerRolesComponente_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerUsuariosRolOrip">
+			<wsdl:input message="bachue:ObtenerUsuariosRolOrip_Request" />
+			<wsdl:output message="bachue:ObtenerUsuariosRolOrip_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerAccesosPorRol">
+			<wsdl:input message="bachue:ObtenerAccesosPorRol_Request" />
+			<wsdl:output message="bachue:ObtenerAccesosPorRol_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerModulosPorRol">
+			<wsdl:input message="bachue:ObtenerModulosPorRol_Request" />
+			<wsdl:output message="bachue:ObtenerModulosPorRol_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SUT_CB_GestionUsuariosSOAP12Binding" type="bachue:SUT_CB_GestionUsuarios">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="ObtenerRoles">
+			<soap:operation style="document" soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionusuarios/v1/ObtenerRoles" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerORIPs">
+			<soap:operation style="document" soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionusuarios/v1/ObtenerORIPs" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="RegistrarUsuario">
+			<soap:operation style="document" soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionusuarios/v1/RegistrarUsuario" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerEntidadesConvenio">
+			<soap:operation style="document" soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionusuarios/v1/ObtenerEntidadesConvenio" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerConveniosEntidad">
+			<soap:operation style="document" soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionusuarios/v1/ObtenerConveniosEntidad" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerRolesUsuario">
+			<soap:operation style="document" soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionusuarios/v1/ObtenerRolesUsuario" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerRolesComponente">
+			<soap:operation style="document" soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionusuarios/v1/ObtenerRolesComponente" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerUsuariosRolOrip">
+			<soap:operation style="document" soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionusuarios/v1/ObtenerUsuariosRolOrip" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerAccesosPorRol">
+			<soap:operation style="document" soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionusuarios/v1/ObtenerAccesosPorRol" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerModulosPorRol">
+			<soap:operation style="document" soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionusuarios/v1/ObtenerModulosPorRol" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SUT_CB_GestionUsuarios">
+		<wsdl:port name="SUT_CB_GestionUsuariosPort" binding="bachue:SUT_CB_GestionUsuariosSOAP12Binding">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

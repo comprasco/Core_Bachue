@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelParametrizacionCuentas}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelEntidadRecaudadoraCuenta}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fEntidadRecaudadoraCuenta" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:panel style="min-width:800px;">
+						<div class="ui-g" align="left"></div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonInsertarEntidadRecaudadoraCuenta}"
+									icon="fa fa-plus-circle" iconPos="left" update="globalMsg"
+									actionListener="#{beanEntidadRecaudadoraCuenta.cambiarEstado()}"
+									action="entidadRecaudadoraCuentaDetalle?faces-redirect=true">
+									<f:param name="pInsertarEntidadRecaudadoraCuentaDetalle"
+										value="true" />
+								</p:commandButton>
+							</div>
+						</div>
+						<p:dataTable id="idTablaEntidadRecaudadoraCuentaDetalle"
+							var="item"
+							value="#{beanEntidadRecaudadoraCuenta.findAllEntidadRecaudadoraCuenta()}"
+							emptyMessage="#{errorBeanSNR.errorSinRegistros}" paginator="true"
+							rows="50" rowIndexVar="rowKey">
+							<f:facet name="header">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelEntidadRecaudadoraCuenta}" />
+							</f:facet>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelNombreEntidadRecaudadora}"
+								filterBy="#{item.idEntidadRecaudadora}">
+								<div align="left">
+									<p:commandLink id="idCLink" styleClass="subrayado"
+										actionListener="#{beanEntidadRecaudadoraCuenta.consultaDetallada(item)}"
+										action="entidadRecaudadoraCuentaDetalle?faces-redirect=true">
+										<h:outputText value="#{item.nombreEntidadRecaudadora}" />
+										<f:param name="idNombre" value="#{item.idEntidadRecaudadora}" />
+									</p:commandLink>
+								</div>
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelNumeroCuenta}"
+								filterBy="#{item.numeroCuenta}">
+								<h:outputText value="#{item.numeroCuenta}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelTipoCuenta}"
+								filterBy="#{item.tipoCuenta}">
+								<h:outputText value="#{messageBeanSNR.commonLabelAhorros}"
+									rendered="#{item.tipoCuenta=='A'}" />
+								<h:outputText value="#{messageBeanSNR.commonLabelCorriente}"
+									rendered="#{item.tipoCuenta=='C'}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelTipoArchivo}"
+								filterBy="#{item.tipoArchivo}">
+								<h:outputText value="#{messageBeanSNR.commonLabelMulticash}"
+									rendered="#{item.tipoArchivo=='MU'}" />
+								<h:outputText value="#{messageBeanSNR.commonLabelAsobancaria}"
+									rendered="#{item.tipoArchivo=='AS'}" />
+								<h:outputText value="#{messageBeanSNR.commonLabelACH}"
+									rendered="#{item.tipoArchivo=='AC'}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelEstado}"
+								filterBy="#{item.activo}">
+								<h:outputText value="#{messageBeanSNR.commonSi}"
+									rendered="#{item.activo=='S'}" />
+								<h:outputText value="#{messageBeanSNR.commonNo}"
+									rendered="#{item.activo=='N'}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

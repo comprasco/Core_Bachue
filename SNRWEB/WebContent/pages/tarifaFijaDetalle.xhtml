@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTarifa}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTarifaFija}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{beanTarifaFija.insertar ? messageBeanSNR.commonLabelInsertarTarifaFija : messageBeanSNR.commonLabelModificarTarifaFija}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fsTarifaFijaDetalle" style="width: 100%;">
+				<p:growl id="gTarifaFijaDetMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false"/>
+				<center>
+
+					<p:panel id="idPInsertUpdate"
+						header="#{beanTarifaFija.insertar ? messageBeanSNR.pageInsertarTarifaFija : messageBeanSNR.pageEditarTarifaFija}">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTarifaFija}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText id="idTarifaFija" 
+									disabled="#{!beanTarifaFija.insertar}"
+									title="#{tooltipBeanSNR.administracionTarifaFijaTarifaFijaDetalleVersion}"
+									placeholder="#{messageBeanSNR.commonLabelTarifaFija}"
+									value="#{beanTarifaFija.parametros.idTarifaFija}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelVersion}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText id="idItVersion" maxlength="3"
+									disabled="#{!beanTarifaFija.insertar}"
+									title="#{tooltipBeanSNR.administracionTarifaFijaTarifaFijaDetalleVersion}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelVersion}"
+									value="#{beanTarifaFija.parametros.version}" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTipoActo}" />
+								<br />
+								<p:inputText id="idItIdTipoActo" maxlength="20"
+									title="#{tooltipBeanSNR.administracionTarifaFijaTarifaFijaDetalleIdTipoActo}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelTipoActo}"
+									value="#{beanTarifaFija.parametros.idTipoActo}" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelVersionActo}" />
+								<br />
+								<p:inputText id="idItVersionActo" maxlength="3"
+									title="#{tooltipBeanSNR.administracionTarifaFijaTarifaFijaDetalleVersionActo}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelVersionActo}"
+									value="#{beanTarifaFija.parametros.versionActo}" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelValor}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText id="idItValor" maxlength="16"
+									title="#{tooltipBeanSNR.administracionTarifaFijaTarifaFijaDetalleValor}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelValor}"
+									value="#{beanTarifaFija.parametros.valor}" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelFechaDesde} #{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:calendar id="idItFechaDesde" size="10" mask="true"
+									locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+									title="#{tooltipBeanSNR.administracionRangoCuantiaUpdateInsertFechaDesde}"
+									value="#{beanTarifaFija.parametros.fechaDesde}" showOn="button" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelFechaHasta}" />
+								<br />
+								<p:calendar id="idItFechaHasta" size="10" mask="true"
+									locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+									title="#{tooltipBeanSNR.administracionRangoCuantiaUpdateInsertFechaHasta}"
+									value="#{beanTarifaFija.parametros.fechaHasta}" showOn="button" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelActivo} #{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMActivo" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTarifaFijaTarifaFijaDetalleActivo}"
+									value="#{beanTarifaFija.parametros.activo}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelProceso}" />
+								<br />
+								<p:selectOneMenu id="idSOMProceso"
+									title="#{tooltipBeanSNR.administracionTiposCausalDetalleProceso}"
+									style="width:100%;"
+									value="#{beanTarifaFija.tarifaFija.idProceso}">
+									<p:ajax event="change"
+										listener="#{beanTarifaFija.findAllSubprocesos(beanTarifaFija.tarifaFija.idProceso)}"
+										update="idSOMSubproceso" />
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems value="#{beanTarifaFija.findAllProcesos()}"
+										itemValue="#{proceso.idProceso}" var="proceso"
+										itemLabel="#{proceso.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelSubProceso}" />
+								<br />
+								<p:selectOneMenu id="idSOMSubproceso"
+									title="#{tooltipBeanSNR.administracionTiposCausalDetalleSubproceso}"
+									value="#{beanTarifaFija.tarifaFija.idSubProceso}"
+									style="width:100%;">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanTarifaFija.findAllSubprocesos(beanTarifaFija.tarifaFija.idProceso)}"
+										itemValue="#{subproceso.idSubproceso}" var="subproceso"
+										itemLabel="#{subproceso.nombre}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<br />
+						<p:dataTable id="idDetalle" var="item"
+							rendered="#{!beanTarifaFija.insertar}"
+							value="#{beanTarifaFija.parametros}"
+							emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+							<f:facet name="header">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+							</f:facet>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+								<h:outputText value="#{item.idUsuarioCreacion}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+								<h:outputText value="#{item.fechaCreacion}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+								<h:outputText value="#{item.idUsuarioModificacion}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+								<h:outputText value="#{item.fechaModificacion}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelIpModificación}">
+								<h:outputText value="#{item.ipModificacion}" />
+							</p:column>
+						</p:dataTable>
+						<br />
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="right"
+									update="gTarifaFijaDetMsg"
+									action="tarifaFija?faces-redirect=true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelActualizarTarifaFija}"
+									rendered="#{!beanTarifaFija.insertar}"
+									icon="fa fa-check-circle" iconPos="left"
+									update="gTarifaFijaDetMsg"
+									action="#{beanTarifaFija.insertUpdateTarifaFija(false)}"
+									ajax="false" />
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelCrearTarifaFija}"
+									rendered="#{beanTarifaFija.insertar}" icon="fa fa-check-circle"
+									iconPos="left" update="gTarifaFijaDetMsg"
+									action="#{beanTarifaFija.insertUpdateTarifaFija(true)}"
+									ajax="false" />
+							</div>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

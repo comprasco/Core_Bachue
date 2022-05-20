@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelConvenios}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{beanAccEntidadExternaConvenio.insertar ? messageBeanSNR.commonLabelCrearConvenios : messageBeanSNR.commonLabelModificarConvenios}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fAccEntidadExternaConvenioDetalle" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false"/>
+				<center>
+					<p:panel>
+						<p:panel
+							header="#{beanAccEntidadExternaConvenio.insertar ? messageBeanSNR.commonLabelCrearConvenios : messageBeanSNR.commonLabelModificarConvenios}"
+							style="width:100%">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelNumeroConvenio}" 
+										title="#{tooltipBeanSNR.administracionEntidadExternaConvenioDetalleNumeroConvenio}"/>
+									<br />
+									<p:inputText disabled="#{!beanAccEntidadExternaConvenio.insertar}"
+										id="idNumeroConvenio" onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionEntidadExternaConvenioDetalleNumeroConvenio}"
+										placeholder="#{messageBeanSNR.commonLabelNumeroConvenio}"
+										value="#{beanAccEntidadExternaConvenio.entidadExternaConvenio.numeroConvenio}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelNombreConvenio}" />
+									<br />
+									<p:inputText id="idNombreConvenio" onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionEntidadExternaConvenioDetalleNombreConvenio}"
+										placeholder="#{messageBeanSNR.commonLabelNombreConvenio}"
+										value="#{beanAccEntidadExternaConvenio.entidadExternaConvenio.nombreConvenio}" />
+								</div>
+								
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelNombreEntidad}" />
+									<br />
+									<p:selectOneMenu id="idEntidadExterna"
+										effect="fade"
+										filter="true"
+										filterMatchMode="startsWith"
+										style="width:100%;"
+										title="#{tooltipBeanSNR.administracionEntidadExternaConvenioDetalleEntidadExterna}"
+										value="#{beanAccEntidadExternaConvenio.entidadExternaConvenio.idEntidadExterna}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanAccEntidadExternaConvenio.accEntidadExterna}"
+											var="Entidad" itemValue="#{Entidad.idEntidadExterna}"
+											itemLabel="#{Entidad.nombre}" />
+										<p:column>
+											<h:outputText value="#{Entidad.nombre}" />
+										</p:column>
+										<p:ajax event="change" update="idEntidadExterna"/>
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelActivo}" />
+									<p:selectOneMenu id="idActivo" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionEntidadExternaConvenioDetalleActivo}"
+										value="#{beanAccEntidadExternaConvenio.entidadExternaConvenio.activo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelActivo}"
+											itemValue="S" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelInactivo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-12 ui-lg-3">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelIdTipoEntidad}"
+										style="font-size: 100%;" align="center" />
+									<p:selectOneMenu id="idTipoEntidad" style="width:100%;"
+											title="#{tooltipBeanSNR.administracionEntidadesTipoEntidad}"
+											value="#{beanAccEntidadExternaConvenio.entidadExternaConvenio.idTipoEntidad}">
+											<f:selectItem itemValue=""
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+											<f:selectItems value="#{beanAccEntidadExternaConvenio.cargarTipoEntidad()}"
+												var="tipoEntidad" itemValue="#{tipoEntidad.idTipoEntidad}"
+												itemLabel="#{tipoEntidad.idTipoEntidad}-#{tipoEntidad.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3" align="left">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelFechaCreacion}"
+										style="font-size: 100%;" />
+									<br />
+									<p:calendar id="idFechaCreacionConvenio" size="20" mask="true"
+										title="#{tooltipBeanSNR.administracionEntidadExternaConvenioDetalleFechaCreacionConvenio}"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										value="#{beanAccEntidadExternaConvenio.entidadExternaConvenio.fechaCreacionConvenio}"
+										showOn="button" >
+									<p:ajax event="dateSelect" listener="#{beanAccEntidadExternaConvenio.findFechaVencimiento(beanAccEntidadExternaConvenio.entidadExternaConvenio)}" 
+											update="fAccEntidadExternaConvenioDetalle:idFechaVencimiento" />
+									<p:ajax event="blur" listener="#{beanAccEntidadExternaConvenio.findFechaVencimiento(beanAccEntidadExternaConvenio.entidadExternaConvenio)}" 
+											update="fAccEntidadExternaConvenioDetalle:idFechaVencimiento" />
+									</p:calendar>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3" align="left">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelFechaVencimiento}"
+										style="font-size: 100%;" 
+										title="#{tooltipBeanSNR.administracionEntidadExternaConvenioDetalleFechaVencimiento}"/>
+									<br />
+									<p:calendar id="idFechaVencimiento" size="20" mask="true"
+										style="width:95% !important"
+										title="#{tooltipBeanSNR.administracionEntidadExternaConvenioDetalleFechaVencimiento}"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										value="#{beanAccEntidadExternaConvenio.entidadExternaConvenio.fechaVencimiento}"
+										showOn="button" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel 
+										value="#{messageBeanSNR.commonLabelNumeroDocumentoRenovacion}" />
+									<br />
+									<p:inputText id="idNumeroDocumentoRenovacion" onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionEntidadExternaConvenioDetalleNumeroDocumentoRenovacion}"
+										placeholder="#{messageBeanSNR.commonLabelNombreConvenio}"
+										value="#{beanAccEntidadExternaConvenio.entidadExternaConvenio.numeroDocumentoRenovacion}" />
+								</div>
+								
+								<div class="ui-g-12 ui-md-12 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelCirculo}"
+										style="font-size: 100%;" align="center" />
+									<p:selectOneMenu id="idCircRegistral" style="width:100%;"
+											title="#{tooltipBeanSNR.administracionEntidadExternaConvenioDetalleCirculoRegistral}"
+											value="#{beanAccEntidadExternaConvenio.entidadExternaConvenio.idCirculo}">
+											<p:ajax event="change" update="idZonaRegistral" />
+											<f:selectItem itemValue=""
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+											<f:selectItems value="#{beanAccEntidadExternaConvenio.findCirculoRegistral()}"
+												var="circulo" itemValue="#{circulo.idCirculo}"
+												itemLabel="#{circulo.idCirculo}-#{circulo.nombre}" />
+											<p:ajax event="change" update="fAccEntidadExternaConvenioDetalle:idZonaRegistral"/>
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelZonaRegistral}" />
+									<br />
+									<p:selectCheckboxMenu id="idZonaRegistral"
+										filter="true"
+										filterMatchMode="startsWith"
+										label="#{messageBeanSNR.commonLabelSeleccione}"
+										style="width:100%; height:50%;"
+										title="#{tooltipBeanSNR.administracionEntidadExternaConvenioDetalleZonaRegistral}"
+										value="#{beanAccEntidadExternaConvenio.entidadExternaConvenio.zonaRegistral}">
+										<f:selectItems
+											value="#{beanAccEntidadExternaConvenio.findZonaRegistral()}"
+											var="zonas" itemValue="#{zonas.idZonaRegistral}"
+											itemLabel="#{zonas.nombreCirculo}-#{zonas.nombrePais}-#{zonas.nombreDepartamento}-#{zonas.nombreMunicipio}-#{zonas.nombreVereda}" />
+									</p:selectCheckboxMenu>
+								</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-4" >
+									<p:outputLabel
+										value=" " />
+									<p:commandButton
+										value="#{messageBeanSNR.commonLabelAgregarZonaRegistral}"
+										icon="fa fa-pencil" iconPos="right" update="fAccEntidadExternaConvenioDetalle:idDtListado"
+										action="#{beanAccEntidadExternaConvenio.salvarZonaRegistral()}"
+										ajax="false" />
+								</div>
+							</div>
+							<br />
+							<p:dataTable id="idDtListado" var="item"
+								value="#{beanAccEntidadExternaConvenio.zonaRegistralAsociada}"
+								rendered="#{beanAccEntidadExternaConvenio.tablaZonas}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}" paginator="true"
+								rows="50">
+								<f:facet name="header">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonButtonZonaRegistral}" />
+								</f:facet>
+								<p:column headerText="#{messageBeanSNR.commonLabelCirculo}">
+									<h:outputText value="#{item.idCirculo}-#{item.nombreCirculo}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelPais}">
+									<h:outputText value="#{item.nombrePais}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelDepartamento}">
+									<h:outputText value="#{item.nombreDepartamento}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelMunicipio}">
+									<h:outputText value="#{item.nombreMunicipio}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelVereda}">
+									<h:outputText value="#{item.nombreVereda}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+									style="text-align: center">
+									<p:commandButton 
+										iconPos="center"
+										action="#{beanAccEntidadExternaConvenio.zonaAEliminar(item)}"
+										onclick="PF('cdrConfirmacionEliminacion').show();"
+										icon="fa fa-trash"
+										title="#{tooltipBeanSNR.administracionComunidadesEtnicasEliminarRegistro}" />
+								</p:column>
+							</p:dataTable>
+							<br />
+							<p:outputPanel rendered="#{!beanAccEntidadExternaConvenio.insertar}">
+								<p:dataTable id="idDetalle" var="item"
+									value="#{beanAccEntidadExternaConvenio.datosAuditoria}"
+									emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+									<f:facet name="header">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+									</f:facet>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+										<h:outputText value="#{item.idUsuarioCreacion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+										<h:outputText value="#{item.fechaCreacion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+										<h:outputText value="#{item.idUsuarioModificacion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+										<h:outputText value="#{item.fechaModificacion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelIpModificación}">
+										<h:outputText value="#{item.ipModificacion}" />
+									</p:column>
+								</p:dataTable>
+							</p:outputPanel>
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										update="globalMsg" action="#{beanAccEntidadExternaConvenio.returnPages()}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton
+										value="#{beanAccEntidadExternaConvenio.insertar ? messageBeanSNR.commonLabelCrearConvenios : messageBeanSNR.commonLabelModificarConvenios}"
+										icon="fa fa-pencil" iconPos="right" update="globalMsg"
+										action="#{beanAccEntidadExternaConvenio.salvar()}"
+										actionListener="accEntidadExternaConvenio?faces-redirect=true"
+										ajax="false" />
+								</div>
+							</div>
+						</p:panel>
+					</p:panel>
+				</center>
+			</h:form>
+			<p:dialog id="cuadroConfirmacionEliminacion" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="cdrConfirmacionEliminacion" modal="true"
+				resizable="false" width="500">
+				<h:form id="fDialog3"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaConfirmacionEliminacion" maxwidth="280"
+						cellspacing="1" cellpadding="20" border="0" align="center">
+						<tr>
+							<div align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelEstaSeguroDeEliminarRegistro}" />
+							</div>
+						</tr>
+						<tr>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-check"
+										value="#{messageBeanSNR.commonLabelSi}"
+										action="#{beanAccEntidadExternaConvenio.zonaEliminada()}"
+										onclick="PF('cdrConfirmacionEliminacion').hide();" />
+								</div>
+							</td>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-times"
+										value="#{messageBeanSNR.commonLabelNo}"
+										onclick="PF('cdrConfirmacionEliminacion').hide();" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

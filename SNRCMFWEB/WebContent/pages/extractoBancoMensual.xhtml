@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelConciliacion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelReportes}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelExtractos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelExtractoBancoMensual}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fExtractoBancoMensual" style="width: 100%;">
+				<p:growl id="idGrowl" globalOnly="true" showDetail="true"
+					sticky="false" life="10000" redisplay="false" />
+				<center>
+					<p:panel>
+						<p:panel
+							header="#{messageBeanSNR.commonLabelExtractoBancoMensual}"
+							style="width:100%">
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-4 ui-lg-4" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelEntidadRecaudadora}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idEntidadRecaudadoraCuenta"
+										style="width:80%;"
+										title="#{tooltipBeanSNR.conciliacionConfrontacionDeLaInformacionEntidadRecaudadora}"
+										value="#{beanExtractoBancoMensual.idEntidadRecaudadora}">
+										<p:ajax event="change"
+											listener="#{beanExtractoBancoMensual.buscarEntidadRecaudadoraLocal()}"
+											update="idNumeroCuenta,idTipoCuenta" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanExtractoBancoMensual.buscarEntidadRecaudadoraConciliacionLocal()}"
+											var="item" itemValue="#{item.idEntidadRecaudadora}"
+											itemLabel="#{item.codigoEntidadRecaudadora} - #{item.nombreEntidadRecaudadora}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-4 ui-lg-4" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNumeroCuenta}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idNumeroCuenta" style="width:80%;"
+										title="#{tooltipBeanSNR.conciliacionConfrontacionDeLaInformacionNumeroCuenta}"
+										value="#{beanExtractoBancoMensual.idCuenta}">
+										<p:ajax event="change"
+											listener="#{beanExtractoBancoMensual.actualizarTipoCuenta()}"
+											update="idTipoCuenta" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanExtractoBancoMensual.entidadRecaudadoraCuentas}"
+											var="item" itemValue="#{item.idCuenta}"
+											itemLabel="#{item.numeroCuenta}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-4 ui-lg-4" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoCuenta}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<h:inputText id="idTipoCuenta"
+										value="#{beanExtractoBancoMensual.tipoCuentaLabel}"
+										readonly="true" style="width:80%;">
+									</h:inputText>
+								</div>
+								<div class="ui-g-12 ui-md-4 ui-lg-4" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelMesAno}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idPeriodo" style="width:80%;"
+										value="#{beanExtractoBancoMensual.periodo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanExtractoBancoMensual.listFechas}"
+											var="item" itemValue="#{item.periodoAnioMes}"
+											itemLabel="#{item.fechaStr}" />
+										<p:ajax event="change"
+											listener="#{beanExtractoBancoMensual.test()}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<br />
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonCargarExtractoBancario}"
+										actionListener="#{beanExtractoBancoMensual.cargarExtractoBancario()}" />
+								</div>
+							</div>
+						</p:panel>
+						<br />
+					</p:panel>
+					<p:spacer />
+					<div align="left">
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="principal?faces-redirect=true">
+						</p:commandButton>
+					</div>
+					<br />
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

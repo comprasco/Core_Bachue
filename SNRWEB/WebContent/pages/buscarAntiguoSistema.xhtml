@@ -1,0 +1,1287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAnalistaDeCopias}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBuscarEnAntiguoSistema}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fBuscarAntSistema">
+				
+				<p:poll listener="#{beanBuscarAntiguoSistema.consultarDocumentoDigitalizado}" update="fBuscarAntSistema:opConsultarSGDDocumento" interval="15" widgetVar="wvPoll" autoStart="false"/>			
+				<p:growl id="idGrowl" sticky="false" showDetail="true" life="20000" globalOnly="true" redisplay="false"/>
+				
+				<!-- Datos del predio -->
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeNir}"
+							value="#{beanPredioDocumentoActo.predio.get('NIR')}" />
+					</div>
+					<div class="ui-g-12 ui-md-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelIdTurno}" />
+						<br />
+						<h:commandLink
+							action="#{beanPredioDocumentoActo.dirigirTrazabilidad()}"
+							target="_blank">
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTurno}"
+								value="#{beanPredioDocumentoActo.predio.get('ID_TURNO')}" />
+						</h:commandLink>
+					</div>
+					<div class="ui-g-12 ui-md-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelFechaCreacion}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeFechaCreacion}"
+							value="#{beanPredioDocumentoActo.turno.fechaCreacion}" />
+					</div>
+					<div class="ui-g-12 ui-md-2">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelDecisionCalificacionTramite}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeDecisionCalificacion}"
+							value="#{beanPredioDocumentoActo.decisionCalificacion}" />
+					</div>
+					<div class="ui-g-12 ui-md-3">
+						<br />
+						<div class="ui-g-12 ui-md-12">
+							<p:commandButton ajax="false"
+								value="#{messageBeanSNR.commonButtonVisualizarDocumentos}"
+								icon="fa fa-newspaper-o" iconPos="left" update="idGrowl"
+								actionListener="#{beanPredioDocumentoActo.descargarArchivoZip}">
+								<p:fileDownload value="#{beanPredioDocumentoActo.imagen}" />
+							</p:commandButton>
+						</div>
+					</div>
+					<script type="text/javascript">
+						function start()
+						{
+							PF('statusDownload').show();
+						}
+	
+						function stop()
+						{
+							PF('statusDownload').hide();
+						}
+					</script>
+				</div>
+				
+				<br/>
+				
+				<p:outputPanel id="idOPOpcionesConsulta">
+					<p:panel id="idPOpcionesConsulta">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTipoDeBusqueda}" />
+								<br />
+								<p:selectOneRadio id="idSORTipoConsulta"
+									value="#{beanBuscarAntiguoSistema.tipoConsulta}">
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelAntiguoSistema}" itemValue="A" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelDocumento}" itemValue="D" />
+									<p:ajax update="idOPPaneles" listener="#{beanBuscarAntiguoSistema.limpiarDatosCalculados}"/>
+								</p:selectOneRadio>
+							</div>
+						</div>
+					</p:panel>
+				</p:outputPanel>
+
+				<br/>
+
+				<p:outputPanel id="idOPPaneles">
+					<p:panel id="idCalificacionConsultaCriteriosDocumento"
+						header="#{messageBeanSNR.commonLabelConsultaPorCriteriosDocumento}"
+						rendered="#{beanBuscarAntiguoSistema.tipoConsulta == 'D'}"
+						toggleable="true" style="text-align:center">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-6 ui-lg-5">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelCirculoRegistral}"
+									styleClass="textosConsultaEstadoPredio" />
+								<br />
+								<p:selectOneMenu id="idConsultaCriteriosDocumentoCirculo"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionDatosDocumentoCirculoRegistral}"
+									value="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.anotacionPredio.idCirculo}"
+									effect="fade" var="c" style="width:100%;" filter="true"
+									filterMatchMode="startsWith">
+									<f:selectItems
+										value="#{beanReference.findCirculoRegistral(true)}"
+										var="circulo"
+										itemLabel="#{circulo.idCirculo} - #{circulo.nombre}"
+										itemValue="#{circulo.idCirculo}" />
+									<p:column>
+										<h:outputText value="#{c}" />
+									</p:column>
+									<p:ajax event="change" update="idConsultaCriteriosDocumentoMunicipioDocumento"/>
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-6 ui-lg-5">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}">
+								</p:outputLabel>
+								<br />
+								<p:selectOneMenu id="idConsultaCriteriosDocumentoTipoDocumento"
+									style="width:100%;"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionDatosDocumentoTipoDocumento}"
+									disabled="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.consultado}"
+									value="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.documento.idTipoDocumento}">
+									<f:selectItem itemValue=""
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+									<f:selectItems
+										value="#{beanReference.findTipoDocumentoPublicoActivo()}"
+										var="item" itemLabel="#{item.nombre}"
+										itemValue="#{item.idTipoDocumento}" />
+									<p:ajax event="change"
+										listener="#{beanBuscarAntiguoSistema.tipoOficina(true)}"
+										update="idConsultaCriteriosDocumentoPaisDocumento,idConsultaCriteriosDocumentoDepartamentoDocumento,idConsultaCriteriosDocumentoMunicipioDocumento,idConsultaCriteriosDocumentoOficinaOrigen,idConsultaCriteriosDocumentoTipoEntidad" />
+									<p:ajax
+										listener="#{beanBuscarAntiguoSistema.validarExistenciaDocumento}"
+										update=":fBuscarAntSistema:idGrowl,idOPPaneles" />
+									<p:ajax event="change"
+										update=":fBuscarAntSistema:idGrowl,idOPPaneles,idConsultaCriteriosDocumentoTipoOficina"
+										listener="#{beanBuscarAntiguoSistema.cargarTiposOficinaAnotaciones('C')}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelNumeroDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionDatosDocumentoNumeroDocumento}"
+									id="idConsultaCriteriosDocumentoNumeroDocumento"
+									placeholder="#{messageBeanSNR.commonLabelDocumento}"
+									maxlength="20"
+									disabled="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.consultado}"
+									value="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.documento.numero}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelFechaDelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:calendar id="idConsultaCriteriosDocumentoFechaDocumento"
+									size="10" mask="true" locale="es" placeholder="DD/MM/AAAA"
+									pattern="dd/MM/yyyy"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionDatosDocumentoFechaDocumento}"
+									disabled="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.consultado}"
+									value="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.documento.fechaDocumento}"
+									showOn="button">
+									<p:ajax event="dateSelect" update="idGrowl" />
+								</p:calendar>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-6 ui-lg-5">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoDeOficina}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idConsultaCriteriosDocumentoTipoOficina"
+									style="width:100%;"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionDatosDocumentoTipoOficina}"
+									disabled="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.consultado}"
+									value="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.documento.idTipoOficina}">
+									<p:ajax
+										listener="#{beanBuscarAntiguoSistema.tipoOficina(true)}"
+										update="idConsultaCriteriosDocumentoPaisDocumento,idConsultaCriteriosDocumentoDepartamentoDocumento,idConsultaCriteriosDocumentoMunicipioDocumento,idConsultaCriteriosDocumentoOficinaOrigen,idConsultaCriteriosDocumentoTipoEntidad" />
+									<f:selectItem itemValue=""
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+									<f:selectItems
+										value="#{beanReference.findTipoOficina()}"
+										var="item" itemLabel="#{item.nombre}"
+										itemValue="#{item.idTipoOficina}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoDeEntidad}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idConsultaCriteriosDocumentoTipoEntidad"
+									style="width:100%;"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionDatosDocumentoTipoEntidad}"
+									disabled="true"
+									value="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.documento.tipoEntidad}">
+									<f:selectItem itemValue=""
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+									<f:selectItems value="#{beanReference.findTipoEntidad()}"
+										var="item" itemLabel="#{item.nombre}"
+										itemValue="#{item.idTipoEntidad}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-6 ui-lg-5">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelPais}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idConsultaCriteriosDocumentoPaisDocumento"
+									style="width:100%;"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionDatosDocumentoPais}"
+									disabled="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.consultado}"
+									value="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.documento.idPais}">
+									<p:ajax listener="#{beanBuscarAntiguoSistema.pais}"
+										update="idConsultaCriteriosDocumentoOficinaOrigen,idConsultaCriteriosDocumentoMunicipioDocumento,idConsultaCriteriosDocumentoDepartamentoDocumento,idConsultaCriteriosDocumentoOficinaOrigen" />
+									<f:selectItem itemValue=""
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+									<f:selectItems value="#{beanReference.findPaises()}"
+										var="paises" itemValue="#{paises.idPais}"
+										itemLabel="#{paises.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu
+									disabled="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.consultado}"
+									id="idConsultaCriteriosDocumentoDepartamentoDocumento"
+									style="width:100%;"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionDatosDocumentoDepartamento}"
+									value="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.documento.idDepartamento}">
+									<p:ajax listener="#{beanBuscarAntiguoSistema.departamento}"
+										update="idConsultaCriteriosDocumentoMunicipioDocumento,idConsultaCriteriosDocumentoOficinaOrigen" />
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanBuscarAntiguoSistema.findDepartamentos()}"
+										var="item" itemValue="#{item.idDepartamento}"
+										itemLabel="#{item.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu
+									disabled="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.consultado}"
+									id="idConsultaCriteriosDocumentoMunicipioDocumento"
+									style="width:100%;"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionDatosDocumentoMunicipio}"
+									value="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.documento.idMunicipio}">
+									<p:ajax
+										listener="#{beanBuscarAntiguoSistema.oficinaOrigen()}"
+										update="idConsultaCriteriosDocumentoOficinaOrigen" />
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanBuscarAntiguoSistema.findMunicipios()}"
+										var="munRes" itemValue="#{munRes.idMunicipio}"
+										itemLabel="#{munRes.nombre}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-6 ui-lg-5">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelOficinaDeOrigen}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idConsultaCriteriosDocumentoOficinaOrigen"
+									style="width:100%;"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionDatosDocumentoOficinaOrigen}"
+									disabled="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.consultado}"
+									value="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.documento.idOficinaOrigen}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanBuscarAntiguoSistema.getOficinaOrigen()}"
+										var="orig" itemLabel="#{orig.nombre}"
+										itemValue="#{orig.idOficinaOrigen}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3" style="align-self: center; text-align: center;">
+								<br />
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonConsultar}"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionDatosDocumentoConsultar}"
+									disabled="#{beanBuscarAntiguoSistema.consultaCriteriosCalificacionDocumento.consultado}"
+									update="idCalificacionConsultaCriteriosDocumento,fBuscarAntSistema:idGrowl"
+									actionListener="#{beanBuscarAntiguoSistema.consultarYValidarModificacionAntSistema(false)}"
+									icon="lupa" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4" style="align-self: center; text-align: center;">
+								<br />
+								<p:commandButton value="#{messageBeanSNR.commonButtonLimpiar}"
+									icon="fa fa-undo"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionDatosDocumentoLimpiarDatos}"
+									update="idCalificacionConsultaCriteriosDocumento,idCalificacionConsultaCriteriosDocumento,opConsultarSGDDocumento"
+									actionListener="#{beanBuscarAntiguoSistema.clearConsulta('Documento')}"/>
+							</div>
+						</div>
+						<br />
+
+						<p:dataTable id="detalleTurno"
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+							value="#{beanBuscarAntiguoSistema.dataConsultaDatosDocumento}"
+							var="detalle">
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelMatriculasInmobiliarias}"
+								style="text-align:left">
+								<h:outputText
+									value="#{detalle.idCirculo} - #{detalle.idMatricula}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}"
+								style="text-align:left">
+								<h:outputText value="#{detalle.direccion}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelNumeroAnotacion}"
+								style="text-align:left">
+								<h:outputText value="#{detalle.idAnotacion}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelFechaAnotacion}"
+								style="text-align:left">
+								<h:outputText value="#{detalle.fechaRegistro}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelSeleccione}"
+								style="text-align:left">
+								<p:selectBooleanCheckbox value="#{detalle.seleccione}">
+									<p:ajax update="detalleTurno" listener="#{beanBuscarAntiguoSistema.seleccionarUnSoloCriterioDocumento(detalle)}"/>
+								</p:selectBooleanCheckbox>
+							</p:column>
+						</p:dataTable>
+						<p:outputPanel id="opConsultarSGDDocumento">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+									<p:commandButton value="#{messageBeanSNR.commonLabelConsultaSGD}"
+										id="idCbConsultarSGDDocumento"
+										icon="lupa"
+										actionListener="#{beanBuscarAntiguoSistema.consultarOWCCAntiguoSistemaCopias(false)}"
+										update="fBuscarAntSistema:opResultadosBusqueda, fBuscarAntSistema:idOPAcciones, fBuscarAntSistema:idOpDetallesPredioAntSisConsulta"
+										rendered="#{(beanBuscarAntiguoSistema.dataConsultaDatosDocumento != null and !beanBuscarAntiguoSistema.digitalizarDocumento) or (!beanBuscarAntiguoSistema.digitalizarDocumento and beanBuscarAntiguoSistema.turno.digitalizado eq 'S')}">
+									</p:commandButton>
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:panel>
+
+					<p:outputPanel id="idOPPanelNuevo">
+						<p:panel
+							header="#{messageBeanSNR.commonLabelBusquedaAntSistemaManual}"
+							toggleable="true" style="text-align:center"
+							id="idPConsultaAntSistema"
+							rendered="#{beanBuscarAntiguoSistema.tipoConsulta eq 'A'}">
+							<div class="ui-c" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel id="idOlLibro"
+										value="#{messageBeanSNR.commonLabelLibro}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMLibroBusqueda" style="width:100%"
+										title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudLibro}"
+										value="#{beanBuscarAntiguoSistema.detalleAntSistemaConsulta.idLibroAntSistema}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findLibroAntiguoSistema()}"
+											var="libro" itemValue="#{libro.idLibroAntiguoSistema}"
+											itemLabel="#{libro.nombre}" />
+										<p:ajax event="change" 
+											listener="#{beanBuscarAntiguoSistema.actualizarPais}"
+											update="idOLMatriculaDetAntSis2,datosPredioIdMatricula2"/>
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel id="idOltomoBusqueda"
+										value="#{messageBeanSNR.commonLabelTomo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMTomo" style="width:100%"
+										title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTomo}"
+										value="#{beanBuscarAntiguoSistema.detalleAntSistemaConsulta.tomo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanRegistro.getTomos()}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel id="idOlFolioBusqueda"
+										value="#{messageBeanSNR.commonLabelFolio}" />
+									<br />
+									<p:selectOneMenu id="idSOMFolioBusqueda" style="width:100%"
+										title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudFolio}"
+										value="#{beanBuscarAntiguoSistema.detalleAntSistemaConsulta.folio}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanRegistro.getFolios()}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel id="idOlPartidaBusqueda" indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelTipoPartida}" />
+									<br />
+									<p:selectOneMenu id="idSOMPartidaBusqueda" style="width:100%"
+										title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTipoPartida}"
+										value="#{beanBuscarAntiguoSistema.detalleAntSistemaConsulta.partida}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="PAR" itemValue="PAR" />
+										<f:selectItem itemLabel="IMPAR" itemValue="IMPAR" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-c" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel id="idOLNumeroPartidaBusqueda"
+										value="#{messageBeanSNR.commonLabelNumeroPartida}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()"
+										id="idItNumeroPartida" maxlength="39"
+										title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudNumeroPartida}"
+										value="#{beanBuscarAntiguoSistema.detalleAntSistemaConsulta.numeroPartida}">
+										<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+									</p:inputText>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel id="idOlanoBusqueda"
+										value="#{messageBeanSNR.commonLabelAnio}" />
+									<br />
+									<p:selectOneMenu id="idSOMAnoBusqueda" style="width:100%"
+										title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudAnio}"
+										value="#{beanBuscarAntiguoSistema.detalleAntSistemaConsulta.anio}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanRegistro.getYearsAgo()}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel id="idOLCirDetAntSisBusqueda"
+										value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+									<br />
+									<p:selectOneMenu
+										id="idSOMCirculoRegistralAntSistemaLibroSegundoBusqueda"
+										value="#{beanBuscarAntiguoSistema.detalleAntSistemaConsulta.idCirculo}"
+										style="width:100%"
+										title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudCirculoRegistral}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanBuscarAntiguoSistema.findCirculoRegistral()}"
+											var="circuloAntSistema"
+											itemValue="#{circuloAntSistema.idCirculo}"
+											itemLabel="#{circuloAntSistema.idCirculo} - #{circuloAntSistema.nombre}" />
+										<p:ajax update="idOPPaneles,idOPPanelNuevo"
+											listener="#{beanBuscarAntiguoSistema.cambioCirculoBusqueda()}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}" />
+									<br />
+									<p:selectOneMenu id="idSOMMunTomoBusqueda" style="width:100%"
+										title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudMunicipio}"
+										value="#{beanBuscarAntiguoSistema.detalleAntSistemaConsulta.idMunicipioTomo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findMunicipios(beanBuscarAntiguoSistema.detalleAntSistemaConsulta.idPaisTomo,beanBuscarAntiguoSistema.detalleAntSistemaConsulta.idDepartamentoTomo)}"
+											var="munAntSistema" itemValue="#{munAntSistema.idMunicipio}"
+											itemLabel="#{munAntSistema.nombre} - #{munAntSistema.idMunicipio}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-c" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel id="idOLTipoPredioDetAntSisBusqueda"
+										value="#{messageBeanSNR.commonLabelTipoDePredio}" />
+									<br />
+									<p:selectOneMenu
+										id="idSOMTipoPredioAntSistemaLibroSegundoBusqueda"
+										value="#{beanBuscarAntiguoSistema.detalleAntSistemaConsulta.tipoPredio}"
+										style="width:100%"
+										title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTipoPredio}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanReference.findTipoPredio()}"
+											var="tipoPredioAntSistema"
+											itemValue="#{tipoPredioAntSistema.idTipoPredio}"
+											itemLabel="#{tipoPredioAntSistema.descripcion}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel
+											indicateRequired="#{beanBuscarAntiguoSistema.detalleAntSistemaConsulta.idLibroAntSistema == '11'}"
+											id="idOLMatriculaDetAntSis2"
+											value="#{messageBeanSNR.commonLabelMatricula}" />
+										<p:inputText onblur="value=value.toUpperCase()"
+											disabled="#{!(beanBuscarAntiguoSistema.detalleAntSistemaConsulta.idLibroAntSistema == '11')}"
+											id="datosPredioIdMatricula2" style="width: 100%;"
+											label="#{messageBeanSNR.commonLabelMatricula}"
+											placeholder="#{messageBeanSNR.commonLabelMatricula}"
+											value="#{beanBuscarAntiguoSistema.detalleAntSistemaConsulta.idMatricula}"
+											maxlength="20"
+											onkeypress="if (event.keyCode == 13) { return false; }">
+										<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+										</p:inputText>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3"
+									style="align-self: center; text-align: center;">
+									<p:commandButton id="buscarDetalleAntSistema"
+										title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaBusquedaDocumentoConsultaDatosDetalle}"
+										value="#{messageBeanSNR.commonButtonConsultar}" icon="lupa"
+										update="idOPPanelNuevo,fBuscarAntSistema:idGrowl"
+										actionListener="#{beanBuscarAntiguoSistema.consultarYValidarModificacionAntSistema(true)}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3"
+									style="align-self: center; text-align: center;">
+									<p:commandButton
+										title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaBusquedaDocumentoLimpiar}"
+										value="#{messageBeanSNR.commonButtonLimpiar}"
+										icon="fa fa-undo"
+										update="idOpDetallesPredioAntSisConsulta,idOPPanelNuevo"
+										actionListener="#{beanBuscarAntiguoSistema.limpiarDetalleAntSistema()}" />
+								</div>
+							</div>
+							<br/>
+							<p:outputPanel id="idOpDetallesPredioAntSisConsulta">
+								<p:dataTable id="idDTDetallesPredioAntSisConsulta"
+									var="detalle"
+									value="#{beanBuscarAntiguoSistema.detallesAntSistemaConsulta}"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+
+									<f:facet name="header">
+										<h:outputText
+											value="#{messageBeanSNR.commonLabelDetalleDatosAntSistema}" />
+									</f:facet>
+									<p:columnGroup type="header">
+										<p:row>
+											<p:column width="20%"
+												headerText="#{messageBeanSNR.commonLabelLibro}" />
+											<p:column headerText="#{messageBeanSNR.commonLabelTomo}" />
+											<p:column headerText="#{messageBeanSNR.commonLabelFolio}" />
+											<p:column headerText="#{messageBeanSNR.commonLabelTipoPartida}" />
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelNumeroPartida}" />
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelAnio}" />
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelNombreDelPredio}" />
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelMatricula}" />
+										</p:row>
+									</p:columnGroup>
+
+									<p:column width="20%">
+										<div align="left">
+											<p:commandLink id="idCLMostrarDetalleConsulta"
+												update="fDialogDetallePredio:idPDatosLibro,fDialogDetallePredio:idPDatosDocAntSistema"
+												value="#{detalle.nombreLibro}"
+												actionListener="#{beanBuscarAntiguoSistema.mostrarDialogDetallePredio(detalle)}"
+												styleClass="subrayado">
+											</p:commandLink>
+										</div>
+									</p:column>
+									<p:column>
+										<div align="left">
+											<h:outputText value="#{detalle.tomo}" />
+										</div>
+									</p:column>
+									<p:column>
+										<div align="left">
+											<h:outputText value="#{detalle.folio}" />
+										</div>
+									</p:column>
+									<p:column>
+										<div align="left">
+											<h:outputText value="#{detalle.partida}" />
+										</div>
+									</p:column>
+									<p:column>
+										<div align="left">
+											<h:outputText value="#{detalle.numeroPartida}" />
+										</div>
+									</p:column>
+									<p:column>
+										<div align="left">
+											<h:outputText value="#{detalle.anio}" />
+										</div>
+									</p:column>
+										<p:column>
+										<div align="left">
+											<h:outputText value="#{detalle.nombrePredio}" />
+										</div>
+									</p:column>
+									<p:column width="20%">
+										<div align="center">
+											<p:commandButton rendered="#{detalle.matriculas != null}"
+												actionListener="#{beanBuscarAntiguoSistema.cargarMatriculasPorDetalle(detalle,false)}"
+												title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaBusquedaAntiguoSistemaMatricula}"
+												icon="fa fa-search" iconPos="center">
+											</p:commandButton>
+											<h:outputText rendered="#{detalle.matriculas == null}"
+												value="#{messageBeanSNR.commonLabelSinInformacion}" />
+										</div>
+									</p:column>
+								</p:dataTable>
+							</p:outputPanel>
+						</p:panel>
+						<br />
+					</p:outputPanel>
+					
+					<p:outputPanel id="opResultadosBusqueda">
+						<p:dataTable id="iddtDocumentosOWCC"
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+							value="#{beanBuscarAntiguoSistema.documentosOWCC}" var="item"
+							rendered="#{beanBuscarAntiguoSistema.documentosOWCC != null}"
+							paginator="true"
+							rows="50"
+							style="width:auto">
+							<f:facet name="header">
+								<h:outputText value="#{messageBeanSNR.commonLabelDocumentosAlmacenadosEnSgd}" />
+							</f:facet>
+							<p:columnGroup type="header">
+								<p:column headerText="#{messageBeanSNR.commonLabelTipoDocumental}"/>
+								<p:column headerText="#{messageBeanSNR.commonLabelNIR}"/>
+								<p:column headerText="#{messageBeanSNR.commonLabelDatosDelDocumento}"/>
+								<p:column headerText="#{messageBeanSNR.commonLabelTurno}"/>
+								<p:column headerText="#{messageBeanSNR.commonLabelMatriculas}"/>
+								<p:column headerText="#{messageBeanSNR.commonLabelNumeroDeFolios}"/>
+								<p:column headerText="#{messageBeanSNR.commonLabelSeleccione}"/>
+							</p:columnGroup>
+
+							<p:column>
+								<h:outputText value="#{item.tipoDocumental.nombre}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.nir}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.docRegistrado}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.turno}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.matriculas}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.numeroFolios}" />
+							</p:column>
+							<p:column style="text-align: center;">
+								<p:selectBooleanCheckbox value="#{item.seleccione}"/>
+							</p:column>
+						</p:dataTable>
+						<br/>
+					</p:outputPanel>
+					
+					<p:outputPanel id="idOpLiquidacionItem">
+						<p:outputPanel rendered="#{beanBuscarAntiguoSistema.liquidacionItem != null}">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:dataTable
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{beanBuscarAntiguoSistema.liquidacionItem}" var="item"
+										tableStyle="width:auto">
+										<f:facet name="header">
+											<h:outputText
+												value="#{messageBeanSNR.commonButtonDetalleDeLiquidacion}" />
+										</f:facet>
+										<p:columnGroup type="header">
+											<p:row>
+												<p:column headerText="#{messageBeanSNR.commonLabelIdentificadorDelProceso}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelNoMatriculasONuprePorOrip}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelTramiteOConcepto}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelCuantiaCantidadActo}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelCuantiaCantidadActo}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelValorAvaluo}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelDerechosACobrar}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelConservacionDocumental}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelTotalLiquidado}" />
+											</p:row>
+										</p:columnGroup>
+										<p:column>
+											<h:outputText value="#{item.idProceso}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.circulosRegistrales}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.numeroMatriculas}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.tramite}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.tarifa}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.certificadosAsociados}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.valorAvaluo}">
+												<f:convertNumber pattern="¤#,##0.00" currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+											</h:outputText>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.valorFinal}">
+												<f:convertNumber pattern="¤#,##0.00" currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+											</h:outputText>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.valorDocumental}">
+												<f:convertNumber pattern="¤#,##0.00" currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+											</h:outputText>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.valorTotal}">
+												<f:convertNumber pattern="¤#,##0.00" currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+											</h:outputText>
+										</p:column>
+										<p:columnGroup type="footer">
+								            <p:row>
+								                <p:column colspan="7" style="text-align:right" footerText="#{messageBeanSNR.commonLabelSubTotalesMayuscula}" />
+								                <p:column footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanBuscarAntiguoSistema.valorTotalDerechos}"/>
+									            <p:column footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanBuscarAntiguoSistema.valorTotalConservacion}"/>
+									            <p:column footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanBuscarAntiguoSistema.valorTotalLiquidacion}"/>
+								            </p:row>
+								        </p:columnGroup>
+									</p:dataTable>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-6">
+									<p:dataTable
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{beanBuscarAntiguoSistema.resumenPorOrip}" var="item"
+										tableStyle="width:100%">
+										<f:facet name="header">
+											<h:outputText
+												value="#{messageBeanSNR.commonLabelResumenPorOripMayuscula}" />
+										</f:facet>
+										<p:columnGroup type="header">
+											<p:row>
+												<p:column headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelTotalLiquidado}" />
+											</p:row>
+										</p:columnGroup>
+										<p:column>
+											<h:outputText value="#{item.circulosRegistrales}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.valorTotal}">
+												<f:convertNumber pattern="¤#,##0.00" currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+											</h:outputText>
+										</p:column>
+									</p:dataTable>
+								</div>
+								<div class="ui-g-12 ui-md-12 ui-lg-3" align="right">
+									<strong>
+										<h:outputText value="#{messageBeanSNR.commonLabelValorTotalAPagar}"/>
+									</strong>
+								</div>
+								<div class="ui-g-12 ui-md-12 ui-lg-3" align="right">
+									<h:outputText value="#{messageBeanSNR.commonLabelSignoPesos}#{beanBuscarAntiguoSistema.valorTotalLiquidacionConservacion}" style="font-size: 20px;"/>
+								</div>
+							</div>
+							<br/>
+						</p:outputPanel>
+					</p:outputPanel>
+					
+					<p:outputPanel id="idOPAcciones">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+								<p:commandButton id="idRegresar"
+									value="#{messageBeanSNR.commonLabelRegresar}"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									action="detalleActo?faces-redirect=true">
+								</p:commandButton>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonPreliquidar}"
+									title="#{messageBeanSNR.commonButtonPreliquidar}"
+									update="fBuscarAntSistema:idGrowl, fBuscarAntSistema:idOpLiquidacionItem, fBuscarAntSistema:idOPAcciones" 
+									icon="fa fa-check-circle" iconPos="left"
+									actionListener="#{beanBuscarAntiguoSistema.preliquidar}" 
+									rendered="#{!beanBuscarAntiguoSistema.procesoTerminado and beanBuscarAntiguoSistema.documentosOWCC != null}"/>
+								<p:commandButton id="cbTerminarLiq"
+									value="#{messageBeanSNR.commonLabelTerminarProceso}"
+									rendered="#{!beanBuscarAntiguoSistema.procesoTerminado and beanBuscarAntiguoSistema.liquidacionItem != null}"
+									type="button" icon="fa fa-check-circle" iconPos="left"
+									onclick="PF('dlg2').show();" />
+							</div>
+						</div>
+					</p:outputPanel>
+				</p:outputPanel>
+			</h:form>
+			
+			<p:dialog id="idSinDatosOWCC"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" resizable="false"
+				modal="true" appendTo="@(body)" widgetVar="wvSinDatosOWCC"
+				width="50%">
+				<h:form id="fSinDatosOWCC">
+					<center>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12">
+								<p:outputLabel value="#{messageBeanSNR.commonMessageSinDatosOWCCDigitalizarDocumento}" />
+							</div>
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<p:commandButton value="#{messageBeanSNR.commonLabelSi}" 
+									icon="fa fa-check" 
+									actionListener="#{beanBuscarAntiguoSistema.abriUrlCapture}"
+									update="fBuscarAntSistema:opConsultarSGDDocumento" 
+									oncomplete="PF('wvSinDatosOWCC').hide();"/>
+								<p:spacer/>
+								<p:spacer/>
+								<p:commandButton value="#{messageBeanSNR.commonLabelNo}" 
+									icon="fa fa-close" 
+									onclick="PF('wvSinDatosOWCC').hide();"/>
+							</div>
+						</div>
+						<br />
+					</center>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)" position="center" id="dlg2"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg2"
+				modal="true" height="90" resizable="false">
+				<h:form id="fDialog" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeTerminarElProceso}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fBuscarAntSistema"
+							action="#{beanBuscarAntiguoSistema.terminarProcesoCopias()}"
+							oncomplete="PF('dlg2').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlg2').hide();"/>
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)" id="idDDetallePredio"
+				header="#{messageBeanSNR.commonLabelInformacionDelLibro}"
+				widgetVar="detallePredio" modal="true" resizable="false" width="900"
+				height="400" style="text-align:center" maximizable="true">
+				<h:form id="fDialogDetallePredio">
+					<p:panel id="idPDatosLibro" style="text-align:center"
+						header="#{messageBeanSNR.commonLabelDetalleDatosAntSistema}">
+						<div class="ui-c" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOlLibro"
+									value="#{messageBeanSNR.commonLabelLibro}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()" id="idSOMLibro"
+									maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudLibro}"
+									value="#{beanBuscarAntiguoSistema.detalleAntSistemaCargado.libroAntiguoSistema.nombre}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOltomo"
+									value="#{messageBeanSNR.commonLabelTomo}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()" id="idSOMTomo"
+									maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTomo}"
+									value="#{beanBuscarAntiguoSistema.detalleAntSistemaCargado.tomo}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOlFolio"
+									value="#{messageBeanSNR.commonLabelFolio}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()" id="idSOMFolio"
+									maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudFolio}"
+									value="#{beanBuscarAntiguoSistema.detalleAntSistemaCargado.folio}">
+								</p:inputText>
+							</div>
+						</div>
+						<div class="ui-c" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOLNumeroPartida"
+									value="#{messageBeanSNR.commonLabelNumeroPartida}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idItNumeroPartida" maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudNumeroPartida}"
+									value="#{beanBuscarAntiguoSistema.detalleAntSistemaCargado.numeroPartida}">
+									<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOlPartida"
+									value="#{messageBeanSNR.commonLabelTipoPartida}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idSOMPartida" maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTipoPartida}"
+									value="#{beanBuscarAntiguoSistema.detalleAntSistemaCargado.partida}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOlano"
+									value="#{messageBeanSNR.commonLabelAnio}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()" id="idSOMAno"
+									maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudAnio}"
+									value="#{beanBuscarAntiguoSistema.detalleAntSistemaCargado.anio}">
+								</p:inputText>
+							</div>
+						</div>
+						<div class="ui-c" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOLCirDetAntSis"
+									value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idSOMCirculoRegistralAntSistemaLibroSegundo" maxlength="39"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudCirculoRegistral}"
+									value="#{beanBuscarAntiguoSistema.detalleAntSistemaCargado.circuloRegistral.idCirculo} - #{beanBuscarAntiguoSistema.detalleAntSistemaCargado.circuloRegistral.nombre}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOLTipoPredioDetAntSis"
+									value="#{messageBeanSNR.commonLabelTipoDePredio}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idSOMTipoPredioAntSistemaLibroSegundo" maxlength="39"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTipoPredio}"
+									value="#{beanBuscarAntiguoSistema.detalleAntSistemaCargado.predioTipo.descripcion}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOLMatriculaDetAntSis"
+									value="#{messageBeanSNR.commonLabelMatricula}" />
+								<p:inputText onblur="value=value.toUpperCase()" disabled="true"
+									id="datosPredioIdMatricula" style="width: 100%;"
+									label="#{messageBeanSNR.commonLabelMatricula}"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudMatricula}"
+									placeholder="#{messageBeanSNR.commonLabelMatricula}"
+									value="#{beanBuscarAntiguoSistema.detalleAntSistemaCargado.idMatricula}"
+									maxlength="20"
+									onkeypress="if (event.keyCode == 13) { validarPredio(); return false; }">
+								</p:inputText>
+							</div>
+						</div>
+						<div class="ui-c" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idSOMMunTomo" maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudMunicipio}"
+									value="#{beanBuscarAntiguoSistema.detalleAntSistemaCargado.municipioTomo.nombre}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOLNombrePredioDetAntSis"
+									value="#{messageBeanSNR.commonLabelNombreDelPredio}" />
+								<p:inputText onblur="value=value.toUpperCase()" disabled="true"
+									id="datosPredioNombrePredio" style="width: 100%;"
+									label="#{messageBeanSNR.commonLabelNombreDelPredio}"
+									placeholder="#{messageBeanSNR.commonLabelNombreDelPredio}"
+									value="#{beanBuscarAntiguoSistema.detalleAntSistemaCargado.nombrePredio}"
+									maxlength="20">
+								</p:inputText>
+							</div>
+						</div>
+					</p:panel>
+					<br />
+					<p:outputPanel id="idPDatosDocAntSistema">
+						<p:outputPanel
+							rendered="#{beanBuscarAntiguoSistema.documentoDetalleCargado != null}">
+							<p:panel toggleable="true" style="text-align:center"
+								header="#{messageBeanSNR.commonLabelDatosDelDocumento}">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6 ui-lg-5">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+										</p:outputLabel>
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idSOMEscrituraAntSis" maxlength="39" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTipoDocumento}"
+											value="#{beanBuscarAntiguoSistema.documentoDetalleCargado.tipoDocumento.nombre}">
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelNumeroDeDocumento}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idItDocuActoAntSis" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudNumeroDocumento}"
+											placeholder="#{messageBeanSNR.commonLabelDocumento}"
+											maxlength="20"
+											value="#{beanBuscarAntiguoSistema.documentoDetalleCargado.numero}">
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-4">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+										<br />
+										<p:calendar id="idCalFechaDocAntSis" size="10" mask="true"
+											locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+											value="#{beanBuscarAntiguoSistema.documentoDetalleCargado.fechaDocumento}"
+											showOn="button" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudFechaDocumento}">
+										</p:calendar>
+									</div>
+								</div>
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6 ui-lg-5">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTipoDeOficina}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idSOMTipoOficinaAntSis" maxlength="39" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTipoOficina}"
+											value="#{beanBuscarAntiguoSistema.documentoDetalleCargado.tipoOficina.nombre}">
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTipoDeEntidad}" />
+										<br />
+										<p:selectOneMenu id="idSOMTipoEntidadAntSis"
+											style="width:100%"
+											value="#{beanBuscarAntiguoSistema.idTipoEntidad}"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTipoEntidad}"
+											disabled="true">
+											<f:selectItems value="#{beanReference.findTipoEntidad()}"
+												var="item" itemLabel="#{item.nombre}"
+												itemValue="#{item.idTipoEntidad}" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-4">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelFechaEjecutoria}" />
+										<br />
+										<p:calendar id="idCalFechaEjecutoriaAntSis" size="10"
+											mask="true" disabled="true" locale="es"
+											placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+											value="#{beanBuscarAntiguoSistema.documentoDetalleCargado.fechaEjecutoria}"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudFechaEjecutoria}"
+											showOn="button">
+										</p:calendar>
+									</div>
+								</div>
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6 ui-lg-5">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelPais}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idPaisDocumentoAntSis" maxlength="39" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudPais}"
+											value="#{beanBuscarAntiguoSistema.documentoDetalleCargado.pais.nombre}">
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelDepartamento}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idSOMDepartamentoAntSis" maxlength="39" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudDepartamento}"
+											value="#{beanBuscarAntiguoSistema.documentoDetalleCargado.departamento.nombre}">
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-4">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idSOMMunicipioAntSis" maxlength="39" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudMunicipio}"
+											value="#{beanBuscarAntiguoSistema.documentoDetalleCargado.municipio.nombre}">
+										</p:inputText>
+									</div>
+								</div>
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6 ui-lg-5">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelOficinaDeOrigen}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idSOMOficinaOrigenAntSis" maxlength="39" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudOficinaOrigen}"
+											value="#{beanBuscarAntiguoSistema.documentoDetalleCargado.oficinaOrigen.nombre}">
+										</p:inputText>
+									</div>
+								</div>
+							</p:panel>
+						</p:outputPanel>
+					</p:outputPanel>
+					<br />
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog id="idMatriculasPorDetalle"
+				header="#{messageBeanSNR.commonLabelMatriculas}" resizable="false"
+				modal="true" appendTo="@(body)" widgetVar="idMatriculasPorDetalle"
+				width="50%">
+				<h:form id="fMatriculasPorDetalle">
+					<center>
+						<p:dataTable id="idDTMatriculasPorDetalle" var="item"
+							value="#{beanBuscarAntiguoSistema.matriculasPorDetalle}"
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+
+							<f:facet name="header">
+								<h:outputText value="#{messageBeanSNR.commonLabelMatriculas}" />
+							</f:facet>
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column headerText="#{messageBeanSNR.commonLabelCirculo}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelMatricula}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelSeleccione}" />
+								</p:row>
+							</p:columnGroup>
+							<p:column>
+								<div align="left">
+									<h:outputText value="#{item.idCirculo}" />
+								</div>
+							</p:column>
+							<p:column>
+								<div align="left">
+									<h:outputText value="#{item.idMatricula}" />
+								</div>
+							</p:column>
+							<p:column>
+								<div align="left">
+									<p:selectBooleanCheckbox value="#{item.matriculaSeleccionada}" />
+								</div>
+							</p:column>
+						</p:dataTable>
+						<br />
+						<p:commandButton value="#{messageBeanSNR.commonButtonCerrar}"
+							icon="fa fa-close"
+							onclick="PF('idMatriculasPorDetalle').hide();">
+						</p:commandButton>
+						<p:spacer/>
+						<p:spacer/>
+						<p:commandButton value="#{messageBeanSNR.commonLabelConsultaSGD}"
+							icon="lupa"
+							actionListener="#{beanBuscarAntiguoSistema.consultarOWCCAntiguoSistemaCopias(true)}"
+							update="fBuscarAntSistema:opResultadosBusqueda,fBuscarAntSistema:idOPAcciones, fBuscarAntSistema:idOpDetallesPredioAntSisConsulta"
+							oncomplete="PF('idMatriculasPorDetalle').hide();">
+						</p:commandButton>
+					</center>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog id="iddDatosModificadosAntSistema"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" resizable="false"
+				modal="true" appendTo="@(body)" widgetVar="wvDatosModificadosAntSistema"
+				width="50%">
+				<h:form id="fDatosModificadosAntSistema">
+					<center>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12">
+								<p:outputLabel value="#{messageBeanSNR.commonMessageExistenDiferenciasEstaSeguroModificarDatos}" />
+							</div>
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<p:commandButton value="#{messageBeanSNR.commonLabelSi}" 
+									icon="fa fa-check" 
+									actionListener="#{beanBuscarAntiguoSistema.consultarYModificarAntSistema(true)}"
+									update="fBuscarAntSistema:idOPPanelNuevo,fBuscarAntSistema:idGrowl" 
+									oncomplete="PF('wvDatosModificadosAntSistema').hide();"/>
+								<p:spacer/>
+								<p:spacer/>
+								<p:commandButton value="#{messageBeanSNR.commonLabelNo}" 
+									icon="fa fa-close" 
+									actionListener="#{beanBuscarAntiguoSistema.consultaDetalleAntSistemaCopias}" 
+									update="fBuscarAntSistema:idOPPanelNuevo,fBuscarAntSistema:idGrowl" 
+									oncomplete="PF('wvDatosModificadosAntSistema').hide();"/>
+							</div>
+						</div>
+						<br />
+					</center>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog id="iddDatosModificadosDocumento"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" resizable="false"
+				modal="true" appendTo="@(body)" widgetVar="wvDatosModificadosDocumento"
+				width="50%">
+				<h:form id="fDatosModificadosDocumento">
+					<center>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12">
+								<p:outputLabel value="#{messageBeanSNR.commonMessageExistenDiferenciasEstaSeguroModificarDatos}" />
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<p:commandButton value="#{messageBeanSNR.commonLabelSi}" 
+									icon="fa fa-check" 
+									actionListener="#{beanBuscarAntiguoSistema.consultarYModificarAntSistema(false)}"
+									update="fBuscarAntSistema:idCalificacionConsultaCriteriosDocumento,fBuscarAntSistema:idGrowl" 
+									oncomplete="PF('wvDatosModificadosDocumento').hide();"/>
+								<p:spacer/>
+								<p:commandButton value="#{messageBeanSNR.commonLabelNo}" 
+									icon="fa fa-close" 
+									actionListener="#{beanBuscarAntiguoSistema.validarExistenciaDocumento}" 
+									update="fBuscarAntSistema:idCalificacionConsultaCriteriosDocumento,fBuscarAntSistema:idGrowl" 
+									oncomplete="PF('wvDatosModificadosDocumento').hide();"/>
+							</div>
+						</div>
+						<br />
+					</center>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

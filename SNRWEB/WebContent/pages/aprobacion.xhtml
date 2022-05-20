@@ -1,0 +1,580 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item" style="#{beanAprobacion.vieneAprobacionApoyoNacional? '' : 'display:none'}">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelApoyoNacional}"/>
+				</li>
+				<li class="breadcrumb-item" style="#{beanAprobacion.vieneDeResponsableTesoreria? '' : 'display:none'}">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDevoluciones}"/>
+				</li>
+				<li class="breadcrumb-item" style="#{beanAprobacion.vieneDeAprobacion
+													or beanAprobacion.vieneDeAntiguoSistema
+													or beanAprobacion.vieneDeAprobacionAsesoriaJuridica
+													or beanAprobacion.vieneDeCorrecciones
+													or beanAprobacion.vieneDeAprobacionTrasladosOficinaDestino
+													or beanAprobacion.vieneDeDespachoSuperintendente
+													or beanAprobacion.vieneDeAprobacionVisitas
+													or beanAprobacion.vieneDeAprobacionEjecucionVisitas
+													or beanAprobacion.vieneDeCompOtroCirculo
+													or beanAprobacion.vieneDeDireccionTecnicaRegistro
+													or beanAprobacion.vieneDeAprobacionDireccionTecnicaRegistro
+													or beanAprobacion.vieneDeAprobacionSubDireccionApoyoJuridico
+													or beanAprobacion.vieneDeAprobacionSuperintendente
+													or beanAprobacion.vieneDeAutorizacionResponsableDevoluciones ? '' : 'display:none'}">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAprobacion}"/>
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacion}"
+						rendered="#{beanAprobacion.vieneDeAprobacion}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionAntiguoSistema}"
+						rendered="#{beanAprobacion.vieneDeAntiguoSistema}" /> 
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelCoordinadorJuridico}"
+						rendered="#{beanAprobacion.vieneDeCoordinadorJuridico}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionAsesoriaJuridica}"
+						rendered="#{beanAprobacion.vieneDeAprobacionAsesoriaJuridica}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionDeTrasladosOficinaDestino}"
+						rendered="#{beanAprobacion.vieneDeAprobacionTrasladosOficinaDestino}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionDireccionTecnicaRegistroOficinaDestino}"
+						rendered="#{beanAprobacion.vieneDeAprobacionDireccionTecnicaRegistro}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionDireccionTecnicaRegistro}"
+						rendered="#{beanAprobacion.vieneDeDireccionTecnicaRegistro}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelComplementacionDeOtroCirculo}"
+						rendered="#{beanAprobacion.vieneDeCompOtroCirculo}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionDeCorrecciones}"
+						rendered="#{beanAprobacion.vieneDeCorrecciones}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionFirmaDespacho}"
+						rendered="#{beanAprobacion.vieneDeAprobacionFirmaDespacho}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelEjecucionDeTraslados}"
+						rendered="#{beanAprobacion.vieneDeEjecucionTraslado}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelFijacionAvisosOficinaDestino}"
+						rendered="#{beanAprobacion.vieneDeBandejaFijacionAvisosOficinaDestino}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelFijacionAvisosOficinaOrigen}"
+						rendered="#{beanAprobacion.vieneDeBandejaFijacionAvisosOficinaOrigen}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionDespachoSuperintendente}"
+						rendered="#{beanAprobacion.vieneDeDespachoSuperintendente}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionDelegadoRegistro}"
+						rendered="#{beanAprobacion.vieneDeAprobacionVisitas}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionEjecucion}"
+						rendered="#{beanAprobacion.vieneDeAprobacionEjecucionVisitas}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionSuperintendiente}"
+						rendered="#{beanAprobacion.vieneDeAprobacionSuperintendente}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionSubDireccionApoyoJuridico}"
+						rendered="#{beanAprobacion.vieneDeAprobacionSubDireccionApoyoJuridico}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelRevisionRecursosCoordinadorJuridico}"
+						rendered="#{beanAprobacion.vieneDeRevisionRecursosCoordinadorJuridico}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAutorizacionResponsableDevoluciones}"
+						rendered="#{beanAprobacion.vieneDeAutorizacionResponsableDevoluciones}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelEjecucionDeVisitas}"
+						rendered="#{beanAprobacion.vieneDeEjecucionVisitas}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelResponsableTesoreria}"
+						rendered="#{beanAprobacion.vieneDeResponsableTesoreria}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionApoyoNacional}"
+						rendered="#{beanAprobacion.vieneAprobacionApoyoNacional}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionVisitasSuperintendente}"
+						rendered="#{beanAprobacion.vieneDeAprobacionVisitasSuperintendente}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionDelRegistrador}" 
+						rendered="#{beanAprobacion.vieneDeAprobacion}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionDelRegistrador}" 
+						rendered="#{beanAprobacion.vieneDeAprobacionAsesoriaJuridica}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionDelRegistrador}" 
+						rendered="#{beanAprobacion.vieneDeAprobacionDireccionTecnicaRegistro}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionDelRegistrador}" 
+						rendered="#{beanAprobacion.vieneDeAprobacionFirmaDespacho}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionDelRegistrador}" 
+						rendered="#{beanAprobacion.vieneDeAprobacionVisitas}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionDelRegistrador}" 
+						rendered="#{beanAprobacion.vieneDeAprobacionTrasladosOficinaDestino}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" 
+						rendered="#{beanAprobacion.vieneDeAntiguoSistema}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" 
+						rendered="#{beanAprobacion.vieneDeCompOtroCirculo}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelRevisionCoordinadorJuridico}" 
+						rendered="#{beanAprobacion.vieneDeCoordinadorJuridico}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleTurno}" 
+						rendered="#{beanAprobacion.vieneDeBandejaFijacionAvisosOficinaOrigen}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleTurno}" 
+						rendered="#{beanAprobacion.vieneDeBandejaFijacionAvisosOficinaDestino}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleTurno}" 
+						rendered="#{beanAprobacion.vieneDeEjecucionTraslado}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionSubDireccionApoyoJuridico}"
+						rendered="#{beanAprobacion.vieneDeAprobacionSubDireccionApoyoJuridico}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelRevisionRecursosCoordinadorJuridico}"
+						rendered="#{beanAprobacion.vieneDeRevisionRecursosCoordinadorJuridico}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleTurno}"
+						rendered="#{beanAprobacion.vieneAprobacionApoyoNacional}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeTurnos}"
+						rendered="#{beanAprobacion.vieneDeResponsableTesoreria}" />
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleTurno}"
+						rendered="#{beanAprobacion.vieneDeAprobacionVisitasSuperintendente}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<p:dialog widgetVar="statusDispositivo" modal="true"
+				draggable="false" closable="false" resizable="false"
+				showHeader="false" appendTo="@(body)" width="16%">
+					<p:progressBar id="progressBar" mode="indeterminate"
+					widgetVar="progressBar" rendered="true" />
+				</p:dialog>
+			<h:form id="fAprobacion" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+			<p:remoteCommand name="segundaVerificacion" actionListener="#{beanAprobacion.segundaVerificacion}"
+				update="globalMsg" partialSubmit="true" global="false" />
+			<p:remoteCommand name="fail"
+				actionListener="#{beanDispositivos.error}" update="globalMsg"
+				partialSubmit="true" global="false" />
+			<p:remoteCommand name="verify"
+				action="#{beanAprobacion.accionSegundoFactorVerificado()}" 
+				update="globalMsg" />
+				<center>
+					<p:panel style="min-width:800px;">
+						<div class="ui-g">
+							<p:dataTable id="idDtTurnos" sortOrder="ascending"
+								value="#{beanAprobacion.dataAprobacion}" var="row"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+								paginator="true" rows="50" style="font-size: 73%;"
+								filteredValue="#{beanAprobacion.filtroAprobacion}">
+
+								<p:column style="width: 11%;"
+									headerText="#{messageBeanSNR.commonLabelFiltrarTurno}"
+									filterBy="#{row.idTurno}" filterMatchMode="contains">
+									<h:outputText value="#{row.idTurno}"
+										title="#{tooltipBeanSNR.procesosAprobacionFiltrarTurno}" />
+								</p:column>
+
+								<p:column style="width: 10%;"
+									sortBy="#{row.turno.fechaCreacion}"
+									headerText="#{messageBeanSNR.commonLabelFechaRadicacion}">
+									<h:outputText value="#{row.turno.fechaCreacion}" />
+								</p:column>
+
+								<p:column style="width: 14%;"
+									headerText="#{messageBeanSNR.commonLabelFiltrarNir}"
+									filterBy="#{row.nir}" filterMatchMode="contains">
+									<h:outputText value="#{row.nir}"
+										title="#{tooltipBeanSNR.procesosAprobacionFiltrarNIR}" />
+								</p:column>
+
+								<p:column style="width: 8%;"
+									headerText="#{messageBeanSNR.commonLabelFechaAsignacion}">
+									<h:outputText value="#{row.turnoHistoria.fechaReparto}" />
+								</p:column>
+								
+								<p:column 
+										headerText="#{messageBeanSNR.commonLabelFechaVencimiento}"
+										width="10%" style="text-align:left">
+										<h:outputText value="#{row.fechaVencimiento}">
+											<f:convertDateTime pattern="dd/MM/yyyy"
+												timeZone="GMT-5" />
+										</h:outputText>
+								</p:column>
+									
+								<p:column 
+										headerText="#{messageBeanSNR.commonLabelEstadoVencimiento}"
+										width="10%" style="text-align:left">
+										<h:outputText style="#{row.rojoTiempoVencimiento ? 'color:red' : 'color:blue'}" 
+											value="#{messageBeanSNR.commonLabelEstadoActivo} #{row.tiempoVencimiento}" rendered="#{row.rojoTiempoVencimiento}" />
+										<h:outputText style="#{row.rojoTiempoVencimiento ? 'color:red' : 'color:blue'}" 
+											value="#{messageBeanSNR.commonLabelEstadoVencido} #{row.tiempoVencimiento}" rendered="#{!row.rojoTiempoVencimiento}" />
+								</p:column>
+
+								<p:column style="width: 13%;"
+									headerText="#{messageBeanSNR.commonLabelMotivo}">
+									<h:outputText value="#{row.motivoNoTramite}" />
+								</p:column>
+								
+								<p:column style="width: 13%;"
+									headerText="#{messageBeanSNR.commonLabelTipificacionTurno}">
+									<h:outputText value="#{row.tipificacionTurno}" />
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+									style="width: 13%;">
+									<div align="center">
+										<p:commandButton id="abrirObsProcesoAnterior"
+											icon="fa fa-id-card-o" disabled="#{row.estadoActividad eq 'BLQ'}"
+											actionListener="#{beanAprobacion.mostrarObservacionesProcesoAnterior(row)}"
+											title="#{tooltipBeanSNR.procesosAprobacionObservacionesProcesoAnterior}"
+											style="width: 23%;" />
+									</div>
+								</p:column>
+
+								<p:column style="width: 10%;"
+									headerText="#{messageBeanSNR.commonLabelCertificadosAsociados}">
+									<h:outputText value="#{row.turnosAsociados}" />
+								</p:column>
+
+								<p:column style="width: 7%;"
+									headerText="#{messageBeanSNR.commonLabelDetalle}">
+									<div align="center">
+										<h:commandButton rendered="#{row.estadoActividad eq 'ASG'}"
+											value="#{messageBeanSNR.commonLabelVerDetalle}"
+											action="#{beanAprobacion.abrirDetalleTurno(row)}"
+											image="../images/find.png">
+										</h:commandButton>
+										<h:commandButton
+											value="#{messageBeanSNR.commonLabelVerDetalle}"
+											action="aprobacion.jsf" immediate="true"
+											image="../images/reestringido.png"
+											rendered="#{row.estadoActividad eq 'BLQ'}">
+										</h:commandButton>
+									</div>
+								</p:column>
+
+								<p:column rendered="#{!beanAprobacion.vieneDeBandejaFijacionAvisosOficinaOrigen and !beanAprobacion.vieneDeBandejaFijacionAvisosOficinaDestino}"
+									style="width: 8%;"
+									headerText="#{beanAprobacion.vieneDeAntiguoSistema ? messageBeanSNR.commonLabelFirmar : messageBeanSNR.commonLabelGenerarRelacion}">
+									<div align="center">
+										<p:selectBooleanCheckbox value="#{row.generarRelacion}"
+											disabled="true" id="idCBGenerarRelacion">
+											<p:ajax
+												update=":fAprobacion:idCBBotonSalvar,:fAprobacion:idBotonVisualizarReliacion" />
+										</p:selectBooleanCheckbox>
+									</div>
+								</p:column>
+
+								<p:column rendered="#{!beanAprobacion.vieneDeBandejaFijacionAvisosOficinaOrigen and !beanAprobacion.vieneDeBandejaFijacionAvisosOficinaDestino}" 
+									style="width: 10%;"
+									headerText="#{messageBeanSNR.commonLabelObservacionesAprobador}">
+									<p:commandButton icon="fa fa-pencil"
+										id="idObservacionesAprobador"
+										title="#{tooltipBeanSNR.procesosAprobacionObservacionesAprobador}"
+										style="width: 50%; margin-bottom: 12%; height: 100%;"
+										maxlength="50" disabled="#{row.estadoActividad eq 'BLQ'}"
+										actionListener="#{beanAprobacion.guardarIdTurnoHistoria(row)}">
+									</p:commandButton>
+								</p:column>
+
+							</p:dataTable>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-6 ui-md-6 ui-lg-5" align="left">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									title="#{tooltipBeanSNR.procesosAprobacionRegresar}"
+									action="#{beanAprobacion.regresar()}">
+								</p:commandButton>
+							</div>
+							<div class="ui-g-6 ui-md-6 ui-lg-7" align="right">
+								<p:commandButton id="idCBGenerarRealacion"
+									rendered="#{!beanAprobacion.vieneDeAntiguoSistema and !beanAprobacion.procesoCertificados 
+											and !beanAprobacion.vieneDeCorrecciones and !beanAprobacion.esDesistimiento and !beanAprobacion.vieneDeCoordinadorJuridico
+											and !beanAprobacion.vieneDeBandejaFijacionAvisosOficinaDestino and !beanAprobacion.vieneDeBandejaFijacionAvisosOficinaOrigen
+											and !beanAprobacion.vieneDeAprobacionAsesoriaJuridica and !beanAprobacion.vieneDeAprobacionFirmaDespacho 
+											and !beanAprobacion.vieneDeDespachoSuperintendente and !beanAprobacion.vieneAprobacionApoyoNacional}"
+									value="#{messageBeanSNR.commonLabelGenerarRelacion}"
+									actionListener="#{beanAprobacion.generarDocumentoRelacionAprobacion(false)}"
+									icon="fa fa-check" update="fAprobacion" />
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonVisualizarDocumentos}"
+									onclick="PrimeFaces.monitorDownload(start, stop);"
+									actionListener="#{beanAprobacion.descargarArchivoZip}"
+									icon="fa fa-file-o" style="display: none;"
+									id="idBotonVisualizarReliacion" ajax="false">
+									<p:fileDownload value="#{beanAprobacion.zipDocumentosRelacion}" />
+								</p:commandButton>
+								<p:commandButton style="display: none;"
+									widgetVar="wvBotonSalvar" id="idCBBotonSalvar"
+									value="#{beanAprobacion.labelBoton}"
+									onclick="procesar();"
+									title="#{tooltipBeanSNR.procesosAprobacionSalvar}"
+									icon="fa fa-save" />
+								<p:commandButton
+									widgetVar="wvBotonSalvar2" id="idCBBotonSalvar2"
+									rendered="#{beanAprobacion.vieneDeAprobacionAsesoriaJuridica or beanAprobacion.vieneDeAprobacionFirmaDespacho 
+											or beanAprobacion.vieneDeDespachoSuperintendente}"
+									value="#{beanAprobacion.labelBoton}"
+									onclick="procesar();"
+									title="#{tooltipBeanSNR.procesosAprobacionSalvar}"
+									update=":fAprobacion:idDtTurnos,:fAprobacion:idDtTurnos,fDialogConfirmacionRelaciones"
+									icon="fa fa-save" />
+								<p:commandButton widgetVar="wvBotonSalvarAntSis"
+									id="idCBBotonSalvarAntSis"
+									value="#{messageBeanSNR.commonButtonContinuarProceso}"
+									rendered="#{beanAprobacion.vieneDeAntiguoSistema and beanAprobacion.dataAprobacion ne null and !empty beanAprobacion.dataAprobacion and !beanAprobacion.procesoCertificados}"
+									onclick="PF('firmarAntSis').show();"
+									update=":fAprobacion:idDtTurnos,:fAprobacion:idDtTurnos,fDialogConfirmacionRelaciones"
+									icon="fa fa-save" />
+								<p:commandButton widgetVar="wvBotonSalvarCertificado"
+									id="idCBBotonSalvarCertificado"
+									value="#{messageBeanSNR.commonButtonContinuarProceso}"
+									rendered="#{(beanAprobacion.procesoCertificados or beanAprobacion.vieneDeCorrecciones or beanAprobacion.vieneDeCoordinadorJuridico or beanAprobacion.esDesistimiento) 
+											and beanAprobacion.dataAprobacion ne null and !empty beanAprobacion.dataAprobacion }"
+									onclick="PF('firmarCertificados').show();"
+									update="idDtTurnos,idCBBotonSalvarCertificado"
+									icon="fa fa-save" />
+							</div>
+							<script type="text/javascript">
+								function start()
+								{
+									mostrarElemento('fAprobacion:idCBBotonSalvar');
+									PF('statusDialog').show();
+								}
+
+								function stop()
+								{
+									PF('statusDialog').hide();
+								}
+							</script>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelAdvertencia}" closable="false"
+				widgetVar="dlgSuspension" modal="true" resizable="false"
+				width="750" height="170">
+				<h:form id="fDialogSuspension"
+					style="font-size: large; text-align: justify; top: 30%; left: 30%;">
+					<h:outputText value="#{beanAprobacion.observacionesTemporales}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonLabelConfirmar}"
+							icon="fa fa-check" oncomplete="PF('dlgSuspension').hide();"
+							action="#{beanAprobacion.returnBandeja()}" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)" id="idDPreguntaAprobarRelaciones"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="preguntaAprobarRelaciones" modal="true" resizable="false">
+				<h:form id="fDialogPreguntaAprobarRelaciones"
+					style="font-size: large; top: 50%; left: 50%;">
+					
+					<p:outputPanel rendered="#{beanAprobacion.esRecursos}">
+						<p:outputLabel 
+							value="#{messageBeanSNR.commonLabelTipoDecisionRecurso}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br/>
+						<h:outputText value="#{beanAprobacion.nombreTipoDecisionRecurso}" />
+						<br/>
+						<br/>
+					</p:outputPanel>
+					<div align="center">
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelAprobarRelaciones}" />
+					</div>
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							actionListener="#{beanAprobacion.validarTipoRecurso()}"
+							oncomplete="mostrarElemento('fAprobacion:idBotonVisualizarReliacion'); PF('preguntaAprobarRelaciones').hide();"
+							icon="fa fa-check" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							actionListener="#{beanAprobacion.setDocumentosGenerados(null)}"
+							icon="fa fa-close"
+							onclick="PF('preguntaAprobarRelaciones').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg"
+				modal="true" height="110" resizable="false">
+				<h:form id="fDialogSalvar"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText id="idFirmar"
+						rendered="#{beanAprobacion.mostrarFirmar}"
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeRealizarLaAprobacionDelTurno}" />
+					<br />
+					<h:outputText id="idDevolver"
+						rendered="#{beanAprobacion.mostrarDevolver}"
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeRealizarLaDevolucionDelTurno}" />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" action="#{beanAprobacion.salvar()}"
+							oncomplete="PF('dlg').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlg').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="confirmacionRelaciones" modal="true" resizable="false">
+				<h:form id="fDialogConfirmacionRelaciones"
+					style="font-size: large; top: 50%; left: 50%;">
+					<p:outputLabel rendered="#{!beanAprobacion.vieneDeAprobacionAsesoriaJuridica and !beanAprobacion.vieneDeDespachoSuperintendente and !beanAprobacion.vieneDeAprobacionFirmaDespacho}"
+						value="#{messageBeanSNR.commonLabelRelacionesAprobacionGeneradas}" />
+					<p:outputLabel value=" #{beanAprobacion.relacionesCreadasString}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonButtonAceptar}"
+							icon="fa fa-check" action="#{beanAprobacion.regresar()}"
+							oncomplete="PF('confirmacionRelaciones').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="firmarAntSis" modal="true" resizable="false">
+				<h:form id="fDialogFirmarAntSis"
+					style="font-size: large; top: 50%; left: 50%;">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonMessagePreguntaAprobacionAntSistema}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check"
+							onclick="procesar();PF('firmarAntSis').hide();"/>
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('firmarAntSis').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="firmarCertificados" modal="true" resizable="false">
+				<h:form id="fDialogFirmarCertificados"
+					style="font-size: large; font-weight:bold; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonMessagePreguntaAprobacionAntSistema}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check"
+							onclick="procesar();PF('firmarCertificados').hide();"/>
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('firmarCertificados').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelObservacionesAprobador}"
+				widgetVar="dlg4" modal="true" height="360" resizable="false"
+				width="700">
+				<h:form id="fDialog" style="font-size: medium; top: 40%; left: 40%;">
+					<center>
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelObservacionesAprobador}" />
+					</center>
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonLabelGuardar}"
+							icon="fa fa-check"
+							actionListener="#{beanAprobacion.agregarcomentario()}"
+							id="id_SiCancelar" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonLabelCancelar}"
+							icon="fa fa-close" onclick="PF('dlg4').hide();" ajax="false">
+						</p:commandButton>
+					</div>
+					<br />
+					<h:outputText value="#{messageBeanSNR.commonLabelObservaciones}" />
+					<br />
+					<p:inputTextarea rows="7" cols="73" counter="display"
+						id="id_comentarioaprobacion" maxlength="240"
+						onblur="value=value.toUpperCase()"
+						counterTemplate="{0} Caracteres faltantes" autoResize="true"
+						value="#{beanAprobacion.observacionesTurnoHistoria}">
+					</p:inputTextarea>
+					<br />
+					<h:outputText id="display" />
+					<br />
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelObservacionesObligatorias}" />
+				</h:form>
+			</p:dialog>
+
+			<p:dialog id="cuadroObsProcesoAnterior" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+				widgetVar="obsProcesoAnterior" modal="true" resizable="false"
+				width="700">
+				<h:form id="fDialogo"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaCuadroProcesoAnterior" maxwidth="280"
+						cellspacing="1" cellpadding="20" border="1" bgcolor="#1E679A"
+						align="center">
+						<tr>
+							<td id="fila1TablaCuadroProcesoAnterior" bgcolor="#ffffff">
+								<h:outputText value="#{beanAprobacion.observaciones}"
+									id="id_observacionesProcesoAnterior" />
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

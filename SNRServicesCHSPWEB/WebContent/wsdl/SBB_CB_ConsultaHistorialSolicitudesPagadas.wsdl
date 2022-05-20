@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/consultahistorialsolicitudespagadas/v1"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/consultardetallesolicitud/v1"
+	xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/buscarsolicitudes/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/consultahistorialsolicitudespagadas/v1">
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/consultardetallesolicitud/v1">
+			<xsd:complexType
+				name="tipoEntradaConsultarDetalleSolicitud">
+				<xsd:sequence>
+					<xsd:element name="modulo" type="xsd:string" />
+					<xsd:element name="solicitante">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="tipoDocumento" type="xsd:string" />
+								<xsd:element name="numeroDocumento"
+									type="xsd:string" />
+								<xsd:element name="tipoPersona" type="xsd:string" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="nir" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="entradaConsultarDetalleSolicitud"
+				type="bachue1:tipoEntradaConsultarDetalleSolicitud" />
+
+			<xsd:complexType
+				name="tipoSalidaConsultarDetalleSolicitud">
+				<xsd:sequence>
+					<xsd:element name="turnos">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="0"
+									name="turno" type="bachue1:tipoTurno" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+
+					<xsd:element name="codigoMensaje">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200" />
+								<xsd:enumeration value="204" />
+								<xsd:enumeration value="500" />
+								<xsd:enumeration value="453" />
+								<xsd:enumeration value="430" />
+								<xsd:enumeration value="433" />
+								<xsd:enumeration value="455" />
+								<xsd:enumeration value="453" />
+								<xsd:enumeration value="434" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="descripcionMensaje"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<!-- Tipo complejo tipoTurno -->
+			<xsd:complexType name="tipoTurno">
+				<xsd:sequence>
+					<xsd:element name="nir" type="xsd:string" />
+					<xsd:element name="turno" type="xsd:string" />
+					<xsd:element name="descripcionServicio"
+						type="xsd:string" />
+					<xsd:element name="descricionSubServicio"
+						type="xsd:string" />
+					<xsd:element name="fechaServicio" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="salidaConsultarDetalleSolicitud"
+				type="bachue1:tipoSalidaConsultarDetalleSolicitud" />
+		</xsd:schema>
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/consultahistorialsolicitudespagadas/buscarsolicitudes/v1">
+			<xsd:complexType name="tipoEntradaBuscarSolicitudes">
+				<xsd:sequence>
+					<xsd:element name="modulo" type="xsd:string" />
+					<xsd:element name="solicitante">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="tipoDocumento" type="xsd:string" />
+								<xsd:element name="numeroDocumento"
+									type="xsd:string" />
+								<xsd:element name="tipoPersona" type="xsd:string" />
+
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="servicio" type="xsd:string" />
+					<xsd:element minOccurs="0" name="nir" nillable="true"
+						type="xsd:string" />
+					<xsd:element name="fechaDesdeBusqueda"
+						type="xsd:string" />
+					<xsd:element minOccurs="0" name="fechaHastaBusqueda"
+						nillable="true" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="entradaBuscarSolicitudes"
+				type="bachue2:tipoEntradaBuscarSolicitudes" />
+
+			<xsd:complexType name="tipoSalidaBuscarSolicitudes">
+				<xsd:sequence>
+					<xsd:element name="solicitudes">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="0"
+									name="solicitud" type="bachue2:tipoSolicitud" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200" />
+								<xsd:enumeration value="500" />
+								<xsd:enumeration value="204" />
+								<xsd:enumeration value="453" />
+								<xsd:enumeration value="430" />
+								<xsd:enumeration value="431" />
+								<xsd:enumeration value="432" />
+								<xsd:enumeration value="433" />
+								<xsd:enumeration value="455" />
+								<xsd:enumeration value="456" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="descripcionMensaje"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<!-- Tipo complejo tipoSolicitud -->
+			<xsd:complexType name="tipoSolicitud">
+				<xsd:sequence>
+					<xsd:element name="nir" type="xsd:string" />
+					<xsd:element name="descripcionServicio"
+						type="xsd:string" />
+					<xsd:element name="descripcionSubServicio"
+						type="xsd:string" />
+					<xsd:element name="fechaServicio" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="salidaBuscarSolicitudes"
+				type="bachue2:tipoSalidaBuscarSolicitudes" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="ConsultarDetalleSolicitud_Request">
+		<wsdl:part
+			element="bachue1:entradaConsultarDetalleSolicitud" name="entrada" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarDetalleSolicitud_Response">
+		<wsdl:part element="bachue1:salidaConsultarDetalleSolicitud"
+			name="salida" />
+	</wsdl:message>
+
+	<wsdl:message name="BuscarSolicitudes_Request">
+		<wsdl:part element="bachue2:entradaBuscarSolicitudes"
+			name="entrada" />
+	</wsdl:message>
+	<wsdl:message name="BuscarSolicitudes_Response">
+		<wsdl:part element="bachue2:salidaBuscarSolicitudes"
+			name="salida" />
+	</wsdl:message>
+
+	<wsdl:portType
+		name="SBB_CB_ConsultaHistorialSolicitudesPagadas">
+		<wsdl:operation name="ConsultarDetalleSolicitud">
+			<wsdl:input
+				message="bachue:ConsultarDetalleSolicitud_Request" />
+			<wsdl:output
+				message="bachue:ConsultarDetalleSolicitud_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="BuscarSolicitudes">
+			<wsdl:input message="bachue:BuscarSolicitudes_Request" />
+			<wsdl:output message="bachue:BuscarSolicitudes_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding
+		name="SBB_CB_ConsultaHistorialSolicitudesPagadasSOAP12Binding"
+		type="bachue:SBB_CB_ConsultaHistorialSolicitudesPagadas">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="ConsultarDetalleSolicitud">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/consultahistorialsolicitudespagadas/v1/ConsultarDetalleSolicitud"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="BuscarSolicitudes">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/consultahistorialsolicitudespagadas/v1/BuscarSolicitudes"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service
+		name="SBB_CB_ConsultaHistorialSolicitudesPagadasService">
+		<wsdl:port
+			binding="bachue:SBB_CB_ConsultaHistorialSolicitudesPagadasSOAP12Binding"
+			name="SBB_CB_ConsultaHistorialSolicitudesPagadas">
+			<soap:address
+				location="http://localhost:7001/SNRServicesCHSPWEB/services/SBB_CB_ConsultaHistorialSolicitudesPagadas" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

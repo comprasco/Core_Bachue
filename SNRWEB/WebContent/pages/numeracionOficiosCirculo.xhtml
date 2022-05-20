@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelOperativo}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelNumeracionOficiosCirculo}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fNumeracionOficiosCirculo" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:panel style="min-width:800px;">
+						<div class="ui-g" align="left"></div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelInsertarNumeracionOficiosCirculo}"
+									icon="fa fa-plus-circle" iconPos="left" update="globalMsg"
+									actionListener="#{beanNumeracionOficiosCirculo.cambiarEstado()}"
+									action="numeracionOficiosCirculoDetalle?faces-redirect=true">
+									<f:param name="pInsertarNumeracionOficiosCirculo" value="true" />
+								</p:commandButton>
+							</div>
+						</div>
+						<p:dataTable id="idTabla" var="item"
+							value="#{beanNumeracionOficiosCirculo.findAllNumeracionOficiosCirculo()}"
+							emptyMessage="#{errorBeanSNR.errorSinRegistros}" paginator="true"
+							rows="50" rowIndexVar="rowKey">
+							<f:facet name="header">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelNumeracionOficiosCirculo}" />
+							</f:facet>
+							<p:column headerText="#{messageBeanSNR.commonLabelCirculo}"
+								filterBy="#{item.idCirculo}">
+								<div align="left">
+									<p:commandLink id="idCLink" styleClass="subrayado"
+										actionListener="#{beanNumeracionOficiosCirculo.consultaDetallada(item)}"
+										action="numeracionOficiosCirculoDetalle?faces-redirect=true">
+										<h:outputText value="#{item.idCirculo}" />
+									</p:commandLink>
+								</div>
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelDependencia}"
+								filterBy="#{item.idDependencia}">
+								<h:outputText value="#{item.idDependencia}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelActivo}">
+								<h:outputText value="#{messageBeanSNR.commonLabelSi}"
+									rendered="#{item.activo=='S'}" />
+								<h:outputText value="#{messageBeanSNR.commonLabelNo}"
+									rendered="#{item.activo=='N'}" />
+							</p:column>
+						</p:dataTable>
+
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

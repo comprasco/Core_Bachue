@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelUsuario}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracionUsuarios}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fAdministracionUsuariosDetalle" style="width: 100%;">
+				<p:growl id="gAdministracionUsuarioDetMsg" globalOnly="true"
+					showDetail="true" sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:outputLabel value="#{messageBeanSNR.commonLabelIdUsuario}: " />
+					<strong>
+						<p:outputLabel id="idOLIdUsuario" style="font-size: 40px;"
+							value="#{beanAdministracionUsuarios.usuario.idUsuario}" />
+					</strong>
+					<br />
+					<p:tabView id="TvdetalleUsuario" effect="fade"
+						effectDuration="normal"
+						activeIndex="#{beanAdministracionUsuarios.seleccionado}">
+						<p:ajax event="tabChange"
+							listener="#{beanAdministracionUsuarios.setRenderizarBotonRegresar()}"
+							update="fAdministracionUsuariosDetalle" />
+						<!-- Resumen-->
+						<p:tab id="tResumen" titleStyle="font-size:15px;"
+							title="#{messageBeanSNR.commonLabelResumen}">
+							<p:panel style="min-width:100px;"
+								header="#{messageBeanSNR.commonLabelOpcionesAModificar}"
+								id="pOpcionesConsulta">
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+										<div class="ui-g-12 ui-md-4 ui-lg-4" align="center">
+											<p:outputLabel value="#{messageBeanSNR.commonLabelCirculo}" />
+											<br />
+											<p:selectBooleanCheckbox
+												value="#{beanAdministracionUsuarios.circuloSeleccionado}">
+												<p:ajax event="change"
+													update="fAdministracionUsuariosDetalle:TvdetalleUsuario" />
+											</p:selectBooleanCheckbox>
+										</div>
+										<div class="ui-g-12 ui-md-4 ui-lg-4" align="center">
+											<p:outputLabel value="#{messageBeanSNR.commonLabelEtapa}" />
+											<br />
+											<p:selectBooleanCheckbox
+												value="#{beanAdministracionUsuarios.etapaSeleccionado}">
+												<p:ajax event="change"
+													update="fAdministracionUsuariosDetalle:TvdetalleUsuario" />
+											</p:selectBooleanCheckbox>
+										</div>
+										<div class="ui-g-12 ui-md-4 ui-lg-4" align="center">
+											<p:outputLabel value="#{messageBeanSNR.commonLabelLinea}" />
+											<br />
+											<p:selectBooleanCheckbox
+												value="#{beanAdministracionUsuarios.lineaSeleccionado}">
+												<p:ajax event="change"
+													update="fAdministracionUsuariosDetalle:TvdetalleUsuario" />
+											</p:selectBooleanCheckbox>
+										</div>
+									</div>
+								</div>
+							</p:panel>
+							<br />
+							<!--Resumen Circulos Activos-->
+							<p:panel id="idPResumenCirculo" style="min-width:800px;"
+								header="#{messageBeanSNR.commonLabelCirculosUsuario}">
+								<div class="ui-g" align="center">
+									<p:dataTable
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										id="idDtListadoCiruloResumen" var="item" editable="true"
+										value="#{beanAdministracionUsuarios.circulosActivosPorUsuario}">
+										<p:column id="idCCirculoPResumen"
+											headerText="#{messageBeanSNR.commonLabelCirculoRegistral}">
+											<div>
+												<h:outputText value="#{item.circulo.nombreCirculoRegistral}" />
+											</div>
+										</p:column>
+
+										<p:column headerText="#{messageBeanSNR.commonLabelFechaDesde}">
+											<div>
+												<h:outputText value="#{item.fechaDesde}" />
+											</div>
+										</p:column>
+
+										<p:column headerText="#{messageBeanSNR.commonLabelFechaHasta}">
+											<div>
+												<h:outputText value="#{item.fechaHasta}" />
+											</div>
+										</p:column>
+
+										<p:column headerText="#{messageBeanSNR.commonLabelActivo}">
+											<div>
+												<h:outputText value="#{messageBeanSNR.commonLabelSi}"
+													rendered="#{item.activo=='S'}" />
+												<h:outputText value="#{messageBeanSNR.commonLabelNo}"
+													rendered="#{item.activo=='N'}" />
+											</div>
+										</p:column>
+									</p:dataTable>
+								</div>
+							</p:panel>
+							<br />
+							<!--Resumen Etapas Activas-->
+							<p:panel id="idPResumenEtapaUsuario" style="min-width:800px;"
+								header="#{messageBeanSNR.commonLabelEtapasUsuario}">
+								<div class="ui-g" align="center">
+									<p:dataTable
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										id="idDtListadoEtapasResumen" var="item" editable="true"
+										value="#{beanAdministracionUsuarios.etapasActivasPorUsuario}">
+										<p:column id="idCEtapaPResumen"
+											headerText="#{messageBeanSNR.commonLabelIdEtapa}">
+											<div>
+												<h:outputText value="#{item.etapa.nombre}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelActivo}">
+											<div>
+												<h:outputText value="#{messageBeanSNR.commonLabelSi}"
+													rendered="#{item.activo=='S'}" />
+												<h:outputText value="#{messageBeanSNR.commonLabelNo}"
+													rendered="#{item.activo=='N'}" />
+											</div>
+										</p:column>
+									</p:dataTable>
+								</div>
+							</p:panel>
+							<!--Resumen Lineas Activas-->
+							<p:outputPanel id="idPResumenLineas">
+								<p:panel id="idPResumenLineasTable" style="min-width:800px;"
+									header="#{messageBeanSNR.commonLabelLineasUsuario}">
+									<div class="ui-g" align="center">
+										<p:dataTable
+											emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+											id="idDtResumenLineas" var="resumenLineasItem"
+											editable="true"
+											value="#{beanAdministracionUsuarios.lineasActivasPorUsuario}">
+											<p:column id="idCIdResumenLineaP" width="10%"
+												headerText="#{messageBeanSNR.commonLabelIdLineaProduccion}">
+												<div>
+													<h:outputText
+														value="#{resumenLineasItem.lineaProduccion.idLineaProduccion}" />
+												</div>
+											</p:column>
+											<p:column id="idCResumenLineaP"
+												headerText="#{messageBeanSNR.commonLabelLineaProduccion}">
+												<div>
+													<h:outputText
+														value="#{resumenLineasItem.lineaProduccion.nombre}" />
+												</div>
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelActivo}">
+												<div>
+													<h:outputText value="#{messageBeanSNR.commonLabelSi}"
+														rendered="#{resumenLineasItem.activo=='S'}" />
+													<h:outputText value="#{messageBeanSNR.commonLabelNo}"
+														rendered="#{resumenLineasItem.activo=='N'}" />
+												</div>
+											</p:column>
+										</p:dataTable>
+									</div>
+								</p:panel>
+							</p:outputPanel>
+						</p:tab>
+						<!-- Circulo-->
+						<p:tab id="tCirculo" titleStyle="font-size:15px;"
+							title="#{messageBeanSNR.commonLabelCirculo}"
+							rendered="#{beanAdministracionUsuarios.circuloSeleccionado}">
+							<p:panel id="idPInsertCirculo" style="min-width:800px;"
+								header="#{messageBeanSNR.pageInsertarCirculoUsuario}">
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-6 ui-lg-6">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelCirculoRegistral}#{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:selectOneMenu id="idSOMCirculoInsert" style="width:85%;"
+											title="#{tooltipBeanSNR.administracionUsuarioCirculosDetalleCirculoRegistral}"
+											value="#{beanAdministracionUsuarios.usuarioCirculo.circulo.idCirculo}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems
+												value="#{beanAdministracionUsuarios.findAllCirculosActivos()}"
+												itemLabel="#{circulos.idCirculo} - #{circulos.nombre}"
+												itemValue="#{circulos.idCirculo}" var="circulos" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-6">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelActivo}#{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:selectOneMenu id="idSOMActivo1" style="width:85%;"
+											title="#{tooltipBeanSNR.administracionUsuarioCirculosDetalleActivo}"
+											value="#{beanAdministracionUsuarios.usuarioCirculo.activo}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+												itemValue="S" />
+											<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+												itemValue="N" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-6 ui-lg-6">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelFechaDesde}#{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:calendar id="idCalFechaDesde" size="10" mask="true"
+											title="#{tooltipBeanSNR.administracionUsuarioCirculosDetalleFechaDesde}"
+											locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+											value="#{beanAdministracionUsuarios.usuarioCirculo.fechaDesde}"
+											showOn="button" />
+									</div>
+
+									<div class="ui-g-12 ui-md-6 ui-lg-6">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelFechaHasta}" />
+										<br />
+										<p:calendar id="idCalFechaHasta" size="10" mask="true"
+											title="#{tooltipBeanSNR.administracionUsuarioCirculosDetalleFechaHasta}"
+											locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+											value="#{beanAdministracionUsuarios.usuarioCirculo.fechaHasta}"
+											showOn="button" />
+									</div>
+								</div>
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:commandButton
+											value="#{messageBeanSNR.commonLabelCrearUsuarioCirculo}"
+											icon="fa fa-check-circle" iconPos="left"
+											title="#{tooltipBeanSNR.administracionUsuarioCirculosDetalleCrear}"
+											update="fAdministracionUsuariosDetalle gUsuarioCirculosDetMsg idPUpdate"
+											action="#{beanAdministracionUsuarios.insertUpdateUsuarioCirculo(null, true)}"
+											ajax="false" />
+									</div>
+								</div>
+							</p:panel>
+							<br />
+							<p:panel id="idPUpdate" style="min-width:800px;"
+								header="#{messageBeanSNR.pageEditarCirculoUsuario}">
+								<div class="ui-g" align="center">
+									<p:dataTable
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										id="idDtListadoCirulo" var="item" editable="true"
+										value="#{beanAdministracionUsuarios.circulosPorUsuario}">
+
+										<p:ajax event="rowEdit"
+											listener="#{beanAdministracionUsuarios.insertUpdateUsuarioCirculo(item, false)}"
+											update="fAdministracionUsuariosDetalle:gAdministracionUsuarioDetMsg idDtListadoCirulo" />
+
+										<p:ajax event="rowEditCancel"
+											listener="#{beanAdministracionUsuarios.findCirculosPorUsuario()}"
+											update="fAdministracionUsuariosDetalle:gAdministracionUsuarioDetMsg idDtListadoCirulo" />
+
+										<p:column id="idCCirculoP"
+											headerText="#{messageBeanSNR.commonLabelCirculoRegistral}">
+											<div>
+												<h:outputText value="#{item.circulo.nombreCirculoRegistral}" />
+											</div>
+										</p:column>
+
+										<p:column headerText="#{messageBeanSNR.commonLabelFechaDesde}"
+											style="width:180px">
+											<div>
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{item.fechaDesde}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:calendar id="idCalFechaDesde" size="10" mask="true"
+															title="#{tooltipBeanSNR.administracionUsuarioCirculosDetalleFechaDesde}"
+															locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+															value="#{item.fechaDesde}" showOn="button" />
+													</f:facet>
+												</p:cellEditor>
+											</div>
+										</p:column>
+
+										<p:column headerText="#{messageBeanSNR.commonLabelFechaHasta}"
+											style="width:180px">
+											<div>
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{item.fechaHasta}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:calendar id="idCalFechaHasta" size="10" mask="true"
+															title="#{tooltipBeanSNR.administracionUsuarioCirculosDetalleFechaHasta}"
+															locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+															value="#{item.fechaHasta}" showOn="button" />
+													</f:facet>
+												</p:cellEditor>
+											</div>
+										</p:column>
+
+										<p:column headerText="#{messageBeanSNR.commonLabelActivo}">
+											<div>
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{messageBeanSNR.commonLabelSi}"
+															rendered="#{item.activo=='S'}" />
+														<h:outputText value="#{messageBeanSNR.commonLabelNo}"
+															rendered="#{item.activo=='N'}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:selectOneMenu id="idSOMActivo2" style="width:100%;"
+															title="#{tooltipBeanSNR.administracionUsuarioCirculosDetalleActivo}"
+															value="#{item.activo}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+																itemValue="S" />
+															<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+																itemValue="N" />
+														</p:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</div>
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+											<h:outputText value="#{item.idUsuarioModificacion}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+											<h:outputText value="#{item.fechaModificacion}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelIpModificación}">
+											<h:outputText value="#{item.ipModificacion}" />
+										</p:column>
+										<p:column style="width:80px"
+											headerText="#{messageBeanSNR.commonLabelModificar}">
+											<p:rowEditor style="margin-left: 20px"
+												editTitle="#{tooltipBeanSNR.administracionUsuarioCirculosDetalleModificar}" />
+										</p:column>
+									</p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+						<!-- Etapa-->
+						<p:tab id="tEtapa" titleStyle="font-size:15px;"
+							title="#{messageBeanSNR.commonLabelEtapa}"
+							rendered="#{beanAdministracionUsuarios.etapaSeleccionado}">
+							<p:panel id="idPInsert" style="min-width:800px;"
+								header="#{messageBeanSNR.pageInsertarEtapaUsuario}">
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-6 ui-lg-6">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelIdEtapa}#{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:selectOneMenu id="idSOMEtapaInsert" style="width:100%;"
+											title="#{tooltipBeanSNR.administracionUsuarioEtapasDetalleInsertarEtapaUsuarioEtapa}"
+											value="#{beanAdministracionUsuarios.usuarioEtapa.etapa.idEtapa}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems
+												value="#{beanAdministracionUsuarios.findAllEtapasActivos()}"
+												itemLabel="#{etapas.nombre}" itemValue="#{etapas.idEtapa}"
+												var="etapas" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-6">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelActivo}#{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:selectOneMenu id="idSOMHabilitado" style="width:100%;"
+											title="#{tooltipBeanSNR.administracionUsuarioEtapasDetalleInsertarEtapaUsuarioHabilitado}"
+											value="#{beanAdministracionUsuarios.usuarioEtapa.activo}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+												itemValue="S" />
+											<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+												itemValue="N" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:commandButton
+											value="#{messageBeanSNR.commonLabelCrearUsuarioEtapa}"
+											icon="fa fa-check-circle" iconPos="left"
+											title="#{tooltipBeanSNR.administracionUsuarioEtapasDetalleInsertarEtapaUsuarioCrearUsuarioEtapa}"
+											update="fAdministracionUsuariosDetalle:gAdministracionUsuarioDetMsg idPUpdateEtapaUsuario"
+											action="#{beanAdministracionUsuarios.insertUpdateUsuarioEtapa(null, true)}"
+											ajax="false" />
+									</div>
+								</div>
+							</p:panel>
+							<br />
+							<p:panel id="idPUpdateEtapaUsuario" style="min-width:800px;"
+								header="#{messageBeanSNR.pageEditarEtapaUsuario}">
+								<div class="ui-g" align="center">
+									<p:dataTable
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										id="idDtListadoEtapas" var="item" editable="true"
+										value="#{beanAdministracionUsuarios.etapasPorUsuario}">
+
+										<p:ajax event="rowEdit"
+											listener="#{beanAdministracionUsuarios.insertUpdateUsuarioEtapa(item, false)}"
+											update="idDtListadoEtapas" />
+
+										<p:ajax event="rowEditCancel"
+											listener="#{beanAdministracionUsuarios.findEtapasPorUsuario()}"
+											update=":fAdministracionUsuariosDetalle:gAdministracionUsuarioDetMsg" />
+
+										<p:column id="idCEtapaP"
+											headerText="#{messageBeanSNR.commonLabelIdEtapa}">
+											<div>
+												<h:outputText value="#{item.etapa.nombre}" />
+											</div>
+										</p:column>
+
+										<p:column headerText="#{messageBeanSNR.commonLabelActivo}">
+											<div>
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{messageBeanSNR.commonLabelSi}"
+															rendered="#{item.activo=='S'}" />
+														<h:outputText value="#{messageBeanSNR.commonLabelNo}"
+															rendered="#{item.activo=='N'}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:selectOneMenu id="idSOMHabilitado" style="width:100%;"
+															title="#{tooltipBeanSNR.administracionUsuarioEtapasDetalleEditarEtapaUsuarioHabilitado}"
+															value="#{item.activo}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+																itemValue="S" />
+															<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+																itemValue="N" />
+														</p:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</div>
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+											<h:outputText value="#{item.idUsuarioModificacion}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+											<h:outputText value="#{item.fechaModificacion}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelIpModificación}">
+											<h:outputText value="#{item.ipModificacion}" />
+										</p:column>
+										<p:column style="width:80px"
+											headerText="#{messageBeanSNR.commonLabelModificar}">
+											<p:rowEditor style="margin-left: 20px"
+												editTitle="#{tooltipBeanSNR.administracionUsuarioCirculosDetalleModificar}" />
+										</p:column>
+									</p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+						<!-- Linea-->
+						<p:tab id="tLinea" titleStyle="font-size:15px;"
+							title="#{messageBeanSNR.commonLabelLinea}"
+							rendered="#{beanAdministracionUsuarios.lineaSeleccionado}">
+							<p:panel id="idPInsertLinea"
+								header="#{messageBeanSNR.pageInsertarLineaUsuario}">
+								<div class="ui-g" align="center">
+									<p:dataTable
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										id="idDtListadoLinea" editable="true"
+										value="#{beanAdministracionUsuarios.lineasPorUsuario}"
+										var="item">
+										<p:column style="width:10%;"
+											headerText="#{messageBeanSNR.commonLabelIdLineaProduccion}">
+											<div>
+												<h:outputText
+													value="#{item.lineaProduccion.idLineaProduccion}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelNombre}">
+											<div>
+												<h:outputText value="#{item.lineaProduccion.nombre}" />
+											</div>
+										</p:column>
+										<p:column style="width:10%;text-align:center"
+											headerText="#{messageBeanSNR.commonLabelSeleccione}">
+											<p:selectBooleanCheckbox value="#{item.seleccionado}" />
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelActivo}">
+											<p:selectOneMenu id="idSOMActivoInsert"
+												value="#{item.activo}" style="width:100%;">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+													itemValue="S" />
+												<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+													itemValue="N" />
+											</p:selectOneMenu>
+										</p:column>
+									</p:dataTable>
+								</div>
+
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:commandButton
+											value="#{messageBeanSNR.commonLabelCrearUsuarioLinea}"
+											icon="fa fa-check-circle" iconPos="left"
+											action="#{beanAdministracionUsuarios.insertUsuarios()}" />
+									</div>
+								</div>
+							</p:panel>
+							<br />
+							<p:outputPanel id="idPUpdateTablaPanel">
+								<p:panel id="idPUpdateTable" style="min-width:800px;"
+									header="#{messageBeanSNR.pageEditarLineaUsuario}">
+									<div class="ui-g" align="center">
+										<p:dataTable
+											emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+											id="idDtListadoLineas" var="item" editable="true"
+											value="#{beanAdministracionUsuarios.allLineasPorUsuario}">
+
+											<p:ajax event="rowEdit"
+												listener="#{beanAdministracionUsuarios.insertUpdateUsuarioLinea(item, false, true)}"
+												update=":fAdministracionUsuariosDetalle:gAdministracionUsuarioDetMsg idDtListadoLineas" />
+
+											<p:ajax event="rowEditCancel"
+												listener="#{beanAdministracionUsuarios.findLineasPorUsuario()}"
+												update=":fAdministracionUsuariosDetalle:gAdministracionUsuarioDetMsg idDtListadoLineas" />
+
+											<p:column id="idCIdLineaP" width="10%"
+												headerText="#{messageBeanSNR.commonLabelIdLineaProduccion}">
+												<div>
+													<h:outputText
+														value="#{item.lineaProduccion.idLineaProduccion}" />
+												</div>
+											</p:column>
+
+											<p:column id="idCLineaP"
+												headerText="#{messageBeanSNR.commonLabelLineaProduccion}">
+												<div>
+													<h:outputText value="#{item.lineaProduccion.nombre}" />
+												</div>
+											</p:column>
+
+											<p:column headerText="#{messageBeanSNR.commonLabelActivo}">
+												<div>
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{messageBeanSNR.commonLabelSi}"
+																rendered="#{item.activo=='S'}" />
+															<h:outputText value="#{messageBeanSNR.commonLabelNo}"
+																rendered="#{item.activo=='N'}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:selectOneMenu id="idSOMActivo4" style="width:100%;"
+																value="#{item.activo}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+																	itemValue="S" />
+																<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+																	itemValue="N" />
+															</p:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</div>
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+												<h:outputText value="#{item.idUsuarioModificacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+												<h:outputText value="#{item.fechaModificacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelIpModificación}">
+												<h:outputText value="#{item.ipModificacion}" />
+											</p:column>
+											<p:column style="width:80px"
+												headerText="#{messageBeanSNR.commonLabelModificar}">
+												<p:rowEditor style="margin-left: 20px"
+													editTitle="#{tooltipBeanSNR.administracionUsuarioCirculosDetalleModificar}" />
+											</p:column>
+										</p:dataTable>
+									</div>
+								</p:panel>
+							</p:outputPanel>
+						</p:tab>
+					</p:tabView>
+					<div class="ui-g" align="center">
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								rendered="#{beanAdministracionUsuarios.renderizarBotonRegresar}"
+								update="fAdministracionUsuariosDetalle"
+								action="#{beanAdministracionUsuarios.clean()}"
+								id="botonRegresar" />
+						</div>
+					</div>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

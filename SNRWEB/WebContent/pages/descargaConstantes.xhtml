@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelConstantes}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonButtonDescargarConstantesRTF}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fTipoRecepcion" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:dialog modal="true" widgetVar="statusDownload" header="Status"
+						draggable="false" closable="false" resizable="false">
+						<p:graphicImage value="/images/ajaxloadingbar.gif" />
+					</p:dialog>
+					<p:panel style="min-width:800px;">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonDescargarConstantesRTF}"
+									icon="fa fa-check-circle" iconPos="left" ajax="false"
+									onclick="PrimeFaces.monitorDownload(start, stop);"
+									actionListener="#{beanConstantes.descargarConstantesRtf()}">
+									<p:fileDownload value="#{beanConstantes.zipRTFS}" />
+								</p:commandButton>
+								<p:commandButton value="descargar log" icon="fa fa-check-circle"
+									iconPos="left"
+									onclick="PF('dialogLogs').show(); if(!PF('dialogLogs').maximized){ PF('dialogLogs').toggleMaximize()}" />
+							</div>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+			<p:dialog appendTo="@(body)" header="Logs" widgetVar="dialogLogs"
+				modal="true" height="100" resizable="false">
+				<h:form id="dialogLogs"
+					style="font-size: large; top: 100%; left: 100%;">
+					<p:growl id="growlDialog" globalOnly="true" showDetail="true"
+						sticky="false" life="10000" redisplay="false" />
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:dataTable value="#{beanConstantes.archivosLog}" var="item"
+								id="dTLogs" widgetVar="dTLogs">
+								<p:column headerText="Nombre" filterBy="#{item.nombre}"
+									sortBy="#{item.nombre}">
+									<p:commandLink value="#{item.nombre}"
+										styleClass="#{item.regresar ? 'subrayado' : 'none'}"
+										actionListener="#{beanConstantes.accionClickArchivo(item)}"
+										update="dialogLogs:growlDialog" />
+								</p:column>
+								<p:column headerText="Fecha modificacion"
+									sortBy="#{item.fechaModificacion}">
+									<h:outputText value="#{item.fechaModificacion}">
+										<f:convertDateTime type="date" pattern="dd-MM-yyyy HH:mm:ss" />
+									</h:outputText>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:commandButton value="Cerrar" icon="fa fa-close" iconPos="left"
+								onclick="PF('dialogLogs').hide();" update="dialogLogs" />
+						</div>
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)" header="Confirmación"
+				widgetVar="dialogDescarga" modal="true" height="100"
+				resizable="false">
+				<h:form id="dialogDescarga"
+					style="font-size: large; top: 100%; left: 100%;">
+					<p:growl id="growlDialog" globalOnly="true" showDetail="true"
+						sticky="false" life="10000" redisplay="false" />
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:outputLabel
+								value="¿Esta seguro de descargar el archivo seleccionado?" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+							<p:commandButton value="#{messageBeanSNR.commonLabelNo}"
+								icon="fa fa-close" iconPos="left"
+								onclick="PF('dialogDescarga').hide()" />
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+							<p:commandButton value="#{messageBeanSNR.commonLabelSi}"
+								icon="fa fa-check" iconPos="right" ajax="false"
+								onclick="PrimeFaces.monitorDownload(console.log('inicio'), ()=>{PF('dialogDescarga').hide();});"
+								update="dialogLogs">
+								<p:fileDownload value="#{beanConstantes.log}" />
+							</p:commandButton>
+						</div>
+					</div>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/co/busquedadocumentos/v1"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/co/busquedadocumentos/v1"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/co/busquedadocumentos/consultar/v1"
+	xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/co/busquedadocumentos/obtenerarchivo/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/co/busquedadocumentos/consultar/v1"
+			elementFormDefault="qualified" version="1.3">
+			<xsd:complexType name="tipoEntradaConsultar">
+				<xsd:sequence>
+					<xsd:element name="sistemaOrigen" type="xsd:string" />
+					<xsd:element name="parametros">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="parametro"
+									type="bachue1:tipoParametro" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="repositorio">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="TEMPORAL" />
+								<xsd:enumeration value="FINAL" />
+								<xsd:enumeration value="MIXTO" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<!-- Tipo complejo Parametro -->
+			<xsd:complexType name="tipoParametro">
+				<xsd:sequence>
+					<xsd:element name="nombre" type="xsd:string" />
+					<xsd:element name="valor" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultar"
+				type="bachue1:tipoEntradaConsultar" />
+			<xsd:complexType name="tipoSalidaConsultar">
+				<xsd:sequence>
+					<xsd:element name="documentos">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="documento"
+									type="bachue1:tipoDocumento" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<!-- Tipo complejo Documento -->
+			<xsd:complexType name="tipoDocumento">
+				<xsd:sequence>
+					<xsd:element name="dID" type="xsd:string" />
+					<xsd:element name="docName" type="xsd:string" />
+					<xsd:element name="tipoDocumental" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="orip" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="nir" type="xsd:string" minOccurs="0"
+						maxOccurs="1" nillable="true" />
+					<xsd:element name="codOrip" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="turno" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="documentoRegistrado"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="numeroDocumento" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="fechaDocumento" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="entidadOrigen" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="pais" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="departamento" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="municipio" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="matricula" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="anotacion" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="numeroPagina" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="numeroFolios" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="nombreInterviniente"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="identificacionInterviniente"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="fechaPublicacion" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="fechaVigencia" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="tipoOficina" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="actoNaturalezaJuridica"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="proceso" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="nirVinculado" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="turnoVinculado" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="urlVisor" type="xsd:string"
+						minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultar"
+				type="bachue1:tipoSalidaConsultar" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/co/busquedadocumentos/obtenerarchivo/v1">
+			<xsd:complexType name="tipoEntradaObtenerArchivo">
+				<xsd:sequence>
+					<xsd:element name="dDocName" type="xsd:string" />
+					<xsd:element name="dID" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaObtenerArchivo"
+				type="bachue2:tipoEntradaObtenerArchivo" />
+			<xsd:complexType name="tipoSalidaObtenerArchivo">
+				<xsd:sequence>
+					<xsd:element name="archivo" type="xsd:base64Binary" />
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerArchivo"
+				type="bachue2:tipoSalidaObtenerArchivo" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="Consultar_Request">
+		<wsdl:part name="entrada" element="bachue1:entradaConsultar" />
+	</wsdl:message>
+	<wsdl:message name="Consultar_Response">
+		<wsdl:part name="salida" element="bachue1:salidaConsultar" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerArchivo_Request">
+		<wsdl:part name="entrada"
+			element="bachue2:entradaObtenerArchivo" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerArchivo_Response">
+		<wsdl:part name="salida"
+			element="bachue2:salidaObtenerArchivo" />
+	</wsdl:message>
+	<wsdl:portType name="SUT_CO_BusquedaDocumentos">
+		<wsdl:operation name="Consultar">
+			<wsdl:input message="bachue:Consultar_Request" />
+			<wsdl:output message="bachue:Consultar_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerArchivo">
+			<wsdl:input message="bachue:ObtenerArchivo_Request" />
+			<wsdl:output message="bachue:ObtenerArchivo_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding
+		name="SUT_CO_BusquedaDocumentosSOAP12Binding"
+		type="bachue:SUT_CO_BusquedaDocumentos">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="Consultar">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/co/busquedadocumentos/v1/Consultar" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerArchivo">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/co/busquedadocumentos/v1/ObtenerArchivo" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SUT_CO_BusquedaDocumentos">
+		<wsdl:port name="SUT_CO_BusquedaDocumentosPort"
+			binding="bachue:SUT_CO_BusquedaDocumentosSOAP12Binding">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

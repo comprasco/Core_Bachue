@@ -1,0 +1,2434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtmltransitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelIngresoSolicitud}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelSolicitudCertificados}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<h:form id="fCertificados" style="width: 100%;"
+				enctype="multipart/form-data" onkeypress="return event.keyCode!=13">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="10000" redisplay="false" />
+				<p:remoteCommand name="failImpresion" actionListener="#{beanCertificados.errorImpresion('fCertificados')}" update="globalMsg" partialSubmit="true" global="false"/>
+				<p:remoteCommand name="imprimirDocumento" actionListener="#{beanCertificados.imprimirDocumentos('fCertificados')}" update="globalMsg" partialSubmit="true" global="false"/>
+				<center>
+					<p:wizard flowListener="#{beanCertificados.flowListener}" id="myWizard"
+						widgetVar="myWizard" showNavBar="false">
+						<p:tab id="datosInteresado_id" titleStyle="font-size:15px;"
+							title="#{messageBeanSNR.commonLabelDatosDelInteresadoTitle}">
+							<p:panel>
+								<p:panel
+									header="#{messageBeanSNR.commonLabelConsultarAlInteresado}"
+									toggleable="true" id="consultaralinteresado">
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-6 ui-lg-2" />
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTipoDocumentoIdentidad}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMTipoDocIdentidad" ajax="true"
+												style="width:80%"
+												title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoConsultaInteresadoTipoDocumentoIdentidad}"
+												value="#{beanCertificados.tipoDocInteresado}">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems
+													value="#{beanReference.findTipoDocumentoActivo()}"
+													var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+													itemLabel="#{tipoDoc.descripcion}" />
+											</p:selectOneMenu>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2" />
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel indicateRequired="true"
+												value="#{messageBeanSNR.commonLabelDocumentoIdentidad}"
+												style="width:100%" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()" ajax="true"
+												id="idItDocumentoID" style="width:80% !important"
+												title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoConsultaInteresadoDocumentoIdentidad}"
+												label="#{messageBeanSNR['commonLabelDocumento']}"
+												placeholder="#{messageBeanSNR['commonLabelDocumento']}"
+												value="#{beanCertificados.documentoInteresado}" maxlength="20"
+												requiredMessage="El campo Justificación es requerido">
+											</p:inputText>
+										</div>
+									</div>
+									<div class="ui-g" align="center">
+										<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+											<p:commandButton
+												value="#{messageBeanSNR.commonLabelConsultar}" icon="lupa"
+												iconPos="left"
+												update="idOPDatosConsulta,idPanelListados,globalMsg,idPPanelDatosBasicos,idPanelDirRes,idPanelDirCorr,idPanelDatosContacto,idSOMTipoDocIdentidad,idItDocumentoID,idOPIntervienePregunta"
+												onclick="PF('idDexenta').show();">
+											</p:commandButton>
+										</div>
+									</div>
+									<p:outputPanel id="idPanelListados">
+										<p:outputPanel rendered="#{beanCertificados.rendered}">
+											<br />
+											<div class="ui-g" align="left">
+												<p:dataTable id="idDtPersonas"
+													value="#{beanCertificados.registroDatosConsultados.listadoPersona}"
+													var="item">
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelTipoDocumento}"
+														width="8%" sortBy="#{item.idDocumentoTipo}">
+														<h:outputText value="#{item.idDocumentoTipo}" />
+													</p:column>
+
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelDocumento}"
+														width="12%" sortBy="#{item.numeroDocumento}">
+														<h:outputText value="#{item.numeroDocumento}" />
+													</p:column>
+
+													<p:column headerText="#{messageBeanSNR.commonLabelNombres}"
+														width="20%">
+														<h:outputText
+															value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.nombreCompleto}" />
+													</p:column>
+
+													<p:column width="6%" headerText="Seleccione">
+														<p:selectOneRadio value="#{item.seleccionado}">
+															<f:selectItem itemLabel="" itemValue="true" />
+															<p:ajax
+																listener="#{beanCertificados.cargarDatosPersonales(item)}"
+																update=":fCertificados:idPPanelDatosBasicos,idDtPersonas,:fCertificados:idPanelListados,:fCertificados:idPanelDirRes, :fCertificados:idOPDatosConsulta,:fCertificados:idSorMismaDir" />
+														</p:selectOneRadio>
+													</p:column>
+
+													<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+														width="6%">
+														<p:commandButton icon="fa fa-pencil" iconPos="left"
+															update="fCertificados"
+															title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoConsultaInteresadoEditar}"
+															actionListener="#{beanCertificados.accionBotonEditarPersona(item)}" />
+													</p:column>
+												</p:dataTable>
+												<br />
+											</div>
+										</p:outputPanel>
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-6 ui-lg-2" />
+											<div class="ui-g-12 ui-md-6 ui-lg-3">
+												<p:outputPanel rendered="#{beanCertificados.personaConsultada}">
+													<div class="ui-g" align="center">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelMedioANotificar}#{messageBeanSNR.commonLabelObligatorio}"
+															style="width:100%" />
+														<br />
+														<p:selectOneMenu id="idsomMedioANotificar"
+															style="width:77%"
+															title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosBasicosInteresadoMedioNotificar}"
+															value="#{beanCertificados.solicitud.idAutorizacionNotificacion}">
+															<p:ajax update="idsomMedioANotificar,idOPDatosConsulta" />
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems value="#{beanCertificados.mediosNotificar}"
+																var="habNot" itemValue="#{habNot.idTipoRecepcion}"
+																itemLabel="#{habNot.nombre}" />
+															<p:ajax event="change"
+																listener="#{beanCertificados.cambioDeMedioNotInteresado(beanCertificados.solicitud.idAutorizacionNotificacion)}"
+																update="idPanelDatosContacto idPanelDirCorr idPanelDirRes idOPDatosConsulta" />
+														</p:selectOneMenu>
+													</div>
+												</p:outputPanel>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-2" />
+											<div class="ui-g-12 ui-md-6 ui-lg-3">
+												<p:outputPanel rendered="#{beanCertificados.personaConsultada}">
+													<div class="ui-g" align="center">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelMedioAComunicar}#{messageBeanSNR.commonLabelObligatorio}"
+															style="width:100%" />
+														<br />
+														<p:selectOneMenu id="idsomMedioACom"
+															style="width:77%"
+															title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosBasicosInteresadoMedioNotificar}"
+															value="#{beanCertificados.solicitud.idAutorizacionComunicacion}">
+															<p:ajax update="idsomMedioANotificar,idOPDatosConsulta" />
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems value="#{beanCertificados.mediosComunicar}"
+																var="habCom" itemValue="#{habCom.idTipoRecepcion}"
+																itemLabel="#{habCom.nombre}" />
+															<p:ajax event="change"
+																listener="#{beanCertificados.cambioDeMedioComInteresado(beanCertificados.solicitud.idAutorizacionComunicacion)}"
+																update="idPanelDatosContacto idPanelDirCorr idPanelDirRes idOPDatosConsulta" />
+														</p:selectOneMenu>
+													</div>
+												</p:outputPanel>
+											</div>
+										</div>
+										<p:outputPanel rendered="#{beanCertificados.rendered}">
+											<p:outputPanel id="idOPDatosConsulta"
+												rendered="#{beanCertificados.mostrarDatosConsulta}">
+												<div class="ui-g" align="left">
+													<div class="ui-g-12 ui-md-6 ui-lg-4"
+														style="display: #{(beanCertificados.mostrarDireccionesResidencia and(beanCertificados.habilitarDireccionReCo or beanCertificados.habilitarDireccionReNo))? 'block': 'none'}">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelDireccionesDeResidencia}" />
+														<br />
+														<p:selectOneMenu id="dire" style="width:80%"
+															title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoConsultaInteresadoDireccionesResidencia}"
+															value="#{beanCertificados.idDirResSeleccion}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanCertificados.registroDatosConsultados.listadoDireccionResidencia}"
+																var="item"
+																itemValue="#{item.idPersona}-#{item.idDireccion}"
+																itemLabel="#{item.direccion}" />
+															<p:ajax
+																listener="#{beanCertificados.cargarDireccionResidencia}"
+																update=":fCertificados:idPanelDirRes,idSorMismaDir" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-4"
+														style="display: #{(beanCertificados.mostrarDireccionesCorrespondencia and(beanCertificados.habilitarDireccionCoCo or beanCertificados.habilitarDireccionCoNo))? 'block': 'none'}">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelDireccionesDeCorrespondencia}" />
+														<br />
+														<p:selectOneMenu style="width:80%"
+															title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoConsultaInteresadoDireccionesCorrespondencia}"
+															value="#{beanCertificados.idDirCorrSeleccion}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanCertificados.registroDatosConsultados.listadoDireccionCorrespondencia}"
+																var="item"
+																itemValue="#{item.idPersona}-#{item.idDireccion}"
+																itemLabel="#{item.direccion}" />
+															<p:ajax
+																listener="#{beanCertificados.cargarDireccionCorrespondencia}"
+																update=":fCertificados:idPanelDirCorr" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-4"
+														style="display: #{(beanCertificados.mostrarTelefonoFijo and(beanCertificados.habilitarTelFijoCo or beanCertificados.habilitarTelFijoNo))? 'block': 'none'}">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabalTelefonosFijos}" />
+														<br />
+														<p:selectOneMenu style="width:80%"
+															title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoConsultaInteresadoTelefonosFijos}"
+															value="#{beanCertificados.idTelFijoSeleccion}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanCertificados.registroDatosConsultados.listadoTelefonoFijo}"
+																var="item"
+																itemValue="#{item.idPersona}-#{item.idTelefono}"
+																itemLabel="#{item.telefono}" />
+															<p:ajax listener="#{beanCertificados.cargarTelefonoFijo}"
+																update=":fCertificados:idOpTelFijo" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-4"
+														style="display: #{(beanCertificados.mostrarTelefonoMovil and(beanCertificados.habilitarTelMovilCo or beanCertificados.habilitarTelMovilNo))? 'block': 'none'}">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabalTelefonosMoviles}" />
+														<br />
+														<p:selectOneMenu style="width:80%"
+															title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoConsultaInteresadoTelefonosMoviles}"
+															value="#{beanCertificados.idTelMovSeleccion}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanCertificados.registroDatosConsultados.listadoTelefonoMovil}"
+																var="item"
+																itemValue="#{item.idPersona}-#{item.idTelefono}"
+																itemLabel="#{item.telefono}" />
+															<p:ajax listener="#{beanCertificados.cargarTelefonoMovil}"
+																update="idSOMPaisTelMov,idItTelefonoMovil" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-4"
+														style="display: #{(beanCertificados.mostrarCorreo and(beanCertificados.habilitarCorreoCo or beanCertificados.habilitarCorreoNo))? 'block': 'none'}">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelCorreosElectronicos}" />
+														<br />
+														<p:selectOneMenu style="width:80%"
+															title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoConsultaInteresadoCorreosElectronicos}"
+															value="#{beanCertificados.idCorreoSeleccion}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanCertificados.registroDatosConsultados.listadoCorreoElectronico}"
+																var="item"
+																itemValue="#{item.idPersona}-#{item.idCorreoElectronico}"
+																itemLabel="#{item.correoElectronico}" />
+															<p:ajax
+																listener="#{beanCertificados.cargarCorreoElectronico}"
+																update="idItEmail" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+											</p:outputPanel>
+										</p:outputPanel>
+									</p:outputPanel>
+								</p:panel>
+								<br />
+								<p:panel id="idPPanelDatosBasicos"
+									header="#{messageBeanSNR.commonLabelDatosBasicosDelInteresado}"
+									toggleable="true"
+									collapsed="#{beanCertificados.mostrarDatosBasicos}">
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTipoDePersona}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMTipoPersona" style="width:100%"
+												title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosBasicosInteresadoTipoPersona}"
+												value="#{beanCertificados.persona.idTipoPersona}"
+												disabled="#{beanCertificados.deshabilitarDatosBasicos || beanCertificados.deshabilitarTipoPersona || beanCertificados.esRetomarSolicitud || !beanCertificados.habilitadoPorConsulta}">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems value="#{beanReference.findTipoPersona()}"
+													var="tipoPersona" itemValue="#{tipoPersona.idTipoPersona}"
+													itemLabel="#{tipoPersona.descripcion}" />
+												<p:ajax event="change"
+													listener="#{beanCertificados.validarTipoPersonaDocumento(beanCertificados.persona.idTipoPersona)}"
+													update="idSOMTipoPersona idSOMTipoDoc idsomMedioANotificar idPanelDirRes idOLNombre idOLApellido idOLRazon @this,idOlDocumento,idSOMNacionalidad,idSOMGenero,idOlPNombre,idOlSNombre,idOlPApellido,idOlSApellido,idOlRazonSocial" />
+											</p:selectOneMenu>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMTipoDoc" style="width:100%"
+												title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosBasicosInteresadoTipoDocumento}"
+												value="#{beanCertificados.persona.idDocumentoTipo}"
+												disabled="#{beanCertificados.deshabilitarDatosBasicos || beanCertificados.deshabilitarTipoDocumento || beanCertificados.esRetomarSolicitud || !beanCertificados.habilitadoPorConsulta}">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems
+													value="#{beanReference.findTipoDocumentoActivo()}"
+													var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+													itemLabel="#{tipoDoc.descripcion}" />
+												<p:ajax event="change"
+													listener="#{beanCertificados.validarTipoPersonaDocumento(beanCertificados.persona.idDocumentoTipo)}"
+													update="idSOMTipoPersona idSOMTipoDoc idsomMedioANotificar idPanelDirRes idOLNombre idOLApellido idOLRazon @this,idOlDocumento,idSOMNacionalidad,idSOMGenero,idOlPNombre,idOlSNombre,idOlPApellido,idOlSApellido,idOlRazonSocial" />
+											</p:selectOneMenu>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idOlDocumento"
+												title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosBasicosInteresadoDocumento}"
+												placeholder="#{messageBeanSNR.commonLabelDocumento}"
+												maxlength="20"
+												value="#{beanCertificados.persona.numeroDocumento}"
+												disabled="#{(beanCertificados.deshabilitarDatosBasicos || beanCertificados.esRetomarSolicitud || !beanCertificados.habilitadoPorConsulta)}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelNacionalidad}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMNacionalidad" style="width:100%"
+												title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosBasicosInteresadoNacionalidad}"
+												value="#{beanCertificados.persona.idPais}"
+												disabled="#{beanCertificados.deshabilitarDatosBasicos || beanCertificados.esRetomarSolicitud|| !beanCertificados.habilitadoPorConsulta}">
+												<p:ajax update="idSOMNacionalidad" />
+												<f:selectItem itemValue=""
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+												<f:selectItems value="#{beanReference.findPaises()}"
+													var="paises" itemValue="#{paises.idPais}"
+													itemLabel="#{paises.nombre}" />
+											</p:selectOneMenu>
+										</div>
+									</div>
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+												value="#{messageBeanSNR.commonLabelCalidadEnQueActua}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMCalidad" style="width:100%"
+												title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosBasicosInteresadoCalidadActua}"
+												value="#{beanCertificados.solicitud.idCalidadSolicitante}"
+												disabled="#{!beanCertificados.habilitadoPorConsulta}">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems
+													value="#{beanReference.findCalidadSolicitante()}"
+													var="calSol" itemValue="#{calSol.idCalidadSolicitante}"
+													itemLabel="#{calSol.nombre}" />
+											</p:selectOneMenu>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel for="idOlPNombre" id="idOLNombre"
+												indicateRequired="#{!beanCertificados.deshabilitarCamposPorNit}"
+												value="#{messageBeanSNR.commonLabelPrimerNombre}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idOlPNombre" maxlength="100"
+												title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosBasicosInteresadoPrimerNombre}"
+												placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+												value="#{beanCertificados.persona.primerNombre}"
+												disabled="#{(beanCertificados.deshabilitarDatosBasicos || beanCertificados.deshabilitarCamposPorNit || beanCertificados.esRetomarSolicitud) and (!beanCertificados.accionBtnEditPerNormal) || !beanCertificados.habilitadoPorConsulta}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel for="idOlSNombre"
+												value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idOlSNombre" maxlength="100"
+												title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosBasicosInteresadoSegundoNombre}"
+												placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+												value="#{beanCertificados.persona.segundoNombre}"
+												disabled="#{(beanCertificados.deshabilitarDatosBasicos || beanCertificados.deshabilitarCamposPorNit || beanCertificados.esRetomarSolicitud) and (!beanCertificados.accionBtnEditPerNormal) || !beanCertificados.habilitadoPorConsulta}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel for="idOlPApellido" id="idOLApellido"
+												indicateRequired="#{!beanCertificados.deshabilitarCamposPorNit}"
+												value="#{messageBeanSNR.commonLabelPrimerApellido}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idOlPApellido" maxlength="150"
+												title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosBasicosInteresadoPrimerApellido}"
+												placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+												value="#{beanCertificados.persona.primerApellido}"
+												disabled="#{(beanCertificados.deshabilitarDatosBasicos || beanCertificados.deshabilitarCamposPorNit || beanCertificados.esRetomarSolicitud) and (!beanCertificados.accionBtnEditPerNormal) || !beanCertificados.habilitadoPorConsulta}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel for="idOlSApellido"
+												value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idOlSApellido" maxlength="100"
+												title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosBasicosInteresadoSegundoApellido}"
+												placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+												value="#{beanCertificados.persona.segundoApellido}"
+												disabled="#{(beanCertificados.deshabilitarDatosBasicos || beanCertificados.deshabilitarCamposPorNit || beanCertificados.esRetomarSolicitud) and (!beanCertificados.accionBtnEditPerNormal) || !beanCertificados.habilitadoPorConsulta}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelGenero}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMGenero" style="width:100%"
+												title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosBasicosInteresadoGenero}"
+												value="#{beanCertificados.persona.idNaturalGenero}"
+												disabled="#{beanCertificados.deshabilitarCamposPorNit || beanCertificados.deshabilitarTipoDocumento || beanCertificados.deshabilitarTipoPersona || beanCertificados.esRetomarSolicitud || !beanCertificados.habilitadoPorConsulta}">
+												<p:ajax update="idSOMGenero" />
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems value="#{beanReference.findGeneros()}"
+													var="generos" itemValue="#{generos.idNaturalGenero}"
+													itemLabel="#{generos.ilicode}" />
+											</p:selectOneMenu>
+										</div>
+
+									</div>
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-12 ui-lg-6">
+											<p:outputLabel for="idOlRazonSocial" id="idOLRazon"
+												indicateRequired="#{beanCertificados.deshabilitarCamposPorNit}"
+												value="#{messageBeanSNR.commonLabelRazonSocial}" />
+											<br />
+											<p:inputText
+												title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosBasicosInteresadoRazonSocial}"
+												onblur="value=value.toUpperCase()" id="idOlRazonSocial"
+												placeholder="#{messageBeanSNR.commonLabelRazonSocial}"
+												value="#{beanCertificados.persona.razonSocial}"
+												disabled="#{(beanCertificados.deshabilitarDatosBasicos || !beanCertificados.deshabilitarCamposPorNit || beanCertificados.esRetomarSolicitud) and (!beanCertificados.accionBtnEditPerNit) || !beanCertificados.habilitadoPorConsulta}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel for="idSOMEntidadExenta" id="idOLEntidadExenta"
+												value="#{messageBeanSNR.commonLabelEntidadExenta}" />
+											<br />
+											<p:selectOneMenu id="idSOMEntidadExenta"
+												style="width:100%"
+												value="#{beanCertificados.solicitud.entidadExenta}"
+												title="">
+												<f:selectItem itemLabel="#{messageBeanSNR.commonLabelNo}"
+													itemValue="N"/>
+												<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSi}"
+													itemValue="S"/>
+											</p:selectOneMenu>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel for="idSOMConvenio" id="idOLConvenio"
+												indicateRequired="#{beanCertificados.solicitud.entidadExenta eq 'S'}"
+												value="#{messageBeanSNR.commonLabelConvenio}" />
+											<br />
+											<p:selectOneMenu id="idSOMConvenio"
+												style="width:100%" disabled="#{beanCertificados.solicitud.entidadExenta ne 'S'}"
+												title="">
+												<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue=""/>
+											</p:selectOneMenu>
+										</div>
+									</div>
+									<p:outputPanel id="idOPIntervienePregunta">
+										<p:outputPanel rendered="#{!beanCertificados.rendered}">
+											<div class="ui-g" align="left">
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<h:panelGrid columns="2">
+														<p:outputLabel id="labelInterviene1" for="idOlInterviene1"
+															indicateRequired="true"
+															value="#{messageBeanSNR.commonLabelPreguntaIntervieneEnElDocumentoARegistrar}" />
+														<p:selectOneRadio id="idOlInterviene1" style="width:100%"
+															value="#{beanCertificados.solicitud.participaInterviniente}"
+															disabled="#{!beanCertificados.habilitadoPorConsulta}">
+															<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+																itemValue="S" />
+															<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+																itemValue="N" />
+														</p:selectOneRadio>
+													</h:panelGrid>
+												</div>
+											</div>
+										</p:outputPanel>
+									</p:outputPanel>
+								</p:panel>
+								<br />
+								<p:panel id="idPanelDirRes" toggleable="true"
+									widgetVar="wvPanelDireccionR"
+									style="#{beanCertificados.persona.idTipoPersona eq 'J' ? 'display: none' : ''}"
+									collapsed="#{!beanCertificados.habilitarPanelDirResidencia}"
+									header="#{messageBeanSNR.commonLabelDireccionDeResidencia}">
+									<ui:include src="direccionResidenciaInclude.xhtml"/>
+								</p:panel>
+								<br />
+								<p:panel id="idPanelDirCorr" toggleable="true"
+									widgetVar="wvPanelDireccionC"
+									collapsed="#{!beanCertificados.habilitarPanelDirCorrespondencia}"
+									header="#{messageBeanSNR.commonLabelDireccionDeCorrespondencia}">
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-8 ui-lg-8">
+											<h:panelGrid columns="2">
+												<p:outputLabel id="labelCorrespondencia"
+													value="#{messageBeanSNR.commonLabelPreguntaDeseaQueSeaLaMismaDireccion}#{messageBeanSNR.commonLabelObligatorio}" />
+												<p:selectOneRadio id="idSorMismaDir" style="width:100%"
+													disabled="#{!beanCertificados.habilitadoPorConsulta}"
+													value="#{beanCertificados.mismaDireccionCorrespondencia}">
+													<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+														itemValue="S" />
+													<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+														itemValue="N" />
+													<p:ajax
+														listener="#{beanCertificados.cambiarDireccionCorrespondencia}"
+														update=":fCertificados:idFormDireccionCorrespondenciaInclude" />
+												</p:selectOneRadio>
+											</h:panelGrid>
+										</div>
+									</div>
+									<ui:include src="direccionCorrespondenciaInclude.xhtml"/>
+								</p:panel>
+								<br />
+								<p:panel id="idPanelDatosContacto" widgetVar="wvPanelDatosC"
+									collapsed="#{!beanCertificados.habilitarPanelDatosContacto}"
+									header="#{messageBeanSNR.commonLabelDatosDelContacto}"
+									toggleable="true">
+									<p:outputPanel id="idOpTelFijo">
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelPaisDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:selectOneMenu id="idSOMPaisTel" style="width:80%"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosContactoPaisTelefonoFijo}"
+														value="#{beanCertificados.telefonoFijo.idPais}"
+														disabled="#{beanCertificados.deshabilitarTelFijo || !beanCertificados.habilitadoPorConsulta}">
+														<p:ajax listener="#{beanCertificados.cambiarPaisTelefono}"
+															update="idSOMDepTel,idItIndicativo" />
+														<f:selectItem itemValue=""
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+														<f:selectItems value="#{beanReference.findPaises()}"
+															var="paises" itemValue="#{paises.idPais}"
+															itemLabel="#{paises.nombre}" />
+													</p:selectOneMenu>
+												</div>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelDepartamentoDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:selectOneMenu id="idSOMDepTel" style="width:80%"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosContactoDepartamentoTelefonoFijo}"
+														value="#{beanCertificados.telefonoFijo.idDepartamento}"
+														disabled="#{beanCertificados.deshabilitarTelFijo || !beanCertificados.habilitadoPorConsulta}">
+														<p:ajax
+															listener="#{beanCertificados.findIndicativoDepartamento}"
+															update="idItIndicativo" />
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems
+															value="#{beanCertificados.findDepartamentosTelefono()}"
+															var="depRes" itemValue="#{depRes.idDepartamento}"
+															itemLabel="#{depRes.nombre}" />
+													</p:selectOneMenu>
+												</div>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<div class="ui-g-4 ui-md-4 ui-lg-3">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelIndicativo}" />
+												</div>
+												<div class="ui-g-2 ui-md-2 ui-lg-2">
+													<p:inputText onblur="value=value.toUpperCase()"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosContactoIndicativo}"
+														id="idItIndicativo" disabled="true" size="4"
+														value="#{beanCertificados.telefonoFijo.indicativo}"
+														maxlength="15" />
+												</div>
+												<div class="ui-g-1 ui-md-1 ui-lg-1">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelSignoNumero}" />
+												</div>
+
+												<div class="ui-g-5 ui-md-5 ui-lg-4">
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idItTelefonoFijo"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosContactoTelefonoFijo}"
+														placeholder="#{messageBeanSNR.commonLabelTelefonoFijo}"
+														maxlength="7"
+														value="#{beanCertificados.telefonoFijo.telefono}"
+														disabled="#{beanCertificados.deshabilitarTelFijo || !beanCertificados.habilitadoPorConsulta}">
+														<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+													</p:inputText>
+												</div>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelPaisDelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:selectOneMenu id="idSOMPaisTelMov" style="width:80%"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosContactoPaisTelefonoMovil}"
+														value="#{beanCertificados.telefonoMovil.idPais}"
+														disabled="#{beanCertificados.deshabilitarTelMovil || !beanCertificados.habilitadoPorConsulta}">
+														<p:ajax update="idItIndicativoMovil" />
+														<f:selectItem itemValue=""
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+														<f:selectItems value="#{beanReference.findPaises()}"
+															var="paises" itemValue="#{paises.idPais}"
+															itemLabel="#{paises.nombre}" />
+													</p:selectOneMenu>
+												</div>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<div class="ui-g-4 ui-md-4 ui-lg-3">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelIndicativo}" />
+													<p:spacer />
+												</div>
+												<div class="ui-g-2 ui-md-2 ui-lg-2">
+													<p:inputText onblur="value=value.toUpperCase()"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosContactoIndicativoMovil}"
+														id="idItIndicativoMovil" disabled="true" size="4"
+														value="#{beanCertificados.telefonoMovil.idPais}" />
+												</div>
+												<div class="ui-g-1 ui-md-1 ui-lg-1">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelSignoNumero}" />
+													<p:spacer />
+												</div>
+
+												<div class="ui-g-5 ui-md-5 ui-lg-5">
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idItTelefonoMovil"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosContactoTelefonoMovil}"
+														placeholder="#{messageBeanSNR.commonLabelTelefonoMovil}"
+														value="#{beanCertificados.telefonoMovil.telefono}"
+														disabled="#{beanCertificados.deshabilitarTelMovil || !beanCertificados.habilitadoPorConsulta}"
+														maxlength="10">
+														<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+													</p:inputText>
+												</div>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelCorreoElectronico}#{messageBeanSNR.commonLabelObligatorio}" />
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idItEmail" style="width:83% !important"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosContactoCorreoElectronico}"
+														placeholder="#{messageBeanSNR.commonLabelEjemploCorreo}"
+														size="30" maxlength="100"
+														value="#{beanCertificados.correoElectronico.correoElectronico}"
+														disabled="#{beanCertificados.deshabilitarCorreo || !beanCertificados.habilitadoPorConsulta}" />
+												</div>
+											</div>
+										</div>
+									</p:outputPanel>
+								</p:panel>
+								<br />
+								<p:outputPanel id="idObservaciones1">
+									<div align="left">
+										<strong>
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelObservaciones}" />
+										</strong>
+										<p:inputTextarea rows="10" cols="240"
+											title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosObservaciones}"
+											onblur="value=value.toUpperCase()"
+											value="#{beanCertificados.solicitud.descripcion}"
+											queryDelay="750" maxlength="4000" minQueryLength="4"
+											counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+											counter="idNumeroCaracteres1" />
+									</div>
+									<div align="right">
+										<h:outputText id="idNumeroCaracteres1" />
+									</div>
+								</p:outputPanel>
+							</p:panel>
+						</p:tab>
+						<p:tab id="datosTramite_id" titleStyle="font-size:15px;"
+							title="#{messageBeanSNR.commonLabelDatosDelTramite}">
+							<p:panel id="idPDatosTramite">
+								<p:panel id="idPSolicitud"
+									toggleable="true" header="#{messageBeanSNR.commonLabelSolicitud}">
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel indicateRequired="true"
+												value="#{messageBeanSNR.commonLabelNuevaEntrada}" />
+											<br />
+											<p:selectOneMenu id="idSOMNuevaEntrada" style="width:100%"
+												title="#{tooltipBeanSNR.procesosRegistroDatosTramiteTipoTramite}"
+												value="#{beanCertificados.respuestaNuevaEntrada}">
+												<p:ajax event="change"
+													update="idOlTurnoAnterior,idOlNirRelacionado" />
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonNo}"
+													itemValue="N" />
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonSi}"
+													itemValue="S" />
+												<p:ajax event="change" update="idPSolicitud"
+													listener="#{beanCertificados.cambiarTurnoNirNuevaEntrada()}"/>
+											</p:selectOneMenu>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel indicateRequired="#{beanCertificados.respuestaNuevaEntrada eq 'S'}"
+												value="#{messageBeanSNR.commonLabelTurnoAnteriorRelacionado}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idOlTurnoAnterior" maxlength="20"
+												rendered="#{beanCertificados.turnosRelacionadosNuevaEntrada eq null or empty beanCertificados.turnosRelacionadosNuevaEntrada}"
+												disabled="#{beanCertificados.respuestaNuevaEntrada ne 'S'}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosTramiteTurnoAnterior}"
+												placeholder="#{messageBeanSNR.commonLabelTurnoAnteriorRelacionado}"
+												value="#{beanCertificados.solicitud.idTurnoAnt}">
+												<p:keyFilter regEx="/[\d\-]/" preventPaste="false" />
+												<p:ajax listener="#{beanCertificados.consultarTurnoNuevaEntrada()}"
+													update="fCertificados:idOlNirRelacionado,fCertificados:idSOMTiposCertificado,fCertificados:idOlTurnoAnterior,globalMsg,idTVDatosPredio:panelDatosDelPredio,idTVDatosPredio:idPMostrarMasiva"
+													event="change" />
+											</p:inputText>
+											<p:selectOneMenu id="idSOMTurnosAnteriores" style="width:100%"
+												rendered="#{beanCertificados.turnosRelacionadosNuevaEntrada ne null and not(empty beanCertificados.turnosRelacionadosNuevaEntrada)}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosTramiteTurnoAnterior}"
+												value="#{beanCertificados.solicitud.idTurnoAnt}">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems itemLabel="#{turno.idTurno}" 
+													var="turno" value="#{beanCertificados.turnosRelacionadosNuevaEntrada}"
+													itemValue="#{turno.idTurno}"/>
+												<p:ajax update="idTVDatosPredio:panelDatosDelPredio,idTVDatosPredio:idPMostrarMasiva" event="change"
+													listener="#{beanCertificados.cambiarTurnoNuevaEntrada()}"/>
+											</p:selectOneMenu>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel indicateRequired="#{beanCertificados.respuestaNuevaEntrada eq 'S'}"
+												value="#{messageBeanSNR.commonLabelNIRRelacionado}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idOlNirRelacionado" maxlength="16"
+												title="#{tooltipBeanSNR.procesosRegistroDatosTramiteNirRelacionado}"
+												placeholder="#{messageBeanSNR.commonLabelNIRRelacionado}"
+												disabled="#{beanCertificados.respuestaNuevaEntrada ne 'S' or beanCertificados.bloqueosNuevaEntrada}"
+												value="#{beanCertificados.solicitud.nirAsociado}" >
+												<p:ajax event="change" update="idPSolicitud,globalMsg"
+													listener="#{beanCertificados.consultarNirNuevaEntrada()}"/>
+											</p:inputText>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel indicateRequired="true"
+												value="#{messageBeanSNR.commonLabelTipoCertificado}" />
+											<br />
+											<p:selectOneMenu id="idSOMTiposCertificado" style="width:100%"
+												title="#{beanCertificados.nombreTooltipSubproceso}"
+												value="#{beanCertificados.solicitud.idSubproceso}"
+												disabled="#{beanCertificados.bloqueosNuevaEntrada}">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems itemLabel="#{sub.nombre}" 
+													var="sub" value="#{beanCertificados.subprocesosCertificados}"
+													itemValue="#{sub.idSubproceso}"/>
+												<p:ajax event="change" update="fCertificados"
+													listener="#{beanCertificados.cambiarSubproceso()}" />
+											</p:selectOneMenu>
+										</div>
+									</div>
+								</p:panel>
+								<br />
+								<p:panel toggleable="true" id="idPMatricula"
+									header="#{messageBeanSNR.commonLabelMatricula}">
+									<p:outputPanel id="idOPTipoRequiereMatr">
+										<p:selectOneRadio id="idSORTipoRequiereMatricula"
+											value="#{beanCertificados.datosMatricula.eleccionRequiereMatricula}">
+											<f:selectItems
+												value="#{beanCertificados.datosMatricula.tiposMatricula}"
+												var="opcion" itemLabel="#{opcion.descripcion}"
+												itemDisabled="#{opcion.desactivar}"
+												itemValue="#{opcion.idTipoRequiereMatricula}" />
+											<p:ajax event="click"
+												listener="#{beanCertificados.buscarInfoCirculo(beanCertificados.datosMatricula)}"
+												update="idOPTabDatosPredio" />
+										</p:selectOneRadio>
+									</p:outputPanel>
+									<br />
+									<p:outputPanel id="idOPTabDatosPredio"
+										title="#{messageBeanSNR.commonLabelDatosAntiguoSistema}">
+										<p:tabView id="idTVDatosPredio"
+											rendered="#{beanCertificados.datosMatricula.eleccionRequiereMatricula ne null}">
+											<p:tab id="idTabDatosMatricula"
+												title="#{messageBeanSNR.commonLabelDatosConMatricula}"
+												rendered="#{beanCertificados.datosMatricula.eleccionRequiereMatricula eq '1' or beanCertificados.datosMatricula.eleccionRequiereMatricula eq '3'}">
+												<div class="ui-c">
+													<div class="ui-g-12">
+														<p:outputPanel id="idPgTipoMatricula">
+															<p:selectOneRadio id="idSorIndividualMasiva"
+																value="#{beanCertificados.datosMatricula.seccionTipoMatricula}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelMatriculaInmobiliariaIndividual}"
+																	itemValue="S" />
+																<br />
+																<f:selectItem 
+																	itemDisabled="#{!beanCertificados.certificadosMasivos}"
+																	itemLabel="#{messageBeanSNR.commonLabelMatriculasMasivas}"
+																	itemValue="N" />
+																<p:ajax
+																	listener="#{beanCertificados.actualizarMatriculasAgregadas()}"
+																	update="panelDatosDelPredio,idPMostrarMasiva,fCertificados,idOPIconoCargueExcel" />
+															</p:selectOneRadio>
+														</p:outputPanel>
+													</div>
+												</div>
+												<p:outputPanel
+													rendered="#{beanCertificados.datosMatricula.seccionTipoMatricula == 'N'}">
+													<br />
+												</p:outputPanel>
+												<p:panel
+													header="#{messageBeanSNR.commonLabelMatriculasMasivas}"
+													toggleable="true" id="idPMostrarMasiva"
+													rendered="#{beanCertificados.datosMatricula.seccionTipoMatricula == 'N'}">
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-4">
+															<p:outputLabel indicateRequired="true"
+																value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+															<br />
+															<p:selectOneMenu id="idCirculoRegistralMasivo"
+																style="width:100%" filter="true"
+																disabled="#{beanCertificados.nuevaEntrada}" 
+																value="#{beanCertificados.datosMatricula.idCirculo}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanReference.findCirculoRegistral(false)}"
+																	var="circuloRegistralData"
+																	itemValue="#{circuloRegistralData.idCirculo}"
+																	itemLabel="#{circuloRegistralData.idCirculo} - #{circuloRegistralData.nombre}" />
+															</p:selectOneMenu>
+															<br />
+														</div>
+														<div class="ui-g-12 ui-md-4">
+															<p:outputLabel indicateRequired="true"
+																value="#{messageBeanSNR.commonLabelDesde}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="idItDesde" maxlength="10"
+																title="#{tooltipBeanSNR.procesosRegistroDatosPredioOrdinariaMatriculasMasivasDesde}"
+																placeholder="#{messageBeanSNR.commonLabelDesde}"
+																value="#{beanCertificados.datosMatricula.rangoInicio}" />
+														</div>
+														<div class="ui-g-12 ui-md-4">
+															<p:outputLabel indicateRequired="true"
+																value="#{messageBeanSNR.commonLabelHasta}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="idItHasta" maxlength="10"
+																title="#{tooltipBeanSNR.procesosRegistroDatosPredioOrdinariaMatriculasMasivasHasta}"
+																placeholder="#{messageBeanSNR.commonLabelHasta}"
+																value="#{beanCertificados.datosMatricula.rangoFin}" />
+														</div>
+													</div>
+													<div class="ui-g" >
+														<div class="ui-g-12 ui-md-4" align="left">
+															<p:commandButton
+																value="#{messageBeanSNR.commonLabelAgregarActosAsociados}"
+																style="width:100%" icon="fa fa-plus-circle"
+																iconPos="left"
+																actionListener="#{beanCertificados.agregarActosMasivosCirculos(beanCertificados.datosMatricula)}"
+																update="panelDatosDelPredio,fCertificados:globalMsg" />
+														</div>
+														<div class="ui-g-12 ui-md-8" align="right">
+															<p:commandLink id="idCLDescargarPlantilla"
+																styleClass="subrayado" 
+																value="#{messageBeanSNR.commonLabelDescargarPlantilla}"
+																ajax="false"
+																actionListener="#{beanCertificados.descargarPlantillaMatriculas()}">
+																<p:fileDownload value="#{beanCertificados.imagen}" />
+															</p:commandLink>
+														</div>
+													</div>
+													<div class="ui-g" align="center">
+														<div class="ui-g-12" align="center">
+															<p:fileUpload
+																fileUploadListener="#{beanCertificados.processFile}"
+																mode="advanced" dragDropSupport="true"
+																cancelLabel="#{messageBeanSNR.commonLabelCancelar}"
+																uploadLabel="#{messageBeanSNR.commonLabelCargar}"
+																fileLimitMessage="#{messageBeanSNR.commonLabelSoloCargarUnArchivoALaVez}"
+																invalidFileMessage="#{messageBeanSNR.commonLabelElArchivoCargueDebeSerExcel}"
+																label="#{messageBeanSNR.commonLabelCargarExcelDeActos}"
+																sizeLimit="#{beanCertificados.cargarConstanteTamanoLimiteArchivo()}"
+																invalidSizeMessage="#{messageBeanSNR.commonLabelElArchivoCargueNoPuedeExcederLos2Mb}"
+																id="idFuLoadFile" widgetVar="idFuLoadFile"
+																update="idPMostrarMasiva,fCertificados:globalMsg,idClnkRespuesta,panelDatosDelPredio,idOPIconoCargueExcel"
+																fileLimit="1" allowTypes="/(\.|\/)(xls?x)$/"
+																oncomplete="PF('idFuLoadFile').clear();">
+																<f:attribute name="nAttrDatoPredio"
+																	value="#{beanCertificados.datosMatricula}" />
+																<f:attribute name="datosPredio"
+																	value="S" />
+															</p:fileUpload>
+														</div>
+													</div>
+													<p:outputPanel id="idOPIconoCargueExcel">
+														<p:outputPanel rendered="#{beanCertificados.datosMatricula.file ne null}">
+															<div class="ui-g"  align="center">
+																<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+																	<p:commandLink id="idClnkRespuesta" ajax="false"
+																		onclick="PrimeFaces.monitorDownload(start, stop);"
+																		actionListener="#{beanCertificados.datosMatricula.rebuildFile}"
+																		rendered="#{beanCertificados.datosMatricula.file != null}">
+																		<p:graphicImage value="/images/excel_ico.png"
+																			width="48" />
+																		<p:fileDownload value="#{beanCertificados.datosMatricula.fileDescarga}" />
+																	</p:commandLink>
+																	<br></br>
+																	<p:outputLabel id="idOlLinkExcel"
+																		value="Archivo de salida"
+																		rendered="#{beanCertificados.datosMatricula.file != null}">
+																	</p:outputLabel>
+																</div>
+															</div>
+														</p:outputPanel>
+													</p:outputPanel>
+
+													<script type="text/javascript">
+														function start()
+														{
+															PF(
+																	'statusDownload')
+																	.show();
+														}
+
+														function stop()
+														{
+															PF(
+																	'statusDownload')
+																	.hide();
+														}
+													</script>
+
+													<p:dialog appendTo="@(body)" modal="true"
+														widgetVar="statusDownload" header="Status"
+														draggable="false" closable="false" resizable="false">
+														<p:graphicImage value="/images/ajaxloadingbar.gif" />
+													</p:dialog>
+												</p:panel>
+												<br />
+												<p:panel id="panelDatosDelPredio" toggleable="true"
+													header="#{messageBeanSNR.commonLabelMatriculasAsociadas}">
+													<p:dataTable id="idActosDatosDelPredio" var="item"
+														tableStyle="width:auto" emptyMessage=""
+														rows="50"
+														paginator="#{beanCertificados.datosMatricula.seccionTipoMatricula == 'N'}"
+														value="#{beanCertificados.datosMatricula.actosAsociadosGeneral}">
+														<p:column headerText="#{messageBeanSNR.commonLabelNro}" >
+															<p:outputLabel id="idOlNumMatrMasiva"
+																value="#{item.consecutivo}" />
+														</p:column>
+														<p:column width="20%"
+															headerText="#{messageBeanSNR.commonLabelCirculoRegistral}">
+															<p:selectOneMenu id="datosPredioIdCirculoRegistral"
+																disabled="#{beanCertificados.datosMatricula.seccionTipoMatricula == 'N' or item.matriculaCargada or beanCertificados.nuevaEntrada or beanCertificados.bloqueosNuevaEntrada}"
+																style="width: 100%;" filter="true"
+																value="#{item.idCirculo}" >
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="#{item.idCirculo}" />
+																<f:selectItems
+																	value="#{beanReference.findCirculoRegistral(false)}"
+																	var="circuloRegistralData"
+																	itemValue="#{circuloRegistralData.idCirculo}"
+																	itemLabel="#{circuloRegistralData.idCirculo} - #{circuloRegistralData.nombre}" />
+																<p:ajax update="idActosDatosDelPredio"
+																	event="change"/>
+															</p:selectOneMenu>
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelMatricula}">
+															<p:remoteCommand name="validarPredio"
+																update="datosPredioIdMatricula"
+																actionListener="#{beanCertificados.cargarDireccionPredioActo(item.idMatricula,item.idCirculo,item.nupre,beanCertificados.datosMatricula)}" />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="datosPredioIdMatricula" style="width: 100%;"
+																label="#{messageBeanSNR.commonLabelMatricula}"
+																placeholder="#{messageBeanSNR.commonLabelMatricula}"
+																value="#{item.idMatricula}" maxlength="20"
+																disabled="#{((!item.ingresoNuevo and !beanCertificados.habilitarTurnoYnir) or item.matriculaCargada) and !beanCertificados.esMasivoYPredioInconsistente or (beanCertificados.bloqueosNuevaEntrada)}"
+																onkeypress="if (event.keyCode == 13) { validarPredio(); return false; }">
+																<p:ajax
+																	listener="#{beanCertificados.cargarDireccionPredioActo(item.idMatricula,item.idCirculo,item.nupre,beanCertificados.datosMatricula)}"
+																	event="change"
+																	update="datosPredioIdMatricula,idITCedulaCatastral,fCertificados:idPanelObservacionesPredio,fCertificados:globalMsg" />
+																<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+															</p:inputText>
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelNupre}">
+															<p:inputText onblur="value=value.toUpperCase()"
+																title="#{tooltipBeanSNR.procesosRegistroDatosPredioOrdinariaMatriculasMasivasNupre}"
+																disabled="#{(!item.ingresoNuevo and !beanCertificados.habilitarTurnoYnir) or item.bloquearMatricula or item.matriculaCargada}"
+																style="width: 100%;" maxlength="18"
+																value="#{item.nupre}">
+																<p:ajax
+																	listener="#{beanCertificados.cargarDireccionPredioActo(item.idMatricula,item.idCirculo,item.nupre,beanCertificados.datosMatricula)}"
+																	event="change" update="idActosDatosDelPredio,fCertificados:globalMsg" />
+																<p:keyFilter regEx="/[a-z0-9_]/i"
+																	preventPaste="false" />
+															</p:inputText>
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelCedulaCatastral}">
+															<p:inputText id="idITCedulaCatastral" 
+																onblur="value=value.toUpperCase()"
+																style="width: 100%;" maxlength="30"
+																disabled="#{item.matriculaCargada}"
+																value="#{item.numeroPredial}">
+																<p:keyFilter regEx="/[a-z0-9_]/i"
+																	preventPaste="false" />
+																<p:ajax update="idITCedulaCatastral,datosPredioIdCirculoRegistral,datosPredioIdMatricula,fCertificados:globalMsg"
+																	listener="#{beanCertificados.buscarPorNumeroPredial(item)}" />
+															</p:inputText>
+														</p:column>
+														<p:column width="12%"
+															headerText="#{messageBeanSNR.commonLabelCantidadDeCertificados}">
+															<div class="ui-fluid">
+																<p:spinner id="idSpCantidad" value="#{item.cantidad}"
+																	min="0" size="5"
+																	disabled="#{beanCertificados.bloqueosNuevaEntrada}"
+																	title="#{tooltipBeanSNR.procesosRegistroDatosPredioOrdinariaMatriculasMasivasCantidadCertificados}">
+																	<p:keyFilter regEx="/[\d]/"/>	
+																</p:spinner>
+															</div>
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelAccion}">
+															<p:commandButton id="btnEliminiar"
+																update="idActosDatosDelPredio,fCertificados:idTVDatosPredio:btnAgregarActo,fCertificados:idTVDatosPredio:idOPIconoCargueExcel,fCertificados:idPanelObservacionesPredio"
+																icon="fa fa-trash"
+																title="#{messageBeanSNR.commonLabelEliminar}"
+																disabled="#{beanCertificados.bloqueosNuevaEntrada}"
+																actionListener="#{beanCertificados.deleteActoSelected(item,beanCertificados.datosMatricula)}" />
+														</p:column>
+													</p:dataTable>
+													<div class="ui-c">
+														<div class="ui-g-12">
+															<p:commandButton id="btnAgregarActo"
+																value="#{messageBeanSNR.commonLabelAgregarActoAsociadoIndividual}"
+																update="idActosDatosDelPredio,btnAgregarActo"
+																icon="fa fa-plus-circle" iconPos="left"
+																disabled="#{beanCertificados.datosMatricula.actosAsociadosGeneral ne null and beanCertificados.datosMatricula.actosAsociadosGeneral.size() ge 1 and !beanCertificados.certificadosMasivos}"
+																actionListener="#{beanCertificados.agregarActosIndividual(beanCertificados.datosMatricula)}"
+																rendered="#{beanCertificados.datosMatricula.seccionTipoMatricula == 'S'}" />
+														</div>
+													</div>
+												</p:panel>
+											</p:tab>
+											<p:tab id="idTabDatosAntSistema"
+												title="#{messageBeanSNR.commonLabelDatosAntiguoSistema}"
+												rendered="#{beanCertificados.datosMatricula.eleccionRequiereMatricula eq '2' or beanCertificados.datosMatricula.eleccionRequiereMatricula eq '3'}">
+												<p:panel id="idPnPrediosAntiguoSistema"
+													header="#{messageBeanSNR.commonLabelPredioAntiguoSistema}">
+													<div class="ui-c">
+														<div class="ui-g-12">
+															<p:selectOneRadio id="idSorAntiguoSistema" 
+																widgetVar="wvSORAntSistema"
+																disabled="#{(beanCertificados.datosMatricula.datosAntSistemaGuardados and !beanCertificados.datosMatricula.creacionPredio) or beanCertificados.datosMatricula.modificarDatosAntSis or (beanCertificados.bloqueosNuevaEntrada)}"
+																value="#{beanCertificados.datosMatricula.antiguoSistema1932}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelAnioDeAdquisicionAntesDe1978}"
+																	itemValue="S" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelDatosDelPredio}"
+																	itemValue="O" />
+																<p:ajax
+																	listener="#{beanCertificados.resetAntSis(beanCertificados.datosMatricula)}"
+																	update="idSOMCirculoRegistralAntSistema,idPnlAdicional,idSOMLibro,idSOMAno,idOLNombrePredio,idOPTablaDetalleAntsis,idSOMDepAntSistema,idSOMMunAntSistema,idSOMTipoPredioAntSistema" />
+															</p:selectOneRadio>
+														</div>
+													</div>
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-4">
+															<p:outputLabel indicateRequired="true"
+																value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+															<br />
+															<p:selectOneMenu id="idSOMCirculoRegistralAntSistema"
+																style="width:100%" filter="true"
+																disabled="#{(beanCertificados.datosMatricula.datosAntSistemaGuardados and !beanCertificados.datosMatricula.modificarDatosAntSis) or (beanCertificados.bloqueosNuevaEntrada)}"
+																title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaCirculoRegistral}"
+																value="#{beanCertificados.datosMatricula.datosAntiguoSistema.idCirculo}">
+																<p:ajax event="change"
+																	listener="#{beanCertificados.filtrarPorCirculo(beanCertificados.datosMatricula)}"
+																	update="fCertificados:idOlNirRelacionado,idSOMDepAntSistema,idSOMMunAntSistema" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanCertificados.findCirculoRegistral()}"
+																	var="circuloAntSistema"
+																	itemValue="#{circuloAntSistema.idCirculo}"
+																	itemLabel="#{circuloAntSistema.idCirculo} - #{circuloAntSistema.nombre}" />
+																<p:ajax event="change" update="idSOMMunAntSistema"/>
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-4">
+															<p:outputLabel indicateRequired="true"
+																value="#{messageBeanSNR.commonLabelTipoDePredio}" />
+															<br />
+															<p:selectOneMenu id="idSOMTipoPredioAntSistema"
+																style="width:100%" widgetVar="wvTipoPredioAntSistema"
+																disabled="#{(beanCertificados.datosMatricula.datosAntSistemaGuardados and !beanCertificados.datosMatricula.modificarDatosAntSis) or (beanCertificados.bloqueosNuevaEntrada)}"
+																title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaTipoPredio}"
+																value="#{beanCertificados.datosMatricula.datosAntiguoSistema.idTipoPredio}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanReference.findTipoPredio()}"
+																	var="tipoPredioAntSistema"
+																	itemValue="#{tipoPredioAntSistema.idTipoPredio}"
+																	itemLabel="#{tipoPredioAntSistema.descripcion}" />
+															</p:selectOneMenu>
+														</div>
+
+														<div class="ui-g-12 ui-md-4">
+															<p:outputLabel id="idOLNombrePredio"
+																indicateRequired="#{beanCertificados.datosMatricula.antiguoSistema1932 == 'O'}"
+																value="#{messageBeanSNR.commonLabelNombreDelPredio}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="idItNomAntSistema" maxlength="400"
+																disabled="#{(beanCertificados.datosMatricula.datosAntSistemaGuardados and !beanCertificados.datosMatricula.modificarDatosAntSis) or (beanCertificados.bloqueosNuevaEntrada)}"
+																title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaNombrePredio}"
+																value="#{beanCertificados.datosMatricula.datosAntiguoSistema.nombrePredio}" />
+														</div>
+													</div>
+
+													<div class="ui-c" align="left">
+														<div class="ui-g-12 ui-md-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelPais}" />
+															<br />
+															<p:selectOneMenu id="idSOMPaisAntSistema"
+																style="width:100%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaPais}"
+																value="#{beanCertificados.datosMatricula.datosAntiguoSistema.idPais}"
+																disabled="true">
+																<p:ajax update="idSOMDepAntSistema,idSOMMunAntSistema" />
+																<f:selectItem itemValue="57" itemLabel="COLOMBIA" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDepartamento}" />
+															<br />
+															<p:selectOneMenu id="idSOMDepAntSistema"
+																style="width:100%" disabled="true"
+																title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaDepartamento}"
+																value="#{beanCertificados.datosMatricula.datosAntiguoSistema.idDepartamento}">
+																<p:ajax event="change" update="idSOMMunAntSistema" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanCertificados.findDepartamentosAntSistema(beanCertificados.datosMatricula)}"
+																	var="depAntSistema"
+																	itemValue="#{depAntSistema.idDepartamento}"
+																	itemLabel="#{depAntSistema.nombre}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-4">
+															<p:outputLabel indicateRequired="true"
+																value="#{messageBeanSNR.commonLabelMunicipio}" />
+															<br />
+															<p:selectOneMenu id="idSOMMunAntSistema"
+																style="width:100%"
+																disabled="#{(beanCertificados.datosMatricula.datosAntSistemaGuardados and !beanCertificados.datosMatricula.modificarDatosAntSis) or (beanCertificados.bloqueosNuevaEntrada)}"
+																title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaMunicipio}"
+																value="#{beanCertificados.datosMatricula.datosAntiguoSistema.idMunicipio}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanCertificados.findMunicipiosByCirculo(beanCertificados.datosMatricula.datosAntiguoSistema.idCirculo)}"
+																	var="munAntSistema"
+																	itemValue="#{munAntSistema.idMunicipio}"
+																	itemLabel="#{munAntSistema.nombre}" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+													<div class="ui-c" align="left">
+														<div class="ui-g-12 ui-md-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelCantidadDeCertificados}" />
+															<br />
+															<p:inputNumber onblur="value=value.toUpperCase()"
+																style="width:100%" id="idITCantidadCertificados"
+																disabled="true"
+																maxlength="39" decimalPlaces="0"
+																value="#{beanCertificados.datosMatricula.datosAntiguoSistema.cantidadCertificados}">
+																<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+															</p:inputNumber>
+														</div>
+													</div>
+													<br />
+													<div align="right">
+														<p:commandButton id="idCBCancelarCrearPredio"
+															widgetVar="wvCBCancelarCrearPredio"
+															actionListener="#{beanCertificados.cancelarCreacionPredioAntSistema(beanCertificados.datosMatricula)}"
+															rendered="#{beanCertificados.datosMatricula.creacionPredio}"
+															icon="fa fa-close" iconPos="left"
+															update="fCertificados:idTVDatosPredio:idPnPrediosAntiguoSistema,fCertificados:idTVDatosPredio:idPnlAdicional,fCertificados:idTVDatosPredio:idOPTablaDetalleAntsis,fCertificados:globalMsg"
+															value="#{messageBeanSNR.commonLabelCancelar}">
+														</p:commandButton>
+														<p:spacer width="5"></p:spacer>
+														<p:commandButton id="idCBModificarDatosAntSistema"
+															actionListener="#{beanCertificados.guardarDatosAntSistema(beanCertificados.datosMatricula, false)}"
+															disabled="#{!beanCertificados.datosMatricula.modificarDatosAntSis}"
+															update="idPnlAdicional,idPnPrediosAntiguoSistema,fCertificados:globalMsg,idOPDetallesAntSis"
+															icon="fa fa-save" iconPos="left"
+															value="#{messageBeanSNR.commonLabelModificar}">
+															<f:actionListener binding="#{beanCertificados.validarCamposDatosAnt()}"/>
+														</p:commandButton>
+														<p:spacer width="5"></p:spacer>
+														<p:commandButton id="idCBEliminarDatosAntSistema"
+															actionListener="#{beanCertificados.setDatosTemporalesEliminar(beanCertificados.datosMatricula)}"
+															onclick="PF('idDlgEliminarDatosAntSistema').show();"
+															disabled="#{!beanCertificados.datosMatricula.modificarDatosAntSis}"
+															icon="fa fa-trash" iconPos="left"
+															update="idPnlAdicional,idPnPrediosAntiguoSistema,fCertificados:globalMsg,idOPDetallesAntSis"
+															value="#{messageBeanSNR.commonLabelEliminar}">
+														</p:commandButton>
+														<p:spacer width="5"></p:spacer>
+														<p:commandButton id="idCBGuardarDatosAntSistema"
+															actionListener="#{beanCertificados.guardarDatosAntSistema(beanCertificados.datosMatricula, true)}"
+															disabled="#{beanCertificados.datosMatricula.modificarDatosAntSis or beanCertificados.datosMatricula.datosAntSistemaGuardados}"
+															icon="fa fa-save" iconPos="left"
+															update="idPnlAdicional,idPnPrediosAntiguoSistema,fCertificados:globalMsg,idOPDetallesAntSis"
+															title="#{tooltipBeanSNR.procesoRegistroDatosPredioGuardarDatosPredioAntSistema}"
+															value="#{messageBeanSNR.commonButtonGuardarPredioAntSistema}">
+															<f:actionListener binding="#{beanCertificados.validarCamposDatosAnt()}"/>
+														</p:commandButton>
+													</div>
+													<br />
+												</p:panel>
+												<p:outputPanel id="idPnlAdicional">
+													<p:outputPanel id="idOPDetallesAntSis"
+														rendered="#{(beanCertificados.datosMatricula.datosAntSistemaGuardados or beanCertificados.datosMatricula.modificarDetallesAntSis) and beanCertificados.datosMatricula.antiguoSistema1932 =='S'}">
+														<br />
+														<p:panel id="idPDatosLibro"
+															header="#{messageBeanSNR.commonLabelDetalleDatosAntSistema}">
+															<div class="ui-c" align="left">
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel id="idOlLibro" indicateRequired="true"
+																		value="#{messageBeanSNR.commonLabelLibro}" />
+																	<br />
+																	<p:selectOneMenu id="idSOMLibro" style="width:100%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaLibro}"
+																		value="#{beanCertificados.datosMatricula.detalleAntSistema.idLibroAntSistema}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanReference.findLibroAntiguoSistema()}"
+																			var="libro"
+																			itemValue="#{libro.idLibroAntiguoSistema}"
+																			itemLabel="#{libro.nombre}" />
+																		<p:ajax update="idPnlAdicional,idOPPanelDocumento"
+																			listener="#{beanCertificados.cambiarLibro(beanCertificados.datosMatricula)}" />
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel indicateRequired="true"
+																		value="#{messageBeanSNR.commonLabelMunicipio}" />
+																	<br />
+																	<p:selectOneMenu id="idSOMMunTomo" style="width:100%"
+																		disabled="true"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaMunicipio}"
+																		value="#{beanCertificados.datosMatricula.detalleAntSistema.idMunicipioTomo}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanCertificados.findMunicipioAntSistema(beanCertificados.datosMatricula)}"
+																			var="munAntSistema"
+																			itemValue="#{munAntSistema.idMunicipio}"
+																			itemLabel="#{munAntSistema.nombre}" />
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel id="idOltomo" indicateRequired="true"
+																		value="#{messageBeanSNR.commonLabelTomo}" />
+																	<br />
+																	<p:selectOneMenu id="idSOMTomo" style="width:100%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaTomo}"
+																		value="#{beanCertificados.datosMatricula.detalleAntSistema.tomo}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems value="#{beanCertificados.getTomos()}" />
+																	</p:selectOneMenu>
+																</div>
+															</div>
+															<div class="ui-c" align="left">
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel id="idOlFolio" indicateRequired="true"
+																		value="#{messageBeanSNR.commonLabelFolio}" />
+																	<br />
+																	<p:selectOneMenu id="idSOMFolio" style="width:100%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaFolio}"
+																		value="#{beanCertificados.datosMatricula.detalleAntSistema.folio}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems value="#{beanCertificados.getFolios()}" />
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel id="idOlPartida"
+																		indicateRequired="#{!beanCertificados.datosMatricula.libroMatriculas}"
+																		value="#{messageBeanSNR.commonLabelTipoPartida}" />
+																	<br />
+																	<p:selectOneMenu id="idSOMPartida" style="width:100%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaNumeroPartida}"
+																		value="#{beanCertificados.datosMatricula.detalleAntSistema.partida}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItem itemLabel="PAR" itemValue="PAR" />
+																		<f:selectItem itemLabel="IMPAR" itemValue="IMPAR" />
+																		<p:ajax process="@this" update="@this"/>
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel id="idOLNumeroPartida"
+																		indicateRequired="true"
+																		value="#{messageBeanSNR.commonLabelNumeroPartida}" />
+																	<br />
+																	<p:inputText onblur="value=value.toUpperCase()"
+																		id="idItNumeroPartida" maxlength="39"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaNumeroPartida}"
+																		value="#{beanCertificados.datosMatricula.detalleAntSistema.numeroPartida}">
+																		<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+																		<p:ajax event="change"
+																			listener="#{beanCertificados.verificarParImpar}"/>
+																	</p:inputText>
+																</div>
+															</div>
+															<div class="ui-c" align="left">
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel id="idOlano"
+																		indicateRequired="#{!beanCertificados.datosMatricula.libroMatriculas}"
+																		value="#{messageBeanSNR.commonLabelAnio}" />
+																	<br />
+																	<p:selectOneMenu id="idSOMAno" style="width:100%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaAnio}"
+																		value="#{beanCertificados.datosMatricula.detalleAntSistema.anio}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems value="#{beanCertificados.getYearsAgo()}" />
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel
+																		indicateRequired="#{beanCertificados.datosMatricula.libroMatriculas}"
+																		id="idOLCirDetAntSis"
+																		value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+																	<br />
+																	<p:selectOneMenu
+																		id="idSOMCirculoRegistralAntSistemaLibroSegundo"
+																		style="width:100%" disabled="true"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaCirculoRegistral}"
+																		value="#{beanCertificados.datosMatricula.datosAntiguoSistema.idCirculo}">
+																		<p:ajax event="change"
+																			listener="#{beanCertificados.filtrarPorCirculo()}"
+																			update="fCertificados:idOlNirRelacionado,idSOMDepAntSistema,idSOMMunAntSistema" />
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanCertificados.findCirculoRegistral()}"
+																			var="circuloAntSistema"
+																			itemValue="#{circuloAntSistema.idCirculo}"
+																			itemLabel="#{circuloAntSistema.idCirculo} - #{circuloAntSistema.nombre}" />
+																		<p:ajax event="change" update="idSOMMunicipioAntSis"/>
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel
+																		indicateRequired="#{beanCertificados.datosMatricula.libroMatriculas}"
+																		id="idOLTipoPredioDetAntSis"
+																		value="#{messageBeanSNR.commonLabelTipoDePredio}" />
+																	<br />
+																	<p:selectOneMenu
+																		id="idSOMTipoPredioAntSistemaLibroSegundo"
+																		style="width:100%" disabled="true"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaTipoPredio}"
+																		value="#{beanCertificados.datosMatricula.datosAntiguoSistema.idTipoPredio}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanReference.findTipoPredio()}"
+																			var="tipoPredioAntSistema"
+																			itemValue="#{tipoPredioAntSistema.idTipoPredio}"
+																			itemLabel="#{tipoPredioAntSistema.descripcion}" />
+																	</p:selectOneMenu>
+																</div>
+															</div>
+															<div class="ui-c" align="left">
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel
+																		indicateRequired="#{beanCertificados.datosMatricula.libroMatriculas}"
+																		id="idOLMatriculaDetAntSis"
+																		value="#{messageBeanSNR.commonLabelMatricula}" />
+																	<p:inputText onblur="value=value.toUpperCase()"
+																		disabled="#{!beanCertificados.datosMatricula.libroMatriculas}"
+																		id="datosPredioIdMatricula" style="width: 100%;"
+																		label="#{messageBeanSNR.commonLabelMatricula}"
+																		placeholder="#{messageBeanSNR.commonLabelMatricula}"
+																		value="#{beanCertificados.datosMatricula.detalleAntSistema.idMatricula}"
+																		maxlength="20"
+																		onkeypress="if (event.keyCode == 13) { return false; }">
+																		<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+																	</p:inputText>
+																</div>
+															</div>
+															<div align="right">
+																	<p:commandButton id="idCBModificarDetallesAntSistema"
+																		actionListener="#{beanCertificados.guardarDetalleAntSistema(beanCertificados.datosMatricula, false)}"
+																		disabled="#{!beanCertificados.datosMatricula.modificarDetallesAntSis}"
+																		icon="fa fa-save" iconPos="left"
+																		value="#{messageBeanSNR.commonLabelModificar}"
+																		update="idPDatosLibro,idPnlAdicional,idSOMLibro,idSOMAno,idOLNombrePredio,fCertificados:globalMsg,idDTDetallesAntGuardados,idOPPanelDocumento">
+																		<f:actionListener binding="#{beanCertificados.validarCamposDetalleAnt()}"/>
+																	</p:commandButton>
+																	<p:spacer width="5"></p:spacer>
+																	<p:commandButton id="idCBGuardarDetallesAntSistema"
+																		actionListener="#{beanCertificados.guardarDetalleAntSistema(beanCertificados.datosMatricula, true)}"
+																		disabled="#{beanCertificados.datosMatricula.modificarDetallesAntSis}"
+																		icon="fa fa-save" iconPos="left"
+																		title="#{tooltipBeanSNR.procesoRegistroDatosPredioGuardarDetallesPredioAntSistema}"
+																		value="#{messageBeanSNR.commonButtonGuardarDetalleAntSistema}"
+																		update="idPDatosLibro,idPnlAdicional,idSOMLibro,idSOMAno,idOLNombrePredio,fCertificados:globalMsg,idDTDetallesAntGuardados,idOPPanelDocumento">
+																		<f:actionListener binding="#{beanCertificados.validarCamposDetalleAnt()}"/>
+																	</p:commandButton>
+															</div>
+														</p:panel>
+													</p:outputPanel>
+												</p:outputPanel>
+												<p:outputPanel id="idOPPanelDocumento">
+													<p:outputPanel id="idOLPanelDocumentoLibroSegundo"
+														rendered="#{beanCertificados.datosMatricula.datosAntSistemaGuardados and beanCertificados.datosMatricula.libroSegundo}">
+														<br />
+														<p:panel id="idPDatosDocAntSistema"
+															widgetVar="idWVPanelDocAntSis" toggleable="true"
+															header="#{messageBeanSNR.commonLabelDatosDelDocumento}">
+															<div class="ui-g">
+																<div class="ui-g-12 ui-md-6 ui-lg-5">
+																	<p:outputLabel indicateRequired="true"
+																		value="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+																	</p:outputLabel>
+																	<br />
+																	<p:selectOneMenu id="idSOMEscrituraAntSis"
+																		style="width:100%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoTipoDocumento}"
+																		value="#{beanCertificados.datosMatricula.bgnDocumento.idTipoDocumento}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanReference.findTipoDocumentoPublicoActivo()}"
+																			var="item" itemLabel="#{item.nombre}"
+																			itemValue="#{item.idTipoDocumento}" />
+																		<p:ajax
+																			listener="#{beanCertificados.validarExistenciaDocumento(beanCertificados.datosMatricula,true)}"
+																			update="fCertificados:globalMsg,idSOMOficinaOrigenAntSis" />
+																		<p:ajax
+																			listener="#{beanCertificados.findTipoOficina(beanCertificados.datosMatricula)}"
+																			update="fCertificados:globalMsg,idSOMTipoOficinaAntSis,idSOMOficinaOrigenAntSis" />
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-3">
+																	<p:outputLabel indicateRequired="true"
+																		value="#{messageBeanSNR.commonLabelNumeroDeDocumento}" />
+																	<br />
+																	<p:inputText onblur="value=value.toUpperCase()"
+																		id="idItDocuActoAntSis"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoNumeroDocumento}"
+																		placeholder="#{messageBeanSNR.commonLabelDocumento}"
+																		maxlength="20"
+																		value="#{beanCertificados.datosMatricula.bgnDocumento.numero}">
+																		<p:ajax
+																			listener="#{beanCertificados.validarExistenciaDocumento(beanCertificados.datosMatricula,true)}"
+																			update="fCertificados:globalMsg" />
+																	</p:inputText>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel indicateRequired="true"
+																		value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+																	<br />
+																	<p:calendar id="idCalFechaDocAntSis" size="10"
+																		mask="true" locale="es" placeholder="DD/MM/AAAA"
+																		pattern="dd/MM/yyyy"
+																		value="#{beanCertificados.datosMatricula.bgnDocumento.fechaDocumento}"
+																		showOn="button"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoFechaDocumento}">
+																		<p:ajax event="dateSelect"
+																			listener="#{beanCertificados.validarExistenciaDocumento(beanCertificados.datosMatricula,true)}"
+																			update="fCertificados:globalMsg" />
+																	</p:calendar>
+																</div>
+															</div>
+															<div class="ui-g">
+																<div class="ui-g-12 ui-md-6 ui-lg-5">
+																	<p:outputLabel indicateRequired="true"
+																		value="#{messageBeanSNR.commonLabelTipoDeOficina}" />
+																	<br />
+																	<p:selectOneMenu id="idSOMTipoOficinaAntSis"
+																		style="width:100%"
+																		value="#{beanCertificados.datosMatricula.bgnDocumento.idTipoOficina}"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoTipoOficina}">
+																		<p:ajax
+																			listener="#{beanCertificados.tipoOficina(beanCertificados.datosMatricula)}"
+																			update="idSOMTipoEntidadAntSis,idPaisDocumentoAntSis,idSOMDepartamentoAntSis,idSOMMunicipioAntSis,idSOMOficinaOrigenAntSis" />
+																		<f:selectItems
+																			value="#{beanCertificados.datosMatricula.tipoOficinaDocumento}"
+																			var="item" itemLabel="#{item.nombre}"
+																			itemValue="#{item.idTipoOficina}" />
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-3">
+																	<p:outputLabel indicateRequired="true"
+																		value="#{messageBeanSNR.commonLabelTipoDeEntidad}" />
+																	<br />
+																	<p:selectOneMenu id="idSOMTipoEntidadAntSis"
+																		style="width:100%"
+																		value="#{beanCertificados.idTipoEntidad}"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoTipoEntidad}"
+																		disabled="true">
+																		<f:selectItems
+																			value="#{beanReference.findTipoEntidad()}"
+																			var="item" itemLabel="#{item.nombre}"
+																			itemValue="#{item.idTipoEntidad}" />
+																		<p:ajax
+																			listener="#{beanCertificados.validarExistenciaDocumento(beanCertificados.datosMatricula,true)}"
+																			update="fCertificados:globalMsg" />
+																	</p:selectOneMenu>
+																</div>
+															</div>
+															<div class="ui-g">
+																<div class="ui-g-12 ui-md-6 ui-lg-5">
+																	<p:outputLabel
+																		value="#{messageBeanSNR.commonLabelPais}" />
+																	<br />
+																	<p:selectOneMenu id="idPaisDocumentoAntSis"
+																		style="width:100%;"
+																		value="#{beanCertificados.datosMatricula.bgnDocumento.idPais}"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoPais}">
+																		<p:ajax
+																			listener="#{beanCertificados.pais(beanCertificados.datosMatricula)}"
+																			update="idSOMDepartamentoAntSis,idSOMMunicipioAntSis,idSOMOficinaOrigenAntSis" />
+																		<p:ajax
+																			listener="#{beanCertificados.validarExistenciaDocumento(beanCertificados.datosMatricula,true)}"
+																			update="fCertificados:globalMsg" />
+																		<f:selectItem itemValue=""
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+																		<f:selectItems value="#{beanReference.findPaises()}"
+																			var="paises" itemValue="#{paises.idPais}"
+																			itemLabel="#{paises.nombre}" />
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-3">
+																	<p:outputLabel
+																		value="#{messageBeanSNR.commonLabelDepartamento}" />
+																	<br />
+																	<p:selectOneMenu id="idSOMDepartamentoAntSis"
+																		style="width:100%"
+																		value="#{beanCertificados.datosMatricula.bgnDocumento.idDepartamento}"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoDepartamento}">
+																		<p:ajax
+																			listener="#{beanCertificados.departamento(beanCertificados.datosMatricula)}"
+																			update="idSOMMunicipioAntSis,idSOMOficinaOrigenAntSis" />
+																		<p:ajax
+																			listener="#{beanCertificados.validarExistenciaDocumento(beanCertificados.datosMatricula,true)}"
+																			update="fCertificados:globalMsg" />
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanCertificados.findDepartamentos(beanCertificados.datosMatricula)}"
+																			var="item" itemValue="#{item.idDepartamento}"
+																			itemLabel="#{item.nombre}" />
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel
+																		value="#{messageBeanSNR.commonLabelMunicipio}" />
+																	<br />
+																	<p:selectOneMenu id="idSOMMunicipioAntSis"
+																		style="width:100%"
+																		value="#{beanCertificados.datosMatricula.bgnDocumento.idMunicipio}"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoMunicipio}">
+																		<p:ajax
+																			listener="#{beanCertificados.oficinaOrigen(beanCertificados.datosMatricula)}"
+																			update="idSOMOficinaOrigenAntSis" />
+																		<p:ajax
+																			listener="#{beanCertificados.validarExistenciaDocumento(beanCertificados.datosMatricula,true)}"
+																			update="fCertificados:globalMsg" />
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanCertificados.findMunicipiosByCirculo(beanCertificados.datosMatricula.datosAntiguoSistema.idCirculo)}"
+																			var="munRes" itemValue="#{munRes.idMunicipio}"
+																			itemLabel="#{munRes.nombre}" />
+																	</p:selectOneMenu>
+																</div>
+															</div>
+															<div class="ui-g">
+																<div class="ui-g-12 ui-md-12 ui-lg-12">
+																	<p:outputLabel
+																		value="#{messageBeanSNR.commonLabelOficinaDeOrigen}" />
+																	<br />
+																	<p:selectOneMenu id="idSOMOficinaOrigenAntSis"
+																		style="width:100%"
+																		value="#{beanCertificados.datosMatricula.bgnDocumento.idOficinaOrigen}"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoOficinaOrigen}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanCertificados.getOficinaOrigen(beanCertificados.datosMatricula)}"
+																			var="orig" itemLabel="#{orig.nombre}"
+																			itemValue="#{orig.idOficinaOrigen}" />
+																		<p:ajax
+																			listener="#{beanCertificados.validarExistenciaDocumento(beanCertificados.datosMatricula,true)}"
+																			update="fCertificados:globalMsg" />
+																	</p:selectOneMenu>
+																</div>
+															</div>
+														</p:panel>
+													</p:outputPanel>
+												</p:outputPanel>
+												<p:outputPanel id="idOPTablaDetalleAntsis">
+													<p:outputPanel>
+														<br />
+													</p:outputPanel>
+													<p:dataTable id="idDTDetallesAntGuardados" var="detalle"
+														value="#{beanCertificados.datosMatricula.detallesAntSisAgregados}"
+														rendered="#{beanCertificados.datosMatricula.antiguoSistema1932 == 'S'}"
+														emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelNumeroPredio}">
+															<p:outputLabel id="idOlNumPredioActo"
+																value="#{messageBeanSNR.commonLabelPredio} #{detalle.consecutivoPredioAntSistema}" />
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelLibro}">
+															<p:selectOneMenu id="idSOMLibroTabla"
+																style="width:100%" disabled="true"
+																title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaLibro}"
+																value="#{detalle.idLibroAntSistema}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanReference.findLibroAntiguoSistema()}"
+																	var="libro"
+																	itemValue="#{libro.idLibroAntiguoSistema}"
+																	itemLabel="#{libro.nombre}" />
+															</p:selectOneMenu>
+														</p:column>
+														<p:column headerText="#{messageBeanSNR.commonLabelTomo}">
+															<h:outputText value="#{detalle.tomo}" />
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelFolio}">
+															<h:outputText value="#{detalle.folio}" />
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelNumeroPartida}">
+															<h:outputText value="#{detalle.numeroPartida}" />
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelAccion}"
+															style="align: left;" width="10%">
+															<p:commandButton icon="fa fa-trash" iconPos="left"
+																update="idDTDetallesAntGuardados"
+																disabled="#{beanCertificados.bloqueosNuevaEntrada}"
+																title="#{messageBeanSNR.commonLabelEliminar}"
+																onclick="PF('preguntaEliminarDetalle').show()"
+																actionListener="#{beanCertificados.setDetalleAntSisParaEliminar(detalle)}">
+																<f:setPropertyActionListener value="#{beanCertificados.datosMatricula}" 
+																	target="#{beanCertificados.datosPredioAntSisAgregar}"/>
+															</p:commandButton>
+															<p:commandButton icon="fa fa-pencil" iconPos="left"
+																disabled="#{beanCertificados.bloqueosNuevaEntrada}"
+																update="fCertificados:idTVDatosPredio:idPnlAdicional,fCertificados:idTVDatosPredio:idOPTablaDetalleAntsis,fCertificados:globalMsg,fCertificados:idTVDatosPredio:idOPPanelDocumento"
+																title="#{messageBeanSNR.commonLabelModificar}"
+																actionListener="#{beanCertificados.cargarDetallesPredio(beanCertificados.datosMatricula, detalle)}">
+															</p:commandButton>
+														</p:column>
+													</p:dataTable>
+												</p:outputPanel>
+											</p:tab>
+										</p:tabView>
+									</p:outputPanel>
+								</p:panel>
+								<br />
+								<p:panel toggleable="true" id="idPDatosIdentificacion"
+									widgetVar="wvPanelDatosId" collapsed="true"
+									header="#{messageBeanSNR.commonLabelDatosIdentificacion}" >
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTipoDeDocumento}" />
+											<br />
+											<p:selectOneMenu id="idSOMTipoDocDatosId" style="width:100%"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoDocumento}"
+												value="#{beanCertificados.datosIdentificacion.idDocumentoTipo}"
+												disabled="#{beanCertificados.bloqueosNuevaEntrada}">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems
+													value="#{beanReference.findTipoDocumentoActivo()}"
+													var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+													itemLabel="#{tipoDoc.descripcion}" />
+												<p:ajax listener="#{beanCertificados.validarTipoDocumentoSeleccionado()}"
+													event="change" update="idOLDocumentoDatosId,idITDocumentoDatosId,idOLNombreDatosId,idITPNombreDatosId,idITSNombreDatosId,idOLApellidoDatosId,idITPApellidoDatosId,idITSApellidoDatosId,idOLRazonDatosId,idITRazonSocialDatosId"/>
+											</p:selectOneMenu>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel indicateRequired="#{beanCertificados.datosIdentificacion.idDocumentoTipo ne null}"
+												id="idOLDocumentoDatosId"
+												value="#{messageBeanSNR.commonLabelDocumento}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idITDocumentoDatosId"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoDocumento}"
+												placeholder="#{messageBeanSNR.commonLabelDocumento}"
+												maxlength="20"
+												value="#{beanCertificados.datosIdentificacion.numeroDocumento}" 
+												disabled="#{beanCertificados.bloqueosNuevaEntrada}"/>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel for="idITPNombreDatosId" id="idOLNombreDatosId"
+												indicateRequired="#{!beanCertificados.habilitarRazonSocial and beanCertificados.datosIdentificacion.idDocumentoTipo ne null}"
+												value="#{messageBeanSNR.commonLabelPrimerNombre}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idITPNombreDatosId" maxlength="100"
+												disabled="#{beanCertificados.habilitarRazonSocial or beanCertificados.bloqueosNuevaEntrada}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerNombre}"
+												placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+												value="#{beanCertificados.datosIdentificacion.primerNombre}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel for="idITSNombreDatosId"
+												value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idITSNombreDatosId" maxlength="100"
+												disabled="#{beanCertificados.habilitarRazonSocial or beanCertificados.bloqueosNuevaEntrada}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoNombre}"
+												placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+												value="#{beanCertificados.datosIdentificacion.segundoNombre}" />
+										</div>
+									</div>
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel for="idITPApellidoDatosId" id="idOLApellidoDatosId"
+												indicateRequired="#{!beanCertificados.habilitarRazonSocial and beanCertificados.datosIdentificacion.idDocumentoTipo ne null}"
+												value="#{messageBeanSNR.commonLabelPrimerApellido}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idITPApellidoDatosId" maxlength="150"
+												disabled="#{beanCertificados.habilitarRazonSocial or beanCertificados.bloqueosNuevaEntrada}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerApellido or beanCertificados.bloqueosNuevaEntrada}"
+												placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+												value="#{beanCertificados.datosIdentificacion.primerApellido}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel for="idITSApellidoDatosId"
+												value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idITSApellidoDatosId" maxlength="100"
+												disabled="#{beanCertificados.habilitarRazonSocial or beanCertificados.bloqueosNuevaEntrada}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoApellido}"
+												placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+												value="#{beanCertificados.datosIdentificacion.segundoApellido}" />
+										</div>
+										<div class="ui-g-12 ui-md-12 ui-lg-6">
+											<p:outputLabel for="idITRazonSocialDatosId" id="idOLRazonDatosId"
+												indicateRequired="#{beanCertificados.habilitarRazonSocial and beanCertificados.datosIdentificacion.idDocumentoTipo ne null}"
+												value="#{messageBeanSNR.commonLabelRazonSocial}" />
+											<br />
+											<p:inputText
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoRazonSocial}"
+												onblur="value=value.toUpperCase()" id="idITRazonSocialDatosId"
+												disabled="#{!beanCertificados.habilitarRazonSocial or beanCertificados.bloqueosNuevaEntrada}"
+												placeholder="#{messageBeanSNR.commonLabelRazonSocial}"
+												value="#{beanCertificados.datosIdentificacion.razonSocial}" />
+										</div>
+									</div>
+								</p:panel>
+								<br />
+								<p:panel toggleable="true" id="idPDirección"
+									header="#{messageBeanSNR.commonLabelDireccion}" collapsed="true">
+									<ui:include src="direccionCertificadoInclude.xhtml"/>
+								</p:panel>
+								
+								<br/>
+								<p:outputPanel id="idPanelObservacionesPredio">
+									<div align="left">
+										<h:outputLabel id="idObservacionesPredioInconsistente"
+											value="#{beanCertificados.mensajePredioInconsistente}" />
+										<br />
+									</div>
+								</p:outputPanel>
+								
+								<p:outputPanel id="idObservaciones2">
+									<div align="left">
+										<strong>
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelObservaciones}" />
+										</strong>
+										<p:inputTextarea rows="10" cols="240"
+											id="idObservacionesCert2"
+											title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoDatosObservaciones}"
+											onblur="value=value.toUpperCase()"
+											value="#{beanCertificados.solicitud.descripcion}"
+											queryDelay="750" maxlength="4000" minQueryLength="4"
+											counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+											counter="idNumeroCaracteres2" />
+									</div>
+									<div align="right">
+										<h:outputText id="idNumeroCaracteres2" />
+									</div>
+								</p:outputPanel>
+							</p:panel>
+						</p:tab>
+						
+						<p:tab id="documentosSoporte_id" titleStyle="font-size:15px;"
+							title="#{messageBeanSNR.commonLabelDocumentosSoporte}"
+							rendered="#{!beanCertificados.certificadosMasivos}">
+							<p:panel id="idOPSoporteDoc"
+								header="#{messageBeanSNR.commonLabelSolicitudDocumentacion}">
+								<p:dataTable id="idDtCompletitudDocumentales"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									value="#{beanCertificados.tiposCompletitudDocumental}" var="tiposDoc">
+									<p:columnGroup type="header">
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelTipoDocumental}"
+											style="width: 15%;" />
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelObligatoriedad}"
+											style="width: 10%;" />
+										<p:column headerText="#{messageBeanSNR.commonLabelRecepcion}"
+											style="width: 10%" />
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelObservaciones}"
+											style="width: 23%;" />
+										<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+											style="width: 9%" />
+									</p:columnGroup>
+		
+									<p:column>
+										<p:selectOneMenu id="idSOMTipoDocumental"
+											disabled="#{beanCertificados.procesoTerminado}"
+											title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosTipoDocumental}"
+											style="width:100%" value="#{tiposDoc.idTipoDocumental}">
+											<f:selectItems itemValue="#{doc.idTipoDocumental}"
+												value="#{beanReference.findAllTiposDocumentales()}"
+												var="doc"
+												itemLabel="#{doc.nombre} - #{doc.idTipoDocumental}" />
+											<p:ajax update="idSOMTipoDocumental"/>
+										</p:selectOneMenu>
+									</p:column>
+									<p:column>
+										<p:selectBooleanCheckbox id="seleccionObli"
+											value="#{tiposDoc.seleccionado}" />
+									</p:column>
+									
+									<p:column>
+										<p:selectOneMenu id="idSOMRecepcionDocumento"
+											disabled="#{beanCertificados.procesoTerminado}"
+											title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosRecepcionDocumento}"
+											style="width:100%" value="#{tiposDoc.medioRecepcion}">
+											<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+											<f:selectItems itemValue="#{comp}"
+												value="#{beanCertificados.findAllRecepcionDocumento()}"
+												var="comp"
+												itemLabel="#{comp}" />
+											<p:ajax update="idSOMTipoDocumental"/>
+										</p:selectOneMenu>
+									</p:column>
+									
+									<p:column>
+										<p:inputText id="observaTipo"
+											onblur="value=value.toUpperCase()"
+											style="#{tiposDoc.campoRojoObservacion ? 'border-color:red !important;width:100%;' : 'width:100%;'};"
+											value="#{tiposDoc.observaciones}" maxlength="200"
+											title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosObservaciones}"
+											placeholder="#{messageBeanSNR.commonLabelObservaciones}">
+											<p:ajax event="blur" update="observaTipo"/>
+										</p:inputText>
+									</p:column>
+
+									<p:column>
+										<p:commandButton icon="fa fa-trash"
+											disabled="#{tiposDoc.noEditable or beanCertificados.procesoTerminado}"
+											iconPos="left"
+											title="#{messageBeanSNR.commonLabelEliminar}"
+											actionListener="#{beanCertificados.deleteCompletitudDocumental(tiposDoc)}"
+											update="fCertificados:idOPSoporteDoc" />
+									</p:column>
+								</p:dataTable>
+								<br />
+								<div align="right">
+									<p:commandButton
+										value="#{messageBeanSNR.commonLabelAgregarNuevoTipoDocumental}"
+										rendered="#{!beanCertificados.procesoTerminado}"
+										update="fCertificados:idOPSoporteDoc" ajax="true"
+										icon="fa fa-plus-circle" iconPos="left"
+										actionListener="#{beanCertificados.addCompletitudDocumental()}" />
+								</div>
+							</p:panel>
+						</p:tab>
+						
+						<p:tab id="liquidacion_id" titleStyle="font-size:15px;"
+							title="#{messageBeanSNR.commonLabelCondicionesLiquidacionTitle}">
+							<p:outputPanel id="idOPDetalleLiquidacion" >
+								<p:outputPanel rendered="#{beanCertificados.liquidacionItem != null}">
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-12 ui-lg-12">
+											<p:dataTable
+												emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+												value="#{beanCertificados.liquidacionItem}"
+												var="item" tableStyle="width:auto">
+												<f:facet name="header">
+													<h:outputText
+														value="#{messageBeanSNR.commonButtonDetalleDeLiquidacion}" />
+												</f:facet>
+												<p:columnGroup type="header">
+													<p:row>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelIdentificadorDelProceso}" />
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelNoMatriculasONuprePorOrip}" />
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelTramiteOConcepto}" />
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelCuantiaCantidadActo}" />
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelCuantiaCantidadActo}" />
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelValorAvaluo}" />
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelDerechosACobrar}" />
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelConservacionDocumental}" />
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelTotalLiquidado}" />
+													</p:row>
+												</p:columnGroup>
+												<p:column>
+													<h:outputText value="#{item.idProceso}" />
+												</p:column>
+												<p:column>
+													<h:outputText value="#{item.circulosRegistrales}" />
+												</p:column>
+												<p:column>
+													<h:outputText value="#{item.numeroMatriculas}" />
+												</p:column>
+												<p:column>
+													<h:outputText value="#{item.tramite}" />
+												</p:column>
+												<p:column>
+													<h:outputText value="#{item.tarifa}" />
+												</p:column>
+												<p:column>
+													<h:outputText
+														rendered="#{item.reglaCuantiaCantidad == '1.CERTIFICADOS'}"
+														value="#{item.certificadosAsociados}" />
+													<h:outputText
+														rendered="#{item.reglaCuantiaCantidad == 'CANTIDAD' and item.cantidadActos le 0}"
+														value="#{item.cantidadActos}" />
+													<h:outputText
+														rendered="#{item.reglaCuantiaCantidad == 'CANTIDAD' and item.cantidadActos gt 0}"
+														value="#{item.certificadosAsociados}" />
+													<h:outputText
+														rendered="#{item.reglaCuantiaCantidad == 'CUANTIA'}"
+														value="#{item.cuantiaActoDouble}">
+														<f:convertNumber pattern="¤#,##0.00"
+															currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+													</h:outputText>
+												</p:column>
+												<p:column>
+													<h:outputText value="#{item.valorAvaluo}">
+														<f:convertNumber pattern="¤#,##0.00"
+															currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+													</h:outputText>
+												</p:column>
+												<p:column>
+													<h:outputText value="#{item.valorFinal}">
+														<f:convertNumber pattern="¤#,##0.00"
+															currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+													</h:outputText>
+												</p:column>
+												<p:column>
+													<h:outputText value="#{item.valorDocumental}">
+														<f:convertNumber pattern="¤#,##0.00"
+															currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+													</h:outputText>
+												</p:column>
+												<p:column>
+													<h:outputText value="#{item.valorTotal}">
+														<f:convertNumber pattern="¤#,##0.00"
+															currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+													</h:outputText>
+												</p:column>
+												<p:columnGroup type="footer">
+													<p:row>
+														<p:column colspan="7" style="text-align:right"
+															footerText="#{messageBeanSNR.commonLabelSubTotalesMayuscula}" />
+														<p:column
+															footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanCertificados.valorTotalDerechos}" />
+														<p:column
+															footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanCertificados.valorTotalConservacion}" />
+														<p:column
+															footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanCertificados.valorTotalLiquidacion}" />
+													</p:row>
+												</p:columnGroup>
+											</p:dataTable>
+										</div>
+									</div>
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-12 ui-lg-6">
+											<p:dataTable
+												emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+												value="#{beanCertificados.resumenPorOrip}" var="item"
+												tableStyle="width:100%">
+												<f:facet name="header">
+													<h:outputText
+														value="#{messageBeanSNR.commonLabelResumenPorOripMayuscula}" />
+												</f:facet>
+												<p:columnGroup type="header">
+													<p:row>
+														<p:column headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+														<p:column headerText="#{messageBeanSNR.commonLabelTotalLiquidado}" />
+													</p:row>
+												</p:columnGroup>
+												<p:column>
+													<h:outputText value="#{item.circulosRegistrales}"/>
+												</p:column>
+												<p:column>
+													<h:outputText value="#{item.valorTotal}">
+														<f:convertNumber pattern="¤#,##0.00" currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+													</h:outputText>
+												</p:column>
+											</p:dataTable>
+										</div>
+										<div class="ui-g-12 ui-md-12 ui-lg-3" align="right">
+											<strong>
+												<h:outputText value="#{messageBeanSNR.commonLabelValorTotalAPagar}"/>
+											</strong>
+										</div>
+										<div class="ui-g-12 ui-md-12 ui-lg-3" align="right">
+											<h:outputText value="#{messageBeanSNR.commonLabelSignoPesos}#{beanCertificados.valorTotalLiquidacionConservacion}" style="font-size: 20px;"/>
+										</div>
+									</div>
+								</p:outputPanel>
+							</p:outputPanel>
+							<br />
+							<p:outputPanel id="opPanelTerminarProcesoLiq">
+								<p:commandButton id="cbTerminarLiq"
+									value="#{messageBeanSNR.commonLabelTerminarProceso}"
+									icon="fa fa-check-circle" iconPos="left"
+									rendered="#{!beanCertificados.procesoTerminado}"
+									onclick="PF('dlgTerminarProceso').show();" />
+							</p:outputPanel>
+						</p:tab>
+						<p:tab id="impresion_id" titleStyle="font-size:15px;"
+							title="#{messageBeanSNR.commonLabelImpresion}">
+							<p:panel header="#{messageBeanSNR.commonLabelDocumentosAImprimir}" 
+								toggleable="true">
+								<p:outputPanel>
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-12 ui-lg-12">
+											<p:dataTable id="idDtDocsImprimir" var="item"
+												value="#{beanCertificados.documentosImprimir}"
+												emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+												<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+													<h:outputText
+														value="#{item.tipo}" />
+												</p:column>
+												<p:column headerText="#{messageBeanSNR.commonLabelEstado}">
+													<h:outputText id="estadoDocumento"
+														value="#{item.estadoImpresion}" />
+												</p:column>
+											</p:dataTable>
+										</div>
+										<div class="ui-g-12 ui-md-12 ui-lg-12">
+											<p:commandButton value="#{messageBeanSNR.commonLabelImprimir}" 
+												global="false" icon="fa fa-print" id="botonImprimir" widgetVar="botonImprimir"
+												actionListener="#{beanCertificados.imprimirDocumentos(true,'fCertificados')}"/>
+										</div>
+									</div>
+								</p:outputPanel>
+							</p:panel>
+						</p:tab>
+					</p:wizard>
+					<p:outputPanel id="opBotones">
+						<p:ajaxStatus onstart="PF('statusDialog').show()"
+							onsuccess="PF('statusDialog').hide()" />
+						<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+							closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+						<p:graphicImage value="/images/ajaxloadingbar.gif" />
+						</p:dialog>
+						<h:form id="fCertificadosSubmit">
+							<p:growl id="message" showDetail="true" redisplay="false"/>
+							<p:outputPanel id="idOPBotonesRegistro">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6 ui-lg-3" align="left">
+										<p:commandButton
+											value="#{messageBeanSNR.commonButtonLimpiar}"
+											id="idCBLimpiarDatos" icon="fa fa-undo"
+											rendered="#{beanCertificados.mostrarLimpiarDatos}"
+											actionListener="#{beanCertificados.limpiarDatosInteresado}"
+											update="fCertificados">
+										</p:commandButton>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-9" align="right">
+										<p:commandButton
+											value="#{messageBeanSNR.commonLabelRegresar}"
+											icon="fa fa-arrow-circle-left" iconPos="left"
+											update=":fCertificados:opBotones"
+											rendered="#{beanCertificados.mostrarAtras and not(beanCertificados.procesoTerminado)}"
+											onclick="PF('myWizard').back()" />
+										<p:spacer />
+										<p:commandButton id="botonFinalizar"
+											value="#{messageBeanSNR.commonLabelFinalizar}"
+											style="display:none" process="@this"
+											icon="fa fa-check" action="principal?faces-redirect=true" />
+										<p:spacer />
+										<p:commandButton
+											value="#{messageBeanSNR.commonLabelSiguiente}"
+											icon="fa fa-arrow-circle-right" iconPos="right"
+											update=":fCertificados:opBotones,idOPBotonesRegistro"
+											rendered="#{not(beanCertificados.ocultarSiguiente)}"
+											onclick="PF('myWizard').next()" />
+									</div>
+								</div>
+							</p:outputPanel>
+						</h:form>
+					</p:outputPanel>
+				</center>
+			</h:form>
+			
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgTerminarProceso" modal="true" height="90" resizable="false">
+				<h:form id="fDialogRecepcion"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeTerminarElProceso}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fCertificados:opPanelTerminarProcesoLiq,fCertificados:opBotones,fCertificados:idOPDetalleLiquidacion"
+							actionListener="#{beanCertificados.terminarProcesoCertificados()}"
+							oncomplete="PF('dlgTerminarProceso').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlgTerminarProceso').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)" id="idDlgEliminarDatosAntSistema"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="idDlgEliminarDatosAntSistema" modal="true" width="380"
+				resizable="false" draggable="false" position="center">
+				<h:form id="fDialogEliminarDatosAntSistema"
+					style="font-size: large; top: 50%; left: 50%; text-align: center;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelPreguntaEliminarDatosAntSistema}" />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							actionListener="#{beanCertificados.eliminarDatosAntSistema}"
+							action="#{beanCertificados.setDatosMatricula(beanCertificados.datosTemporalesEliminar)}"
+							icon="fa fa-check" update="fCertificados:idTVDatosPredio:idPnPrediosAntiguoSistema,fCertificados:idTVDatosPredio:idPnlAdicional,fCertificados:idTVDatosPredio:idOPTablaDetalleAntsis,fCertificados:globalMsg"
+							oncomplete="PF('idDlgEliminarDatosAntSistema').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close"
+							onsuccess="PF('idDlgEliminarDatosAntSistema').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)" id="idDPreguntaEliminarDetalle"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="preguntaEliminarDetalle" modal="true" resizable="false">
+				<h:form id="fDialogPreguntaEliminarDetalle"
+					style="font-size: large; top: 50%; left: 50%;">
+					<div align="center">
+						<h:outputText
+							value="#{messageBeanSNR.commonMessagePreguntaEliminarDetallePredio}" />
+					</div>
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" 
+							update="fCertificados:globalMsg,fCertificados:idTVDatosPredio:idDTDetallesAntGuardados"
+							actionListener="#{beanCertificados.eliminarDetalleAntSistema(beanCertificados.datosPredioAntSisAgregar, beanCertificados.detalleAntSisParaEliminar)}"
+							oncomplete="PF('preguntaEliminarDetalle').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close"
+							onclick="PF('preguntaEliminarDetalle').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)" id="idDexenta"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="idDexenta" modal="true" closable="false" resizable="false">
+				<h:form id="formDexenta"
+					style="font-size: large; top: 50%; left: 50%;">
+					<div align="center">
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelActuaEntidadExenta}" />
+					</div>
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" 
+							onclick="PF('idDexenta').hide(); PF('idDexentaPersona').show(); if(!PF('idDexentaPersona').maximized){ PF('idDexentaPersona').toggleMaximize()}" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close"
+							update="fCertificados"
+							actionListener="#{beanCertificados.consultarPersonaDocumento(true,'fCertificados')}"
+							onclick="PF('idDexenta').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)" id="idDexentaPersona"
+				header="#{messageBeanSNR.commonLabelConsultarEntidadExterna}" closable="false"
+				widgetVar="idDexentaPersona" modal="true" resizable="false">
+				<h:form id="formDexentaPersona"
+					style="font-size: large; top: 50%; left: 50%;">
+					<p:growl id="growlDialog" globalOnly="true" showDetail="true"
+						sticky="false" life="10000" redisplay="false" />
+					<div class="ui-g">
+						<div class="ui-g-6 ui-md-6 ui-lg-6">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelTipoEntidadExterna}"/><br/>
+							<p:selectOneMenu id="idSOMTipoEntidadExenta" ajax="true"
+								style="width:80%"
+								title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoConsultaInteresadoTipoDocumentoIdentidad}"
+								value="#{beanCertificados.tipoEntidadExenta}">
+								<p:ajax listener="#{beanCertificados.cargarListaEntidades}" event="change" update="idSOMTipoEntidadesExenta,growlDialog"/>
+								<f:selectItem
+									itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+									itemValue="" />
+								<f:selectItems
+									value="#{beanReference.findAllTipoOficinaActivo()}"
+									var="oficina" itemValue="#{oficina.idTipoOficina}"
+									itemLabel="#{oficina.nombre}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-6">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelNombreEntidadExterna}"/><br/>
+							<p:selectOneMenu id="idSOMTipoEntidadesExenta" ajax="true"
+								style="width:80%"
+								title="#{tooltipBeanSNR.procesosIngresoSolicitudCertificadosDatosInteresadoConsultaInteresadoTipoDocumentoIdentidad}"
+								value="#{beanCertificados.idEntidadExenta}">
+								<f:selectItem
+									itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+									itemValue="" />
+								<f:selectItems
+									value="#{beanCertificados.entidades}"
+									var="entidad" itemValue="#{entidad.idEntidadExterna}"
+									itemLabel="#{entidad.nombre}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+							<p:commandButton value="#{messageBeanSNR.commonLabelConsultar}" icon="lupa" update="@form,growlDialog"
+								iconPos="left" actionListener="#{beanCertificados.consultarPersonasEntidadExenta}"/>
+						</div>
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:dataTable id="idDtPersonasAsignadasTabla" 
+								rendered="#{beanCertificados.isValidCollection(beanCertificados.personaEntidad)}"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+								value="#{beanCertificados.personaEntidad}"
+								var="item" paginator="true"
+								rows="50">
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelTipoDocumento}"
+									width="8%" sortBy="#{item.idDocumentoTipo}">
+									<h:outputText value="#{item.idDocumentoTipo}" />
+								</p:column>
+	
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelDocumento}"
+									width="12%" sortBy="#{item.numeroDocumento}">
+									<h:outputText value="#{item.numeroDocumento}" />
+								</p:column>
+	
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelNombres}"
+									width="20%">
+									<h:outputText
+										value="#{item.nombreCompleto}" />
+								</p:column>
+								
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelCorreoElectronico}"
+									width="15%">
+									<h:outputText
+										value="#{item.correoElectronico}" />
+								</p:column>
+								<p:column id="columnaSeleccione"
+									headerText="#{messageBeanSNR.commonLabelSeleccione}"
+									width="6%">
+										<p:selectOneRadio id="idSeleccione" value="#{item.seleccionado}">
+											<f:selectItem itemLabel="" itemValue="true" />
+										</p:selectOneRadio>
+								</p:column>
+							</p:dataTable>			
+						</div>
+						
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+							<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left" onclick="PF('idDexentaPersona').hide()" />
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+							<p:commandButton value="#{messageBeanSNR.commonLabelGuardar}" update="fCertificados,formDexentaPersona"
+								icon="fa fa-save" iconPos="right" actionListener="#{beanCertificados.guardarEntidadExenta(null)}" />
+						</div>
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)" position="center" id="dlg2"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg2"
+				modal="true" height="90" resizable="false">
+				<h:form id="fDialog" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{beanCertificados.textoTerminarProceso}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fCertificados"
+							actionListener="#{beanCertificados.generacionSolicitudes(true)}"
+							oncomplete="PF('dlg2').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							update="fCertificados"
+							actionListener="#{beanCertificados.generacionSolicitudes(false)}"
+							icon="fa fa-close" oncomplete="PF('dlg2').hide();"/>
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelNIRCreado}"
+				widgetVar="idDialogNir" modal="true" height="100" resizable="false">
+				<h:form id="fDialog2"
+					style="font-size: large; top: 100%; left: 100%;">
+					<h:outputText id="otMensaje"
+						value="#{beanCertificados.mensajeTerminarProceso}" />
+				</h:form>
+			</p:dialog>
+			
+			
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

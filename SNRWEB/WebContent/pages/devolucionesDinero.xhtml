@@ -1,0 +1,2204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtmltransitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelIngresoSolicitud}" />
+				</li>
+				<li class="breadcrumb-item active">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelSolicitudDevolucionDeDinero}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="hfdevolucionesDinero">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<p:remoteCommand name="failImpresion"
+					actionListener="#{beanDevolucionDinero.errorImpresion('hfdevolucionesDinero')}"
+					update="globalMsg" partialSubmit="true" global="false" />
+				<p:remoteCommand name="imprimirDocumento"
+					actionListener="#{beanDevolucionDinero.imprimirDocumentos('hfdevolucionesDinero')}"
+					update="globalMsg" partialSubmit="true" global="false" />
+				<p:outputPanel style="min-width:1000px;">
+					<p:panel style="min-width:550px;">
+						<p:wizard flowListener="#{beanDevolucionDinero.flowListener}"
+							id="myWizard" widgetVar="myWizard" showNavBar="true"
+							backLabel="Regresar" nextLabel="Siguiente">
+							<p:tab id="datosTramite_id" titleStyle="font-size:15px;"
+								title="#{messageBeanSNR.commonLabelDatosDelTramite}">
+								<center>
+									<p:panel
+										header="#{messageBeanSNR.commonLabelSeleccionTipoDevolucion}"
+										toggleable="true">
+										<h:panelGrid columns="2" style="margin-bottom:10px"
+											cellpadding="5">
+											<p:selectOneRadio id="idseleccionTipoDevolucion"
+												value="#{beanDevolucionDinero.idSubproceso}"
+												style="width:100%">
+												<f:selectItems
+													value="#{beanDevolucionDinero.findSubprocesosDevDinero()}"
+													var="subproceso" itemLabel="#{subproceso.nombre}"
+													itemValue="#{subproceso.idSubproceso}" />
+												<p:ajax update="hfdevolucionesDinero" />
+											</p:selectOneRadio>
+										</h:panelGrid>
+									</p:panel>
+									<p:panel rendered="#{beanDevolucionDinero.idSubproceso eq '1'}">
+										<p:panel
+											header="#{messageBeanSNR.commonLabelConsultaObjetoDevolucion}"
+											toggleable="true" widgetVar="panelConsulta"
+											id="ipPanelConsultaPorTurno">
+											<div class="ui-g">
+												<div class="ui-g-12" align="center">
+													<p:selectOneRadio id="idNirOTurno"
+														widgetVar="wvSORAntSistema"
+														disabled="#{(itemPredio.datosAntSistemaGuardados and !itemPredio.creacionPredio) or itemPredio.modificarDatosAntSis or beanDevolucionDinero.esTipoActoBaldio}"
+														value="#{beanDevolucionDinero.consultaTurnoONir}">
+														<f:selectItem itemLabel="#{messageBeanSNR.commonLabelNIR}"
+															itemValue="NIR" />
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelTurno}"
+															itemValue="TURNO" />
+														<p:ajax
+															listener="#{beanDevolucionDinero.limpiarDatosPanelConsultaNorOTurno()}"
+															update="ipPanelConsultaPorTurno" />
+													</p:selectOneRadio>
+												</div>
+												<div class="ui-g-12 ui-md-6"
+													style="display:#{beanDevolucionDinero.consultaTurnoONir != null ? '' : 'none'}">
+													<div class="ui-g-12 ui-md-12"
+														style="display:#{beanDevolucionDinero.consultaTurnoONir == 'NIR' ? '' : 'none'}">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelNIR}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															title="#{tooltipBeanSNR.procesosRegistroDatosTramiteNIR}"
+															placeholder="#{messageBeanSNR.commonLabelNIR}"
+															maxlength="100" id="idnirRecepcionTurno"
+															value="#{beanDevolucionDinero.turnoRecepcion.nirTurno}">
+															<p:ajax event="blur"
+																update="idITurnoNirGrabacionMatricula"
+																listener="#{beanDevolucionDinero.listarTurnosDadoElNir()}" />
+														</p:inputText>
+													</div>
+													<div class="ui-g-12 ui-md-12"
+														style="display:#{beanDevolucionDinero.consultaTurnoONir == 'TURNO' ? '' : 'none'}">
+														<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															title="#{tooltipBeanSNR.procesosRegistroDatosTramiteNIR}"
+															readonly="true"
+															placeholder="#{messageBeanSNR.commonLabelNIR}"
+															maxlength="100" id="idnirRecepcion"
+															value="#{beanDevolucionDinero.turnoRecepcion.nir}" />
+													</div>
+												</div>
+												<div class="ui-g-12 ui-md-6"
+													style="display:#{beanDevolucionDinero.consultaTurnoONir != null ? '' : 'none'}">
+													<div class="ui-g-12 ui-md-12"
+														style="display:#{beanDevolucionDinero.consultaTurnoONir == 'TURNO' ? '' : 'none'}">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelTurnoORadicacion}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															title="#{tooltipBeanSNR.procesosRegistroDatosTramiteTurnoORadicacion}"
+															placeholder="#{messageBeanSNR.commonLabelTurnoORadicacion}"
+															maxlength="100" id="idIRadicacionRecepcion"
+															value="#{beanDevolucionDinero.turnoRecepcion.idTurno}">
+															<p:ajax event="blur" global="false"
+																listener="#{beanDevolucionDinero.turnoRecepcion.setNir(null)}"
+																update="idnirRecepcion" />
+														</p:inputText>
+													</div>
+
+													<div class="ui-g-12 ui-md-12"
+														style="display:#{beanDevolucionDinero.consultaTurnoONir == 'NIR' ? '' : 'none'}">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelTurnoORadicacion}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu style="width:100%"
+															id="idITurnoNirGrabacionMatricula"
+															title="#{tooltipBeanSNR.procesosRegistroDatosTramiteTurnoORadicacion}"
+															value="#{beanDevolucionDinero.turnoRecepcion.idTurnoNir}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanDevolucionDinero.infoTurnosNir}" var="item"
+																itemValue="#{item.idTurno}" itemLabel="#{item.idTurno}" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+												<div class="ui-g-12 ui-md-12" align="center">
+													<br />
+													<p:commandButton
+														value=" #{messageBeanSNR.commonButtonConsultar} "
+														icon="lupa" iconPos="left"
+														actionListener="#{beanDevolucionDinero.busquedaTurnos()}"
+														update=":hfdevolucionesDinero, :hfdevolucionesDinero:globalMsg" />
+													<p:spacer width="40px" />
+													<p:commandButton
+														value="#{messageBeanSNR.commonButtonLimpiar}"
+														icon="fa fa-undo" iconPos="left"
+														actionListener="#{beanDevolucionDinero.limpiarRecepcionDocumentos()}"
+														update="globalMsg" />
+												</div>
+											</div>
+										</p:panel>
+
+										<p:panel widgetVar="panelResultadoConsulta"
+											header="#{messageBeanSNR.commonLabelResultadoDeLaConsulta}"
+											toggleable="true">
+											<p:dataTable id="idDtListadoTurnosDevolucion"
+												value="#{beanDevolucionDinero.actosDevolucionDinero}"
+												var="item"
+												emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+												rendered="#{beanDevolucionDinero.liquidacionItem == null}">
+												<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+													<h:outputText value="#{item.nir}" />
+												</p:column>
+												<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+													<p:commandLink
+														action="#{beanDevolucionDinero.detalleTurno}">
+														<f:param name="idTurno" value="#{item.idTurno}" />
+														<h:outputText value="#{item.idTurno}"
+															styleClass="subrayado" />
+													</p:commandLink>
+												</p:column>
+												<p:column headerText="#{messageBeanSNR.commonLabelActo}">
+													<p:commandLink id="idCLinkActo" styleClass="subrayado"
+														actionListener="#{beanDevolucionDinero.consultaLiquidacion(item)}"
+														update="dlgdetalleLiq:idDtRegistrosDetalleLiq">
+														<h:outputText
+															value="#{item.idTipoActo} - #{item.especificacionActo}" />
+													</p:commandLink>
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelValorDerechosDeRegistro}">
+													<h:outputText value="#{item.valorDerechos}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelTotalLiquidado}">
+													<h:outputText value="#{item.valorTotalLiquidado}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelSeleccione}">
+													<p:selectBooleanCheckbox value="#{item.seleccionado}">
+														<p:ajax
+															listener="#{beanDevolucionDinero.validarTurnoSeleccionado(item)}"
+															update="hfdevolucionesDinero:idDtListadoTurnosDevolucion" />
+													</p:selectBooleanCheckbox>
+												</p:column>
+											</p:dataTable>
+											
+											<p:outputPanel rendered="#{beanDevolucionDinero.liquidacionItem != null}">
+												<div class="ui-g">
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:dataTable
+															emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+															value="#{beanDevolucionDinero.liquidacionItem}"
+															var="item" tableStyle="width:auto">
+															<f:facet name="header">
+																<h:outputText
+																	value="#{messageBeanSNR.commonButtonDetalleDeLiquidacion}" />
+															</f:facet>
+															<p:columnGroup type="header">
+																<p:row>
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelIdentificadorDelProceso}" />
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelNoMatriculasONuprePorOrip}" />
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelTramiteOConcepto}" />
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelCuantiaCantidadActo}" />
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelCuantiaCantidadActo}" />
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelValorAvaluo}" />
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelDerechosACobrar}" />
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelConservacionDocumental}" />
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelTotalLiquidado}" />
+																</p:row>
+															</p:columnGroup>
+															<p:column>
+																<h:outputText value="#{item.idProceso}" />
+															</p:column>
+															<p:column>
+																<h:outputText value="#{item.circulosRegistrales}" />
+															</p:column>
+															<p:column>
+																<h:outputText value="#{item.numeroMatriculas}" />
+															</p:column>
+															<p:column>
+																<h:outputText value="#{item.tramite}" />
+															</p:column>
+															<p:column>
+																<h:outputText value="#{item.tarifa}" />
+															</p:column>
+															<p:column>
+																<h:outputText value="#{item.certificadosAsociados}" />
+															</p:column>
+															<p:column>
+																<h:outputText value="#{item.valorAvaluo}">
+																	<f:convertNumber pattern="¤#,##0.00"
+																		currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+																</h:outputText>
+															</p:column>
+															<p:column>
+																<h:outputText value="#{item.valorFinal}">
+																	<f:convertNumber pattern="¤#,##0.00"
+																		currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+																</h:outputText>
+															</p:column>
+															<p:column>
+																<h:outputText value="#{item.valorDocumental}">
+																	<f:convertNumber pattern="¤#,##0.00"
+																		currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+																</h:outputText>
+															</p:column>
+															<p:column>
+																<h:outputText value="#{item.valorTotal}">
+																	<f:convertNumber pattern="¤#,##0.00"
+																		currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+																</h:outputText>
+															</p:column>
+															<p:columnGroup type="footer">
+																<p:row>
+																	<p:column colspan="7" style="text-align:right"
+																		footerText="#{messageBeanSNR.commonLabelSubTotalesMayuscula}" />
+																	<p:column
+																		footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanDevolucionDinero.valorTotalDerechos}" />
+																	<p:column
+																		footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanDevolucionDinero.valorTotalConservacion}" />
+																	<p:column
+																		footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanDevolucionDinero.valorTotalLiquidacion}" />
+																</p:row>
+															</p:columnGroup>
+														</p:dataTable>
+													</div>
+												</div>
+												<div class="ui-g">
+													<div class="ui-g-12 ui-md-12 ui-lg-6">
+														<p:dataTable
+															emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+															value="#{beanDevolucionDinero.resumenPorOrip}" var="item"
+															tableStyle="width:100%">
+															<f:facet name="header">
+																<h:outputText
+																	value="#{messageBeanSNR.commonLabelResumenPorOripMayuscula}" />
+															</f:facet>
+															<p:columnGroup type="header">
+																<p:row>
+																	<p:column headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+																	<p:column headerText="#{messageBeanSNR.commonLabelTotalLiquidado}" />
+																</p:row>
+															</p:columnGroup>
+															<p:column>
+																<h:outputText value="#{item.circulosRegistrales}"/>
+															</p:column>
+															<p:column>
+																<h:outputText value="#{item.valorTotal}">
+																	<f:convertNumber pattern="¤#,##0.00" currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+																</h:outputText>
+															</p:column>
+														</p:dataTable>
+													</div>
+													<div class="ui-g-12 ui-md-12 ui-lg-3" align="right">
+														<strong>
+															<h:outputText value="#{messageBeanSNR.commonLabelValorTotalADevolver}"/>
+														</strong>
+													</div>
+													<div class="ui-g-12 ui-md-12 ui-lg-3" align="right">
+														<h:outputText value="#{messageBeanSNR.commonLabelSignoPesos}#{beanDevolucionDinero.valorTotalLiquidacionConservacion}" style="font-size: 20px;"/>
+													</div>
+												</div>
+											</p:outputPanel>
+										</p:panel>
+										
+										
+									</p:panel>
+									<p:panel rendered="#{beanDevolucionDinero.idSubproceso eq '2'}">
+										<p:panel header="#{messageBeanSNR.commonLabelDatosDeLaConsignacionErrada}" toggleable="true">
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:outputLabel value="#{messageBeanSNR.commonLabelTipoConsignacion}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br/>
+													<p:selectOneMenu id="idSoMTipoConsignacion"
+														style="width:100%;"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudDevolucionesDineroTipoConsignacion}"
+														value="#{beanDevolucionDinero.devolucionDinero.tipoConsignacion}">
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems
+															value="#{beanReference.buscarTiposConsignacion()}"
+															var="item"
+															itemValue="#{item}"
+															itemLabel="#{item}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:outputLabel value="#{messageBeanSNR.commonLabelNumeroConsignacion}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br/>
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idItNumeroConsignacion"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudDevolucionDeDineroNumeroConsignacion}"
+														placeholder="#{messageBeanSNR.commonLabelNumeroConsignacion}"
+														maxlength="100"
+														value="#{beanDevolucionDinero.devolucionDinero.numeroConsignacionErrada}"/>
+												</div>
+											</div>
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:outputLabel value="#{messageBeanSNR.commonLabelNombreDeLaEntidad}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br/>
+													<p:selectOneMenu id="idSoMNombreEntidad"
+														style="width:100%;"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudDevolucionesDineroNombreDeLaEntidad}"
+														value="#{beanDevolucionDinero.devolucionDinero.codEntidadConsignacionErrada}">
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems
+															value="#{beanDevolucionDinero.findAllEntidadRecaudadora()}"
+															var="entidadRecaudadora"
+															itemValue="#{entidadRecaudadora.codigoEntidadRecaudadora}"
+															itemLabel="#{entidadRecaudadora.nombreEntidadRecaudadora}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:outputLabel value="#{messageBeanSNR.commonLabelFechaDeConsignacion}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br/>
+													<p:calendar id="idCalFechaConsignacion" size="10" mask="true"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudDevolucionesDineroFechaDeConsignacion}"
+														locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+														value="#{beanDevolucionDinero.devolucionDinero.fechaConsignacionErrada}"
+														showOn="button"/>
+												</div>
+											</div>
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:outputLabel value="#{messageBeanSNR.commonLabelNumeroCuentaBancaria}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br/>
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idItNumeroCuentaBancaria"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudDevolucionDeDineroNumeroCuentaBancaria}"
+														placeholder="#{messageBeanSNR.commonLabelNumeroCuentaBancaria}"
+														maxlength="100"
+														value="#{beanDevolucionDinero.devolucionDinero.numeroCuentaConsignacionErrada}"/>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:outputLabel value="#{messageBeanSNR.commonLabelValor}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br/>
+													<p:inputNumber id="idINValor" maxlength="17"
+														title="#{tooltipBeanSNR.procesosIngresoSolicitudDevolucionDeDineroValor}"
+														placeholder="#{messageBeanSNR.commonLabelValor}"
+														symbol="$" value="#{beanDevolucionDinero.devolucionDinero.valorConsignacionErrada}">
+														<p:keyFilter regEx="/[\d\-\.]/" preventPaste="false" />
+													</p:inputNumber>
+												</div>
+											</div>
+										</p:panel>
+									</p:panel>
+								</center>
+							</p:tab>
+							<p:tab id="datosInteresado_id" titleStyle="font-size:15px;"
+								title="#{messageBeanSNR.commonLabelDatosDelInteresadoTitle}">
+								<center>
+									<br />
+									<p:outputLabel value="#{beanDevolucionDinero.idSubproceso eq '1' ? messageBeanSNR.commonMessageIntervinoEnTramitePregunta : messageBeanSNR.commonMessageMismaPersonaRealizoPagoPregunta}"/>
+									<p:selectOneRadio id="idIntervinoEnTramitePregunta"
+										value="#{beanDevolucionDinero.intervieneTramiteDevDinero}">
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSi}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelNo}"
+											itemValue="N" />
+										<p:ajax
+											listener="#{beanDevolucionDinero.validacionesIntervinoEnTramitePregunta}"
+											update="hfdevolucionesDinero" />
+									</p:selectOneRadio>
+									<br />
+									<p:outputLabel id="idIntervinoCuentaBancaria"
+										value="#{messageBeanSNR.commonMessageQuienIntervinoCuentaBancariaPregunta}" />
+									<p:selectOneRadio id="idIntervieneTitularCuentaBancaria"
+										value="#{beanDevolucionDinero.titularCuentaDevDinero}">
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSi}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelNo}"
+											itemValue="N" />
+									</p:selectOneRadio>
+									<br />
+									<p:outputPanel id="opConsultarAlInteresado">
+							     		<br/>
+										<p:panel id="idPanelConsultarInteresado"
+											rendered="#{beanDevolucionDinero.mostrarPanelInteresado}">
+											<p:panel
+												header="#{beanDevolucionDinero.idSubproceso eq '1' ? messageBeanSNR.commonLabelConsultarAlInteresado : beanDevolucionDinero.idSubproceso eq '2' ? (beanDevolucionDinero.personaRepresentante == null ? messageBeanSNR.commonLabelConsultarAlRepresentante : messageBeanSNR.commonLabelPersonaARepresentar) : ''}"
+												toggleable="true" id="consultaralinteresado">
+												<p:outputPanel id="seccionConsulta"
+													rendered="#{beanDevolucionDinero.mostrarPanelConsultaInteresado}">
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-6 ui-lg-2" />
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTipoDocumentoIdentidad}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMTipoDocIdentidad" ajax="true"
+																style="width:80%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoTipoDocumentoIdentidad}"
+																value="#{beanDevolucionDinero.tipoDocInteresado}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanReference.findTipoDocumentoActivo()}"
+																	var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+																	itemLabel="#{tipoDoc.descripcion}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-2" />
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDocumentoIdentidad}#{messageBeanSNR.commonLabelObligatorio}"
+																style="width:100%" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																ajax="true" id="idItDocumentoID"
+																style="width:80% !important"
+																title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoDocumentoIdentidad}"
+																label="#{messageBeanSNR['commonLabelDocumento']}"
+																placeholder="#{messageBeanSNR['commonLabelDocumento']}"
+																value="#{beanDevolucionDinero.documentoInteresado}"
+																maxlength="20"
+																requiredMessage="El campo Justificación es requerido">
+															</p:inputText>
+														</div>
+													</div>
+													<div class="ui-g" align="center">
+														<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+															<p:commandButton
+																value="#{messageBeanSNR.commonLabelConsultar}"
+																icon="lupa" iconPos="left" id="botonConsultaPersona"
+																update="idOPDatosConsulta,idPanelListados,globalMsg,idPPanelDatosBasicos,idPanelDirRes,idPanelDirCorr,idPanelDatosContacto,idSOMTipoDocIdentidad,idItDocumentoID"
+																actionListener="#{beanDevolucionDinero.consultarPersonaDocumento(true, beanDevolucionDinero.personaRepresentante == null, 'hfdevolucionesDinero')}">
+															</p:commandButton>
+														</div>
+													</div>
+												</p:outputPanel>
+												<p:outputPanel id="idPanelListados">
+													<p:outputPanel rendered="#{beanDevolucionDinero.rendered}">
+														<br />
+														<div class="ui-g" align="left">
+															<p:dataTable id="idDtPersonas"
+																emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+																value="#{beanDevolucionDinero.registroDatosConsultados.listadoPersona}"
+																var="item">
+																<p:column
+																	headerText="#{messageBeanSNR.commonLabelTipoDocumento}"
+																	width="8%" sortBy="#{item.idDocumentoTipo}">
+																	<h:outputText value="#{item.idDocumentoTipo}" />
+																</p:column>
+	
+																<p:column
+																	headerText="#{messageBeanSNR.commonLabelDocumento}"
+																	width="12%" sortBy="#{item.numeroDocumento}">
+																	<h:outputText value="#{item.numeroDocumento}" />
+																</p:column>
+	
+																<p:column
+																	headerText="#{messageBeanSNR.commonLabelNombres}"
+																	width="20%">
+																	<h:outputText
+																		value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.nombreCompleto}" />
+																</p:column>
+	
+																<p:column width="6%" headerText="Seleccione">
+																	<p:selectOneRadio value="#{item.seleccionado}"
+																		id="SORColumnaPersona">
+																		<f:selectItem itemLabel="" itemValue="true" />
+																		<p:ajax
+																			listener="#{beanDevolucionDinero.cargarDatosPersonalesDevDinero(item)}"
+																			update=":hfdevolucionesDinero:idPPanelDatosBasicos,idDtPersonas,:hfdevolucionesDinero:idPanelListados,:hfdevolucionesDinero:idPanelDirRes, :hfdevolucionesDinero:idOPDatosConsulta,:hfdevolucionesDinero:idSorMismaDir" />
+																	</p:selectOneRadio>
+																</p:column>
+	
+																<p:column
+																	headerText="#{messageBeanSNR.commonLabelAccion}"
+																	width="6%">
+																	<p:commandButton icon="fa fa-pencil" iconPos="left"
+																		update="hfdevolucionesDinero"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoEditar}"
+																		actionListener="#{beanDevolucionDinero.accionBotonEditarPersona(item)}" />
+																</p:column>
+															</p:dataTable>
+															<br />
+														</div>
+													</p:outputPanel>
+													<p:outputPanel
+														rendered="#{(beanDevolucionDinero.idSubproceso eq '1' and beanDevolucionDinero.personaConsultada) or (beanDevolucionDinero.personaConsultada and beanDevolucionDinero.intervieneTramiteDevDinero eq 'S' and beanDevolucionDinero.idSubproceso eq '2') or (beanDevolucionDinero.personaConsultada and beanDevolucionDinero.intervieneTramiteDevDinero eq 'N' and beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.personaRepresentante == null)}">
+														<div class="ui-g" align="center">
+															<div class="ui-g-12 ui-md-6 ui-lg-2" />
+															<div class="ui-g-12 ui-md-6 ui-lg-4">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelMedioANotificar}#{messageBeanSNR.commonLabelObligatorio}"
+																	style="width:100%" />
+																<br />
+																<p:selectOneMenu id="idsomMedioANotificar"
+																	style="width:77%"
+																	title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoMedioNotificar}"
+																	value="#{beanDevolucionDinero.solicitud.idAutorizacionNotificacion}">
+																	<p:ajax update="idsomMedioANotificar,idOPDatosConsulta" />
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItems
+																		value="#{beanDevolucionDinero.mediosNotificar}"
+																		var="habNot" itemValue="#{habNot.idTipoRecepcion}"
+																		itemLabel="#{habNot.nombre}" />
+																	<p:ajax event="change"
+																		listener="#{beanDevolucionDinero.cambioDeMedioNotInteresado(beanDevolucionDinero.solicitud.idAutorizacionNotificacion)}"
+																		update="idPanelDatosContacto idPanelDirCorr idPanelDirRes idOPDatosConsulta" />
+																</p:selectOneMenu>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-1" />
+															<div class="ui-g-12 ui-md-6 ui-lg-4">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelMedioAComunicar}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:selectOneMenu id="idsomMedioACom" style="width:77%"
+																	title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoMedioComunicar}"
+																	value="#{beanDevolucionDinero.solicitud.idAutorizacionComunicacion}">
+																	<p:ajax update="idsomMedioANotificar,idOPDatosConsulta" />
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItems
+																		value="#{beanDevolucionDinero.mediosComunicar}"
+																		var="habRec" itemValue="#{habRec.idTipoRecepcion}"
+																		itemLabel="#{habRec.nombre}" />
+																	<p:ajax event="change"
+																		listener="#{beanDevolucionDinero.cambioDeMedioComInteresado(beanDevolucionDinero.solicitud.idAutorizacionComunicacion)}"
+																		update="idPanelDatosContacto idPanelDirCorr idPanelDirRes idOPDatosConsulta" />
+																</p:selectOneMenu>
+															</div>
+														</div>
+													</p:outputPanel>
+													<p:outputPanel>
+														<p:outputPanel id="idOPDatosConsulta"
+															rendered="#{(beanDevolucionDinero.idSubproceso eq '1' and beanDevolucionDinero.mostrarDatosConsulta) or (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.personaRepresentante == null)}">
+															<div class="ui-g" align="left">
+																<div class="ui-g-12 ui-md-6 ui-lg-4"
+																	style="display:#{(beanDevolucionDinero.mostrarDireccionesResidencia and (beanDevolucionDinero.habilitarDireccionReCo or beanDevolucionDinero.habilitarDireccionReNo)) ? 'block' : 'none'};">
+																	<p:outputLabel
+																		value="#{messageBeanSNR.commonLabelDireccionesDeResidencia}" />
+																	<br />
+																	<p:selectOneMenu id="dire" style="width:80%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoDireccionesResidencia}"
+																		value="#{beanDevolucionDinero.idDirResSeleccion}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanDevolucionDinero.registroDatosConsultados.listadoDireccionResidencia}"
+																			var="item"
+																			itemValue="#{item.idPersona}-#{item.idDireccion}"
+																			itemLabel="#{item.direccion}" />
+																		<p:ajax
+																			listener="#{beanDevolucionDinero.cargarDireccionResidencia}"
+																			update=":hfdevolucionesDinero:idPanelDirRes,idSorMismaDir" />
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-4"
+																	style="display:#{(beanDevolucionDinero.mostrarDireccionesCorrespondencia and (beanDevolucionDinero.habilitarDireccionCoCo or beanDevolucionDinero.habilitarDireccionCoNo)) ? 'block' : 'none'};">
+																	<p:outputLabel
+																		value="#{messageBeanSNR.commonLabelDireccionesDeCorrespondencia}" />
+																	<br />
+																	<p:selectOneMenu style="width:80%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoDireccionesCorrespondencia}"
+																		value="#{beanDevolucionDinero.idDirCorrSeleccion}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanDevolucionDinero.registroDatosConsultados.listadoDireccionCorrespondencia}"
+																			var="item"
+																			itemValue="#{item.idPersona}-#{item.idDireccion}"
+																			itemLabel="#{item.direccion}" />
+																		<p:ajax
+																			listener="#{beanDevolucionDinero.cargarDireccionCorrespondencia}"
+																			update=":hfdevolucionesDinero:idPanelDirCorr" />
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-4"
+																	style="display:#{(beanDevolucionDinero.mostrarTelefonoFijo and (beanDevolucionDinero.habilitarTelFijoCo or beanDevolucionDinero.habilitarTelFijoNo)) ? 'block' : 'none'};">
+																	<p:outputLabel
+																		value="#{messageBeanSNR.commonLabalTelefonosFijos}" />
+																	<br />
+																	<p:selectOneMenu style="width:80%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoTelefonosFijos}"
+																		value="#{beanDevolucionDinero.idTelFijoSeleccion}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanDevolucionDinero.registroDatosConsultados.listadoTelefonoFijo}"
+																			var="item"
+																			itemValue="#{item.idPersona}-#{item.idTelefono}"
+																			itemLabel="#{item.telefono}" />
+																		<p:ajax
+																			listener="#{beanDevolucionDinero.cargarTelefonoFijo}"
+																			update=":hfdevolucionesDinero:idOpTelFijo" />
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-4"
+																	style="display:#{(beanDevolucionDinero.mostrarTelefonoMovil and (beanDevolucionDinero.habilitarTelMovilCo or beanDevolucionDinero.habilitarTelMovilNo)) ? 'block' : 'none'};">
+																	<p:outputLabel
+																		value="#{messageBeanSNR.commonLabalTelefonosMoviles}" />
+																	<br />
+																	<p:selectOneMenu style="width:80%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoTelefonosMoviles}"
+																		value="#{beanDevolucionDinero.idTelMovSeleccion}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanDevolucionDinero.registroDatosConsultados.listadoTelefonoMovil}"
+																			var="item"
+																			itemValue="#{item.idPersona}-#{item.idTelefono}"
+																			itemLabel="#{item.telefono}" />
+																		<p:ajax
+																			listener="#{beanDevolucionDinero.cargarTelefonoMovil}"
+																			update="idSOMPaisTelMov,idItTelefonoMovil" />
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-4"
+																	style="display:#{(beanDevolucionDinero.mostrarCorreo and (beanDevolucionDinero.habilitarCorreoCo or beanDevolucionDinero.habilitarCorreoNo)) ? 'block' : 'none'};">
+																	<p:outputLabel
+																		value="#{messageBeanSNR.commonLabelCorreosElectronicos}" />
+																	<br />
+																	<p:selectOneMenu style="width:80%"
+																		id="SOMListadoCorreos"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoCorreosElectronicos}"
+																		value="#{beanDevolucionDinero.idCorreoSeleccion}">
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanDevolucionDinero.registroDatosConsultados.listadoCorreoElectronico}"
+																			var="item"
+																			itemValue="#{item.idPersona}-#{item.idCorreoElectronico}"
+																			itemLabel="#{item.correoElectronico}" />
+																		<p:ajax
+																			listener="#{beanDevolucionDinero.cargarCorreoElectronico}"
+																			update="idItEmail" />
+																	</p:selectOneMenu>
+																</div>
+															</div>
+														</p:outputPanel>
+													</p:outputPanel>
+												</p:outputPanel>
+											</p:panel>
+											<br />
+											<p:panel id="idPPanelDatosBasicos"
+												header="#{beanDevolucionDinero.idProceso == '10' ? messageBeanSNR.commonLabelDatosBasicos : messageBeanSNR.commonLabelDatosBasicosDelInteresado}"
+												toggleable="true"
+												collapsed="#{beanDevolucionDinero.mostrarDatosBasicos}">
+												<div class="ui-g" align="left">
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelTipoDePersona}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idSOMTipoPersona" style="width:100%"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoPersona}"
+															value="#{beanDevolucionDinero.persona.idTipoPersona}"
+															disabled="#{beanDevolucionDinero.deshabilitarDatosBasicos || beanDevolucionDinero.deshabilitarTipoPersona || beanDevolucionDinero.esRetomarSolicitud || !beanDevolucionDinero.habilitadoPorConsulta}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems value="#{beanReference.findTipoPersona()}"
+																var="tipoPersona"
+																itemValue="#{tipoPersona.idTipoPersona}"
+																itemLabel="#{tipoPersona.descripcion}" />
+															<p:ajax event="change"
+																listener="#{beanDevolucionDinero.validarTipoPersonaDocumento(beanDevolucionDinero.persona.idTipoPersona)}"
+																update="idSOMTipoPersona idSOMTipoDoc idsomMedioACom idsomMedioANotificar idPanelDirRes idOLNombre idOLApellido idOLRazon @this,idOlDocumento,idSOMNacionalidad,idSOMGenero,idOlPNombre,idOlSNombre,idOlPApellido,idOlSApellido,idOlRazonSocial" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idSOMTipoDoc" style="width:100%"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoDocumento}"
+															value="#{beanDevolucionDinero.persona.idDocumentoTipo}"
+															disabled="#{beanDevolucionDinero.deshabilitarDatosBasicos || beanDevolucionDinero.deshabilitarTipoDocumento || beanDevolucionDinero.esRetomarSolicitud || !beanDevolucionDinero.habilitadoPorConsulta}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanReference.findTipoDocumentoActivo()}"
+																var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+																itemLabel="#{tipoDoc.descripcion}" />
+															<p:ajax event="change"
+																listener="#{beanDevolucionDinero.validarTipoPersonaDocumento(beanDevolucionDinero.persona.idDocumentoTipo)}"
+																update="idSOMTipoPersona idSOMTipoDoc idsomMedioACom idsomMedioANotificar idPanelDirRes idOLNombre idOLApellido idOLRazon @this,idOlDocumento,idSOMNacionalidad,idSOMGenero,idOlPNombre,idOlSNombre,idOlPApellido,idOlSApellido,idOlRazonSocial" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															id="idOlDocumento"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoDocumento}"
+															placeholder="#{messageBeanSNR.commonLabelDocumento}"
+															maxlength="20"
+															value="#{beanDevolucionDinero.persona.numeroDocumento}"
+															disabled="#{beanDevolucionDinero.deshabilitarDatosBasicos || beanDevolucionDinero.esRetomarSolicitud|| !beanDevolucionDinero.habilitadoPorConsulta}" />
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-4">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelNacionalidad}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idSOMNacionalidad" style="width:100%"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoNacionalidad}"
+															value="#{beanDevolucionDinero.persona.idPais}"
+															disabled="#{beanDevolucionDinero.deshabilitarDatosBasicos || beanDevolucionDinero.esRetomarSolicitud|| !beanDevolucionDinero.habilitadoPorConsulta}">
+															<p:ajax update="idSOMNacionalidad" />
+															<f:selectItem itemValue=""
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+															<f:selectItems value="#{beanReference.findPaises()}"
+																var="paises" itemValue="#{paises.idPais}"
+																itemLabel="#{paises.nombre}" />
+														</p:selectOneMenu>
+													</div>
+	
+												</div>
+												<div class="ui-g" align="left">
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+															value="#{messageBeanSNR.commonLabelCalidadEnQueActua}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idSOMCalidad" style="width:100%"
+															rendered="#{beanDevolucionDinero.idProceso != '6' || beanDevolucionDinero.idProceso == '10'}"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoCalidadActua}"
+															value="#{beanDevolucionDinero.solicitud.idCalidadSolicitante}"
+															disabled="#{!beanDevolucionDinero.habilitadoPorConsulta || beanDevolucionDinero.intervieneTramiteDevDinero eq 'S' || (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.personaRepresentante != null)}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanDevolucionDinero.findCalidadSolicitanteDevDinero()}"
+																var="calSol" itemValue="#{calSol.idCalidadSolicitante}"
+																itemLabel="#{calSol.nombre}" />
+														</p:selectOneMenu>
+														<p:inputText id="idITCalidad" style="width:100%"
+															disabled="true"
+															rendered="#{beanDevolucionDinero.idProceso == '6'  || beanDevolucionDinero.esRetomarSolicitud}"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoCalidadActua}"
+															value="#{beanDevolucionDinero.solicitud.idCalidadSolicitante == '3' ? 'INTERESADO' : ''}">
+														</p:inputText>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:outputLabel for="idOlPNombre" id="idOLNombre"
+															indicateRequired="#{!beanDevolucionDinero.deshabilitarCamposPorNit}"
+															value="#{messageBeanSNR.commonLabelPrimerNombre}" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															id="idOlPNombre" maxlength="100"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerNombre}"
+															placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+															value="#{beanDevolucionDinero.persona.primerNombre}"
+															disabled="#{(beanDevolucionDinero.deshabilitarDatosBasicos || beanDevolucionDinero.deshabilitarCamposPorNit || beanDevolucionDinero.esRetomarSolicitud) and (!beanDevolucionDinero.accionBtnEditPerNormal) || !beanDevolucionDinero.habilitadoPorConsulta}" />
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:outputLabel for="idOlSNombre"
+															value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															id="idOlSNombre" maxlength="100"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoNombre}"
+															placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+															value="#{beanDevolucionDinero.persona.segundoNombre}"
+															disabled="#{(beanDevolucionDinero.deshabilitarDatosBasicos || beanDevolucionDinero.deshabilitarCamposPorNit || beanDevolucionDinero.esRetomarSolicitud) and (!beanDevolucionDinero.accionBtnEditPerNormal) || !beanDevolucionDinero.habilitadoPorConsulta}" />
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:outputLabel for="idOlPApellido" id="idOLApellido"
+															indicateRequired="#{!beanDevolucionDinero.deshabilitarCamposPorNit}"
+															value="#{messageBeanSNR.commonLabelPrimerApellido}" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															id="idOlPApellido" maxlength="150"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerApellido}"
+															placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+															value="#{beanDevolucionDinero.persona.primerApellido}"
+															disabled="#{(beanDevolucionDinero.deshabilitarDatosBasicos || beanDevolucionDinero.deshabilitarCamposPorNit || beanDevolucionDinero.esRetomarSolicitud) and (!beanDevolucionDinero.accionBtnEditPerNormal) || !beanDevolucionDinero.habilitadoPorConsulta}" />
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:outputLabel for="idOlSApellido"
+															value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															id="idOlSApellido" maxlength="100"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoApellido}"
+															placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+															value="#{beanDevolucionDinero.persona.segundoApellido}"
+															disabled="#{(beanDevolucionDinero.deshabilitarDatosBasicos || beanDevolucionDinero.deshabilitarCamposPorNit || beanDevolucionDinero.esRetomarSolicitud) and (!beanDevolucionDinero.accionBtnEditPerNormal) || !beanDevolucionDinero.habilitadoPorConsulta}" />
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelGenero}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idSOMGenero" style="width:100%"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoGenero}"
+															value="#{beanDevolucionDinero.persona.idNaturalGenero}"
+															disabled="#{beanDevolucionDinero.deshabilitarCamposPorNit || beanDevolucionDinero.deshabilitarTipoDocumento || beanDevolucionDinero.deshabilitarTipoPersona || beanDevolucionDinero.esRetomarSolicitud || !beanDevolucionDinero.habilitadoPorConsulta}">
+															<p:ajax update="idSOMGenero" />
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems value="#{beanReference.findGeneros()}"
+																var="generos" itemValue="#{generos.idNaturalGenero}"
+																itemLabel="#{generos.ilicode}" />
+														</p:selectOneMenu>
+													</div>
+	
+												</div>
+												<div class="ui-g" align="left">
+													<div class="ui-g-12 ui-md-12 ui-lg-6">
+														<p:outputLabel for="idOlRazonSocial" id="idOLRazon"
+															indicateRequired="#{beanDevolucionDinero.deshabilitarCamposPorNit}"
+															value="#{messageBeanSNR.commonLabelRazonSocial}" />
+														<br />
+														<p:inputText
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoRazonSocial}"
+															onblur="value=value.toUpperCase()" id="idOlRazonSocial"
+															placeholder="#{messageBeanSNR.commonLabelRazonSocial}"
+															value="#{beanDevolucionDinero.persona.razonSocial}"
+															disabled="#{(beanDevolucionDinero.deshabilitarDatosBasicos || !beanDevolucionDinero.deshabilitarCamposPorNit || beanDevolucionDinero.esRetomarSolicitud) and (!beanDevolucionDinero.accionBtnEditPerNit) || !beanDevolucionDinero.habilitadoPorConsulta}" />
+													</div>
+												</div>
+											</p:panel>
+											<br />
+											<p:panel id="idPanelDirRes" toggleable="true"
+												widgetVar="wvPanelDireccionR"
+												style="#{(beanDevolucionDinero.idSubproceso eq '1' and beanDevolucionDinero.persona.idTipoPersona eq 'J') or (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.personaRepresentante != null) ? 'display: none' : ''}"
+												collapsed="#{!beanDevolucionDinero.habilitarPanelDirResidencia}"
+												header="#{messageBeanSNR.commonLabelDireccionDeResidencia}">
+												<ui:include src="direccionResidenciaInclude.xhtml" />
+											</p:panel>
+											<br />
+											<p:panel id="idPanelDirCorr" toggleable="true"
+												widgetVar="wvPanelDireccionC"
+												collapsed="#{!beanDevolucionDinero.habilitarPanelDirCorrespondencia}"
+												header="#{messageBeanSNR.commonLabelDireccionDeCorrespondencia}"
+												rendered="#{beanDevolucionDinero.idSubproceso ne '2' or beanDevolucionDinero.personaRepresentante == null}">
+												<div class="ui-g" align="left">
+													<div class="ui-g-12 ui-md-8 ui-lg-8">
+														<h:panelGrid columns="2">
+															<p:outputLabel id="labelCorrespondencia"
+																value="#{messageBeanSNR.commonLabelPreguntaDeseaQueSeaLaMismaDireccion}#{messageBeanSNR.commonLabelObligatorio}" />
+															<p:selectOneRadio id="idSorMismaDir" style="width:100%"
+																disabled="#{!beanDevolucionDinero.habilitadoPorConsulta}"
+																value="#{beanDevolucionDinero.mismaDireccionCorrespondencia}">
+																<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+																	itemValue="S" />
+																<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+																	itemValue="N" />
+																<p:ajax
+																	listener="#{beanDevolucionDinero.cambiarDireccionCorrespondencia}"
+																	update=":hfdevolucionesDinero:idFormDireccionCorrespondenciaInclude" />
+															</p:selectOneRadio>
+														</h:panelGrid>
+													</div>
+												</div>
+												<ui:include src="direccionCorrespondenciaInclude.xhtml" />
+											</p:panel>
+											<br />
+											<p:panel id="idPanelDatosContacto" widgetVar="wvPanelDatosC"
+												collapsed="#{!beanDevolucionDinero.habilitarPanelDatosContacto}"
+												header="#{messageBeanSNR.commonLabelDatosDelContacto}"
+												toggleable="true"
+												rendered="#{beanDevolucionDinero.idSubproceso ne '2' or beanDevolucionDinero.personaRepresentante == null}">
+												<p:outputPanel id="idOpTelFijo">
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelPaisDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+															<div class="ui-g-12 ui-md-12 ui-lg-12">
+																<p:selectOneMenu id="idSOMPaisTel" style="width:80%"
+																	title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoPaisTelefonoFijo}"
+																	value="#{beanDevolucionDinero.telefonoFijo.idPais}"
+																	disabled="#{beanDevolucionDinero.deshabilitarTelFijo || !beanDevolucionDinero.habilitadoPorConsulta}">
+																	<p:ajax
+																		listener="#{beanDevolucionDinero.cambiarPaisTelefono}"
+																		update="idSOMDepTel,idItIndicativo" />
+																	<f:selectItem itemValue=""
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+																	<f:selectItems value="#{beanReference.findPaises()}"
+																		var="paises" itemValue="#{paises.idPais}"
+																		itemLabel="#{paises.nombre}" />
+																</p:selectOneMenu>
+															</div>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDepartamentoDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+															<div class="ui-g-12 ui-md-12 ui-lg-12">
+																<p:selectOneMenu id="idSOMDepTel" style="width:80%"
+																	title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoDepartamentoTelefonoFijo}"
+																	value="#{beanDevolucionDinero.telefonoFijo.idDepartamento}"
+																	disabled="#{beanDevolucionDinero.deshabilitarTelFijo || !beanDevolucionDinero.habilitadoPorConsulta}">
+																	<p:ajax
+																		listener="#{beanDevolucionDinero.findIndicativoDepartamento}"
+																		update="idItIndicativo" />
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItems
+																		value="#{beanDevolucionDinero.findDepartamentosTelefono()}"
+																		var="depRes" itemValue="#{depRes.idDepartamento}"
+																		itemLabel="#{depRes.nombre}" />
+																</p:selectOneMenu>
+															</div>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<div class="ui-g-4 ui-md-4 ui-lg-3">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelIndicativo}" />
+															</div>
+															<div class="ui-g-2 ui-md-2 ui-lg-2">
+																<p:inputText onblur="value=value.toUpperCase()"
+																	title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoIndicativo}"
+																	id="idItIndicativo" disabled="true" size="4"
+																	value="#{beanDevolucionDinero.telefonoFijo.indicativo}"
+																	maxlength="15" />
+															</div>
+															<div class="ui-g-1 ui-md-1 ui-lg-1">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelSignoNumero}" />
+															</div>
+	
+															<div class="ui-g-5 ui-md-5 ui-lg-4">
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idItTelefonoFijo"
+																	title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoTelefonoFijo}"
+																	placeholder="#{messageBeanSNR.commonLabelTelefonoFijo}"
+																	maxlength="7"
+																	value="#{beanDevolucionDinero.telefonoFijo.telefono}"
+																	disabled="#{beanDevolucionDinero.deshabilitarTelFijo || !beanDevolucionDinero.habilitadoPorConsulta}">
+																	<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+																</p:inputText>
+															</div>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelPaisDelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+															<div class="ui-g-12 ui-md-12 ui-lg-12">
+																<p:selectOneMenu id="idSOMPaisTelMov" style="width:80%"
+																	title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoPaisTelefonoMovil}"
+																	value="#{beanDevolucionDinero.telefonoMovil.idPais}"
+																	disabled="#{beanDevolucionDinero.deshabilitarTelMovil || !beanDevolucionDinero.habilitadoPorConsulta}">
+																	<p:ajax update="idItIndicativoMovil" />
+																	<f:selectItem itemValue=""
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+																	<f:selectItems value="#{beanReference.findPaises()}"
+																		var="paises" itemValue="#{paises.idPais}"
+																		itemLabel="#{paises.nombre}" />
+																</p:selectOneMenu>
+															</div>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<div class="ui-g-4 ui-md-4 ui-lg-3">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelIndicativo}" />
+																<p:spacer />
+															</div>
+															<div class="ui-g-2 ui-md-2 ui-lg-2">
+																<p:inputText onblur="value=value.toUpperCase()"
+																	title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoIndicativoMovil}"
+																	id="idItIndicativoMovil" disabled="true" size="4"
+																	value="#{beanDevolucionDinero.telefonoMovil.idPais}" />
+															</div>
+															<div class="ui-g-1 ui-md-1 ui-lg-1">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelSignoNumero}" />
+																<p:spacer />
+															</div>
+	
+															<div class="ui-g-5 ui-md-5 ui-lg-5">
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idItTelefonoMovil"
+																	title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoTelefonoMovil}"
+																	placeholder="#{messageBeanSNR.commonLabelTelefonoMovil}"
+																	value="#{beanDevolucionDinero.telefonoMovil.telefono}"
+																	disabled="#{beanDevolucionDinero.deshabilitarTelMovil || !beanDevolucionDinero.habilitadoPorConsulta}"
+																	maxlength="10">
+																	<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+																</p:inputText>
+															</div>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelCorreoElectronico}#{messageBeanSNR.commonLabelObligatorio}" />
+															<div class="ui-g-12 ui-md-12 ui-lg-12">
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idItEmail" style="width:83% !important"
+																	title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoCorreoElectronico}"
+																	placeholder="#{messageBeanSNR.commonLabelEjemploCorreo}"
+																	size="30" maxlength="100"
+																	value="#{beanDevolucionDinero.correoElectronico.correoElectronico}"
+																	disabled="#{beanDevolucionDinero.deshabilitarCorreo || !beanDevolucionDinero.habilitadoPorConsulta}" />
+															</div>
+														</div>
+													</div>
+												</p:outputPanel>
+											</p:panel>
+											<p:outputPanel id="idOpAgregarRepresentante">
+												<p:outputPanel rendered="#{beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.intervieneTramiteDevDinero eq 'N' and beanDevolucionDinero.personaRepresentante == null}">
+													<br/>
+													<div class="ui-g">
+												     	<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+															<p:commandButton id="idCmBtnGuardarRepresentante"
+																value="#{messageBeanSNR.commonButtonGuardarRepresentante}"
+																icon="fa fa-save" iconPos="left"
+																actionListener="#{beanDevolucionDinero.agregarRepresentante}"
+																update="hfdevolucionesDinero:opConsultarAlInteresado">
+															</p:commandButton>
+														</div>
+													</div>
+												</p:outputPanel>
+											</p:outputPanel>
+											<p:outputPanel id="idOpAgregarPersonaARepresentar">
+												<p:outputPanel rendered="#{beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.personaRepresentante != null}">
+													<div class="ui-g">
+												     	<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+															<p:commandButton id="idCmBtnAdicionarPersonaARepresentar"
+																value="#{messageBeanSNR.commonButtonAdicionarPersonaARepresentar}"
+																icon="fa fa-save" iconPos="left"
+																actionListener="#{beanDevolucionDinero.agregarPersonaARepresentar}"
+																update="hfdevolucionesDinero:opConsultarAlInteresado">
+															</p:commandButton>
+														</div>
+													</div>
+												</p:outputPanel>
+											</p:outputPanel>
+											<br/>
+											<p:dataTable id="idDtPersonaRepresentante" var="item" tableStyle="width:100%;"
+												emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+												value="#{beanDevolucionDinero.personaRepresentante}" rowIndexVar="rowKey"
+												rendered="#{beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.personaRepresentante != null}">
+												<f:facet name="header">
+													<h:outputText
+														value="#{messageBeanSNR.commonLabelRepresentante}" />
+												</f:facet>
+												<p:columnGroup type="header">
+													<p:row>
+														<p:column style="width:10%"/>
+														<p:column headerText="#{messageBeanSNR.commonLabelTipoDocumentoDocumento}" />
+														<p:column headerText="#{messageBeanSNR.commonLabelRepresentante}" />
+														<p:column headerText="#{messageBeanSNR.commonLabelCalidadEnQueActua}" />
+														<p:column headerText="#{messageBeanSNR.commonLabelEliminar}"/>
+													</p:row>
+												</p:columnGroup>
+												<p:column style="width:5%;">
+													<h:outputText value="#{item.identificador}" />
+												</p:column>
+												
+												<p:column>
+													<h:outputText value="#{item.persona.idDocumentoTipo} - #{item.persona.numeroDocumento}" />
+												</p:column>
+												
+												<p:column>
+													<h:outputText value="#{item.persona.nombreCompleto}" />
+												</p:column>
+						
+												<p:column>
+													<h:outputText value="#{item.calidadEnQueActua}" />
+												</p:column>
+												
+												<p:column style="width: 10%;">
+													<p:commandButton icon="fa fa-trash"
+														title="#{messageBeanSNR.commonLabelEliminar}"
+														iconPos="center"
+														actionListener="#{beanDevolucionDinero.eliminarPersonaRepresentante(item)}" 
+														update="hfdevolucionesDinero:opConsultarAlInteresado"/>
+												</p:column>
+											</p:dataTable>
+											<br/>
+											<p:dataTable id="idDtPersonaARepresentar" var="item" tableStyle="width:100%;"
+												emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+												value="#{beanDevolucionDinero.personaARepresentar}" rowIndexVar="rowKey"
+												rendered="#{beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.personaRepresentante != null}">
+												<f:facet name="header">
+													<h:outputText
+														value="#{messageBeanSNR.commonLabelPersonasARepresentar}" />
+												</f:facet>
+												<p:columnGroup type="header">
+													<p:row>
+														<p:column style="width:10%"/>
+														<p:column headerText="#{messageBeanSNR.commonLabelTipoDocumentoDocumento}" />
+														<p:column headerText="#{messageBeanSNR.commonLabelRepresentante}" />
+														<p:column headerText="#{messageBeanSNR.commonLabelCalidadEnQueActua}" />
+														<p:column headerText="#{messageBeanSNR.commonLabelEliminar}"/>
+													</p:row>
+												</p:columnGroup>
+												<p:column style="width:5%;">
+													<h:outputText value="#{item.identificador}" />
+												</p:column>
+												
+												<p:column>
+													<h:outputText value="#{item.persona.idDocumentoTipo} - #{item.persona.numeroDocumento}" />
+												</p:column>
+												
+												<p:column>
+													<h:outputText value="#{item.persona.nombreCompleto}" />
+												</p:column>
+						
+												<p:column>
+													<h:outputText value="#{item.calidadEnQueActua}" />
+												</p:column>
+												
+												<p:column style="width: 10%;">
+													<p:commandButton icon="fa fa-trash"
+														title="#{messageBeanSNR.commonLabelEliminar}"
+														iconPos="center"
+														actionListener="#{beanDevolucionDinero.eliminarPersonaARepresentar(item)}" 
+														update="hfdevolucionesDinero:opConsultarAlInteresado"/>
+												</p:column>
+											</p:dataTable>
+											<br/>
+											<p:panel
+												header="#{messageBeanSNR.commonLabelIntervinientesARepresentar}"
+												toggleable="true" id="idIntervinientesRepresentar"
+												rendered="#{(beanDevolucionDinero.idSubproceso eq '1' and beanDevolucionDinero.intervieneTramiteDevDinero eq 'N')}">
+												<p:dataTable id="idDtidIntervinientesRepresentar" var="item"
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+													value="#{beanDevolucionDinero.intervinientesDevDinero}"
+													style="max-width: 100%;margin-bottom:0;">
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelTipoDocumento}"
+														width="8%" sortBy="#{item.idDocumentoTipo}">
+														<h:outputText value="#{item.idDocumentoTipo}" />
+													</p:column>
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelDocumento}"
+														width="12%" sortBy="#{item.numeroDocumento}">
+														<h:outputText value="#{item.numeroDocumento}" />
+													</p:column>
+													<p:column headerText="#{messageBeanSNR.commonLabelNombres}"
+														width="20%">
+														<h:outputText
+															value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.nombreCompleto}" />
+													</p:column>
+													<p:column width="6%" headerText="Seleccione">
+														<p:selectOneRadio value="#{item.seleccionado}"
+															id="SORColumnaPersonaDevDineroInterviniente">
+															<f:selectItem itemLabel="" itemValue="true" />
+															<p:ajax
+																listener="#{beanDevolucionDinero.seleccionarInterviniente(item)}"
+																update=":hfdevolucionesDinero:idIntervinientesRepresentar" />
+														</p:selectOneRadio>
+													</p:column>
+												</p:dataTable>
+											</p:panel>
+											<p:outputPanel id="idObservaciones1">
+												<div align="left">
+													<strong>
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelObservaciones}" />
+													</strong>
+													<p:inputTextarea rows="10" cols="240"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosObservaciones}"
+														onblur="value=value.toUpperCase()"
+														value="#{beanDevolucionDinero.solicitud.comentario}"
+														queryDelay="750" maxlength="4000" minQueryLength="4"
+														counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+														counter="idNumeroCaracteres1" />
+												</div>
+												<div align="right">
+													<h:outputText id="idNumeroCaracteres1" />
+												</div>
+											</p:outputPanel>
+										</p:panel>
+								    </p:outputPanel>
+								</center>
+							</p:tab>
+							<p:tab id="datosCuentaBancaria_id" titleStyle="font-size:15px;"
+								title="#{messageBeanSNR.commonLabelDatosCuentaBancariaTitle}">
+								<center>
+									<p:panel
+										header="#{messageBeanSNR.commonLabelDatosCuentaBancaria}"
+										toggleable="true">
+										<div class="ui-g" align="center">
+											<div class="ui-g-12 ui-md-6 ui-lg-6">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelNombreEntidadRecaudadora}#{messageBeanSNR.commonLabelObligatorio}" />
+												<p:selectOneMenu id="idEntidadRecaudadora"
+													style="width:100%;"
+													title="#{tooltipBeanSNR.procesosIngresoSolicitudDevolucionesDineroNombreEntidadRecaudadora}"
+													value="#{beanDevolucionDinero.idEntidadRecaudadora}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanDevolucionDinero.findAllEntidadRecaudadora()}"
+														var="entidadRecaudadora"
+														itemValue="#{entidadRecaudadora.codigoEntidadRecaudadora}"
+														itemLabel="#{entidadRecaudadora.nombreEntidadRecaudadora}" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-6">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTipoCuenta}#{messageBeanSNR.commonLabelObligatorio}" />
+												<p:selectOneMenu id="idTipoCuenta" style="width:100%;"
+													title="#{tooltipBeanSNR.procesosIngresoSolicitudDevolucionesDineroTipoCuenta}"
+													value="#{beanDevolucionDinero.tipoCuenta}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItem itemLabel="AHORROS" itemValue="AHORROS" />
+													<f:selectItem itemLabel="CORRIENTE" itemValue="CORRIENTE" />
+													<f:selectItem itemLabel="CFT" itemValue="CFT" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-6">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelNumeroCuenta}#{messageBeanSNR.commonLabelObligatorio}" />
+												<p:inputText value="#{beanDevolucionDinero.numeroCuenta}"
+													id="idNumeroCuenta" onblur="value=value.toUpperCase()"
+													title="#{tooltipBeanSNR.procesosIngresoSolicitudDevolucionesDineroNumeroCuenta}"
+													placeholder="#{messageBeanSNR.commonLabelNumeroCuenta}">
+													<p:keyFilter regEx="/[a-z0-9]/i" preventPaste="false" />
+												</p:inputText>
+											</div>
+										</div>
+									</p:panel>
+									<br/>
+									<p:panel>
+										<p:panel header="#{messageBeanSNR.commonLabelDatosTitular}"
+											rendered="#{beanDevolucionDinero.titularCuentaS and beanDevolucionDinero.idSubproceso ne '2'}"
+											toggleable="true">
+											<p:panelGrid columns="2" layout="grid"
+												style="margin-bottom:0px">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelNombre}#{messageBeanSNR.commonLabelObligatorio}" />
+												<p:inputText
+													value="#{beanDevolucionDinero.personaTitularCuenta.nombreCompleto}"
+													disabled="true"
+													title="#{tooltipBeanSNR.procesosIngresoSolicitudDevolucionesDineroNombre}"
+													placeholder="#{messageBeanSNR.commonLabelNombre}">
+												</p:inputText>
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+												<p:inputText
+													value="#{beanDevolucionDinero.personaTitularCuenta.idDocumentoTipo}"
+													disabled="true"
+													title="#{tooltipBeanSNR.procesosIngresoSolicitudDevolucionesDineroTipoDeDocumento}"
+													placeholder="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+												</p:inputText>
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelNumeroDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+												<p:inputText
+													value="#{beanDevolucionDinero.personaTitularCuenta.numeroDocumento}"
+													disabled="true"
+													title="#{tooltipBeanSNR.procesosIngresoSolicitudDevolucionesDineroNumeroDeDocumento}"
+													placeholder="#{messageBeanSNR.commonLabelNumeroDeDocumento}">
+												</p:inputText>
+											</p:panelGrid>
+										</p:panel>
+										<p:panel header="Titular de cuenta"
+											rendered="#{(beanDevolucionDinero.idSubproceso eq '1' and !beanDevolucionDinero.titularCuentaS) or beanDevolucionDinero.idSubproceso eq '2'}"
+											toggleable="true">
+											<p:outputPanel id="ingresarIntervinientesIndividual">
+												<p:panel id="idPConsultaInterviniente"
+													header="#{messageBeanSNR.commonLabelConsultar}"
+													toggleable="true"
+													rendered="#{beanDevolucionDinero.idSubproceso eq '1' or (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.titularCuentaDevDinero eq 'N')}">
+													<div class="ui-g" align="center">
+														<div class="ui-g-12 ui-md-6 ui-lg-2" />
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTipoDocumentoIdentidad}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMTipoDocIdentidadInter"
+																style="width:80%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteConsultaIntervinienteTipoDocumentoIdentidad}"
+																disabled="#{!beanDevolucionDinero.habilitarTurnoYnir}"
+																value="#{beanDevolucionDinero.tipoDocInterviniente}">
+																<p:ajax
+																	update="idSOMTipoDocIdentidadInter, idItDocumentoIDInter, idSOMTipoDocInter, idOlDocumentoInter" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanDevolucionDinero.findTipoDocumentoSecuencia()}"
+																	var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+																	itemLabel="#{tipoDoc.descripcion}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-2" />
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDocumentoDeIdentidad}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="idItDocumentoIDInter" maxlength="20"
+																style="width:80% !important"
+																title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteConsultaIntervinienteDocumentoIdentidad}"
+																disabled="#{!beanDevolucionDinero.habilitarTurnoYnir || beanDevolucionDinero.renderedHabilitaSecuencia}"
+																label="#{messageBeanSNR['commonLabelDocumento']}"
+																placeholder="#{messageBeanSNR['commonLabelDocumento']}"
+																value="#{beanDevolucionDinero.documentoInterviniente}" />
+														</div>
+													</div>
+													<div class="ui-g" align="center">
+														<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+															<p:commandButton
+																value="#{messageBeanSNR.commonLabelConsultar}"
+																icon="lupa" iconPos="left"
+																disabled="#{!beanDevolucionDinero.habilitarTurnoYnir || beanDevolucionDinero.procesoTerminado}"
+																update=":hfdevolucionesDinero:idPanelListadosInter,globalMsg,idPPanelDatosBasicosInter,idPanelDirResInter,idPanelDirCorrInter,idPanelDatosContactoInter,idSOMTipoDocIdentidadInter,idItDocumentoIDInter,hfdevolucionesDinero"
+																actionListener="#{beanDevolucionDinero.consultarPersonaDocumentoInter}" />
+														</div>
+													</div>
+													<p:outputPanel id="idPanelListadosInter">
+														<p:outputPanel
+															rendered="#{beanDevolucionDinero.renderedInterviniente}">
+															<br />
+															<div class="ui-g" align="left">
+																<p:dataTable id="idDtIntervinientes"
+																	emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+																	value="#{beanDevolucionDinero.registroDatosConsultadosInter.listadoPersona}"
+																	var="item">
+																	<p:column headerText="Tipo Documento" width="8%"
+																		sortBy="#{item.idDocumentoTipo}">
+																		<h:outputText value="#{item.idDocumentoTipo}" />
+																	</p:column>
+
+																	<p:column headerText="Documento" width="12%"
+																		sortBy="#{item.numeroDocumento}">
+																		<h:outputText value="#{item.numeroDocumento}" />
+																	</p:column>
+
+																	<p:column headerText="Nombres" width="20%">
+																		<h:outputText
+																			value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.nombreCompleto}" />
+																	</p:column>
+
+																	<p:column width="6%" headerText="Seleccione">
+																		<p:selectOneRadio value="#{item.seleccionado}">
+																			<f:selectItem itemLabel="" itemValue="true" />
+																			<p:ajax
+																				listener="#{beanDevolucionDinero.cargarDatosPersonalesInter(item)}"
+																				update=":hfdevolucionesDinero:idPPanelDatosBasicosInter,idDtIntervinientes,:hfdevolucionesDinero:idPanelDirResInter,:hfdevolucionesDinero:idOPDatosConsultaInter, :hfdevolucionesDinero:idsomMedioANotificarInter, :hfdevolucionesDinero:idsomMedioAComInter," />
+																		</p:selectOneRadio>
+																	</p:column>
+
+																	<p:column
+																		headerText="#{messageBeanSNR.commonLabelAccion}"
+																		width="6%">
+																		<p:commandButton icon="fa fa-pencil" iconPos="left"
+																			update="hfdevolucionesDinero"
+																			title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteConsultaIntervinienteEditar}"
+																			actionListener="#{beanDevolucionDinero.accionBotonEditarPersonaInter(item)}" />
+																	</p:column>
+																</p:dataTable>
+															</div>
+														</p:outputPanel>
+														<p:outputPanel
+															rendered="#{beanDevolucionDinero.personaConsultadaInter and beanDevolucionDinero.idSubproceso ne '2'}">
+															<div class="ui-g" align="left">
+																<div class="ui-g-12 ui-md-6 ui-lg-2" />
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel
+																		value="#{messageBeanSNR.commonLabelMedioANotificar}#{messageBeanSNR.commonLabelObligatorio}" />
+																	<br />
+																	<p:selectOneMenu id="idsomMedioANotificarInter"
+																		style="width:61%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosBasicosIntervinienteMedioNotificar}"
+																		value="#{beanDevolucionDinero.solicitudInter.idAutorizacionNotificacion}"
+																		disabled="#{!beanDevolucionDinero.habilitarTurnoYnir}">
+																		<p:ajax
+																			update="idsomMedioANotificarInter,idOPDatosConsultaInter" />
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanDevolucionDinero.mediosComunicarInter}"
+																			var="habNot" itemValue="#{habNot.idTipoRecepcion}"
+																			itemLabel="#{habNot.nombre}" />
+																		<p:ajax event="change"
+																			listener="#{beanDevolucionDinero.cambioDeMedioNotInterviniente(beanDevolucionDinero.solicitudInter.idAutorizacionNotificacion)}"
+																			update="idPanelDirResInter,idOPDatosConsultaInter" />
+																	</p:selectOneMenu>
+																</div>
+																<div class="ui-g-12 ui-md-6 ui-lg-1" />
+																<div class="ui-g-12 ui-md-6 ui-lg-4">
+																	<p:outputLabel
+																		value="#{messageBeanSNR.commonLabelMedioAComunicar}#{messageBeanSNR.commonLabelObligatorio}" />
+																	<br />
+																	<p:selectOneMenu id="idsomMedioAComInter"
+																		style="width:61%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosBasicosIntervinienteMedioComunicar}"
+																		value="#{beanDevolucionDinero.solicitudInter.idAutorizacionComunicacion}"
+																		disabled="#{!beanDevolucionDinero.habilitarTurnoYnir}">
+																		<p:ajax
+																			update="idsomMedioANotificarInter,idOPDatosConsultaInter" />
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanDevolucionDinero.mediosNotificarInter}"
+																			var="habRec" itemValue="#{habRec.idTipoRecepcion}"
+																			itemLabel="#{habRec.nombre}" />
+																		<p:ajax event="change"
+																			listener="#{beanDevolucionDinero.cambioDeMedioComInterviniente(beanDevolucionDinero.solicitudInter.idAutorizacionComunicacion)}"
+																			update="idPanelDirResInter,idOPDatosConsultaInter" />
+																	</p:selectOneMenu>
+																</div>
+															</div>
+														</p:outputPanel>
+														<p:outputPanel
+															rendered="#{beanDevolucionDinero.renderedInterviniente and beanDevolucionDinero.idSubproceso ne '2'}">
+															<p:outputPanel id="idOPDatosConsultaInter">
+																<p:outputPanel
+																	rendered="#{beanDevolucionDinero.mostrarDatosConsultaInter}">
+																	<div class="ui-g" align="left">
+																		<div class="ui-g-12 ui-md-6 ui-lg-4"
+																			style="display:#{(beanDevolucionDinero.mostrarDireccionesResidenciaInter and (beanDevolucionDinero.habilitarDireccionReCoInter or beanDevolucionDinero.habilitarDireccionReNoInter)) ? 'block' : 'none'};">
+																			<p:outputLabel
+																				value="#{messageBeanSNR.commonLabelDireccionesDeResidencia}" />
+																			<br />
+																			<p:selectOneMenu style="width:80%"
+																				title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteConsultaIntervinienteDireccionesResidencia}"
+																				value="#{beanDevolucionDinero.idDirResSeleccionInter}">
+																				<f:selectItem
+																					itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																					itemValue="" />
+																				<f:selectItems
+																					value="#{beanDevolucionDinero.registroDatosConsultadosInter.listadoDireccionResidencia}"
+																					var="item"
+																					itemValue="#{item.idPersona}-#{item.idDireccion}"
+																					itemLabel="#{item.direccion}" />
+																				<p:ajax
+																					listener="#{beanDevolucionDinero.cargarDireccionResidenciaInter}"
+																					update=":hfdevolucionesDinero:idPanelDirResInter" />
+																			</p:selectOneMenu>
+																		</div>
+																		<div class="ui-g-12 ui-md-6 ui-lg-4"
+																			style="display:#{(beanDevolucionDinero.mostrarDireccionesCorrespondenciaInter and (beanDevolucionDinero.habilitarDireccionCoCoInter or beanDevolucionDinero.habilitarDireccionCoNoInter)) ? 'block' : 'none'};">
+																			<p:outputLabel
+																				value="#{messageBeanSNR.commonLabelDireccionesDeCorrespondencia}" />
+																			<br />
+																			<p:selectOneMenu style="width:80%"
+																				title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteConsultaIntervinienteDireccionesCorrespondencia}"
+																				value="#{beanDevolucionDinero.idDirCorrSeleccionInter}">
+																				<f:selectItem
+																					itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																					itemValue="" />
+																				<f:selectItems
+																					value="#{beanDevolucionDinero.registroDatosConsultadosInter.listadoDireccionCorrespondencia}"
+																					var="item"
+																					itemValue="#{item.idPersona}-#{item.idDireccion}"
+																					itemLabel="#{item.direccion}" />
+																				<p:ajax
+																					listener="#{beanDevolucionDinero.cargarDireccionCorrespondenciaInter}"
+																					update=":hfdevolucionesDinero:idPanelDirCorrInter" />
+																			</p:selectOneMenu>
+																		</div>
+																		<div class="ui-g-12 ui-md-6 ui-lg-4"
+																			style="display:#{(beanDevolucionDinero.mostrarTelefonoFijoInter and (beanDevolucionDinero.habilitarTelFijoCoInter or beanDevolucionDinero.habilitarTelFijoNoInter)) ? 'block' : 'none'};">
+																			<p:outputLabel
+																				value="#{messageBeanSNR.commonLabalTelefonosFijos}" />
+																			<br />
+																			<p:selectOneMenu style="width:80%"
+																				title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteConsultaIntervinienteTelefonosFijos}"
+																				value="#{beanDevolucionDinero.idTelFijoSeleccionInter}">
+																				<f:selectItem
+																					itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																					itemValue="" />
+																				<f:selectItems
+																					value="#{beanDevolucionDinero.registroDatosConsultadosInter.listadoTelefonoFijo}"
+																					var="item"
+																					itemValue="#{item.idPersona}-#{item.idTelefono}"
+																					itemLabel="#{item.telefono}" />
+																				<p:ajax
+																					listener="#{beanDevolucionDinero.cargarTelefonoFijoInter}"
+																					update=":hfdevolucionesDinero:idOpTelFijoInter" />
+																			</p:selectOneMenu>
+																		</div>
+																		<div class="ui-g-12 ui-md-6 ui-lg-4"
+																			style="display:#{(beanDevolucionDinero.mostrarTelefonoMovilInter and (beanDevolucionDinero.habilitarTelMovilCoInter or beanDevolucionDinero.habilitarTelMovilNoInter)) ? 'block' : 'none'};">
+																			<p:outputLabel
+																				value="#{messageBeanSNR.commonLabalTelefonosMoviles}" />
+																			<br />
+																			<p:selectOneMenu style="width:80%"
+																				title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteConsultaIntervinienteTelefonosMoviles}"
+																				value="#{beanDevolucionDinero.idTelMovSeleccionInter}">
+																				<f:selectItem
+																					itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																					itemValue="" />
+																				<f:selectItems
+																					value="#{beanDevolucionDinero.registroDatosConsultadosInter.listadoTelefonoMovil}"
+																					var="item"
+																					itemValue="#{item.idPersona}-#{item.idTelefono}"
+																					itemLabel="#{item.telefono}" />
+																				<p:ajax
+																					listener="#{beanDevolucionDinero.cargarTelefonoMovilInter}"
+																					update="idSOMPaisTelMovInter,idItTelefonoMovilInter" />
+																			</p:selectOneMenu>
+																		</div>
+																		<div class="ui-g-12 ui-md-6 ui-lg-4"
+																			style="display:#{(beanDevolucionDinero.mostrarCorreoInter and (beanDevolucionDinero.habilitarCorreoCoInter or beanDevolucionDinero.habilitarCorreoNoInter)) ? 'block' : 'none'};">
+																			<p:outputLabel
+																				value="#{messageBeanSNR.commonLabelCorreosElectronicos}" />
+																			<br />
+																			<p:selectOneMenu style="width:80%"
+																				title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteConsultaIntervinienteCorreosElectronicos}"
+																				value="#{beanDevolucionDinero.idCorreoSeleccionInter}">
+																				<f:selectItem
+																					itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																					itemValue="" />
+																				<f:selectItems
+																					value="#{beanDevolucionDinero.registroDatosConsultadosInter.listadoCorreoElectronico}"
+																					var="item"
+																					itemValue="#{item.idPersona}-#{item.idCorreoElectronico}"
+																					itemLabel="#{item.correoElectronico}" />
+																				<p:ajax
+																					listener="#{beanDevolucionDinero.cargarCorreoElectronicoInter}"
+																					update="idItEmailInter" />
+																			</p:selectOneMenu>
+																		</div>
+																	</div>
+																</p:outputPanel>
+															</p:outputPanel>
+														</p:outputPanel>
+													</p:outputPanel>
+												</p:panel>
+												<br />
+												<p:panel id="idPPanelDatosBasicosInter"
+													header="#{messageBeanSNR.commonLabelDatosBasicos}"
+													toggleable="true"
+													collapsed="#{beanDevolucionDinero.mostrarDatosBasicosInterviniente}"
+													widgetVar="wVPanelDatosBasicosInter">
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTipoDePersona}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMTipoPersonaInter"
+																style="width:100%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosBasicosIntervinienteTipoPersona}"
+																value="#{beanDevolucionDinero.personaInter.idTipoPersona}"
+																disabled="#{beanDevolucionDinero.deshabilitarDatosBasicosInter || !beanDevolucionDinero.habilitarTurnoYnir || beanDevolucionDinero.deshabilitarTipoPersonaInter || (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.titularCuentaDevDinero eq 'S')}">
+																<p:ajax event="change"
+																	listener="#{beanDevolucionDinero.validarTipoPersonaDocumentoInter(beanDevolucionDinero.personaInter.idTipoPersona)}"
+																	update="idSOMTipoPersonaInter idSOMTipoDocInter idsomMedioAComInter idsomMedioANotificarInter idPanelDirResInter idOLNombreInter idOLApellidoInter idOLRazonInter @this,idOlDocumentoInter,idSOMNacionalidadInter,idSOMGeneroInter,idOlPNombreInter,idOlSNombreInter,idOlPApellidoInter,idOlSApellidoInter,idOlRazonSocialInter" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanReference.findTipoPersona()}"
+																	var="tipoPersona"
+																	itemValue="#{tipoPersona.idTipoPersona}"
+																	itemLabel="#{tipoPersona.descripcion}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMTipoDocInter"
+																style="width:100%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosBasicosIntervinienteTipoDocumento}"
+																value="#{beanDevolucionDinero.personaInter.idDocumentoTipo}"
+																disabled="#{beanDevolucionDinero.deshabilitarDatosBasicosInter || !beanDevolucionDinero.habilitarTurnoYnir || beanDevolucionDinero.deshabilitarTipoDocumentoInter || (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.titularCuentaDevDinero eq 'S')}">
+																<p:ajax event="change"
+																	listener="#{beanDevolucionDinero.validarTipoPersonaDocumentoInter(beanDevolucionDinero.personaInter.idDocumentoTipo)}"
+																	update="idSOMTipoPersonaInter idSOMTipoDocInter idsomMedioAComInter idsomMedioANotificarInter idPanelDirResInter idOLNombreInter idOLApellidoInter idOLRazonInter @this,idOlDocumentoInter,idSOMNacionalidadInter,idSOMGeneroInter,idOlPNombreInter,idOlSNombreInter,idOlPApellidoInter,idOlSApellidoInter,idOlRazonSocialInter,idOlDocumentoInter" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanDevolucionDinero.findTipoDocumentoSecuencia()}"
+																	var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+																	itemLabel="#{tipoDoc.descripcion}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="idOlDocumentoInter"
+																title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosBasicosIntervinienteDocumento}"
+																placeholder="#{messageBeanSNR.commonLabelDocumento}"
+																maxlength="20"
+																value="#{beanDevolucionDinero.personaInter.numeroDocumento}"
+																disabled="#{beanDevolucionDinero.deshabilitarDatosBasicosInter || !beanDevolucionDinero.habilitarTurnoYnir || beanDevolucionDinero.renderedHabilitaSecuencia || (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.titularCuentaDevDinero eq 'S')}" />
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelNacionalidad}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idSOMNacionalidadInter"
+																style="width:100%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosBasicosIntervinienteNacionalidad}"
+																value="#{beanDevolucionDinero.personaInter.idPais}"
+																disabled="#{beanDevolucionDinero.deshabilitarDatosBasicosInter || !beanDevolucionDinero.habilitarTurnoYnir || (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.titularCuentaDevDinero eq 'S')}">
+																<f:selectItem itemValue=""
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+																<f:selectItems value="#{beanReference.findPaises()}"
+																	var="paises" itemValue="#{paises.idPais}"
+																	itemLabel="#{paises.nombre}" />
+															</p:selectOneMenu>
+														</div>
+
+													</div>
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-6 ui-lg-2">
+															<p:outputLabel for="idOlPNombreInter"
+																id="idOLNombreInter"
+																indicateRequired="#{!beanDevolucionDinero.deshabilitarCamposPorNitInter}"
+																value="#{messageBeanSNR.commonLabelPrimerNombre}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="idOlPNombreInter" maxlength="100"
+																title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosBasicosIntervinientePrimerNombre}"
+																placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+																value="#{beanDevolucionDinero.personaInter.primerNombre}"
+																disabled="#{((beanDevolucionDinero.deshabilitarDatosBasicosInter || beanDevolucionDinero.deshabilitarCamposPorNitInter) and (!beanDevolucionDinero.accionBtnEditPerNormalInter)) || !beanDevolucionDinero.habilitarTurnoYnir || (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.titularCuentaDevDinero eq 'S') }">
+																<p:keyFilter regEx="/^[a-zA-Z\s]*$/"
+																	preventPaste="false" />
+															</p:inputText>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-2">
+															<p:outputLabel for="idOlSNombreInter"
+																value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="idOlSNombreInter" maxlength="100"
+																title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosBasicosIntervinienteSegundoNombre}"
+																placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+																value="#{beanDevolucionDinero.personaInter.segundoNombre}"
+																disabled="#{((beanDevolucionDinero.deshabilitarDatosBasicosInter || beanDevolucionDinero.deshabilitarCamposPorNitInter) and (!beanDevolucionDinero.accionBtnEditPerNormalInter)) || !beanDevolucionDinero.habilitarTurnoYnir || (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.titularCuentaDevDinero eq 'S')}">
+																<p:keyFilter regEx="/^[a-zA-Z\s]*$/"
+																	preventPaste="false" />
+															</p:inputText>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-2">
+															<p:outputLabel for="idOlPApellidoInter"
+																id="idOLApellidoInter"
+																indicateRequired="#{!beanDevolucionDinero.deshabilitarCamposPorNitInter}"
+																value="#{messageBeanSNR.commonLabelPrimerApellido}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="idOlPApellidoInter" maxlength="150"
+																title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosBasicosIntervinientePrimerApellido}"
+																placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+																value="#{beanDevolucionDinero.personaInter.primerApellido}"
+																disabled="#{((beanDevolucionDinero.deshabilitarDatosBasicosInter || beanDevolucionDinero.deshabilitarCamposPorNitInter) and (!beanDevolucionDinero.accionBtnEditPerNormalInter)) || !beanDevolucionDinero.habilitarTurnoYnir || (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.titularCuentaDevDinero eq 'S')}">
+																<p:keyFilter regEx="/^[a-zA-Z\s]*$/"
+																	preventPaste="false" />
+															</p:inputText>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-2">
+															<p:outputLabel for="idOlSApellidoInter"
+																value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="idOlSApellidoInter" maxlength="100"
+																title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosBasicosIntervinienteSegundoApellido}"
+																placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+																value="#{beanDevolucionDinero.personaInter.segundoApellido}"
+																disabled="#{((beanDevolucionDinero.deshabilitarDatosBasicosInter || beanDevolucionDinero.deshabilitarCamposPorNitInter) and (!beanDevolucionDinero.accionBtnEditPerNormalInter)) || !beanDevolucionDinero.habilitarTurnoYnir || (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.titularCuentaDevDinero eq 'S')}">
+																<p:keyFilter regEx="/^[a-zA-Z\s]*$/"
+																	preventPaste="false" />
+															</p:inputText>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-2">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelGenero}" />
+															<br />
+															<p:selectOneMenu id="idSOMGeneroInter" style="width:100%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosBasicosIntervinienteGenero}"
+																value="#{beanDevolucionDinero.personaInter.idNaturalGenero}"
+																disabled="#{beanDevolucionDinero.deshabilitarCamposPorNitInter || !beanDevolucionDinero.habilitarTurnoYnir || beanDevolucionDinero.deshabilitarTipoDocumentoInter || beanDevolucionDinero.deshabilitarTipoPersonaInter || (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.titularCuentaDevDinero eq 'S')}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems value="#{beanReference.findGeneros()}"
+																	var="generos" itemValue="#{generos.idNaturalGenero}"
+																	itemLabel="#{generos.ilicode}" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-12 ui-lg-6">
+															<p:outputLabel for="idOlRazonSocialInter"
+																id="idOLRazonInter"
+																indicateRequired="#{beanDevolucionDinero.deshabilitarCamposPorNitInter}"
+																value="#{messageBeanSNR.commonLabelRazonSocial}" />
+															<br />
+															<p:inputText
+																title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosBasicosIntervinienteRazonSocial}"
+																onblur="value=value.toUpperCase()"
+																id="idOlRazonSocialInter"
+																placeholder="#{messageBeanSNR.commonLabelRazonSocial}"
+																value="#{beanDevolucionDinero.personaInter.razonSocial}"
+																disabled="#{((beanDevolucionDinero.deshabilitarDatosBasicosInter || !beanDevolucionDinero.deshabilitarCamposPorNitInter) and (!beanDevolucionDinero.accionBtnEditPerNitInter)) || !beanDevolucionDinero.habilitarTurnoYnir || (beanDevolucionDinero.idSubproceso eq '2' and beanDevolucionDinero.titularCuentaDevDinero eq 'S')}" />
+														</div>
+													</div>
+												</p:panel>
+												<br />
+												<p:panel id="idPanelDirResInter" toggleable="true"
+													widgetVar="wvPanelDireccionRInter"
+													style="#{beanDevolucionDinero.personaInter.idTipoPersona eq 'J' or beanDevolucionDinero.idSubproceso eq '2' ? 'display: none' : ''}"
+													collapsed="#{!beanDevolucionDinero.habilitarPanelDirResidenciaInter}"
+													header="#{messageBeanSNR.commonLabelDireccionDeResidencia}">
+													<ui:include src="direccionResidenciaInterInclude.xhtml" />
+												</p:panel>
+												<br />
+												<p:panel id="idPanelDirCorrInter" toggleable="true"
+													widgetVar="wvPanelDireccionCInter"
+													collapsed="#{!beanDevolucionDinero.habilitarPanelDirCorrespondenciaInter}"
+													header="#{messageBeanSNR.commonLabelDireccionDeCorrespondencia}"
+													rendered="#{beanDevolucionDinero.idSubproceso ne '2'}">
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-8 ui-lg-8">
+															<h:panelGrid columns="2">
+																<p:outputLabel id="idOLMismaDireccionInter"
+																	value="#{messageBeanSNR.commonLabelPreguntaDeseaQueSeaLaMismaDireccion}" />
+																<p:selectOneRadio id="idSorMismaDirInter"
+																	style="width:100%"
+																	value="#{beanDevolucionDinero.mismaDireccionCorrespondenciaInter}"
+																	disabled="#{!beanDevolucionDinero.habilitarTurnoYnir}">
+																	<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+																		itemValue="S" />
+																	<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+																		itemValue="N" />
+																	<p:ajax
+																		listener="#{beanDevolucionDinero.cambiarDireccionCorrespondenciaInter}"
+																		update=":hfdevolucionesDinero:idFormDireccionCorrespondenciaInterInclude" />
+																</p:selectOneRadio>
+															</h:panelGrid>
+														</div>
+													</div>
+													<ui:include
+														src="direccionCorrespondenciaInterInclude.xhtml" />
+												</p:panel>
+												<br />
+												<p:panel id="idPanelDatosContactoInter"
+													widgetVar="wvPanelDatosCInter"
+													collapsed="#{!beanDevolucionDinero.habilitarPanelDatosContactoInter}"
+													header="#{messageBeanSNR.commonLabelDatosContacto}"
+													toggleable="true">
+													<p:outputPanel id="idOpTelFijoInter">
+														<div class="ui-g" align="left">
+															<div class="ui-g-12 ui-md-6 ui-lg-4">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelPaisDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+																<div class="ui-g-12 ui-md-12 ui-lg-12">
+																	<p:selectOneMenu id="idSOMPaisTelInter"
+																		style="width:80%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosContactoPaisTelefonoFijo}"
+																		value="#{beanDevolucionDinero.telefonoFijoInter.idPais}"
+																		disabled="#{beanDevolucionDinero.deshabilitarTelFijoInter || !beanDevolucionDinero.habilitarTurnoYnir}">
+																		<p:ajax
+																			listener="#{beanDevolucionDinero.cambiarPaisTelefonoInter}"
+																			update="idSOMDepTelInter,idItIndicativoInter" />
+																		<f:selectItem itemValue=""
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+																		<f:selectItems value="#{beanReference.findPaises()}"
+																			var="paises" itemValue="#{paises.idPais}"
+																			itemLabel="#{paises.nombre}" />
+																	</p:selectOneMenu>
+																</div>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-4">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelDepartamentoDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+																<div class="ui-g-12 ui-md-12 ui-lg-12">
+																	<p:selectOneMenu id="idSOMDepTelInter"
+																		style="width:80%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosContactoDepartamentoTelefonoFijo}"
+																		value="#{beanDevolucionDinero.telefonoFijoInter.idDepartamento}"
+																		disabled="#{beanDevolucionDinero.deshabilitarTelFijoInter || !beanDevolucionDinero.habilitarTurnoYnir}">
+																		<p:ajax
+																			listener="#{beanDevolucionDinero.findIndicativoDepartamentoInter}"
+																			update="idItIndicativoInter" />
+																		<f:selectItem
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																			itemValue="" />
+																		<f:selectItems
+																			value="#{beanDevolucionDinero.findDepartamentosTelefonoInter()}"
+																			var="depRes" itemValue="#{depRes.idDepartamento}"
+																			itemLabel="#{depRes.nombre}" />
+																	</p:selectOneMenu>
+																</div>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-4">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<div class="ui-g-4 ui-md-4 ui-lg-3">
+																	<p:outputLabel
+																		value="#{messageBeanSNR.commonLabelIndicativo}" />
+																</div>
+																<div class="ui-g-2 ui-md-2 ui-lg-2">
+																	<p:inputText onblur="value=value.toUpperCase()"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosContactoIndicativo}"
+																		id="idItIndicativoInter" disabled="true" size="4"
+																		value="#{beanDevolucionDinero.telefonoFijoInter.indicativo}" />
+																</div>
+																<div class="ui-g-1 ui-md-1 ui-lg-1">
+																	<p:outputLabel value="#" />
+																</div>
+
+																<div class="ui-g-5 ui-md-5 ui-lg-5">
+																	<p:inputText onblur="value=value.toUpperCase()"
+																		id="idItTelefonoFijoInter"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosContactoTelefonoFijo}"
+																		placeholder="#{messageBeanSNR.commonLabelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}"
+																		maxlength="7"
+																		value="#{beanDevolucionDinero.telefonoFijoInter.telefono}"
+																		disabled="#{beanDevolucionDinero.deshabilitarTelFijoInter || !beanDevolucionDinero.habilitarTurnoYnir}">
+																		<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+																	</p:inputText>
+																</div>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-4">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelPaisDelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+																<div class="ui-g-12 ui-md-12 ui-lg-12">
+																	<p:selectOneMenu id="idSOMPaisTelMovInter"
+																		style="width:80%"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosContactoPaisTelefonoMovil}"
+																		value="#{beanDevolucionDinero.telefonoMovilInter.idPais}"
+																		disabled="#{beanDevolucionDinero.deshabilitarTelMovilInter || !beanDevolucionDinero.habilitarTurnoYnir}">
+																		<p:ajax update="idItIndicativoMovilInter" />
+																		<f:selectItem itemValue=""
+																			itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+																		<f:selectItems value="#{beanReference.findPaises()}"
+																			var="paises" itemValue="#{paises.idPais}"
+																			itemLabel="#{paises.nombre}" />
+																	</p:selectOneMenu>
+																</div>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-4">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<div class="ui-g-4 ui-md-4 ui-lg-3">
+																	<p:outputLabel
+																		value="#{messageBeanSNR.commonLabelIndicativo}" />
+																</div>
+																<div class="ui-g-2 ui-md-2 ui-lg-2">
+																	<p:inputText onblur="value=value.toUpperCase()"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosContactoIndicativoMovil}"
+																		id="idItIndicativoMovilInter" disabled="true" size="4"
+																		value="#{beanDevolucionDinero.telefonoMovilInter.idPais}" />
+																</div>
+																<div class="ui-g-1 ui-md-1 ui-lg-1">
+																	<p:outputLabel value="#" />
+																</div>
+
+																<div class="ui-g-5 ui-md-5 ui-lg-5">
+																	<p:inputText onblur="value=value.toUpperCase()"
+																		id="idItTelefonoMovilInter"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosContactoTelefonoMovil}"
+																		placeholder="#{messageBeanSNR.commonLabelTelefonoMovil}"
+																		maxlength="10"
+																		value="#{beanDevolucionDinero.telefonoMovilInter.telefono}"
+																		disabled="#{beanDevolucionDinero.deshabilitarTelMovilInter || !beanDevolucionDinero.habilitarTurnoYnir}">
+																		<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+																	</p:inputText>
+																</div>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-4">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelCorreoElectronico}#{messageBeanSNR.commonLabelObligatorio}" />
+																<div class="ui-g-12 ui-md-12 ui-lg-12">
+																	<p:inputText onblur="value=value.toUpperCase()"
+																		style="width:83% !important" id="idItEmailInter"
+																		title="#{tooltipBeanSNR.procesosRegistroDatosIntervinienteDatosContactoCorreoElectronico}"
+																		placeholder="#{messageBeanSNR.commonLabelEjemploCorreo}"
+																		size="30" maxlength="100"
+																		value="#{beanDevolucionDinero.correoElectronicoInter.correoElectronico}"
+																		disabled="#{beanDevolucionDinero.deshabilitarCorreoInter || !beanDevolucionDinero.habilitarTurnoYnir}" />
+																</div>
+															</div>
+														</div>
+													</p:outputPanel>
+												</p:panel>
+												<br />
+												<div class="ui-g" align="center">
+													<div class="ui-g-12 ui-md-6 ui-lg-3" align="left">
+														<p:commandButton
+															value="#{messageBeanSNR.commonLabelLimpiar}"
+															icon="fa fa-undo" iconPos="left"
+															disabled="#{!beanDevolucionDinero.habilitarTurnoYnir || beanDevolucionDinero.procesoTerminado}"
+															update=":hfdevolucionesDinero:idPanelListadosInter,:hfdevolucionesDinero:idPPanelDatosBasicosInter,:hfdevolucionesDinero:idPanelDirResInter,:hfdevolucionesDinero:idPanelDirCorrInter,:hfdevolucionesDinero:idPanelDatosContactoInter,idSOMTipoDocIdentidadInter,idItDocumentoIDInter,idPConsultaInterviniente"
+															actionListener="#{beanDevolucionDinero.limpiarIntervinientes}" />
+													</div>
+												</div>
+												<br />
+												<br />
+											</p:outputPanel>
+										</p:panel>
+									</p:panel>
+								</center>
+							</p:tab>
+							<p:tab id="documentosSoporte_id" titleStyle="font-size:15px;"
+								title="#{messageBeanSNR.commonLabelDocumentosSoporte}">
+								<center>
+									<p:panel id="idPDocsCargados"
+										rendered="#{!beanDevolucionDinero.esSuspensionEntregaDocumentacion}"
+										header="#{messageBeanSNR.commonLabelDocumentosCargados}">
+										<p:dataTable id="idCompletitudDocumentales"
+											emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+											value="#{beanDevolucionDinero.tiposCompletitudDocumental}"
+											var="tiposDoc">
+											<p:columnGroup type="header">
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelTipoDocumental}"
+													style="width: 17%;" />
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelObligatoriedad}"
+													style="width: 10%;" />
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelRecepcion}"
+													style="width: 10%" />
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelObservaciones}"
+													style="width: 25%;" />
+												<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+													style="width: 8%" />
+											</p:columnGroup>
+
+											<p:column>
+												<p:selectOneMenu id="idSOMTipoDocumental"
+													title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosTipoDocumental}"
+													disabled="#{beanDevolucionDinero.procesoTerminado}"
+													style="width:100%" value="#{tiposDoc.idTipoDocumental}">
+													<f:selectItems itemValue="#{doc.idTipoDocumental}"
+														value="#{beanDevolucionDinero.findAllTiposDocumentales()}"
+														var="doc"
+														itemLabel="#{doc.nombre} - #{doc.idTipoDocumental}" />
+													<p:ajax update="idSOMTipoDocumental" />
+												</p:selectOneMenu>
+											</p:column>
+											<p:column>
+												<p:selectBooleanCheckbox id="seleccionObli"
+													disabled="#{beanDevolucionDinero.procesoTerminado}"
+													value="#{tiposDoc.seleccionado}" />
+											</p:column>
+											<p:column>
+												<p:selectOneMenu id="idSOMedioRecepcion"
+													disabled="#{beanDevolucionDinero.procesoTerminado}"
+													title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosRecepcionDocumento}"
+													style="width:100%" value="#{tiposDoc.medioRecepcion}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems itemValue="#{comp}"
+														value="#{beanDevolucionDinero.findAllRecepcionDocumento()}"
+														var="comp" itemLabel="#{comp}" />
+													<p:ajax update="idSOMedioRecepcion" global="false" />
+												</p:selectOneMenu>
+											</p:column>
+											<p:column>
+												<p:inputText id="observaTipo"
+													onblur="value=value.toUpperCase()"
+													disabled="#{beanDevolucionDinero.procesoTerminado}"
+													style="#{tiposDoc.campoRojoObservacion ? 'border-color:red !important;width:100%;' : 'width:100%;'};"
+													value="#{tiposDoc.observaciones}" maxlength="200"
+													title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosObservaciones}"
+													placeholder="#{messageBeanSNR.commonLabelObservaciones}">
+													<p:ajax event="blur" update="observaTipo" />
+												</p:inputText>
+											</p:column>
+											<p:column>
+												<p:commandButton icon="fa fa-trash"
+													disabled="#{tiposDoc.noEditable or beanDevolucionDinero.procesoTerminado}"
+													iconPos="left"
+													title="#{messageBeanSNR.commonLabelEliminar}"
+													actionListener="#{beanDevolucionDinero.deleteCompletitudDocumental(tiposDoc)}"
+													update="hfdevolucionesDinero:idPDocsCargados" />
+											</p:column>
+										</p:dataTable>
+										<br />
+										<div align="right">
+											<p:commandButton
+												value="#{messageBeanSNR.commonLabelAgregarNuevoTipoDocumental}"
+												rendered="#{!beanDevolucionDinero.procesoTerminado}"
+												update="hfdevolucionesDinero:idPDocsCargados" ajax="true"
+												icon="fa fa-plus-circle" iconPos="left"
+												actionListener="#{beanDevolucionDinero.addCompletitudDocumental()}" />
+										</div>
+									</p:panel>
+									<br />
+									<p:outputPanel id="idObservaciones2">
+										<div align="left">
+											<strong>
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelObservaciones}" />
+											</strong>
+											<p:inputTextarea rows="10" cols="240"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosObservaciones}"
+												onblur="value=value.toUpperCase()"
+												value="#{beanDevolucionDinero.solicitud.comentario}"
+												queryDelay="750" maxlength="4000" minQueryLength="4"
+												counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+												counter="idNumeroCaracteres2" />
+										</div>
+										<div align="right">
+											<h:outputText id="idNumeroCaracteres2" />
+										</div>
+									</p:outputPanel>
+									<p:outputPanel id="idBotonesFinalizar">
+										<p:commandButton id="cbTerminarProceso"
+											rendered="#{!beanDevolucionDinero.mostrarResumenSolicitud}"
+											value="#{messageBeanSNR.commonLabelTerminarProceso}"
+											icon="fa fa-check-circle" iconPos="left"
+											action="#{beanDevolucionDinero.terminarProcesoDevoluciones}"
+											update="idBotonesFinalizar" />
+									</p:outputPanel>
+								</center>
+							</p:tab>
+							<p:tab id="impresion_id" titleStyle="font-size:15px;"
+								title="#{messageBeanSNR.commonLabelImpresion}">
+								<p:panel
+									header="#{messageBeanSNR.commonLabelDocumentosAImprimir}"
+									toggleable="true">
+									<p:outputPanel>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<p:dataTable id="idDtDocsImprimir" var="item"
+													value="#{beanDevolucionDinero.documentosImprimir}"
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelDocumento}">
+														<h:outputText value="#{item.tipo}" />
+													</p:column>
+													<p:column headerText="#{messageBeanSNR.commonLabelEstado}">
+														<h:outputText id="estadoDocumento"
+															value="#{item.estadoImpresion}" />
+													</p:column>
+												</p:dataTable>
+											</div>
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<p:commandButton
+													value="#{messageBeanSNR.commonLabelImprimir}"
+													global="false" icon="fa fa-print" id="botonImprimir"
+													widgetVar="botonImprimir"
+													actionListener="#{beanDevolucionDinero.imprimirDocumentos(true,'hfdevolucionesDinero')}" />
+											</div>
+										</div>
+									</p:outputPanel>
+								</p:panel>
+								<br />
+								<p:commandButton id="botonFinalizar" style="display:none"
+									value="#{messageBeanSNR.commonLabelFinalizar}"
+									icon="fa fa-check-circle" iconPos="left"
+									action="principal?faces-redirect=true" />
+							</p:tab>
+						</p:wizard>
+					</p:panel>
+				</p:outputPanel>
+			</h:form>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelDetalleLiquidacion}"
+				widgetVar="dlgdetalleLiquidacion" modal="true" width="85%"
+				height="30%" resizable="false">
+				<h:form id="dlgdetalleLiq">
+					<p:dataTable id="idDtRegistrosDetalleLiq" var="item"
+						emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+						value="#{beanDevolucionDinero.devDineroTemporal}"
+						style="max-width: 100%;margin-bottom:0;">
+						<p:column style="min-width: 170px;"
+							headerText="#{messageBeanSNR.commonLabelActo}">
+							<h:outputText value="#{item.idTipoActo}" />
+						</p:column>
+						<p:column style="min-width: 170px;"
+							headerText="#{messageBeanSNR.commonLabelEspecificacionActo}">
+							<h:outputText value="#{item.especificacionActo}" />
+						</p:column>
+						<p:column style="min-width: 170px;"
+							headerText="#{messageBeanSNR.commonLabelCuantiaDelActo}">
+							<h:outputText value="#{item.cuantiaActo}" />
+						</p:column>
+						<p:column style="min-width: 170px;"
+							headerText="#{messageBeanSNR.commonLabelTipoDeTarifa}">
+							<h:outputText value="#{item.tipoTarifaRegistral}" />
+						</p:column>
+						<p:column style="min-width: 170px;"
+							headerText="#{messageBeanSNR.commonLabelValorDelAvaluo}">
+							<h:outputText value="#{item.valorAvaluo}" />
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelCantidadDeActos}">
+							<h:outputText value="#{item.cantidadActos}" />
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelValorDerechosDeRegistro}">
+							<h:outputText value="#{item.valorDerechos}" />
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelValorConservacionDocumental}">
+							<h:outputText value="#{item.valorConservacionDocumental}" />
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelValorTotalLiquidado}">
+							<h:outputText value="#{item.valorTotalLiquidado}" />
+						</p:column>
+					</p:dataTable>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)" id="idNirGenerado"
+				header="#{messageBeanSNR.commonLabelNIRCreado}" widgetVar="idNirVar"
+				modal="true" height="100" resizable="false">
+				<h:form id="fidNir" style="font-size: large; top: 100%; left: 100%;">
+					<h:outputText id="otMensaje"
+						value="#{beanDevolucionDinero.mensajeTerminarProceso}" />
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

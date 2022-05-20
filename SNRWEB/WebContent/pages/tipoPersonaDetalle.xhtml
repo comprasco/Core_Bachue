@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTablaBasica}" />
+				</li>
+				<li class="breadcrumb-item" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTipoPersona}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{beanTipoPersona.insertar ? messageBeanSNR.pageInsertarTipoPersona : messageBeanSNR.pageModificarTipoPersona}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fTipoPersonaDetalle" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false"/>
+				<center>
+					<p:panel id="pTipoPersona"
+						header="#{beanTipoPersona.insertar ? messageBeanSNR.pageInsertarTipoPersona : messageBeanSNR.pageModificarTipoPersona}">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelIdentificador}" />
+								<br />
+								<p:inputText id="idTipoPersona"
+									title="#{tooltipBeanSNR.administracionTipoPersonaDetalleIdTipoPersona}"
+									disabled="#{!beanTipoPersona.insertar}"
+									placeholder="#{messageBeanSNR.commonLabelIdentificador}"
+									value="#{beanTipoPersona.parametros.idTipoPersona}"
+									maxlength="1" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelDescripcion}" />
+								<br />
+								<p:inputText id="idDescripcion"
+									title="#{tooltipBeanSNR.administracionTipoPersonaDetalleDescripcion}"
+									placeholder="#{messageBeanSNR.commonLabelDescripcion}"
+									value="#{beanTipoPersona.parametros.descripcion}"
+									maxlength="200" />
+							</div>
+						</div>
+						<br />
+							<p:dataTable id="idDetalle" var="item"
+								rendered="#{!beanTipoPersona.insertar}"
+								value="#{beanTipoPersona.parametros}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+								<f:facet name="header">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+								</f:facet>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+									<h:outputText value="#{item.idUsuarioCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<h:outputText value="#{item.fechaCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+									<h:outputText value="#{item.idUsuarioModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+									<h:outputText value="#{item.fechaModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIpModificación}">
+									<h:outputText value="#{item.ipModificacion}" />
+								</p:column>
+							</p:dataTable>
+						<br />
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									update="globalMsg" action="tipoPersona?faces-redirect=true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+								<p:commandButton
+									value="#{beanTipoPersona.insertar ? messageBeanSNR.commonButtonInsertarTipoPersona : messageBeanSNR.commonButtonModificarTipoPersona}"
+									icon="fa fa-pencil" iconPos="left"
+									update=":fTipoPersonaDetalle:pTipoPersona,globalMsg"
+									action="#{beanTipoPersona.salvar}" />
+							</div>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

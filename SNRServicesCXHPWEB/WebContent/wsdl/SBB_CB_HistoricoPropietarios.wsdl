@@ -1,0 +1,697 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/SBB_CB_HistoricoPropietarios/v1"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/SBB_CB_HistoricoPropietarios/v1"
+	xmlns:bachueCHP1="https://www.supernotariado.gov.co/services/bachue/cb/SBB_CB_HistoricoPropietarios/consultarHistoricoPropiedades/v1"
+	xmlns:bachueCHP2="https://www.supernotariado.gov.co/services/bachue/cb/SBB_CB_HistoricoPropietarios/consultarHistoricoPropietarios/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/SBB_CB_HistoricoPropietarios/consultarHistoricoPropiedades/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaConsultarHistoricoPropiedades">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de entrada para la operacion consultarHistoricoPropiedades
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="tipoDocumentoPersona" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Tipo de identificación de una persona Natural
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="CC">
+									<xsd:annotation>
+										<xsd:documentation>CC (Cédula de Ciudadanía)
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="CE">
+									<xsd:annotation>
+										<xsd:documentation>CE (Cédula Extranjería)</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="PA">
+									<xsd:annotation>
+										<xsd:documentation>PS (Pasaporte)</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="TI">
+									<xsd:annotation>
+										<xsd:documentation>TI (Tarjeta de Identidad)
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="NUIP">
+									<xsd:annotation>
+										<xsd:documentation>NUIP (Número Único de Identificación
+											Personal)
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numDocumentoPersona"
+						type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								Número de documento de una persona natural
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="numNIT" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al Número Único de Identificación
+								Tributaria.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string" />
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="primerApellido" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								primer apellido del propietario para realizar
+								la
+								búsqueda del histórico de sus propiedades
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="primerNombre" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								primer nombre del propietario para realizar la
+								búsqueda del histórico de
+								sus propiedades
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="segundoApellido" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								segundo apellido del propietario para realizar
+								la búsqueda del histórico
+								de sus propiedades
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="segundoNombre" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								segundo nombre del propietario para realizar
+								la
+								búsqueda del histórico de
+								sus propiedades
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="razonSocial" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								razon Social del propietario para realizar la
+								búsqueda del histórico de
+								sus propiedades
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="convenio" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								nombre de la Entidad con la que se tiene
+								convenio
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType
+				name="tipoSalidaConsultarHistoricoPropiedades">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de salida para la operacion consultarHistoricoPropiedades
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="propietarios"
+						type="bachueCHP1:propietarioDTO" minOccurs="0"
+						maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>
+								lista de propietarios de la matricula
+								ingresada
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="codMensaje" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>200 cuando no hay error, 4* por errores de
+								validación de campos de entrada o validación de negocio y 500
+								cuando existen errores de sistema.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer" />
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="descripcionMensaje" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al mensaje de error para los casos
+								en que la consulta no fue exitosa, vacío cuando la consulta es
+								exitosa
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="propietarioDTO">
+				<xsd:sequence>
+					<xsd:element name="historicoMatriculas"
+						type="bachueCHP1:historicoPropietarioDTO" minOccurs="0"
+						maxOccurs="unbounded" nillable="true" />
+					<xsd:element name="tipoDocumentoPersona"
+						type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								tipo de documento del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="numDocumentoPersona"
+						type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								numero de documento del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="numNIT" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								numero de documento del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="primerApellido" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								primer apellido del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="primerNombre" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								primer nombre del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="segundoApellido" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								segundo apellido del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="segundoNombre" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								segundo nombre del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="razonSocial" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								razon social del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="historicoPropietarioDTO">
+				<xsd:sequence>
+					<xsd:element name="numAnotacion" type="xsd:int"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								numero de anotacion en la que aparece como
+								propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="codCirculoRegistral"
+						type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								código de circulo u ORIP
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="porcentajeParticipacion"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>porcentaje de participación
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string" />
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="fechaDesde" type="xsd:dateTime"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								fecha desde la cual aparece como propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="fechaHasta" type="xsd:dateTime"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								fecha hasta la cual aparece como propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="numMatriculaInmobiliaria"
+						type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								número de matrícula del predio donde aparece
+								como propietario detro de
+								un periodo dado, salvo que no tenga
+								valor
+								en fecha hasta, para
+								este caso al momento de la consulta
+								todavía
+								aparece como
+								propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NUPRE" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Número Único Predial
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarHistoricoPropiedades"
+				type="bachueCHP1:tipoEntradaConsultarHistoricoPropiedades" />
+			<xsd:element name="salidaConsultarHistoricoPropiedades"
+				type="bachueCHP1:tipoSalidaConsultarHistoricoPropiedades" />
+			<!-- Últimas modificaciones 2020-02-03 16:26 -->
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/SBB_CB_HistoricoPropietarios/consultarHistoricoPropietarios/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaConsultarHistoricoPropietarios">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de entrada para la operacion ConsultarHistoricoPropietarios
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="tipoIdentificacionPredio"
+						minOccurs="0" nillable="false">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al tipo de identificacion por el
+								cual podemos buscar un predio.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="matricula">
+									<xsd:annotation>
+										<xsd:documentation>En el campo numeroIdPredio deberá venir los
+											tres primeros caracteres del cículo y luego si el número de
+											matrícula
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredial">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al CHIP, si es Bogotá o a la
+											referencia o cédula catastral del predio.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredialAnterior">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al anterior numero de
+											Identifiación Predial.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="NUPRE">
+									<xsd:annotation>
+										<xsd:documentation>Número Único Predial
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numIdentificacionPredio"
+						minOccurs="0" nillable="false">
+						<xsd:annotation>
+							<xsd:documentation>Al seleccionar un tipo de Identificación
+								predio,
+								se espera en este campo el número correspondiente; para
+								el caso
+								de
+								Matricula, el sistema toma los tres primeros caracteres
+								como
+								Código Circulo Registral y los siguientes como el Número de
+								Matrícula Inmobiliaria.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="convenio" type="xsd:string"
+						minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType
+				name="tipoSalidaConsultarHistoricoPropietarios">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de salida para la operacion ConsultarHistoricoPropietarios
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="propietarios"
+						type="bachueCHP2:propietarioDTO" minOccurs="0"
+						maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>
+								lista de propietarios de la matricula
+								ingresada
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="codMensaje" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>200 cuando no hay error, 4* por errores de
+								validación de campos de entrada o validación de negocio y 500
+								cuando existen errores de sistema.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer" />
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="descripcionMensaje" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al mensaje de error para los casos
+								en que la consulta no fue exitosa, vacío cuando la consulta es
+								exitosa
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="propietarioDTO">
+				<xsd:sequence>
+					<xsd:element name="historicoMatriculas"
+						type="bachueCHP2:historicoPropietarioDTO" minOccurs="0"
+						maxOccurs="unbounded" nillable="true" />
+					<xsd:element name="tipoDocumentoPersona"
+						type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								tipo de documento del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="numDocumentoPersona"
+						type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								numero de documento del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="numNIT" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								numero de documento del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="primerApellido" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								primer apellido del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="primerNombre" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								primer nombre del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="segundoApellido" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								segundo apellido del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="segundoNombre" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								segundo nombre del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="razonSocial" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								razon social del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="historicoPropietarioDTO">
+				<xsd:sequence>
+					<xsd:element name="numAnotacion" type="xsd:int"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								numero de anotacion en la que aparece como
+								propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="codCirculoRegistral"
+						type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								código de circulo u ORIP
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="porcentajeParticipacion"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>porcentaje de participación
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string" />
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="fechaDesde" type="xsd:dateTime"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								fecha desde la cual aparece como propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="fechaHasta" type="xsd:dateTime"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								fecha hasta la cual aparece como propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="numMatriculaInmobiliaria"
+						type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								número de matrícula del predio donde aparece
+								como propietario detro de
+								un periodo dado, salvo que no tenga
+								valor
+								en fecha hasta, para
+								este caso al momento de la consulta
+								todavía
+								aparece como
+								propietario
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NUPRE" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Número Único Predial
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarHistoricoPropietarios"
+				type="bachueCHP2:tipoEntradaConsultarHistoricoPropietarios" />
+			<xsd:element name="salidaConsultarHistoricoPropietarios"
+				type="bachueCHP2:tipoSalidaConsultarHistoricoPropietarios" />
+			<!-- Últimas modificaciones 2020-02-03 16:26 -->
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- INICIO sección Message -->
+	<wsdl:message name="ConsultarHistoricoPropiedades_Request">
+		<wsdl:part name="entrada"
+			element="bachueCHP1:entradaConsultarHistoricoPropiedades"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message
+		name="ConsultarHistoricoPropiedades_Response">
+		<wsdl:part name="salida"
+			element="bachueCHP1:salidaConsultarHistoricoPropiedades"></wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message
+		name="ConsultarHistoricoPropietarios_Request">
+		<wsdl:part name="entrada"
+			element="bachueCHP2:entradaConsultarHistoricoPropietarios"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message
+		name="ConsultarHistoricoPropietarios_Response">
+		<wsdl:part name="salida"
+			element="bachueCHP2:salidaConsultarHistoricoPropietarios"></wsdl:part>
+	</wsdl:message>
+	<!-- FIN sección Message -->
+
+	<!-- INICIO SBB_CB_HistoricoPropietarios -->
+	<wsdl:portType name="SBB_CB_HistoricoPropietarios">
+
+		<!-- Inicio Operacion consultarHistoricoPropiedades -->
+		<wsdl:operation name="consultarHistoricoPropiedades">
+			<wsdl:input
+				message="bachue:ConsultarHistoricoPropiedades_Request"></wsdl:input>
+			<wsdl:output
+				message="bachue:ConsultarHistoricoPropiedades_Response"></wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Operacion consultarHistoricoPropiedades -->
+
+		<!-- Inicio Operacion consultarHistoricoPropietarios -->
+		<wsdl:operation name="consultarHistoricoPropietarios">
+			<wsdl:input
+				message="bachue:ConsultarHistoricoPropietarios_Request"></wsdl:input>
+			<wsdl:output
+				message="bachue:ConsultarHistoricoPropietarios_Response"></wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Operacion consultarHistoricoPropietarios -->
+
+	</wsdl:portType>
+
+	<!-- INICIO WSDL:binding -->
+	<wsdl:binding
+		name="SBB_CB_HistoricoPropietariosSOAP12Binding"
+		type="bachue:SBB_CB_HistoricoPropietarios">
+
+		<!-- Inicio Binding DatosHistoricoPropiedades -->
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="consultarHistoricoPropiedades">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/SBB_CB_HistoricoPropietarios/v1/consultarHistoricoPropiedades" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Binding DatosHistoricoPropiedades -->
+
+		<!-- Inicio Binding DatosHistoricoPropietarios -->
+
+		<wsdl:operation name="consultarHistoricoPropietarios">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/SBB_CB_HistoricoPropietarios/v1/consultarHistoricoPropietarios" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Binding DatosHistoricoPropietarios -->
+
+	</wsdl:binding>
+	<!-- FIN WSDL:binding -->
+
+	<wsdl:service name="SBB_CB_HistoricoPropietarios">
+		<wsdl:port name="SBB_CB_HistoricoPropietariosPort"
+			binding="bachue:SBB_CB_HistoricoPropietariosSOAP12Binding">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+	<!-- Últimas modificaciones 2020-02-27 16:24 -->
+</wsdl:definitions>

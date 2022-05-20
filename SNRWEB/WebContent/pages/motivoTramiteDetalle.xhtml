@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelWorkflow}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelMotivoTramite}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{beanMotivoTramite.insertar ? messageBeanSNR.pageInsertarMotivoTramite: messageBeanSNR.pageModificarMotivoTramite}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fMotivoTramiteDetalle" style="width: 100%;"
+				enctype="multipart/form-data" onkeypress="return event.keyCode!=13">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<center>
+					<p:panel>
+						<p:panel
+							header="#{beanMotivoTramite.insertar ? messageBeanSNR.pageInsertarMotivoTramite: messageBeanSNR.pageModificarMotivoTramite}"
+							style="width:100%">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelEtapaOrigen}#{messageBeanSNR.commonLabelObligatorio}" />
+									<p:selectOneMenu id="idEtapa" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionMotivoTramiteEtapa}"
+										value="#{beanMotivoTramite.motivoTramite.idEtapaOrigen}"
+										disabled="#{!beanMotivoTramite.insertar}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="-1" />
+										<f:selectItems value="#{beanReference.findEtapaActivoById()}"
+											var="etapa" itemValue="#{etapa.idEtapa}"
+											itemLabel="#{etapa.idEtapa} - #{etapa.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelProceso}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMProceso"
+										title="#{tooltipBeanSNR.administracionTiposCausalDetalleProceso}"
+										style="width:100%;"
+										value="#{beanMotivoTramite.motivoTramite.idProceso}">
+										<p:ajax event="change"
+											listener="#{beanMotivoTramite.findAllSubprocesos(beanMotivoTramite.motivoTramite.idProceso)}"
+											update="idSOMSubproceso" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanMotivoTramite.findAllProcesos()}"
+											itemValue="#{proceso.idProceso}" var="proceso"
+											itemLabel="#{proceso.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelSubProceso}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMSubproceso"
+										title="#{tooltipBeanSNR.administracionTiposCausalDetalleSubproceso}"
+										value="#{beanMotivoTramite.motivoTramite.idSubproceso}"
+										style="width:100%;">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanMotivoTramite.findAllSubprocesos(beanMotivoTramite.motivoTramite.idProceso)}"
+											itemValue="#{subproceso.idSubproceso}" var="subproceso"
+											itemLabel="#{subproceso.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelVersion}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText id="idVersion"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionNaturalezaJuridicaDetalleVersion}"
+										placeholder="#{messageBeanSNR.commonLabelVersion}"
+										value="#{beanMotivoTramite.motivoTramite.versionSubproceso}" >
+										<p:keyFilter regEx="/[0-9]/" preventPaste="false" />	
+									</p:inputText>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelIdMotivo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText maxValue="4" id="idMotivo"
+										disabled="#{!beanMotivoTramite.insertar}"
+										title="#{tooltipBeanSNR.administracionMotivoTramiteIdMotivo}"
+										placeholder="#{messageBeanSNR.commonLabelIdMotivo}"
+										value="#{beanMotivoTramite.motivoTramite.idMotivo}">
+										<p:keyFilter regEx="/[\d\-\.]/" preventPaste="false" />
+									</p:inputText>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDescripcion}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText id="idDescripcion"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionMotivoTramiteDescripcion}"
+										placeholder="#{messageBeanSNR.commonLabelDescripcion}"
+										value="#{beanMotivoTramite.motivoTramite.descripcion}">
+									</p:inputText>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelEstado}#{messageBeanSNR.commonLabelObligatorio}" />
+
+									<p:selectOneMenu id="idEstado" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionMotivoTramiteEstado}"
+										value="#{beanMotivoTramite.motivoTramite.estado}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelActivo}"
+											itemValue="A" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelInactivo}"
+											itemValue="I" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelEtapaPosterior}#{messageBeanSNR.commonLabelObligatorio}" />
+
+									<p:selectOneMenu id="idEtapaPosterior" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionMotivoTramiteEtapaPosterior}"
+										value="#{beanMotivoTramite.motivoTramite.idEtapaPosterior}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanReference.findEtapaActivoById()}"
+											var="etapa" itemValue="#{etapa.idEtapa}"
+											itemLabel="#{etapa.idEtapa} - #{etapa.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelEstadoActividad}#{messageBeanSNR.commonLabelObligatorio}" />
+
+									<p:selectOneMenu id="idEstadoActividad" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionMotivoTramiteEstadoActividad}"
+										value="#{beanMotivoTramite.motivoTramite.estadoActividad}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findEstadoActividadActivo()}"
+											var="estadoActividad"
+											itemValue="#{estadoActividad.idEstadoActividad}"
+											itemLabel="#{estadoActividad.descripcion}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelIndicadorDevolucion}" />
+									<p:selectOneMenu id="idIndicadorDevolucion" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionMotivoTramiteIndicadorDevolucion}"
+										value="#{beanMotivoTramite.motivoTramite.indicadorDevolucion}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSi}"
+											itemValue="S" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelNo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoCompuertaLlegada}" />
+									<p:selectOneMenu id="idTipoCompuertaLlegada" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionMotivoTramiteTipoCompuertaLlegada}"
+										value="#{beanMotivoTramite.motivoTramite.tipoCompuertaLlegada}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelExc}"
+											itemValue="EXC" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelPar}"
+											itemValue="PAR" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelExt}"
+											itemValue="EXT" />
+									</p:selectOneMenu>
+								</div>
+							
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDecisionCalificacion}" />
+									<br />
+									<p:inputText id="idDecisionCalificacion"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionMotivoTramiteDecisionCalificacion}"
+										placeholder="#{messageBeanSNR.commonLabelDecisionCalificacion}"
+										value="#{beanMotivoTramite.motivoTramite.decisionCalificacion}">
+										<p:keyFilter regEx="/[a-z0-9_]/i" preventPaste="false" />
+									</p:inputText>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelFlujoDefecto}" />
+									<br />
+									<p:inputText id="idFlujoDefecto"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionMotivoTramiteFlujoDefecto}"
+										placeholder="#{messageBeanSNR.commonLabelFlujoDefecto}"
+										value="#{beanMotivoTramite.motivoTramite.flujoDefecto}">
+										<p:keyFilter regEx="/[a-z0-9_]/i" preventPaste="false" />
+									</p:inputText>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDescriptorFin}" />
+									<p:selectOneMenu id="idTDescriptorFin" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionMotivoTramiteDescriptor}"
+										value="#{beanMotivoTramite.motivoTramite.descriptorFin}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelFinEtapa}"
+											itemValue="FE" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelFinProceso}"
+											itemValue="FP" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelNo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+
+							<br />
+							<p:dataTable id="idDetalle" var="item"
+								value="#{beanMotivoTramite.datosAuditoria}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}"
+								rendered="#{!beanMotivoTramite.insertar}">
+								<f:facet name="header">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+								</f:facet>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+									<h:outputText value="#{item.idUsuarioCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<h:outputText value="#{item.fechaCreacion}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="GMT-5" />
+									</h:outputText>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+									<h:outputText value="#{item.idUsuarioModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+									<h:outputText value="#{item.fechaModificacion}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="GMT-5" />
+									</h:outputText>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIpModificación}">
+									<h:outputText value="#{item.ipModificacion}" />
+								</p:column>
+							</p:dataTable>
+							<br />
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										update="globalMsg" action="motivoTramite?faces-redirect=true" />
+
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton
+										value="#{beanMotivoTramite.insertar ? messageBeanSNR.commonButtonInsertarMotivoTramite: messageBeanSNR.commonButtonModificarrMotivoTramite}"
+										icon="fa fa-pencil" iconPos="left" update="globalMsg"
+										action="#{beanMotivoTramite.salvar()}" ajax="false" />
+								</div>
+							</div>
+						</p:panel>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

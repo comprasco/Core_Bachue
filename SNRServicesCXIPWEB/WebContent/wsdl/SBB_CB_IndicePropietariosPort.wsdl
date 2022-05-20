@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/indicepropietarios/v1" xmlns:bachueC="https://www.supernotariado.gov.co/services/bachue/cb/indicepropietarios/consultar/v1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/indicepropietarios/v1">
+
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/indicepropietarios/consultar/v1">
+			<xsd:complexType name="tipoEntradaIndicePropietarios">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de entrada para la operacion Consultar
+						Indice de Propietarios
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence minOccurs="0">
+					<xsd:element minOccurs="0" name="tipoDocumentoPersona">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al tipo de documento del
+								propietario. Solo para las personas naturales
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="CC">
+									<xsd:annotation>
+										<xsd:documentation>CC (Cédula de Ciudadanía)
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="CE">
+									<xsd:annotation>
+										<xsd:documentation>CE (Cédula Extranjería)</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="PA">
+									<xsd:annotation>
+										<xsd:documentation>PA (Pasaporte)</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="TI">
+									<xsd:annotation>
+										<xsd:documentation>TI (Tarjeta de Identidad)
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="NUIP">
+									<xsd:annotation>
+										<xsd:documentation>NUIP (Número Único de Identificación
+											Personal)
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="numDocumentoPersona">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al numero de documento de una
+								persona natural según el tipo de documento pesona que ha enviado
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="numNIT">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al Número Único de Identificación
+								Tributaria.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="primerNombre">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al primer nombre de propietario
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="segundoNombre">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al segundo nombre de propietario
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="primerApellido">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al primer apellido de propietario
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="segundoApellido">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al segundo apellido de propietario
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="razonSocial">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a la razón social del propietario
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="tipoIdentificacionPredio">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al tipo de identificacion por el
+								cual podemos buscar un predio.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="matricula">
+									<xsd:annotation>
+										<xsd:documentation>En el campo numeroIdPredio deberá venir los
+											tres primeros caracteres del cículo y luego si el número de
+											matrícula
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredial">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al CHIP, si es Bogotá o a la
+											referencia o cédula catastral del predio.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredialAnterior">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al anterior numero de
+											Identifiación Predial.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="NUPRE">
+									<xsd:annotation>
+										<xsd:documentation>Número Único Predial
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="numIdentificacionPredio">
+						<xsd:annotation>
+							<xsd:documentation>Al seleccionar un tipo de Identificación
+								predio,
+								se espera en este campo el número correspondiente; para el caso
+								de
+								Matricula, el sistema toma los tres primeros caracteres como
+								Código Circulo Registral y los siguientes como el Número de
+								Matrícula Inmobiliaria.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="convenio">
+						<xsd:annotation>
+							<xsd:documentation>Nombre de convenio que tendría la SNR con la
+								Entidad que consume el servicio
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:length value="256"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="codDepartamento">
+						<xsd:annotation>
+							<xsd:documentation>Código DANE, string de longitud 2
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="2"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="codMunicipio">
+						<xsd:annotation>
+							<xsd:documentation>código DANE, longitud 5, dpto + municipio
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="5"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoSalidaIndicePropietarios">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de salida para la generación de la Consulta de
+						Índice de
+						Propietarios
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="cantidadResultados">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a la cantidad de resultados
+								obtenidos
+								en la consulta
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:long">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="datosInmueble" nillable="false" type="bachueC:inmuebleDTO">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a la información del inmueble
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="codMensaje">
+						<xsd:annotation>
+							<xsd:documentation>200 cuando no hay error, 4* por errores de
+								validación de campos de entrada o validación de negocio y 500
+								cuando existen errores de sistema.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="descripcionMensaje">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a al mensaje de error para los
+								casos
+								en qeue la consulta no fue exitosa, vacío cuando la consulta es
+								exitosa
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="inmuebleDTO">
+				<xsd:annotation>
+					<xsd:appinfo>Bachue</xsd:appinfo>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de salida para la operacion Consulta ínidce de propietarios
+						Datos del inmueble
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence maxOccurs="unbounded" minOccurs="0">
+					<xsd:element minOccurs="0" name="codCirculoRegistral">
+						<xsd:annotation>
+							<xsd:documentation>Código del círculo o código de ORIP al que
+								corresponde el predio.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="3"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="codDepartamento">
+						<xsd:annotation>
+							<xsd:documentation>Código DANE, string de longitud 2
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="codMunicipio">
+						<xsd:annotation>
+							<xsd:documentation>código DANE, longitud 5, dpto + municipio
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="direccionPredio">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a la dirección del predio
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="numMatriculaInmobiliaria">
+						<xsd:annotation>
+							<xsd:documentation>Número de matrícula inmobiliaria o número de
+								folio con el que se identifica el predio.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="numPredial">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al CHIP, si es Bogotá o a la
+								referencia o cédula catastral del predio.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="NUPRE">
+						<xsd:annotation>
+							<xsd:documentation>Número Único Predial
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="nomCirculoRegistral">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al nombre del círculo registral al
+								que pertenece el predio
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="400"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="nomDepartamento">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al nombre del departamento en
+								dondese ubica el predio
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="nomMunicipio">
+						<xsd:annotation>
+							<xsd:documentation>Nombre del municipio según DANE donde está
+								ubicado el predio.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="propietarios" nillable="false" type="bachueC:propietarioDTO">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al número de propietarios del
+								predio
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="propietarioDTO">
+				<xsd:annotation>
+					<xsd:appinfo>Bachue</xsd:appinfo>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de salida para la operacion Consulta ínidce de propietarios
+						datos de propietario
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="numNIT">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al número de identificación del
+								propietario persona jurídica
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="numDocumentoPersona">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al número de identificación del
+								propietario persona natural
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="nomTipoDocumento">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al nonmbre del tipo de documento
+								del
+								propietario
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="nomPropietario">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a los nombres y apellidos del
+								propietario
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaIndicePropietarios" type="bachueC:tipoSalidaIndicePropietarios"/>
+			<xsd:element name="entradaIndicePropietarios" type="bachueC:tipoEntradaIndicePropietarios"/>
+			<!-- Últimas modificaciones 2020-02-03 16:26 -->
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- INICIO sección Message -->
+	<wsdl:message name="Consultar_Request">
+		<wsdl:part element="bachueC:entradaIndicePropietarios" name="entrada"/>
+	</wsdl:message>
+	<wsdl:message name="Consultar_Response">
+		<wsdl:part element="bachueC:salidaIndicePropietarios" name="salida"/>
+	</wsdl:message>
+	<!-- FIN sección Message -->
+
+	<!-- INICIO PortType SBB_CB_Inmuebles -->
+	<wsdl:portType name="SBB_CB_IndicePropietarios">
+
+		<!-- Inicio Operacion consultar -->
+		<wsdl:operation name="consultar">
+			<wsdl:input message="bachue:Consultar_Request"/>
+			<wsdl:output message="bachue:Consultar_Response"/>
+		</wsdl:operation>
+		<!-- Fin Operacion consultar -->
+	</wsdl:portType>
+
+	<!-- INICIO WSDL:binding -->
+	<wsdl:binding name="SBB_CB_IndicePropietariosSOAP12Binding" type="bachue:SBB_CB_IndicePropietarios">
+
+		<!-- Inicio Binding IndicePropietarios -->
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="consultar">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/services/bachue/cb/indicepropietarios/v1/consultar" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Binding DatosInmueble -->
+	</wsdl:binding>
+
+	<wsdl:service name="SBB_CB_IndicePropietarios">
+		<wsdl:port binding="bachue:SBB_CB_IndicePropietariosSOAP12Binding" name="SBB_CB_IndicePropietariosPort">
+			<soap:address location="http://localhost:7001/SNRServicesCXIP/services/SBB_CB_IndicePropietariosPort"/>
+		</wsdl:port>
+	</wsdl:service>
+	<!-- Últimas modificaciones 2020-01-27 11:13 -->
+
+</wsdl:definitions>

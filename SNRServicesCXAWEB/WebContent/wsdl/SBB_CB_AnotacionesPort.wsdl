@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/v1" xmlns:bachue4="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/v1">
+
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/anotaciones/consultarAnotaciones/v1">
+			<xsd:complexType name="tipoEntradaDatosAnotacion">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de entrada para la operacion consultarAnotaciones
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="convenio" nillable="true">
+						<xsd:annotation>
+							<xsd:documentation>Código del nombre de convenio que tendría la
+								SNR
+								con la
+								Entidad que consume el servicio
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:length value="256"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="tipoIdentificacionPredio">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al tipo de identificacion por el
+								cual podemos buscar un predio.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="matricula">
+									<xsd:annotation>
+										<xsd:documentation>En el campo numIdentificacionPredio deberá
+											venir los
+											tres primeros caracteres del cículo y luego si el
+											número de
+											matrícula
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredial">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al CHIP, si es Bogotá o a la
+											referencia o cédula catastral del predio.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredialAnterior">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al anterior numero de
+											Identifiación Predial.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="NUPRE">
+									<xsd:annotation>
+										<xsd:documentation>Número Único Predial
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="numIdentificacionPredio">
+						<xsd:annotation>
+							<xsd:documentation>Al seleccionar un tipo de Identificación
+								predio,
+								se espera en este campo el número correspondiente; para el caso
+								de
+								matricula, el sistema toma los tres primeros caracteres como
+								Código Circulo Registral y los siguientes como el Número de
+								Matrícula Inmobiliaria.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="claseAnotacion" nillable="false">
+						<xsd:annotation>
+							<xsd:documentation>Al seleccionar una clase de anotación, el
+								sistema podrá distinguir entre una anotación normal y una
+								anotación creada como Medida Cautelar
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="normal">
+									<xsd:annotation>
+										<xsd:documentation>Indica una anotación normal
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="medidaCautelar">
+									<xsd:annotation>
+										<xsd:documentation>Indica una Medida Cautelar
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoSalidaDatosAnotacion">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de salida para la operacion consultarAnotaciones
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="anotaciones" type="bachue4:tipoAnotacion"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoAnotacion">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de salida para la operacion consultarAnotaciones
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="numAnotacion">
+						<xsd:annotation>
+							<xsd:documentation>numero anotación del predio consultado
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="anotacionesCanceladas" type="bachue4:tipoAnotacionCancelada"/>
+					<xsd:element minOccurs="0" name="comentario" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Comentario que detalla la anotación.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="codTipoDocumentoPublico" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Código del Nombre del documento
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="fechaDocumento">
+						<xsd:annotation>
+							<xsd:documentation>Fecha de Otorgamiento del documento público.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:date"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="nomDocumentoPublico" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Nombre del documento</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="codDominioActoJuridico" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>corresponde al código o letra que identifica
+								el
+								dominio de la medida cautelar: X, H, C, A, D, E, O, P y V.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="nomDominioActoJuridico" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>corresponde al nombre correspondiente con la
+								letra que identifica el dominio de la medida cautelar:
+								MUTACIONES,
+								HIPOTECAS, CANCELACIONES, AFECTACIONES, DEMANDAS, EMBARGOS,
+								OFERTAS, PATRIMONIOS y VALORIZACIONES
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="oficinaOrigen" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>corresponde a la oficina de origen
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="comentarioEspecificoAnotacion" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Comentario específico de la anotación
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="DRR" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>corresponde a un derecho, una restricción o
+								una
+								responsabilidad.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="codNaturalezaJuridicaFolio" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a los códigos de los actos
+								jurídicos
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="fechaAnotacion">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a la fecha en que se realizó la
+								anotación
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:date"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="intervinientes" type="bachue4:tipoInterviniente"/>
+					<xsd:element minOccurs="0" name="NIR" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Número de Identificación Registral de cada
+								anotación
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="radicacion" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al turno</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="estadoAnotacion" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Determina que la anotación existe y tiene
+								validez, valores perrmitidos; V, I.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="valorActo" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al monto de la transacción del
+								acto
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="codMensaje">
+						<xsd:annotation>
+							<xsd:documentation>200 cuando no hay error, 4* por errores de
+								validación de campos de entrada o validación de negocio y 500
+								cuando existen errores de sistema
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="descripcionMensaje" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a al mensaje de error para los
+								casos
+								en qeue la consulta no fue exitosa, vacío cuando la consulta es
+								exitosa
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoInterviniente">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="rolInterviniente" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>El rol del Interviniente, valores posibles DE
+								o
+								A
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="tipoPersona" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Natural o Jurídica</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="esPropietario" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Viene con "X" o "I", donde X significa que la
+								persona natural o juridica es titular de derecho real principal
+								del inmueble e I significa que es titular de derecho en falsa
+								tradicion del inmueble.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="tipoDocumentoPersona" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Tipos de documento posibles de un
+								interviniente:
+								CC, CE, PA, TI, NUIP
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="numDocumentoPersona" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Número de documento del interviniente
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="numNIT" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Número de documento del interviniente
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="porcentajeParticipacion" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>porcentaje de participación</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="primerNombre" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>primer apellido del interviniente
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="segundoNombre" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>segundo apellido del interviniente
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="primerApellido" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>primer nombre del interviniente
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="segundoApellido" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>segundo nombre del interviniente
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="codGenero" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Código Identidad Genero del interviniente 01
+								para
+								Masculino y 02 para Femenino
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="razonSocial" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>razon social del interviniente
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoAnotacionCancelada">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="anotacionCancelada" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Numero de la anotción cancelada
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaDatosAnotacion" type="bachue4:tipoEntradaDatosAnotacion"/>
+
+			<xsd:element name="salidaDatosAnotacion" type="bachue4:tipoSalidaDatosAnotacion"/>
+			<!-- Últimas modificaciones 2020-02-03 17:25 -->
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- INICIO WSDL:mesage -->
+	<wsdl:message name="ConsultarAnotaciones_Request">
+		<wsdl:part element="bachue4:entradaDatosAnotacion" name="entrada">
+		</wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="ConsultarAnotaciones_Response">
+		<wsdl:part element="bachue4:salidaDatosAnotacion" name="salida">
+		</wsdl:part>
+	</wsdl:message>
+
+	<!-- INICIO WSDL:portType -->
+	<wsdl:portType name="SBB_CB_Anotaciones">
+		<!-- Inicio Operacion consultarAnotaciones -->
+		<wsdl:operation name="consultarAnotaciones">
+			<wsdl:input message="bachue:ConsultarAnotaciones_Request"/>
+			<wsdl:output message="bachue:ConsultarAnotaciones_Response"/>
+		</wsdl:operation>
+		<!-- Fin Operacion consultarAnotaciones -->
+	</wsdl:portType>
+
+	<!-- INICIO WSDL:binding -->
+	<wsdl:binding name="SBB_CB_AnotacionesSOAP12Binding" type="bachue:SBB_CB_Anotaciones">
+
+		<!-- Inicio Binding DatosInmueble -->
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="consultarAnotaciones">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/services/bachue/cb/operacionesAnotaciones/v1/consultarAnotaciones" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Binding DatosInmueble -->
+	</wsdl:binding>
+
+	<wsdl:service name="SBB_CB_Anotaciones">
+		<wsdl:port binding="bachue:SBB_CB_AnotacionesSOAP12Binding" name="SBB_CB_AnotacionesPort">
+			<soap:address location="http://localhost:7001/SNRServicesCXA/services/SBB_CB_AnotacionesPort"/>
+		</wsdl:port>
+	</wsdl:service>
+	<!-- Últimas modificaciones 2020-01-27 11:13 -->
+</wsdl:definitions>

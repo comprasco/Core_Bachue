@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelConciliacion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelClasificacionPartidasTipoA}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fPartidasTipoA" style="width: 100%;">
+				<p:growl id="idGrowl" globalOnly="true" showDetail="true"
+					sticky="false" life="10000" redisplay="false" />
+				<center>
+					<p:panel>
+						<p:panel
+							header="#{messageBeanSNR.commonLabelClasificacionPartidasTipoA}"
+							style="width:100%">
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-4 ui-lg-4" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelEntidadRecaudadora}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idEntidadRecaudadoraCuenta"
+										style="width:80%;"
+										title="#{tooltipBeanSNR.conciliacionConfrontacionDeLaInformacionEntidadRecaudadora}"
+										disabled="#{beanPartidasTipoA.mostrarPanel}"
+										value="#{beanPartidasTipoA.idEntidadRecaudadora}">
+										<p:ajax event="change"
+											listener="#{beanPartidasTipoA.buscarEntidadRecaudadoraLocal()}"
+											update="idNumeroCuenta, idTipoCuenta" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanPartidasTipoA.buscarEntidadRecaudadoraConciliacion()}"
+											var="item" itemValue="#{item.idEntidadRecaudadora}"
+											itemLabel="#{item.codigoEntidadRecaudadora} - #{item.nombreEntidadRecaudadora}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-4 ui-lg-4" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNumeroCuenta}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idNumeroCuenta" style="width:80%;"
+										disabled="#{beanPartidasTipoA.mostrarPanel}"
+										title="#{tooltipBeanSNR.conciliacionConfrontacionDeLaInformacionNumeroCuenta}"
+										value="#{beanPartidasTipoA.idCuenta}">
+										<p:ajax event="change"
+											listener="#{beanPartidasTipoA.actualizarTipoCuenta()}"
+											update="idTipoCuenta" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanPartidasTipoA.entidadRecaudadoraCuentas}"
+											var="item" itemValue="#{item.idCuenta}"
+											itemLabel="#{item.numeroCuenta}" />>
+								</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-4 ui-lg-4" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoCuenta}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<h:inputText id="idTipoCuenta" readonly="true"
+										value="#{beanPartidasTipoA.tipoCuentaLabel}"
+										disabled="#{beanPartidasTipoA.mostrarPanel}"
+										style="width:80%;">
+									</h:inputText>
+								</div>
+								<div class="ui-g-12 ui-md-4 ui-lg-4" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelFechaConfrontacion}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:calendar id="idFechaMovimiento" size="10" mask="true"
+										disabled="#{beanPartidasTipoA.mostrarPanel}"
+										title="#{tooltipBeanSNR.conciliacionConfrontacionDeLaInformacionFechaAConfrontar}"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										value="#{beanPartidasTipoA.fechaConfrontacion}"
+										showOn="button" />
+								</div>
+							</div>
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<h:panelGroup>
+										<p:commandButton
+											value="#{messageBeanSNR.commonButtonConsultar}" icon="lupa"
+											action="#{beanPartidasTipoA.consultarPartidasTipoA()}"
+											update="fPartidasTipoA, fPartidasTipoA:idGrowl" />
+										<p:commandButton value="#{messageBeanSNR.commonLabelLimpiar}"
+											icon="fa fa-refresh" iconPos="rigth"
+											action="#{beanPartidasTipoA.limpiarPartidasTipoA()}"
+											update="fPartidasTipoA" />
+									</h:panelGroup>
+								</div>
+							</div>
+						</p:panel>
+						<br />
+						<p:outputPanel id="idPanelResultadoConsulta"
+							rendered="#{beanPartidasTipoA.mostrarPanel}">
+							<p:panel id="idPDocsCargados"
+								header="#{messageBeanSNR.commonLabelClasificacionPartidasTipoA}">
+								<p:dataTable id="idClasificacionPartidastipoA"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									value="#{beanPartidasTipoA.consulta}" var="tiposA"
+									paginator="true" rows="50" rowIndexVar="index">
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelNumeroReferencia}"
+										style="width: 15%;">
+										<div align="left">
+											<h:outputText value="#{tiposA.referencia}" />
+										</div>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelMonto}"
+										style="width: 15%;">
+										<div align="left">
+											<h:outputText value="#{tiposA.monto}">
+												<f:convertNumber pattern="¤#,##0.00"
+													currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+											</h:outputText>
+										</div>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelPartidas}"
+										style="width: 15%">
+										<p:selectOneMenu id="idPartidas" style="width:80%;"
+											value="#{tiposA.partidas}">
+											<p:ajax event="change"
+												listener="#{beanPartidasTipoA.buscarClasificacionPartidas(tiposA)}"
+												update="idClasificacionPartidas" />
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems value="#{beanPartidasTipoA.listaPartidas}"
+												var="partida" itemLabel="#{partida}" itemValue="#{partida}" />
+										</p:selectOneMenu>
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelClasificacionPartidas}"
+										style="width: 15%;">
+										<p:selectOneMenu id="idClasificacionPartidas"
+											style="width:80%;" value="#{tiposA.clasificacionPartidasA}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems value="#{tiposA.listaClasificacionPartidas}"
+												var="clasPartidas" itemLabel="#{clasPartidas}"
+												itemValue="#{clasPartidas}" />
+										</p:selectOneMenu>
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonlabelObservaciones}"
+										style="width: 20%">
+										<p:inputText id="observaTipo"
+											onblur="value=value.toUpperCase()"
+											value="#{tiposA.observaciones}" maxlength="200"
+											placeholder="#{messageBeanSNR.commonlabelObservaciones}">
+											<p:ajax event="blur" update="observaTipo" />
+										</p:inputText>
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelDocumentoSoporte}"
+										style="width: 30%">
+										<p:fileUpload disabled="#{tiposA.documentoSoporte eq 'S'}"
+											fileUploadListener="#{beanPartidasTipoA.processFile}"
+											mode="advanced" dragDropSupport="true" cancelLabel=""
+											uploadLabel="" label="Cargar" id="idFuLoadFile" fileLimit="1"
+											sizeLimit="10000000"
+											fileLimitMessage="Solo se Puede Cargar un archivo a la vez"
+											invalidFileMessage="El Archivo de Cargue debe ser de tipo .rtf, .jpg, .xlsx"
+											invalidSizeMessage="La imagen de cargue no puede exceder los 10 MB"
+											allowTypes="/(\.|\/)(rtf|jpe?g|xls?x|bmp|xml|txt|pdf)$/"
+											oncomplete="PF('idFuLoadFile').clear();">
+											<f:attribute name="idPartidaA" value="#{tiposA.idPartidaA}" />
+										</p:fileUpload>
+									</p:column>
+								</p:dataTable>
+							</p:panel>
+							<br />
+							<p:dataTable id="idListadoDRXC" style="min-width:500px;"
+								value="#{beanPartidasTipoA.dataComprobante}" var="item"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelNumeroComprobanteSIIF}">
+									<p:inputText value="#{item.numeroSIIF}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaComprobanteSIIF}">
+									<p:calendar id="idFechaMovimiento" size="10" mask="true"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										value="#{item.fechaSIIF}" showOn="button" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelConfirmaEnvioNoSiif}">
+									<p:selectBooleanCheckbox value="#{item.confirmaNoSiif}" />
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+						<br />
+					</p:panel>
+					<div class="ui-g" align="center">
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+							<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="principal?faces-redirect=true">
+							</p:commandButton>
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+							<p:commandButton ajax="false"
+								rendered="#{beanPartidasTipoA.mostrarPanel}"
+								value="#{messageBeanSNR.commonLabelGenerarReporteTipoA}"
+								actionListener="#{beanPartidasTipoA.generarReportes()}"
+								icon="fa fa-download" iconPos="left">
+								<p:fileDownload value="#{beanPartidasTipoA.reportes}" />
+							</p:commandButton>
+							<p:commandButton rendered="#{beanPartidasTipoA.mostrarPanel}"
+								value="#{messageBeanSNR.commonLabelSalvar}" icon="fa fa-save"
+								iconPos="right" update="idGrowl"
+								actionListener="#{beanPartidasTipoA.salvarPartidasA()}">
+							</p:commandButton>
+						</div>
+					</div>
+					<br />
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

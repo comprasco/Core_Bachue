@@ -1,0 +1,1453 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1"
+	xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/activarAlertaTierras/v1"
+	xmlns:bachue3="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/agregarMatriculaAlerta/v1"
+	xmlns:bachue4="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/cancelarIngresoAlertaTierras/v1"
+	xmlns:bachue5="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarAlertas/v1"
+	xmlns:bachue6="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarDetalleAlerta/v1"
+	xmlns:bachue7="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarDocumentoAlerta/v1"
+	xmlns:bachue8="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarEntidadesJ_A/v1"
+	xmlns:bachue9="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarListaMatriculas/v1"
+	xmlns:bachue11="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarMatricula/v1"
+	xmlns:bachue12="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarMatriculaAlerta/v1"
+	xmlns:bachue13="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarMatriculaFiltrosTierras/v1"
+	xmlns:bachue14="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarMatriculaInfoCatastral/v1"
+	xmlns:bachue15="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarOficinasOrigenTipo/v1"
+	xmlns:bachue16="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/inactivarAlerta/v1"
+	xmlns:bachue17="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/inscribirAlertaCabecera/v1"
+	xmlns:bachue18="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/rechazarCorreccionAlerta/v1"
+	xmlns:bachue19="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/removerMatriculaAlerta/v1"
+	xmlns:bachue20="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/crearProcAntiguoSistemaTierras/v1"
+	xmlns:bachue21="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/agregarListaMatriculasAlerta/v1"
+	xmlns:bachue22="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/listarProcAntiguoSistema/v1"
+	xmlns:bachue23="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/eliminarProcAntiguoSistema/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/activarAlertaTierras/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaActivarAlertaTierras">
+				<xsd:sequence>
+					<xsd:element name="idAlerta" type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaActivarAlertaTierras"
+				type="bachue2:tipoEntradaActivarAlertaTierras" />
+			<xsd:complexType
+				name="tipoSalidaActivarAlertaTierras">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaActivarAlertaTierras"
+				type="bachue2:tipoSalidaActivarAlertaTierras" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/agregarMatriculaAlerta/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaAgregarMatriculaAlerta">
+				<xsd:sequence>
+					<xsd:element name="idAlerta" type="xsd:int" />
+					<xsd:element name="codCirculoRegistral"
+						type="xsd:string" />
+					<xsd:element name="numMatriculaInmobiliaria"
+						type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaAgregarMatriculaAlerta"
+				type="bachue3:tipoEntradaAgregarMatriculaAlerta" />
+			<xsd:complexType
+				name="tipoSalidaAgregarMatriculaAlerta">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaAgregarMatriculaAlerta"
+				type="bachue3:tipoSalidaAgregarMatriculaAlerta" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/cancelarIngresoAlertaTierras/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaCancelarIngresoAlertaTierras">
+				<xsd:sequence>
+					<xsd:element name="idAlerta" type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaCancelarIngresoAlertaTierras"
+				type="bachue4:tipoEntradaCancelarIngresoAlertaTierras" />
+			<xsd:complexType
+				name="tipoSalidaCancelarIngresoAlertaTierras">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaCancelarIngresoAlertaTierras"
+				type="bachue4:tipoSalidaCancelarIngresoAlertaTierras" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarAlertas/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType name="tipoEntradaConsultarAlertas">
+				<xsd:sequence>
+					<xsd:element name="esSNR" type="xsd:string" />
+					<xsd:element name="codigoEstado" minOccurs="0">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="ACTIVA" />
+								<xsd:enumeration value="INACTIVA" />
+								<xsd:enumeration value="INGRESANDO" />
+								<xsd:enumeration value="REVISION" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="idEntidad" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="fechaInscripcion"
+						type="xsd:dateTime" minOccurs="0" />
+					<xsd:element name="codTipoDocumentoPublico"
+						type="xsd:string" minOccurs="0" />
+					<xsd:element name="codCirculoRegistral"
+						type="xsd:string" minOccurs="0" />
+					<xsd:element name="numMatriculaInmobiliaria"
+						type="xsd:int" minOccurs="0" />
+					<xsd:element name="nombreComunidadEtnica"
+						type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarAlertas"
+				type="bachue5:tipoEntradaConsultarAlertas" />
+			<xsd:complexType name="tipoSalidaConsultarAlertas">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+					<xsd:element name="listaAlertas">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="alerta" minOccurs="0"
+									maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="idAlerta" type="xsd:int" />
+											<xsd:element name="estadoAlerta"
+												type="xsd:string" />
+											<xsd:element name="nombreEntidad"
+												type="xsd:string" />
+											<xsd:element name="fechaInscripcion"
+												type="xsd:dateTime" />
+											<xsd:element name="codTipoDocumentoPublico"
+												type="xsd:string" />
+											<xsd:element name="nombreComunidadEtnica"
+												type="xsd:string" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarAlertas"
+				type="bachue5:tipoSalidaConsultarAlertas" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarDetalleAlerta/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaConsultarDetalleAlerta">
+				<xsd:sequence>
+					<xsd:element name="idAlerta" type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarDetalleAlerta"
+				type="bachue6:tipoEntradaConsultarDetalleAlerta" />
+			<xsd:complexType
+				name="tipoSalidaConsultarDetalleAlerta">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+					<xsd:element name="tipoAlerta" type="xsd:string" />
+					<xsd:element name="nombreEntidad" type="xsd:string" />
+					<xsd:element name="procesoNroRadicado"
+						type="xsd:string" />
+					<xsd:element name="procesoFechaRadicado"
+						type="xsd:dateTime" />
+					<xsd:element name="nomOficinaOrigen" type="xsd:string" />
+					<xsd:element name="nomTipoDocumentoPublico"
+						type="xsd:string" />
+					<xsd:element name="fechaDocumento" type="xsd:dateTime" />
+					<xsd:element name="docNumero" type="xsd:string" />
+					<xsd:element name="docIdSGD" type="xsd:string" />
+					<xsd:element name="docNameSGD" type="xsd:string" />
+					<xsd:element name="nitComunidadEtnica"
+						type="xsd:string" minOccurs="0" />
+					<xsd:element name="estado" type="xsd:string" />
+					<xsd:element name="fechaInactivacionAlerta"
+						type="xsd:dateTime" minOccurs="0" />
+					<xsd:element name="creadoSNR" type="xsd:string" />
+					<xsd:element name="listaMatriculas">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="matricula" minOccurs="0"
+									maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="nomCirculoRegistral"
+												type="xsd:string" />
+											<xsd:element name="numMatriculaInmobiliaria"
+												type="xsd:string" />
+											<xsd:element name="numPredial" type="xsd:string"
+												minOccurs="0" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="inactivacion" minOccurs="0">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="motivoInactivacion"
+									type="xsd:string" />
+								<xsd:element name="nomOficinaOrigen"
+									type="xsd:string" />
+								<xsd:element name="nomTipoDocumentoPublico"
+									type="xsd:string" />
+								<xsd:element name="fechaDocumento"
+									type="xsd:dateTime" />
+								<xsd:element name="docNumero" type="xsd:string" />
+								<xsd:element name="docIdSGD" type="xsd:string" />
+								<xsd:element name="docNameSGD" type="xsd:string" />
+								<xsd:element name="textoInactivacion"
+									type="xsd:string" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="listaAlertasGeneradas">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="alertaGenerada" minOccurs="0"
+									maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="nomCirculoRegistral"
+												type="xsd:string" />
+											<xsd:element name="numMatriculaInmobiliaria"
+												type="xsd:int" />
+											<xsd:element name="turno" type="xsd:string" />
+											<xsd:element name="texto" type="xsd:string"
+												minOccurs="0" />
+											<xsd:element name="usuarioGenerador"
+												type="xsd:string" minOccurs="0" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="listaProcesosAS">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="procesoAS" maxOccurs="unbounded"
+									minOccurs="0">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="idAlerta" type="xsd:int" />
+											<xsd:element name="nomCirculoRegistral"
+												type="xsd:string" />
+											<xsd:element name="nomPais" type="xsd:string" />
+											<xsd:element name="nomDepartamento"
+												type="xsd:string" />
+											<xsd:element name="nomMunicipio"
+												type="xsd:string" />
+											<xsd:element name="tipoPredio" type="xsd:string" />
+											<xsd:element name="numLibro" type="xsd:int" />
+											<xsd:element name="numTomo" type="xsd:int" />
+											<xsd:element name="idTipoPartida"
+												type="xsd:string" />
+											<xsd:element name="numPartida" type="xsd:int" />
+											<xsd:element name="numFolio" type="xsd:int" />
+											<xsd:element name="anio" type="xsd:int" />
+											<xsd:element name="nomPredio" type="xsd:string"
+												minOccurs="0" />
+											<xsd:element name="numPredio" type="xsd:int"
+												minOccurs="0" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarDetalleAlerta"
+				type="bachue6:tipoSalidaConsultarDetalleAlerta" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarDocumentoAlerta/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaConsultarDocumentoAlerta">
+				<xsd:sequence>
+					<xsd:element name="oficinaOrigen" minOccurs="0"
+						type="xsd:string" />
+					<xsd:element name="codTipoDocumentoPublico"
+						type="xsd:string" minOccurs="0" />
+					<xsd:element name="fechaDocumento" minOccurs="0"
+						type="xsd:dateTime" />
+					<xsd:element name="docNumero" minOccurs="0"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarDocumentoAlerta"
+				type="bachue7:tipoEntradaConsultarDocumentoAlerta" />
+			<xsd:complexType
+				name="tipoSalidaConsultarDocumentoAlerta">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarDocumentoAlerta"
+				type="bachue7:tipoSalidaConsultarDocumentoAlerta" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarEntidadesJ_A/v1"
+			elementFormDefault="qualified">
+			<xsd:element name="entradaConsultarEntidadesJ_A">
+				<xsd:complexType />
+			</xsd:element>
+			<xsd:complexType
+				name="tipoSalidaConsultarEntidadesJ_A">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+					<xsd:element name="listaAutoridadesJ_A" minOccurs="0">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="autoridad_A"
+									maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="codigoAutoridad"
+												type="xsd:string" />
+											<xsd:element name="nombreAutoridad"
+												type="xsd:string" />
+											<xsd:element name="esAgenciaNacionalTierras"
+												type="xsd:string" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarEntidadesJ_A"
+				type="bachue8:tipoSalidaConsultarEntidadesJ_A" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarListaMatriculas/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaConsultarListaMatriculas">
+				<xsd:sequence>
+					<xsd:element name="listaMatricula">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="matricula" maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="codCirculoRegistral"
+												type="xsd:string" />
+											<xsd:element name="numMatriculaInmobiliaria"
+												type="xsd:int" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarListaMatriculas"
+				type="bachue9:tipoEntradaConsultarListaMatriculas" />
+			<xsd:complexType
+				name="tipoSalidaConsultarListaMatriculas">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+					<xsd:element name="listaMatriculas" minOccurs="0">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="matricula" minOccurs="0"
+									maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="codCirculoRegistral"
+												type="xsd:string" />
+											<xsd:element name="numMatriculaInmobiliaria"
+												type="xsd:int" />
+											<xsd:element name="esDerivada" type="xsd:string" />
+											<xsd:element name="numPredial" type="xsd:string" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarListaMatriculas"
+				type="bachue9:tipoSalidaConsultarListaMatriculas" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarMatricula/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType name="tipoEntradaConsultarMatricula">
+				<xsd:sequence>
+					<xsd:element name="codCirculoRegistral"
+						type="xsd:string" />
+					<xsd:element name="numMatriculaInmobiliaria"
+						type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarMatricula"
+				type="bachue11:tipoEntradaConsultarMatricula" />
+			<xsd:complexType name="tipoSalidaConsultarMatricula">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+					<xsd:element name="listaMatriculas" minOccurs="0">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="matricula" minOccurs="0"
+									maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="codCirculoRegistral"
+												type="xsd:string" />
+											<xsd:element name="numMatriculaInmobiliaria"
+												type="xsd:int" />
+											<xsd:element name="esDerivada" type="xsd:string" />
+											<xsd:element name="numPredial" type="xsd:string" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarMatricula"
+				type="bachue11:tipoSalidaConsultarMatricula" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarMatriculaAlerta/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaConsultarMatriculaAlerta">
+				<xsd:sequence>
+					<xsd:element name="idAlerta" type="xsd:int" />
+					<xsd:element name="codCirculoRegistral"
+						type="xsd:string" />
+					<xsd:element name="numMatriculaInmobiliaria"
+						type="xsd:int" />
+					<xsd:element name="matriculasPagina" type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarMatriculaAlerta"
+				type="bachue12:tipoEntradaConsultarMatriculaAlerta" />
+			<xsd:complexType
+				name="tipoSalidaConsultarMatriculaAlerta">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+					<xsd:element name="listaMatriculas" minOccurs="0">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="matricula" minOccurs="0"
+									maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="codCirculoRegistral"
+												type="xsd:string" />
+											<xsd:element name="numMatriculaInmobiliaria"
+												type="xsd:int" />
+											<xsd:element name="numPredial" type="xsd:string" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarMatriculaAlerta"
+				type="bachue12:tipoSalidaConsultarMatriculaAlerta" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarMatriculaFiltrosTierras/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaConsultarMatriculaFiltrosTierras">
+				<xsd:sequence>
+					<xsd:element name="idDepartamento" type="xsd:string" />
+					<xsd:element name="idMunicipio" type="xsd:string" />
+					<xsd:element name="idVereda" type="xsd:string" />
+					<xsd:element name="nombrePredio" type="xsd:string" />
+					<xsd:element name="areaPredio" type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element
+				name="entradaConsultarMatriculaFiltrosTierras"
+				type="bachue13:tipoEntradaConsultarMatriculaFiltrosTierras" />
+			<xsd:complexType
+				name="tipoSalidaConsultarMatriculaFiltrosTierras">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+					<xsd:element name="listaMatriculas" minOccurs="0">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="matricula" minOccurs="0"
+									maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="codCirculoRegistral"
+												type="xsd:string" />
+											<xsd:element name="numMatriculaInmobiliaria"
+												type="xsd:int" />
+											<xsd:element name="esDerivada" type="xsd:string" />
+											<xsd:element name="numPredial" type="xsd:string" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element
+				name="salidaConsultarMatriculaFiltrosTierras"
+				type="bachue13:tipoSalidaConsultarMatriculaFiltrosTierras" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarMatriculaInfoCatastral/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaConsultarMatriculaInfoCatastral">
+				<xsd:sequence>
+					<xsd:element name="NUPRE" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="numPredial" minOccurs="0"
+						type="xsd:string" />
+					<xsd:element name="CHIP" minOccurs="0"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element
+				name="entradaConsultarMatriculaInfoCatastral"
+				type="bachue14:tipoEntradaConsultarMatriculaInfoCatastral" />
+			<xsd:complexType
+				name="tipoSalidaConsultarMatriculaICatastral">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+					<xsd:element name="listaMatriculas" minOccurs="0">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="matricula" minOccurs="0"
+									maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="codCirculoRegistral"
+												type="xsd:string" />
+											<xsd:element name="numMatriculaInmobiliaria"
+												type="xsd:int" />
+											<xsd:element name="esDerivada" type="xsd:string" />
+											<xsd:element name="numPredial" type="xsd:string" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarMatriculaInfoCatastral"
+				type="bachue14:tipoSalidaConsultarMatriculaICatastral" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/consultarOficinasOrigenTipo/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaConsultarOficinasOrigenTipo">
+				<xsd:sequence>
+					<xsd:element name="tipoOficinaOrigen" type="xsd:string" />
+					<xsd:element name="codigoOficinaOrigen" minOccurs="0"
+						type="xsd:string" />
+					<xsd:element name="nomParcialOficinaOrigen"
+						minOccurs="0" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarOficinasOrigenTipo"
+				type="bachue15:tipoEntradaConsultarOficinasOrigenTipo" />
+			<xsd:complexType
+				name="tipoSalidaConsultarOficinasOrigenTipo">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+					<xsd:element name="listaOficinasOrigen" minOccurs="0">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="oficinaOrigen"
+									maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="oficinaOrigen"
+												type="xsd:string" />
+											<xsd:element name="nombreOficinaOrigen"
+												type="xsd:string" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarOficinasOrigenTipo"
+				type="bachue15:tipoSalidaConsultarOficinasOrigenTipo" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/inactivarAlerta/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType name="tipoEntradaInactivarAlerta">
+				<xsd:sequence>
+					<xsd:element name="idAlerta" type="xsd:int" />
+					<xsd:element name="idMotivo">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="TERMINACION" />
+								<xsd:enumeration value="EQUIVOCACION" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="oficinaOrigen" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="codTipoDocumentoPublico"
+						type="xsd:string" minOccurs="0" />
+					<xsd:element name="fechaDocumento" type="xsd:dateTime"
+						minOccurs="0" />
+					<xsd:element name="docNumero" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="docIdSGD" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="docNameSGD" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="textoInactivacion" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaInactivarAlerta"
+				type="bachue16:tipoEntradaInactivarAlerta" />
+			<xsd:complexType name="tipoSalidaInactivarAlerta">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaInactivarAlerta"
+				type="bachue16:tipoSalidaInactivarAlerta" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/inscribirAlertaCabecera/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaInscribirAlertaCabecera">
+				<xsd:sequence>
+					<xsd:element name="tipoAlerta" type="xsd:string" />
+					<xsd:element name="idEntidad" type="xsd:int" />
+					<xsd:element name="procesoNroRadicado"
+						type="xsd:string" />
+					<xsd:element name="procesoFechaRadicado"
+						type="xsd:dateTime" />
+					<xsd:element name="oficinaOrigen" type="xsd:string" />
+					<xsd:element name="codTipoDocumentoPublico"
+						type="xsd:string" />
+					<xsd:element name="fechaDocumento" type="xsd:dateTime" />
+					<xsd:element name="docNumero" type="xsd:string" />
+					<xsd:element name="docIdSGD" type="xsd:string" />
+					<xsd:element name="docNameSGD" type="xsd:string" />
+					<xsd:element name="nitComunidadEtnica"
+						type="xsd:string" minOccurs="0" />
+					<xsd:element name="creadoSNR" type="xsd:string" />
+					<xsd:element name="idUsuario" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaInscribirAlertaCabecera"
+				type="bachue17:tipoEntradaInscribirAlertaCabecera" />
+			<xsd:complexType
+				name="tipoSalidaInscribirAlertaCabecera">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+					<xsd:element name="idAlerta" type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaInscribirAlertaCabecera"
+				type="bachue17:tipoSalidaInscribirAlertaCabecera" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/rechazarCorreccionAlerta/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaRechazarCorreccionAlerta">
+				<xsd:sequence>
+					<xsd:element name="idAlerta" type="xsd:int" />
+					<xsd:element name="idUsuario" type="xsd:string" />
+					<xsd:element name="texto" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaRechazarCorreccionAlerta"
+				type="bachue18:tipoEntradaRechazarCorreccionAlerta" />
+			<xsd:complexType
+				name="tipoSalidaRechazarCorreccionAlerta">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaRechazarCorreccionAlerta"
+				type="bachue18:tipoSalidaRechazarCorreccionAlerta" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/removerMatriculaAlerta/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaRemoverMatriculaAlerta">
+				<xsd:sequence>
+					<xsd:element name="idAlerta" type="xsd:int" />
+					<xsd:element name="codCirculoRegistral"
+						type="xsd:string" />
+					<xsd:element name="numMatriculaInmobiliaria"
+						type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaRemoverMatriculaAlerta"
+				type="bachue19:tipoEntradaRemoverMatriculaAlerta" />
+			<xsd:complexType
+				name="tipoSalidaRemoverMatriculaAlerta">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaRemoverMatriculaAlerta"
+				type="bachue19:tipoSalidaRemoverMatriculaAlerta" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/crearProcAntiguoSistemaTierras/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaCrearProcAntiguoSistemaTierras">
+				<xsd:sequence>
+					<xsd:element name="idAlerta" type="xsd:int" />
+					<xsd:element name="codCirculoRegistral"
+						type="xsd:string" />
+					<xsd:element name="codPais" type="xsd:int" />
+					<xsd:element name="codDepartamento" type="xsd:int" />
+					<xsd:element name="codMunicipio" type="xsd:int" />
+
+					<xsd:element name="tipoPredio">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="RURAL" />
+								<xsd:enumeration value="URBANO" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+
+					<xsd:element name="numLibro" type="xsd:int" />
+					<xsd:element name="numTomo" type="xsd:int" />
+
+					<xsd:element name="idTipoPartida">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="PAR" />
+								<xsd:enumeration value="IMPAR" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+
+					<xsd:element name="numPartida" type="xsd:int" />
+					<xsd:element name="numFolio" type="xsd:int" />
+					<xsd:element name="anio" type="bachue20:anio" />
+					<xsd:element name="nomPredio" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="numPredio" type="xsd:int"
+						minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:simpleType name="anio">
+				<xsd:restriction base="xsd:integer">
+					<xsd:minInclusive value="1492" />
+					<xsd:maxInclusive value="1980" />
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:element name="entradaCrearProcAntiguoSistemaTierras"
+				type="bachue20:tipoEntradaCrearProcAntiguoSistemaTierras" />
+			<xsd:complexType
+				name="tipoSalidaCrearProcAntiguoSistemaTierras">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+					<xsd:element name="idAntiguoSistemaTierras"
+						type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaCrearProcAntiguoSistemaTierras"
+				type="bachue20:tipoSalidaCrearProcAntiguoSistemaTierras" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/agregarListaMatriculasAlerta/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaAgregarListaMatriculasAlerta">
+				<xsd:sequence>
+					<xsd:element name="idAlerta" type="xsd:int" />
+					<xsd:element name="listaMatriculas">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="matricula" maxOccurs="unbounded">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="codCirculoRegistral"
+												type="xsd:string" />
+											<xsd:element name="numMatriculaInmobiliaria"
+												type="xsd:int" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaAgregarListaMatriculasAlerta"
+				type="bachue21:tipoEntradaAgregarListaMatriculasAlerta" />
+			<xsd:complexType
+				name="tipoSalidaAgregarListaMatriculasAlerta">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaAgregarListaMatriculasAlerta"
+				type="bachue21:tipoSalidaAgregarListaMatriculasAlerta" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/listarProcAntiguoSistema/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaListarProcAntiguoSistema">
+				<xsd:sequence>
+					<xsd:element name="idAlerta" type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaListarProcAntiguoSistema"
+				type="bachue22:tipoEntradaListarProcAntiguoSistema" />
+			<xsd:complexType
+				name="tipoSalidaListarProcAntiguoSistema">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+					<xsd:element name="listaProcesosAS">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="procesoAS" maxOccurs="unbounded"
+									minOccurs="0">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="idAlerta" type="xsd:int" />
+											<xsd:element name="nomCirculoRegistral"
+												type="xsd:string" />
+											<xsd:element name="nomPais" type="xsd:string" />
+											<xsd:element name="nomDepartamento"
+												type="xsd:string" />
+											<xsd:element name="nomMunicipio"
+												type="xsd:string" />
+											<xsd:element name="tipoPredio" type="xsd:string" />
+											<xsd:element name="numLibro" type="xsd:int" />
+											<xsd:element name="numTomo" type="xsd:int" />
+											<xsd:element name="idTipoPartida"
+												type="xsd:string" />
+											<xsd:element name="numPartida" type="xsd:int" />
+											<xsd:element name="numFolio" type="xsd:int" />
+											<xsd:element name="anio" type="xsd:int" />
+											<xsd:element name="nomPredio" type="xsd:string"
+												minOccurs="0" />
+											<xsd:element name="numPredio" type="xsd:int"
+												minOccurs="0" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaListarProcAntiguoSistema"
+				type="bachue22:tipoSalidaListarProcAntiguoSistema" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/alertaTierras/eliminarProcAntiguoSistema/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaEliminarProcAntiguoSistema">
+				<xsd:sequence>
+					<xsd:element name="idAlerta" type="xsd:int" />
+					<xsd:element name="idAntiguoSistemaTierras"
+						type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaEliminarProcAntiguoSistema"
+				type="bachue23:tipoEntradaEliminarProcAntiguoSistema" />
+			<xsd:complexType
+				name="tipoSalidaEliminarProcAntiguoSistema">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="mensaje" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaEliminarProcAntiguoSistema"
+				type="bachue23:tipoSalidaEliminarProcAntiguoSistema" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="ActivarAlertaTierras_Request">
+		<wsdl:part name="entrada"
+			element="bachue2:entradaActivarAlertaTierras" />
+	</wsdl:message>
+	<wsdl:message name="ActivarAlertaTierras_Response">
+		<wsdl:part name="salida"
+			element="bachue2:salidaActivarAlertaTierras" />
+	</wsdl:message>
+	<wsdl:message name="AgregarMatriculaAlerta_Request">
+		<wsdl:part name="entrada"
+			element="bachue3:entradaAgregarMatriculaAlerta" />
+	</wsdl:message>
+	<wsdl:message name="AgregarMatriculaAlerta_Response">
+		<wsdl:part name="salida"
+			element="bachue3:salidaAgregarMatriculaAlerta" />
+	</wsdl:message>
+	<wsdl:message name="CancelarIngresoAlertaTierras_Request">
+		<wsdl:part name="entrada"
+			element="bachue4:entradaCancelarIngresoAlertaTierras" />
+	</wsdl:message>
+	<wsdl:message name="CancelarIngresoAlertaTierras_Response">
+		<wsdl:part name="salida"
+			element="bachue4:salidaCancelarIngresoAlertaTierras" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarAlertas_Request">
+		<wsdl:part name="entrada"
+			element="bachue5:entradaConsultarAlertas" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarAlertas_Response">
+		<wsdl:part name="salida"
+			element="bachue5:salidaConsultarAlertas" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarDetalleAlerta_Request">
+		<wsdl:part name="entrada"
+			element="bachue6:entradaConsultarDetalleAlerta" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarDetalleAlerta_Response">
+		<wsdl:part name="salida"
+			element="bachue6:salidaConsultarDetalleAlerta" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarDocumentoAlerta_Request">
+		<wsdl:part name="entrada"
+			element="bachue7:entradaConsultarDocumentoAlerta" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarDocumentoAlerta_Response">
+		<wsdl:part name="salida"
+			element="bachue7:salidaConsultarDocumentoAlerta" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarEntidadesJ_A_Request">
+		<wsdl:part name="entrada"
+			element="bachue8:entradaConsultarEntidadesJ_A" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarEntidadesJ_A_Response">
+		<wsdl:part name="salida"
+			element="bachue8:salidaConsultarEntidadesJ_A" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarListaMatriculas_Request">
+		<wsdl:part name="entrada"
+			element="bachue9:entradaConsultarListaMatriculas" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarListaMatriculas_Response">
+		<wsdl:part name="salida"
+			element="bachue9:salidaConsultarListaMatriculas" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarMatricula_Request">
+		<wsdl:part name="entrada"
+			element="bachue11:entradaConsultarMatricula" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarMatricula_Response">
+		<wsdl:part name="salida"
+			element="bachue11:salidaConsultarMatricula" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarMatriculaAlerta_Request">
+		<wsdl:part name="entrada"
+			element="bachue12:entradaConsultarMatriculaAlerta" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarMatriculaAlerta_Response">
+		<wsdl:part name="salida"
+			element="bachue12:salidaConsultarMatriculaAlerta" />
+	</wsdl:message>
+	<wsdl:message
+		name="ConsultarMatriculaFiltrosTierras_Request">
+		<wsdl:part name="entrada"
+			element="bachue13:entradaConsultarMatriculaFiltrosTierras" />
+	</wsdl:message>
+	<wsdl:message
+		name="ConsultarMatriculaFiltrosTierras_Response">
+		<wsdl:part name="salida"
+			element="bachue13:salidaConsultarMatriculaFiltrosTierras" />
+	</wsdl:message>
+	<wsdl:message
+		name="ConsultarMatriculaInfoCatastral_Request">
+		<wsdl:part name="entrada"
+			element="bachue14:entradaConsultarMatriculaInfoCatastral" />
+	</wsdl:message>
+	<wsdl:message
+		name="ConsultarMatriculaInfoCatastral_Response">
+		<wsdl:part name="salida"
+			element="bachue14:salidaConsultarMatriculaInfoCatastral" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarOficinasOrigenTipo_Request">
+		<wsdl:part name="entrada"
+			element="bachue15:entradaConsultarOficinasOrigenTipo" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarOficinasOrigenTipo_Response">
+		<wsdl:part name="salida"
+			element="bachue15:salidaConsultarOficinasOrigenTipo" />
+	</wsdl:message>
+	<wsdl:message name="InactivarAlerta_Request">
+		<wsdl:part name="entrada"
+			element="bachue16:entradaInactivarAlerta" />
+	</wsdl:message>
+	<wsdl:message name="InactivarAlerta_Response">
+		<wsdl:part name="salida"
+			element="bachue16:salidaInactivarAlerta" />
+	</wsdl:message>
+	<wsdl:message name="InscribirAlertaCabecera_Request">
+		<wsdl:part name="entrada"
+			element="bachue17:entradaInscribirAlertaCabecera" />
+	</wsdl:message>
+	<wsdl:message name="InscribirAlertaCabecera_Response">
+		<wsdl:part name="salida"
+			element="bachue17:salidaInscribirAlertaCabecera" />
+	</wsdl:message>
+	<wsdl:message name="RechazarCorreccionAlerta_Request">
+		<wsdl:part name="entrada"
+			element="bachue18:entradaRechazarCorreccionAlerta" />
+	</wsdl:message>
+	<wsdl:message name="RechazarCorreccionAlerta_Response">
+		<wsdl:part name="salida"
+			element="bachue18:salidaRechazarCorreccionAlerta" />
+	</wsdl:message>
+	<wsdl:message name="RemoverMatriculaAlerta_Request">
+		<wsdl:part name="entrada"
+			element="bachue19:entradaRemoverMatriculaAlerta" />
+	</wsdl:message>
+	<wsdl:message name="RemoverMatriculaAlerta_Response">
+		<wsdl:part name="salida"
+			element="bachue19:salidaRemoverMatriculaAlerta" />
+	</wsdl:message>
+	<wsdl:message
+		name="CrearProcAntiguoSistemaTierras_Request">
+		<wsdl:part name="entrada"
+			element="bachue20:entradaCrearProcAntiguoSistemaTierras" />
+	</wsdl:message>
+	<wsdl:message
+		name="CrearProcAntiguoSistemaTierras_Response">
+		<wsdl:part name="salida"
+			element="bachue20:salidaCrearProcAntiguoSistemaTierras" />
+	</wsdl:message>
+	<wsdl:message name="AgregarListaMatriculasAlerta_Request">
+		<wsdl:part name="entrada"
+			element="bachue21:entradaAgregarListaMatriculasAlerta" />
+	</wsdl:message>
+	<wsdl:message name="AgregarListaMatriculasAlerta_Response">
+		<wsdl:part name="salida"
+			element="bachue21:salidaAgregarListaMatriculasAlerta" />
+	</wsdl:message>
+	<wsdl:message name="ListarProcAntiguoSistema_Request">
+		<wsdl:part name="entrada"
+			element="bachue22:entradaListarProcAntiguoSistema" />
+	</wsdl:message>
+	<wsdl:message name="ListarProcAntiguoSistema_Response">
+		<wsdl:part name="salida"
+			element="bachue22:salidaListarProcAntiguoSistema" />
+	</wsdl:message>
+	<wsdl:message name="EliminarProcAntiguoSistema_Request">
+		<wsdl:part name="entrada"
+			element="bachue23:entradaEliminarProcAntiguoSistema" />
+	</wsdl:message>
+	<wsdl:message name="EliminarProcAntiguoSistema_Response">
+		<wsdl:part name="salida"
+			element="bachue23:salidaEliminarProcAntiguoSistema" />
+	</wsdl:message>
+	<wsdl:portType name="BS_SDI_CB_AlertaTierras">
+		<wsdl:operation name="ActivarAlertaTierras">
+			<wsdl:input message="bachue:ActivarAlertaTierras_Request" />
+			<wsdl:output
+				message="bachue:ActivarAlertaTierras_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="AgregarMatriculaAlerta">
+			<wsdl:input
+				message="bachue:AgregarMatriculaAlerta_Request" />
+			<wsdl:output
+				message="bachue:AgregarMatriculaAlerta_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="CancelarIngresoAlertaTierras">
+			<wsdl:input
+				message="bachue:CancelarIngresoAlertaTierras_Request" />
+			<wsdl:output
+				message="bachue:CancelarIngresoAlertaTierras_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarAlertas">
+			<wsdl:input message="bachue:ConsultarAlertas_Request" />
+			<wsdl:output message="bachue:ConsultarAlertas_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarDetalleAlerta">
+			<wsdl:input
+				message="bachue:ConsultarDetalleAlerta_Request" />
+			<wsdl:output
+				message="bachue:ConsultarDetalleAlerta_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarDocumentoAlerta">
+			<wsdl:input
+				message="bachue:ConsultarDocumentoAlerta_Request" />
+			<wsdl:output
+				message="bachue:ConsultarDocumentoAlerta_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarEntidadesJ_A">
+			<wsdl:input message="bachue:ConsultarEntidadesJ_A_Request" />
+			<wsdl:output
+				message="bachue:ConsultarEntidadesJ_A_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarListaMatriculas">
+			<wsdl:input
+				message="bachue:ConsultarListaMatriculas_Request" />
+			<wsdl:output
+				message="bachue:ConsultarListaMatriculas_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarMatricula">
+			<wsdl:input message="bachue:ConsultarMatricula_Request" />
+			<wsdl:output message="bachue:ConsultarMatricula_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarMatriculaAlerta">
+			<wsdl:input
+				message="bachue:ConsultarMatriculaAlerta_Request" />
+			<wsdl:output
+				message="bachue:ConsultarMatriculaAlerta_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarMatriculaFiltrosTierras">
+			<wsdl:input
+				message="bachue:ConsultarMatriculaFiltrosTierras_Request" />
+			<wsdl:output
+				message="bachue:ConsultarMatriculaFiltrosTierras_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarMatriculaInfoCatastral">
+			<wsdl:input
+				message="bachue:ConsultarMatriculaInfoCatastral_Request" />
+			<wsdl:output
+				message="bachue:ConsultarMatriculaInfoCatastral_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarOficinasOrigenTipo">
+			<wsdl:input
+				message="bachue:ConsultarOficinasOrigenTipo_Request" />
+			<wsdl:output
+				message="bachue:ConsultarOficinasOrigenTipo_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="InactivarAlerta">
+			<wsdl:input message="bachue:InactivarAlerta_Request" />
+			<wsdl:output message="bachue:InactivarAlerta_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="InscribirAlertaCabecera">
+			<wsdl:input
+				message="bachue:InscribirAlertaCabecera_Request" />
+			<wsdl:output
+				message="bachue:InscribirAlertaCabecera_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="RechazarCorreccionAlerta">
+			<wsdl:input
+				message="bachue:RechazarCorreccionAlerta_Request" />
+			<wsdl:output
+				message="bachue:RechazarCorreccionAlerta_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="RemoverMatriculaAlerta">
+			<wsdl:input
+				message="bachue:RemoverMatriculaAlerta_Request" />
+			<wsdl:output
+				message="bachue:RemoverMatriculaAlerta_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="CrearProcAntiguoSistemaTierras">
+			<wsdl:input
+				message="bachue:CrearProcAntiguoSistemaTierras_Request" />
+			<wsdl:output
+				message="bachue:CrearProcAntiguoSistemaTierras_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="AgregarListaMatriculasAlerta">
+			<wsdl:input
+				message="bachue:AgregarListaMatriculasAlerta_Request" />
+			<wsdl:output
+				message="bachue:AgregarListaMatriculasAlerta_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ListarProcAntiguoSistema">
+			<wsdl:input
+				message="bachue:ListarProcAntiguoSistema_Request" />
+			<wsdl:output
+				message="bachue:ListarProcAntiguoSistema_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="EliminarProcAntiguoSistema">
+			<wsdl:input
+				message="bachue:EliminarProcAntiguoSistema_Request" />
+			<wsdl:output
+				message="bachue:EliminarProcAntiguoSistema_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="BS_SDI_CB_AlertaTierras"
+		type="bachue:BS_SDI_CB_AlertaTierras">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="ActivarAlertaTierras">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/ActivarAlertaTierras" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="AgregarMatriculaAlerta">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/AgregarMatriculaAlerta" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="CancelarIngresoAlertaTierras">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/CancelarIngresoAlertaTierras" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarAlertas">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/ConsultarAlertas" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarDetalleAlerta">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/ConsultarDetalleAlerta" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarDocumentoAlerta">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/ConsultarDocumentoAlerta" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarEntidadesJ_A">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/ConsultarEntidadesJ_A" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarListaMatriculas">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/ConsultarListaMatriculas" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarMatricula">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/ConsultarMatricula" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarMatriculaAlerta">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/ConsultarMatriculaAlerta" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarMatriculaFiltrosTierras">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/ConsultarMatriculaFiltrosTierras" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarMatriculaInfoCatastral">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/ConsultarMatriculaInfoCatastral" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarOficinasOrigenTipo">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/ConsultarOficinasOrigenTipo" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="InactivarAlerta">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/InactivarAlerta" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="InscribirAlertaCabecera">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/InscribirAlertaCabecera" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="RechazarCorreccionAlerta">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/RechazarCorreccionAlerta" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="RemoverMatriculaAlerta">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/RemoverMatriculaAlerta" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="CrearProcAntiguoSistemaTierras">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/CrearProcAntiguoSistemaTierras" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="AgregarListaMatriculasAlerta">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/AgregarListaMatriculasAlerta" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ListarProcAntiguoSistema">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/ListarProcAntiguoSistema" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="EliminarProcAntiguoSistema">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ee/alertaTierras/v1/EliminarProcAntiguoSistema" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="BS_SDI_CB_AlertaTierras">
+		<wsdl:port name="BS_SDI_CB_AlertaTierrasPort"
+			binding="bachue:BS_SDI_CB_AlertaTierras">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

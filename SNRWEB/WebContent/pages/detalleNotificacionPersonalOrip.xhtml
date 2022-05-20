@@ -1,0 +1,1403 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelNotificacionPersonal}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<p:dialog widgetVar="statusDispositivo" modal="true"
+				draggable="false" closable="false" resizable="false"
+				showHeader="false" appendTo="@(body)" width="16%">
+				<p:progressBar id="progressBar" mode="indeterminate"
+					widgetVar="progressBar" rendered="true" />
+			</p:dialog>
+
+			<h:form id="fDetalleEntrega" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true"
+					redisplay="false" life="1500">
+					<p:autoUpdate />
+				</p:growl>
+				<p:remoteCommand name="fail"
+					actionListener="#{beanDetalleNotificacionPersonalOrip.error}"
+					update="idGrowl" partialSubmit="true" global="false" />
+				<p:remoteCommand name="firma"
+					actionListener="#{beanDetalleNotificacionPersonalOrip.firma}"
+					update="idGrowl" partialSubmit="true" global="false" />
+				<p:remoteCommand name="failImpresion"
+					actionListener="#{beanDetalleNotificacionPersonalOrip.errorImpresion('fDetalleEntrega')}"
+					update="idGrowl" partialSubmit="true" global="false" />
+				<p:remoteCommand name="imprimirDocumento"
+					actionListener="#{beanDetalleNotificacionPersonalOrip.imprimirDocumentos('fDetalleEntrega')}"
+					update="idGrowl" partialSubmit="true" global="false" />
+
+				<center>
+					<p:outputPanel style="min-width:800px;">
+						<p:panel id="idPBandejaEntrega"
+							header="#{messageBeanSNR.commonLabelNotificacionPersonal}"
+							rendered="#{beanDetalleNotificacionPersonalOrip.bandejaentrada}">
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+									<h:panelGrid columns="1">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+											style="font-size: 100%;" />
+										<p:inputText placeholder="#{messageBeanSNR.commonLabelNIR}"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaNIR}"
+											id="nir" value="#{beanDetalleNotificacionPersonalOrip.nir}">
+										</p:inputText>
+									</h:panelGrid>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+									<h:panelGrid columns="1">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}"
+											style="font-size: 100%;" />
+										<p:inputText placeholder="#{messageBeanSNR.commonLabelTurno}"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaTurno}"
+											id="idTurno"
+											value="#{beanDetalleNotificacionPersonalOrip.idTurno}">
+										</p:inputText>
+									</h:panelGrid>
+								</div>
+							</div>
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<h:panelGroup>
+										<p:commandButton
+											value="#{messageBeanSNR.commonButtonConsultar}"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaConsultar}"
+											actionListener="#{beanDetalleNotificacionPersonalOrip.obtenerTurnos}"
+											icon="lupa" update="idPanelListadosEntrega" />
+									</h:panelGroup>
+
+								</div>
+							</div>
+							<br />
+							<p:dataTable id="idPanelListadosEntrega"
+								styleClass="estiloTablaIE"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+								value="#{beanDetalleNotificacionPersonalOrip.datosTramiteTurno}"
+								var="item" paginator="true" rows="50">
+								<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+									<div align="center">
+										<p:commandLink id="idClidTurno" ajax="false"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaTurnosTurno}"
+											value="#{item.idTurno}" styleClass="subrayado"
+											actionListener="#{beanDetalleNotificacionPersonalOrip.cargarTurno(item,false,true)}">
+										</p:commandLink>
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelDecisionEtapaAnterior}">
+									<div align="center">
+										<h:outputText value="#{item.motivoNoTramite}" />
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelEstadoDelTurno}">
+									<div align="center">
+										<h:outputText value="#{item.nombre}" />
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaAsignacion}">
+									<div align="center">
+										<h:outputText value="#{item.fechaAsignacion}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</div>
+								</p:column>
+							</p:dataTable>
+							<br />
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="left">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left" ajax="false"
+										action="#{beanDetalleNotificacionPersonalOrip.accionVolver}">
+									</p:commandButton>
+								</div>
+							</div>
+						</p:panel>
+						<p:panel id="idPDetalleTurno"
+							rendered="#{!beanDetalleNotificacionPersonalOrip.bandejaentrada}">
+							<p:panel header="#{messageBeanSNR.commonLabelDatosDelTurno}"
+								toggleable="true"
+								collapsed="#{beanDetalleNotificacionPersonalOrip.entrega.idTurno eq null}">
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-4 ui-lg-4" align="center">
+										<h:panelGrid columns="1">
+											<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}"
+												style="font-size: 100%;" />
+											<p:inputText
+												value="#{beanDetalleNotificacionPersonalOrip.entrega.idTurno}"
+												readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosTurnoTurno}">
+											</p:inputText>
+										</h:panelGrid>
+									</div>
+									<div class="ui-g-12 ui-md-4 ui-lg-4" align="center">
+										<h:panelGrid columns="1">
+											<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+												style="font-size: 100%;" />
+											<p:inputText
+												value="#{beanDetalleNotificacionPersonalOrip.entrega.nir}"
+												readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosTurnoNir}">
+											</p:inputText>
+										</h:panelGrid>
+									</div>
+									<div class="ui-g-12 ui-md-4 ui-lg-4" align="center">
+										<h:panelGrid columns="1">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelFechaEntrega}"
+												style="font-size: 100%;" />
+											<p:inputText
+												value="#{beanDetalleNotificacionPersonalOrip.fechaEntrega}"
+												readonly="true"
+												title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosTurnoFechaEntrega}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</p:inputText>
+										</h:panelGrid>
+									</div>
+								</div>
+							</p:panel>
+							<!-- Fin Seccion Datos Turno -->
+							<br />
+							<!-- Inicio Seccion Matriculas -->
+							<p:panel header="#{messageBeanSNR.commonLabelMatriculas}"
+								rendered="#{beanDetalleNotificacionPersonalOrip.isValidCollection(beanDetalleNotificacionPersonalOrip.entrega.datosMatriculas)}"
+								toggleable="true">
+								<div class="ui-g">
+									<p:dataTable
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{beanDetalleNotificacionPersonalOrip.entrega.datosMatriculas}"
+										var="item">
+										<p:column headerText="#{messageBeanSNR.commonLabelMatriculas}">
+											<div align="center">
+												<h:outputText value="#{item.matriculaConcatenada}" />
+											</div>
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}"
+											groupRow="true">
+											<div align="center">
+												<h:outputText value="#{item.direccionCompleta}" />
+											</div>
+										</p:column>
+									</p:dataTable>
+								</div>
+								<p:dialog modal="true" widgetVar="statusDownload"
+									draggable="false" closable="false" resizable="false">
+									<p:graphicImage value="/images/ajaxloadingbar.gif" />
+								</p:dialog>
+							</p:panel>
+							<!-- Fin Seccion Matriculas -->
+							<br />
+							<!-- Inicio Seccion Documento -->
+							<p:panel header="#{messageBeanSNR.commonLabelDocumento}"
+								toggleable="true"
+								collapsed="#{beanDetalleNotificacionPersonalOrip.entrega.datosPredioEntrega.tipoDocumento eq null}">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6 ui-lg-2">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTipoDeDocumento}" />
+										<br />
+										<p:inputText readonly="true"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoTipoDocumento}"
+											value="#{beanDetalleNotificacionPersonalOrip.entrega.datosPredioEntrega.tipoDocumento}" />
+										<br />
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-2">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelNumeroDelDocumento}" />
+										<br />
+										<p:inputText readonly="true"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoNumeroDocumento}"
+											value="#{beanDetalleNotificacionPersonalOrip.entrega.datosPredioEntrega.numero}" />
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-2">
+										<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+											value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+										<br />
+										<p:inputText readonly="true"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoFechaDocumento}"
+											value="#{beanDetalleNotificacionPersonalOrip.entrega.datosPredioEntrega.fechaDocumento}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-4">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelOficinaOrigen}" />
+										<br />
+										<p:inputText readonly="true"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoOficinaOrigen}"
+											value="#{beanDetalleNotificacionPersonalOrip.entrega.datosPredioEntrega.nombreOficina}" />
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-2">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTipoOficina}" />
+										<br />
+										<p:inputText readonly="true"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoTipoOficina}"
+											value="#{beanDetalleNotificacionPersonalOrip.entrega.datosPredioEntrega.tipoOficina}" />
+									</div>
+								</div>
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6 ui-lg-2">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelPais}" />
+										<br />
+										<p:inputText readonly="true"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoPais}"
+											value="#{beanDetalleNotificacionPersonalOrip.entrega.datosPredioEntrega.pais}" />
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-2">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelDepartamento}" />
+										<br />
+										<p:inputText readonly="true"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoDepartamento}"
+											value="#{beanDetalleNotificacionPersonalOrip.entrega.datosPredioEntrega.departamento}" />
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-2">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}" />
+										<br />
+										<p:inputText readonly="true"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoMunicipio}"
+											value="#{beanDetalleNotificacionPersonalOrip.entrega.datosPredioEntrega.municipio}" />
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-4">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTipoEntidad}" />
+										<br />
+										<p:inputText readonly="true"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoTipoEntidad}"
+											value="#{beanDetalleNotificacionPersonalOrip.entrega.datosPredioEntrega.tipoEntidad}" />
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-2">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelEntidadExenta}" />
+										<br />
+										<p:inputText readonly="true"
+											title="#{tooltipBeanSNR.procesosEntregaDetalleEntregaBandejaDeEntregaDatosDocumentoEntidadExenta}"
+											value="#{beanDetalleNotificacionPersonalOrip.entrega.datosPredioEntrega.entidadExenta}" />
+									</div>
+
+								</div>
+							</p:panel>
+							<br />
+							<p:panel
+								header="#{messageBeanSNR.commonLabelNotificacionPersonal}"
+								toggleable="true">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:outputPanel id="OPInformacionNotificacion">
+											<p:panelGrid
+												style="margin-top:20px;width:100%;text-align:center;">
+												<f:facet name="header">
+													<p:row>
+														<p:column colspan="4">#{messageBeanSNR.commonLabelDatosNotificacion}</p:column>
+													</p:row>
+												</f:facet>
+												<p:row>
+													<p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelFechaNotificacion}</p:column>
+													<p:column>
+														<p:outputLabel style="font-weight: 400;"
+															value="#{beanDetalleNotificacionPersonalOrip.infoNotificacion.fechaNotificacion}"
+															escape="false" />
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelTipoNotificacion}</p:column>
+													<p:column>
+														<p:outputLabel style="font-weight: 400;"
+															value="#{beanDetalleNotificacionPersonalOrip.infoNotificacion.tipoNotificacion}"
+															escape="false" />
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+										</p:outputPanel>
+									</div>
+								</div>
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:outputPanel id="OPInformacionNotificacionDetalle">
+											<p:dataTable id="DTDocumentosNotificaciones"
+												emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+												value="#{beanDetalleNotificacionPersonalOrip.infoNotificacion.documentosNotificaciones}"
+												var="item">
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelDocumentoNotificaciones}">
+													<div align="center">
+														<h:outputText value="#{item.tipo}" />
+													</div>
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelFechaEnvioPublicacion}"
+													groupRow="true">
+													<div align="center">
+														<h:outputText value="#{item.fechaEnvioComponente}" />
+													</div>
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelFechaAcuseDesficacion}"
+													groupRow="true">
+													<div align="center">
+														<h:outputText value="#{item.fechaAcuseReciboComponente}" />
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</div>
+								</div>
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:outputPanel id="OPDatosPersonasNotificacion">
+											<p:dataTable id="DTDatosPersonasNotificacion"
+												emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+												rendered="#{beanDetalleNotificacionPersonalOrip.infoNotificacion.personaNotificacion ne null}"
+												value="#{beanDetalleNotificacionPersonalOrip.infoNotificacion.personaNotificacion}"
+												var="item">
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelNombresNotificados}">
+													<div align="center">
+														<h:outputText value="#{item.nombreCompleto}" />
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</div>
+								</div>
+							</p:panel>
+							<br />
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:outputPanel id="notificacionesBody">
+										<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+											<h:panelGrid columns="2">
+												<p:outputLabel id="idOLPreguntaRenuncia" indicateRequired="true"
+													value="#{messageBeanSNR.commonLabelPreguntaRenunciaATerminos}" />
+												<p:selectOneRadio id="idSORPreguntaRenuncia"
+													style="width:100%"
+													value="#{beanDetalleNotificacionPersonalOrip.renunciaTerminos}">
+													<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+														itemValue="S" />
+													<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+														itemValue="N" />
+													<p:ajax event="valueChange"
+														listener="#{beanDetalleNotificacionPersonalOrip.actualizarRenunciaTerminosTurno}" 
+														update=":fDetalleEntrega:idOPSiInterviene,:fDetalleEntrega:idOPNoInterviene"/>
+												</p:selectOneRadio>
+											</h:panelGrid>
+										</div>
+										<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+											<h:panelGrid columns="2">
+												<p:outputLabel id="idOLPreguntaInterv" indicateRequired="true"
+													value="#{messageBeanSNR.commonLabelPreguntaIntervieneEnSolicitudEntrega}" />
+												<p:selectOneRadio id="idSORPreguntaInterv" style="width:100%"
+													value="#{beanDetalleNotificacionPersonalOrip.intervieneEnEntrega}">
+													<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+														itemValue="S" />
+													<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+														itemValue="N" />
+													<p:ajax event="click"
+														listener="#{beanDetalleNotificacionPersonalOrip.limpiarIntervinientes()}"
+														update=":fDetalleEntrega:idOPSiInterviene,:fDetalleEntrega:idOPNoInterviene,fDetalleEntrega:idDtTiposDocumentales,fDetalleEntrega:botonesBioClient,fDetalleEntrega:idPanelDocsImprimir" />
+													<p:ajax event="valueChange" 
+														listener="#{beanDetalleNotificacionPersonalOrip.actualizarIntervieneTurno}"
+													/>
+												</p:selectOneRadio>
+											</h:panelGrid>
+										</div>
+									</p:outputPanel>
+									
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:outputPanel id="idOPSiInterviene">
+										<p:panel
+											rendered="#{beanDetalleNotificacionPersonalOrip.intervieneEnEntrega == 'S'}"
+											header="#{messageBeanSNR.commonLabelDatosDeLosIntervenientes}">
+											<div>
+												<p:dataTable id="idDtListadoSolInter" var="item"
+													value="#{beanDetalleNotificacionPersonalOrip.entrega.datosIntervinientes}"
+													rowKey="#{item.idPersona}"
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+													<f:facet name="header">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelIntervenientesAgregados}" />
+													</f:facet>
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+														<h:outputText value="#{item.persona.idDocumentoTipo}" />
+													</p:column>
+													<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+														<h:outputText value="#{item.persona.numeroDocumento}" />
+													</p:column>
+													<p:column headerText="#{messageBeanSNR.commonLabelNombre}">
+														<h:outputText
+															rendered="#{item.persona.idDocumentoTipo != 'NIT'}"
+															value="#{item.persona.nombreCompleto}" />
+														<h:outputText
+															rendered="#{item.persona.idDocumentoTipo == 'NIT'}"
+															value="#{item.persona.razonSocial}" />
+													</p:column>
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelSeleccione}">
+														<p:selectBooleanCheckbox value="#{item.seleccionado}">
+															<p:ajax update="idDtListadoSolInter"
+																listener="#{beanDetalleNotificacionPersonalOrip.cambiarInterviniente(item)}" />
+														</p:selectBooleanCheckbox>
+													</p:column>
+												</p:dataTable>
+											</div>
+											<br />
+											<p:outputPanel id="idSeccionCorreoInterviniente">
+												<div class="ui-g" align="left"
+												style="display:#{beanDetalleNotificacionPersonalOrip.intervieneEnEntrega eq 'S' and (beanDetalleNotificacionPersonalOrip.idEtapa eq '200' or beanDetalleNotificacionPersonalOrip.idEtapa eq '205') and beanDetalleNotificacionPersonalOrip.correosIntervinientesRendered and beanDetalleNotificacionPersonalOrip.entregaCorreo eq 'S' ? '' : 'none'}">
+													<div class="ui-g-12 ui-md-6 ui-lg-6">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelCorreosElectronicos}" />
+														<br />
+														<p:selectOneMenu style="width:80%"
+															id="idITCorreosIntervinientes"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoCorreosElectronicos}"
+															value="#{beanDetalleNotificacionPersonalOrip.correoElectronico}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanDetalleNotificacionPersonalOrip.correosIntervinientes}"
+																var="item" itemValue="#{item}" itemLabel="#{item}" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+												<div class="ui-g" align="left" 
+												style="display:#{beanDetalleNotificacionPersonalOrip.intervieneEnEntrega eq 'S' and (beanDetalleNotificacionPersonalOrip.idEtapa eq '200' or beanDetalleNotificacionPersonalOrip.idEtapa eq '205') and !beanDetalleNotificacionPersonalOrip.correosIntervinientesRendered and beanDetalleNotificacionPersonalOrip.entregaCorreo eq 'S' ? '' : 'none'}">
+												<br />
+													<div class="ui-g-12 ui-md-6 ui-lg-5">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelCorreoElectronico}" />
+														<br />
+														<p:inputText maxlength="100" id="idITCorreosIntervinientes2"
+															onblur="value=value.toUpperCase()"
+															placeholder="#{messageBeanSNR.commonLabelEjemploCorreo}"
+															value="#{beanDetalleNotificacionPersonalOrip.correoElectronicoIngresado}" />
+													</div>
+												</div>
+											</p:outputPanel>
+										</p:panel>
+									</p:outputPanel>
+								</div>
+							</div>
+							<p:outputPanel id="idOPNoInterviene">
+								<p:panel
+									rendered="#{beanDetalleNotificacionPersonalOrip.intervieneEnEntrega eq 'N'}">
+									<p:panel header="#{messageBeanSNR.commonLabelConsultar}"
+										toggleable="true" id="consultaralinteresado">
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-6 ui-lg-2" />
+											<div class="ui-g-12 ui-md-6 ui-lg-3">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTipoDocumentoIdentidad}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMTipoDocIdentidad" ajax="true"
+													style="width:100%"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoTipoDocumentoIdentidad}"
+													value="#{beanDetalleNotificacionPersonalOrip.tipoDocInteresado}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanReference.findTipoDocumentoActivo()}"
+														var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+														itemLabel="#{tipoDoc.descripcion}" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-2" />
+											<div class="ui-g-12 ui-md-6 ui-lg-3">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelDocumentoIdentidad}#{messageBeanSNR.commonLabelObligatorio}"
+													style="width:100%" />
+												<br />
+												<p:inputText onblur="value=value.toUpperCase()" ajax="true"
+													id="idItDocumentoID"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoDocumentoIdentidad}"
+													label="#{messageBeanSNR['commonLabelDocumento']}"
+													placeholder="#{messageBeanSNR['commonLabelDocumento']}"
+													value="#{beanDetalleNotificacionPersonalOrip.documentoInteresado}"
+													maxlength="20"
+													requiredMessage="El campo Justificación es requerido">
+												</p:inputText>
+											</div>
+										</div>
+										<div class="ui-g" align="center">
+											<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+												<p:commandButton
+													value="#{messageBeanSNR.commonLabelConsultar}" icon="lupa"
+													iconPos="left"
+													update="idOPDatosConsulta,idPanelListados,idGrowl,idPPanelDatosBasicos,idPanelDirRes,idPanelDirCorr,idPanelDatosContacto,idSOMTipoDocIdentidad,idItDocumentoID,idPanelMedios"
+													actionListener="#{beanDetalleNotificacionPersonalOrip.consultarPersonaDocumento(true)}">
+												</p:commandButton>
+											</div>
+										</div>
+										<p:outputPanel id="idPanelListados">
+											<p:outputPanel rendered="#{beanDetalleNotificacionPersonalOrip.rendered and beanDetalleNotificacionPersonalOrip.registroDatosConsultados.listadoPersona != null}">
+												<br />
+												<div class="ui-g" align="left">
+													<p:dataTable id="idDtPersonas"
+														value="#{beanDetalleNotificacionPersonalOrip.registroDatosConsultados.listadoPersona}"
+														var="item">
+														<p:column headerText="Tipo Documento" width="8%"
+															sortBy="#{item.idDocumentoTipo}">
+															<h:outputText value="#{item.idDocumentoTipo}" />
+														</p:column>
+
+														<p:column headerText="Documento" width="12%"
+															sortBy="#{item.numeroDocumento}">
+															<h:outputText value="#{item.numeroDocumento}" />
+														</p:column>
+
+														<p:column headerText="Nombres" width="20%">
+															<h:outputText
+																value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.nombreCompleto}" />
+														</p:column>
+
+														<p:column width="6%" headerText="Seleccione">
+															<p:selectOneRadio value="#{item.seleccionado}">
+																<f:selectItem itemLabel="" itemValue="true" />
+																<p:ajax
+																	listener="#{beanDetalleNotificacionPersonalOrip.cargarDatosPersonales(item)}"
+																	update=":fDetalleEntrega:idPPanelDatosBasicos,idDtPersonas,:fDetalleEntrega:idPanelListados,:fDetalleEntrega:idPanelDirRes, :fDetalleEntrega:idOPDatosConsulta" />
+															</p:selectOneRadio>
+														</p:column>
+													</p:dataTable>
+													<br />
+												</div>
+											</p:outputPanel>
+											<p:outputPanel id="idPanelMedios"
+												rendered="#{!beanDetalleNotificacionPersonalOrip.mostrarDatosBasicos and beanDetalleNotificacionPersonalOrip.rendered and !beanDetalleNotificacionPersonalOrip.seleccionadoEsApoderado}">
+												<div class="ui-g" align="center">
+													<div class="ui-g-12 ui-md-6 ui-lg-2" />
+													<div class="ui-g-12 ui-md-6 ui-lg-4">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelMedioANotificar}#{messageBeanSNR.commonLabelObligatorio}"
+															style="width:100%" />
+														<br />
+														<p:selectOneMenu id="idsomMedioANotificar"
+															style="width:83%"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoMedioNotificar}"
+															value="#{beanDetalleNotificacionPersonalOrip.solicitud.idAutorizacionNotificacion}">
+															<p:ajax update="idsomMedioACom,idOPDatosConsulta" />
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanDetalleNotificacionPersonalOrip.mediosNotificar}"
+																var="habNot" itemValue="#{habNot.idTipoRecepcion}"
+																itemLabel="#{habNot.nombre}" />
+															<p:ajax event="change"
+																listener="#{beanDetalleNotificacionPersonalOrip.cambioDeMedioNotificarInteresado(beanDetalleNotificacionPersonalOrip.solicitud.idAutorizacionNotificacion)}"
+																update="idPanelDatosContacto idPanelDirCorr idPanelDirRes idOPDatosConsulta" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-1" />
+													<div class="ui-g-12 ui-md-6 ui-lg-4">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelMedioAComunicar}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idsomMedioACom" style="width:83%"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoMedioComunicar}"
+															value="#{beanDetalleNotificacionPersonalOrip.solicitud.idAutorizacionComunicacion}">
+															<p:ajax update="idsomMedioANotificar, idOPDatosConsulta" />
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanDetalleNotificacionPersonalOrip.mediosComunicar}"
+																var="habRec" itemValue="#{habRec.idTipoRecepcion}"
+																itemLabel="#{habRec.nombre}" />
+															<p:ajax event="change"
+																listener="#{beanDetalleNotificacionPersonalOrip.cambioDeMedioComunicarInteresado(beanDetalleNotificacionPersonalOrip.solicitud.idAutorizacionComunicacion)}"
+																update="idPanelDatosContacto idPanelDirCorr idPanelDirRes idOPDatosConsulta" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+											</p:outputPanel>
+											<p:outputPanel
+												rendered="#{beanDetalleNotificacionPersonalOrip.rendered and !beanDetalleNotificacionPersonalOrip.seleccionadoEsApoderado}">
+												<p:outputPanel id="idOPDatosConsulta"
+													rendered="#{beanDetalleNotificacionPersonalOrip.mostrarDatosConsulta}">
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-6 ui-lg-4" 
+														style="display:#{(beanDetalleNotificacionPersonalOrip.mostrarDireccionesResidencia and (beanDetalleNotificacionPersonalOrip.habilitarDireccionReCo or beanDetalleNotificacionPersonalOrip.habilitarDireccionReNo)) ? 'block' : 'none'};">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDireccionesDeResidencia}" />
+															<br />
+															<p:selectOneMenu id="dire" style="width:80%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoDireccionesResidencia}"
+																value="#{beanDetalleNotificacionPersonalOrip.idDirResSeleccion}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanDetalleNotificacionPersonalOrip.registroDatosConsultados.listadoDireccionResidencia}"
+																	var="item"
+																	itemValue="#{item.idPersona}-#{item.idDireccion}"
+																	itemLabel="#{item.direccion}" />
+																<p:ajax
+																	listener="#{beanDetalleNotificacionPersonalOrip.cargarDireccionResidencia}"
+																	update=":fDetalleEntrega:idPanelDirRes" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4" style="display:#{(beanDetalleNotificacionPersonalOrip.mostrarDireccionesCorrespondencia and (beanDetalleNotificacionPersonalOrip.habilitarDireccionCoCo or beanDetalleNotificacionPersonalOrip.habilitarDireccionCoNo)) ? 'block' : 'none'};">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDireccionesDeCorrespondencia}" />
+															<br />
+															<p:selectOneMenu style="width:80%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoDireccionesCorrespondencia}"
+																value="#{beanDetalleNotificacionPersonalOrip.idDirCorrSeleccion}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanDetalleNotificacionPersonalOrip.registroDatosConsultados.listadoDireccionCorrespondencia}"
+																	var="item"
+																	itemValue="#{item.idPersona}-#{item.idDireccion}"
+																	itemLabel="#{item.direccion}" />
+																<p:ajax
+																	listener="#{beanDetalleNotificacionPersonalOrip.cargarDireccionCorrespondencia}"
+																	update=":fDetalleEntrega:idPanelDirCorr" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4" style="display:#{(beanDetalleNotificacionPersonalOrip.mostrarTelefonoFijo and (beanDetalleNotificacionPersonalOrip.habilitarTelFijoCo or beanDetalleNotificacionPersonalOrip.habilitarTelFijoNo))? 'block' : 'none'};">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabalTelefonosFijos}" />
+															<br />
+															<p:selectOneMenu style="width:80%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoTelefonosFijos}"
+																value="#{beanDetalleNotificacionPersonalOrip.idTelFijoSeleccion}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanDetalleNotificacionPersonalOrip.registroDatosConsultados.listadoTelefonoFijo}"
+																	var="item"
+																	itemValue="#{item.idPersona}-#{item.idTelefono}"
+																	itemLabel="#{item.telefono}" />
+																<p:ajax
+																	listener="#{beanDetalleNotificacionPersonalOrip.cargarTelefonoFijo}"
+																	update=":fDetalleEntrega:idOpTelFijo" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4" style="display:#{(beanDetalleNotificacionPersonalOrip.mostrarTelefonoMovil and (beanDetalleNotificacionPersonalOrip.habilitarTelMovilCo or beanDetalleNotificacionPersonalOrip.habilitarTelMovilNo))? 'block' : 'none'};">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabalTelefonosMoviles}" />
+															<br />
+															<p:selectOneMenu style="width:80%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoTelefonosMoviles}"
+																value="#{beanDetalleNotificacionPersonalOrip.idTelMovSeleccion}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanDetalleNotificacionPersonalOrip.registroDatosConsultados.listadoTelefonoMovil}"
+																	var="item"
+																	itemValue="#{item.idPersona}-#{item.idTelefono}"
+																	itemLabel="#{item.telefono}" />
+																<p:ajax
+																	listener="#{beanDetalleNotificacionPersonalOrip.cargarTelefonoMovil}"
+																	update="idSOMPaisTelMov,idItTelefonoMovil" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4" style="display:#{(beanDetalleNotificacionPersonalOrip.mostrarCorreo and (beanDetalleNotificacionPersonalOrip.habilitarCorreoCo or beanDetalleNotificacionPersonalOrip.habilitarCorreoNo) and (beanDetalleNotificacionPersonalOrip.idEtapa != '200' or beanDetalleNotificacionPersonalOrip.idEtapa != '205')) ? 'block' : 'none'};">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelCorreosElectronicos}" />
+															<br />
+															<p:selectOneMenu style="width:80%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoCorreosElectronicos}"
+																value="#{beanDetalleNotificacionPersonalOrip.idCorreoSeleccion}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanDetalleNotificacionPersonalOrip.registroDatosConsultados.listadoCorreoElectronico}"
+																	var="item"
+																	itemValue="#{item.idPersona}-#{item.idCorreoElectronico}"
+																	itemLabel="#{item.correoElectronico}" />
+																<p:ajax
+																	listener="#{beanDetalleNotificacionPersonalOrip.cargarCorreoElectronico}"
+																	update="idItEmail" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+												</p:outputPanel>
+											</p:outputPanel>
+										</p:outputPanel>
+									</p:panel>
+									<br />
+									<p:outputPanel id="idPPanelDatosBasicos">
+										<p:panel header="#{messageBeanSNR.commonLabelDatosBasicos}"
+											toggleable="true" widgetVar="idPPanelDatosBasicosWVar"
+											collapsed="#{beanDetalleNotificacionPersonalOrip.mostrarDatosBasicos}">
+											<div class="ui-g" align="left">
+												<div class="ui-g-12 ui-md-6 ui-lg-2">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelTipoDePersona}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu id="idSOMTipoPersona" style="width:100%"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoPersona}"
+														value="#{beanDetalleNotificacionPersonalOrip.persona.idTipoPersona}" 
+														onchange="#{beanDetalleNotificacionPersonalOrip.actualizarTiposDocumentales()}"
+														disabled="#{beanDetalleNotificacionPersonalOrip.deshabilitarDatosBasicos || beanDetalleNotificacionPersonalOrip.deshabilitarTipoPersona}">
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems value="#{beanReference.findTipoPersona()}"
+															var="tipoPersona"
+															itemValue="#{tipoPersona.idTipoPersona}"
+															itemLabel="#{tipoPersona.descripcion}" />
+														<p:ajax event="change"
+															listener="#{beanDetalleNotificacionPersonalOrip.validarTipoPersonaDocumento(beanDetalleNotificacionPersonalOrip.persona.idTipoPersona)}"
+															update="idDtTiposDocumentales,idSOMTipoPersona,idSOMTipoDoc,idsomMedioANotificar,idsomMedioACom,idPanelDirRes,idOLNombre,idOLApellido,idOLRazon,@this,idOlDocumento,idSOMNacionalidad,idSOMGenero,idOlPNombre,idOlSNombre,idOlPApellido,idOlSApellido,idOlRazonSocial" />
+													</p:selectOneMenu>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-2">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu id="idSOMTipoDoc" style="width:100%"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoDocumento}"
+														value="#{beanDetalleNotificacionPersonalOrip.persona.idDocumentoTipo}"
+														disabled="#{beanDetalleNotificacionPersonalOrip.deshabilitarDatosBasicos || beanDetalleNotificacionPersonalOrip.deshabilitarTipoDocumento}">
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems
+															value="#{beanReference.findTipoDocumentoActivo()}"
+															var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+															itemLabel="#{tipoDoc.descripcion}" />
+														<p:ajax event="change"
+															listener="#{beanDetalleNotificacionPersonalOrip.validarTipoPersonaDocumento(beanDetalleNotificacionPersonalOrip.persona.idDocumentoTipo)}"
+															update="idSOMTipoPersona,idSOMTipoDoc,idsomMedioANotificar,idsomMedioACom,idPanelDirRes,idOLNombre,idOLApellido,idOLRazon,@this,idOlDocumento,idSOMNacionalidad,idSOMGenero,idOlPNombre,idOlSNombre,idOlPApellido,idOlSApellido,idOlRazonSocial" />
+													</p:selectOneMenu>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-2">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idOlDocumento"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoDocumento}"
+														placeholder="#{messageBeanSNR.commonLabelDocumento}"
+														maxlength="20"
+														value="#{beanDetalleNotificacionPersonalOrip.persona.numeroDocumento}"
+														disabled="#{beanDetalleNotificacionPersonalOrip.deshabilitarDatosBasicos}" />
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelNacionalidad}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu id="idSOMNacionalidad" style="width:100%"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoNacionalidad}"
+														value="#{beanDetalleNotificacionPersonalOrip.persona.idPais}"
+														disabled="#{beanDetalleNotificacionPersonalOrip.deshabilitarDatosBasicos}">
+														<p:ajax update="idSOMNacionalidad" />
+														<f:selectItem itemValue=""
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+														<f:selectItems value="#{beanReference.findPaises()}"
+															var="paises" itemValue="#{paises.idPais}"
+															itemLabel="#{paises.nombre}" />
+													</p:selectOneMenu>
+												</div>
+
+											</div>
+											<div class="ui-g" align="left">
+												<div class="ui-g-12 ui-md-6 ui-lg-2">
+													<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+														value="#{messageBeanSNR.commonLabelCalidadEnQueActua}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu id="idSOMCalidad" style="width:100%"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoCalidadActua}"
+														value="#{beanDetalleNotificacionPersonalOrip.solicitud.idCalidadSolicitante}">
+													<p:ajax
+														listener="#{beanDetalleNotificacionPersonalOrip.ocultarMedioNotificaryComunicar}"
+														update=":fDetalleEntrega" />
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems
+															value="#{beanReference.findCalidadSolicitanteEntrega()}"
+															var="calSol" itemValue="#{calSol.idCalidadSolicitante}"
+															itemLabel="#{calSol.nombre}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-2">
+													<p:outputLabel for="idOlPNombre" id="idOLNombre"
+														indicateRequired="#{!beanDetalleNotificacionPersonalOrip.deshabilitarCamposPorNit}"
+														value="#{messageBeanSNR.commonLabelPrimerNombre}" />
+													<br />
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idOlPNombre" maxlength="100"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerNombre}"
+														placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+														value="#{beanDetalleNotificacionPersonalOrip.persona.primerNombre}"
+														disabled="#{(beanDetalleNotificacionPersonalOrip.deshabilitarDatosBasicos || beanDetalleNotificacionPersonalOrip.deshabilitarCamposPorNit)}" />
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-2">
+													<p:outputLabel for="idOlSNombre"
+														value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+													<br />
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idOlSNombre" maxlength="100"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoNombre}"
+														placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+														value="#{beanDetalleNotificacionPersonalOrip.persona.segundoNombre}"
+														disabled="#{(beanDetalleNotificacionPersonalOrip.deshabilitarDatosBasicos || beanDetalleNotificacionPersonalOrip.deshabilitarCamposPorNit)}" />
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-2">
+													<p:outputLabel for="idOlPApellido" id="idOLApellido"
+														indicateRequired="#{!beanDetalleNotificacionPersonalOrip.deshabilitarCamposPorNit}"
+														value="#{messageBeanSNR.commonLabelPrimerApellido}" />
+													<br />
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idOlPApellido" maxlength="150"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerApellido}"
+														placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+														value="#{beanDetalleNotificacionPersonalOrip.persona.primerApellido}"
+														disabled="#{(beanDetalleNotificacionPersonalOrip.deshabilitarDatosBasicos || beanDetalleNotificacionPersonalOrip.deshabilitarCamposPorNit)}" />
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-2">
+													<p:outputLabel for="idOlSApellido"
+														value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+													<br />
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idOlSApellido" maxlength="100"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoApellido}"
+														placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+														value="#{beanDetalleNotificacionPersonalOrip.persona.segundoApellido}"
+														disabled="#{(beanDetalleNotificacionPersonalOrip.deshabilitarDatosBasicos || beanDetalleNotificacionPersonalOrip.deshabilitarCamposPorNit)}" />
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-2">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelGenero}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu id="idSOMGenero" style="width:100%"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoGenero}"
+														value="#{beanDetalleNotificacionPersonalOrip.persona.idNaturalGenero}"
+														disabled="#{beanDetalleNotificacionPersonalOrip.deshabilitarCamposPorNit || beanDetalleNotificacionPersonalOrip.deshabilitarTipoDocumento || beanDetalleNotificacionPersonalOrip.deshabilitarTipoPersona}">
+														<p:ajax update="idSOMGenero" />
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems value="#{beanReference.findGeneros()}"
+															var="generos" itemValue="#{generos.idNaturalGenero}"
+															itemLabel="#{generos.ilicode}" />
+													</p:selectOneMenu>
+												</div>
+
+											</div>
+											<div class="ui-g" align="left">
+												<div class="ui-g-12 ui-md-12 ui-lg-6">
+													<p:outputLabel for="idOlRazonSocial" id="idOLRazon"
+														indicateRequired="#{beanDetalleNotificacionPersonalOrip.deshabilitarCamposPorNit}"
+														value="#{messageBeanSNR.commonLabelRazonSocial}" />
+													<br />
+													<p:inputText
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoRazonSocial}"
+														onblur="value=value.toUpperCase()" id="idOlRazonSocial"
+														placeholder="#{messageBeanSNR.commonLabelRazonSocial}"
+														value="#{beanDetalleNotificacionPersonalOrip.persona.razonSocial}"
+														disabled="#{(beanDetalleNotificacionPersonalOrip.deshabilitarDatosBasicos || !beanDetalleNotificacionPersonalOrip.deshabilitarCamposPorNit)}" />
+												</div>
+											</div>
+										</p:panel>
+									</p:outputPanel>
+									<br />
+									<p:panel id="idPanelDirRes" toggleable="true"
+										widgetVar="wvPanelDireccionR"
+										style="#{beanDetalleNotificacionPersonalOrip.persona.idTipoPersona eq 'J' ? 'display: none' : ''}"
+										collapsed="#{!beanDetalleNotificacionPersonalOrip.habilitarPanelDirResidencia}"
+										header="#{messageBeanSNR.commonLabelDireccionDeResidencia}">
+										<ui:include src="direccionResidenciaInclude.xhtml" />
+									</p:panel>
+									<br />
+									<p:panel id="idPanelDirCorr" toggleable="true"
+										widgetVar="wvPanelDireccionC"
+										collapsed="#{!beanDetalleNotificacionPersonalOrip.habilitarPanelDirCorrespondencia}"
+										header="#{messageBeanSNR.commonLabelDireccionDeCorrespondencia}">
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-8 ui-lg-8">
+												<h:panelGrid columns="2">
+													<p:outputLabel id="labelCorrespondencia"
+														value="#{messageBeanSNR.commonLabelPreguntaDeseaQueSeaLaMismaDireccion}#{messageBeanSNR.commonLabelObligatorio}" />
+													<p:selectOneRadio id="idSorMismaDir" style="width:100%"
+														value="#{beanDetalleNotificacionPersonalOrip.mismaDireccionCorrespondencia}">
+														<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+															itemValue="S" />
+														<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+															itemValue="N" />
+														<p:ajax
+															listener="#{beanDetalleNotificacionPersonalOrip.cambiarDireccionCorrespondencia(beanDetalleNotificacionPersonalOrip.mismaDireccionCorrespondencia)}"
+															update=":fDetalleEntrega:idFormDireccionCorrespondenciaInclude" />
+													</p:selectOneRadio>
+												</h:panelGrid>
+											</div>
+										</div>
+										<ui:include src="direccionCorrespondenciaInclude.xhtml" />
+									</p:panel>
+									<br />
+									<p:panel id="idPanelDatosContacto" widgetVar="wvPanelDatosC"
+										collapsed="#{!beanDetalleNotificacionPersonalOrip.habilitarPanelDatosContacto}"
+										header="#{messageBeanSNR.commonLabelDatosDelContacto}"
+										toggleable="true">
+										<p:outputPanel id="idOpTelFijo">
+											<div class="ui-g" align="left">
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelPaisDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:selectOneMenu id="idSOMPaisTel" style="width:80%"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoPaisTelefonoFijo}"
+															value="#{beanDetalleNotificacionPersonalOrip.telefonoFijo.idPais}"
+															disabled="#{beanDetalleNotificacionPersonalOrip.deshabilitarTelFijo}">
+															<p:ajax
+																listener="#{beanDetalleNotificacionPersonalOrip.cambiarPaisTelefono}"
+																update="idSOMDepTel,idItIndicativo" />
+															<f:selectItem itemValue=""
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+															<f:selectItems value="#{beanReference.findPaises()}"
+																var="paises" itemValue="#{paises.idPais}"
+																itemLabel="#{paises.nombre}" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelDepartamentoDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:selectOneMenu id="idSOMDepTel" style="width:80%"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoDepartamentoTelefonoFijo}"
+															value="#{beanDetalleNotificacionPersonalOrip.telefonoFijo.idDepartamento}"
+															disabled="#{beanDetalleNotificacionPersonalOrip.deshabilitarTelFijo}">
+															<p:ajax
+																listener="#{beanDetalleNotificacionPersonalOrip.findIndicativoDepartamento}"
+																update="idItIndicativo" />
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanDetalleNotificacionPersonalOrip.findDepartamentosTelefono()}"
+																var="depRes" itemValue="#{depRes.idDepartamento}"
+																itemLabel="#{depRes.nombre}" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<div class="ui-g-4 ui-md-4 ui-lg-3">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelIndicativo}" />
+													</div>
+													<div class="ui-g-2 ui-md-2 ui-lg-2">
+														<p:inputText onblur="value=value.toUpperCase()"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoIndicativo}"
+															id="idItIndicativo" disabled="true" size="4"
+															value="#{beanDetalleNotificacionPersonalOrip.telefonoFijo.indicativo}"
+															maxlength="15" />
+													</div>
+													<div class="ui-g-1 ui-md-1 ui-lg-1">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelSignoNumero}" />
+													</div>
+
+													<div class="ui-g-5 ui-md-5 ui-lg-4">
+														<p:inputText onblur="value=value.toUpperCase()"
+															id="idItTelefonoFijo"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoTelefonoFijo}"
+															placeholder="#{messageBeanSNR.commonLabelTelefonoFijo}"
+															maxlength="7"
+															value="#{beanDetalleNotificacionPersonalOrip.telefonoFijo.telefono}"
+															disabled="#{beanDetalleNotificacionPersonalOrip.deshabilitarTelFijo}">
+															<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+														</p:inputText>
+													</div>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelPaisDelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:selectOneMenu id="idSOMPaisTelMov" style="width:80%"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoPaisTelefonoMovil}"
+															value="#{beanDetalleNotificacionPersonalOrip.telefonoMovil.idPais}"
+															disabled="#{beanDetalleNotificacionPersonalOrip.deshabilitarTelMovil}">
+															<p:ajax update="idItIndicativoMovil" />
+															<f:selectItem itemValue=""
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+															<f:selectItems value="#{beanReference.findPaises()}"
+																var="paises" itemValue="#{paises.idPais}"
+																itemLabel="#{paises.nombre}" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<div class="ui-g-4 ui-md-4 ui-lg-3">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelIndicativo}" />
+														<p:spacer />
+													</div>
+													<div class="ui-g-2 ui-md-2 ui-lg-2">
+														<p:inputText onblur="value=value.toUpperCase()"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoIndicativoMovil}"
+															id="idItIndicativoMovil" disabled="true" size="4"
+															value="#{beanDetalleNotificacionPersonalOrip.telefonoMovil.idPais}" />
+													</div>
+													<div class="ui-g-1 ui-md-1 ui-lg-1">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelSignoNumero}" />
+														<p:spacer />
+													</div>
+
+													<div class="ui-g-5 ui-md-5 ui-lg-5">
+														<p:inputText onblur="value=value.toUpperCase()"
+															id="idItTelefonoMovil"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoTelefonoMovil}"
+															placeholder="#{messageBeanSNR.commonLabelTelefonoMovil}"
+															value="#{beanDetalleNotificacionPersonalOrip.telefonoMovil.telefono}"
+															disabled="#{beanDetalleNotificacionPersonalOrip.deshabilitarTelMovil}"
+															maxlength="10">
+															<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+														</p:inputText>
+													</div>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelCorreoElectronico}#{messageBeanSNR.commonLabelObligatorio}" />
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:inputText onblur="value=value.toUpperCase()"
+															id="idItEmail" style="width:83% !important"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoCorreoElectronico}"
+															placeholder="#{messageBeanSNR.commonLabelEjemploCorreo}"
+															size="30" maxlength="100"
+															value="#{beanDetalleNotificacionPersonalOrip.correoElectronicoPersona.correoElectronico}"
+															disabled="#{beanDetalleNotificacionPersonalOrip.deshabilitarCorreo}" />
+													</div>
+												</div>
+											</div>
+										</p:outputPanel>
+									</p:panel>
+									<br />
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+											<p:commandButton value="#{messageBeanSNR.commonLabelGuardar}"
+												icon="fa fa-save" iconPos="left" update="idOPNoInterviene"
+												actionListener="#{beanDetalleNotificacionPersonalOrip.salvarTercero()}">
+											</p:commandButton>
+										</div>
+									</div>
+								</p:panel>
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:panel toggleable="true"
+											rendered="#{beanDetalleNotificacionPersonalOrip.intervieneEnEntrega == 'N' and beanDetalleNotificacionPersonalOrip.intervinienteCargado}"
+											header="#{messageBeanSNR.commonLabelIntervenienteAgregadoTercero}">
+											<p:dataTable id="idDtListadoSolInterTercero" var="persona"
+												value="#{beanDetalleNotificacionPersonalOrip.personaTercero}"
+												emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+													<h:outputText value="#{persona.idDocumentoTipo}" />
+												</p:column>
+												<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+													<h:outputText value="#{persona.numeroDocumento}" />
+												</p:column>
+												<p:column headerText="#{messageBeanSNR.commonLabelNombre}">
+													<h:outputText
+														rendered="#{beanDetalleNotificacionPersonalOrip.personaTercero.idDocumentoTipo != 'NIT'}"
+														value="#{persona.primerNombre} #{persona.primerApellido}" />
+													<h:outputText
+														rendered="#{beanDetalleNotificacionPersonalOrip.personaTercero.idDocumentoTipo == 'NIT'}"
+														value="#{persona.razonSocial}" />
+												</p:column>
+												<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+													style="align: left;" width="10%">
+													<p:commandButton icon="fa fa-trash" iconPos="left"
+														update="fDetalleEntrega"
+														title="#{messageBeanSNR.commonLabelEliminar}"
+														actionListener="#{beanDetalleNotificacionPersonalOrip.eliminarTerceroCargado}">
+													</p:commandButton>
+												</p:column>
+											</p:dataTable>
+										</p:panel>
+									</div>
+								</div>
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:outputPanel
+											rendered="#{beanDetalleNotificacionPersonalOrip.intervieneEnEntrega == 'N' and beanDetalleNotificacionPersonalOrip.terceroApoderado and beanDetalleNotificacionPersonalOrip.entregaCorreo != 'S'}">
+											<br />
+										</p:outputPanel>
+										<p:panel toggleable="true"
+											rendered="#{beanDetalleNotificacionPersonalOrip.intervieneEnEntrega == 'N' and beanDetalleNotificacionPersonalOrip.terceroApoderado}"
+											header="#{messageBeanSNR.commonLabelIntervenientesRepresentar}">
+											<p:dataTable id="idDtListadoSolInterApoderado" var="item"
+												value="#{beanDetalleNotificacionPersonalOrip.entrega.datosIntervinientes}"
+												rowKey="#{item.idPersona}"
+												emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+												<f:facet name="header">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelIntervenientesAgregados}" />
+												</f:facet>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+													<h:outputText value="#{item.persona.idDocumentoTipo}" />
+												</p:column>
+												<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+													<h:outputText value="#{item.persona.numeroDocumento}" />
+												</p:column>
+												<p:column headerText="#{messageBeanSNR.commonLabelNombre}">
+													<h:outputText
+														rendered="#{item.persona.idDocumentoTipo != 'NIT'}"
+														value="#{item.persona.nombreCompleto}" />
+													<h:outputText
+														rendered="#{item.persona.idDocumentoTipo == 'NIT'}"
+														value="#{item.persona.razonSocial}" />
+												</p:column>
+												<p:column headerText="#{messageBeanSNR.commonLabelSeleccione}">
+													<p:selectBooleanCheckbox value="#{item.seleccionado}" widgetVar="scbInterviene">
+													<p:ajax event="change" 
+														listener="#{beanDetalleNotificacionPersonalOrip.renderBotones(true)}" />
+													</p:selectBooleanCheckbox>
+												</p:column>
+											</p:dataTable>
+										</p:panel>
+									</div>
+								</div>
+								<br />
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:panel
+											rendered="#{beanDetalleNotificacionPersonalOrip.intervieneEnEntrega == 'N' and beanDetalleNotificacionPersonalOrip.intervinienteCargado}">
+											<p:panel id="idOPSolicitudDocumentacion"
+												toggleable="true" widgetVar="panelTiposDocumentales"
+												collapsed="#{beanDetalleNotificacionPersonalOrip.renderDigitalizar}"
+												header="#{messageBeanSNR.commonLabelSolicitudDocumentacion}">
+												<p:dataTable id="idDtTiposDocumentales"
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+													value="#{beanDetalleNotificacionPersonalOrip.tiposDocumentales}" var="tiposDoc" 
+													sortBy="#{tiposDoc.idTipoDocumental}">
+													<p:columnGroup type="header">
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelTipoDocumental}"
+															style="width: 17%;" />
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelObligatoriedad}"
+															style="width: 10%;" />
+														<p:column headerText="#{messageBeanSNR.commonLabelRecepcion}"
+															style="width: 10%" />
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelObservaciones}"
+															style="width: 25%;" />
+														<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+															style="width: 8%" />
+													</p:columnGroup>
+						
+													<p:column>
+														<p:selectOneMenu id="idSOMTipoDocumental"
+															title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosTipoDocumental}"
+															style="width:100%" value="#{tiposDoc.idTipoDocumental}"
+															disabled="#{tiposDoc.activeTiposDoc}"
+															onchange="accionCambioTipoDocumentalEntrega();">
+															<f:selectItems itemValue="#{doc.idTipoDocumental}"
+																value="#{beanReference.findAllTiposDocumentales()}"
+																var="doc"
+																itemLabel="#{doc.nombre} - #{doc.idTipoDocumental}" />
+														</p:selectOneMenu>
+													</p:column>
+													<p:column>
+														<p:selectBooleanCheckbox id="seleccionObli"
+															value="#{tiposDoc.seleccionado}" 
+															onchange="accionCambioTipoDocumentalEntrega();"/>
+													</p:column>
+													<p:column>
+													<p:selectOneMenu id="idSOMedioRecepcion"
+														title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosRecepcionDocumento}"
+														style="#{not(tiposDoc.recepcionValida) ? 'border-color:red !important;width:100%;' : 'width:100%;'};" 
+														value="#{tiposDoc.medioRecepcion}"
+														onchange="accionCambioTipoDocumentalEntrega();">
+														<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+														<f:selectItems itemValue="#{comp}"
+															value="#{beanDetalleNotificacionPersonalOrip.findAllRecepcionDocumento()}"
+															var="comp"
+															itemLabel="#{comp}" />
+													</p:selectOneMenu>
+												</p:column>
+													<p:column>
+														<p:inputText id="observaTipo"
+															onblur="value=value.toUpperCase()"
+															value="#{tiposDoc.observaciones}" maxlength="200"
+															style="#{tiposDoc.campoRojo ? 'border-color:red !important;width:100%;' : 'width:100%;'};"
+															title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosObservaciones}"
+															disabled="#{empty tiposDoc.obligatorio? tiposDoc.editar:false}"
+															placeholder="#{messageBeanSNR.commonLabelObservaciones}" 
+															onchange="accionCambioTipoDocumentalEntrega();"/>
+													</p:column>
+													<p:column>
+														<p:commandButton icon="fa fa-trash"
+															disabled="#{tiposDoc.obligatorio=='S' || tiposDoc.obligatorioC=='S' ? true : false}"
+															iconPos="left"
+															title="#{messageBeanSNR.commonLabelEliminar}"
+															actionListener="#{beanDetalleNotificacionPersonalOrip.deleteTipoDocumental(tiposDoc,true)}"
+															update="idDtTiposDocumentales,fDetalleEntrega:idBotonDigitalizar" />
+													</p:column>
+												</p:dataTable>
+												<br />
+												<div align="right">
+													<p:commandButton
+														value="#{messageBeanSNR.commonLabelGuardarTipoDocumental}"
+														icon="fa fa-check" iconPos="left"
+														style="#{beanDetalleNotificacionPersonalOrip.renderDigitalizar ? 'display:none' : 'display:inline'}" 
+														update="idDtTiposDocumentales" ajax="true"
+														actionListener="#{beanDetalleNotificacionPersonalOrip.salvarTiposDocumentales()}" 
+														id="CBGuardarTipoDoc"/>
+													<p:commandButton
+														value="#{messageBeanSNR.commonLabelAgregarNuevoTipoDocumental}"
+														update="idDtTiposDocumentales" ajax="true"
+														icon="fa fa-plus-circle" iconPos="left"
+														actionListener="#{beanDetalleNotificacionPersonalOrip.addTipoDocumental()}" 
+														onclick="accionCambioTipoDocumentalEntrega();"/>
+												</div>
+											</p:panel>
+										</p:panel>
+									</div>
+								</div> 	
+							</p:outputPanel>
+							<p:outputPanel id="botonesBioClient">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+										<p:commandButton icon="fa fa-upload" id="idBotonDigitalizar"
+											actionListener="#{beanDetalleNotificacionPersonalOrip.actualizarEstadoDigitalizacion()}" 
+											value="#{messageBeanSNR.commonLabelDigitalizar}"
+											style="display:none" 
+											title="#{tooltipBeanSNR.procesosDigitalizacionLineaDeProduccionDigitalizar}"/>
+										<p:commandButton icon="fa fa-edit" id="idBotonPadFirmas"
+											actionListener="#{beanDetalleNotificacionPersonalOrip.abrirPadFirmas()}" global="false"
+											value="#{messageBeanSNR.commonLabelPadFirmas}"
+											onclick = "PF('statusDispositivo').show()"
+											style="display:none"/>
+										<p:commandButton icon="fa fa-upload" id="idGenerarActaNotificacion"
+											actionListener="#{beanDetalleNotificacionPersonalOrip.generarActaNotificacionPersonal()}"
+											value="#{messageBeanSNR.commonLabelGenerarActaNotificacion}"
+											style="display:none" global="true"/>
+										<p:commandButton icon="fa fa-save" id="idGuardarActa"
+											actionListener="#{beanDetalleNotificacionPersonalOrip.guardarActaOWCC()}"
+											value="#{messageBeanSNR.commonButtonGuardarDocumento}"
+											style="display:none"/>
+										<p:commandButton icon="fa fa-upload" id="idGenerarDocumentoEntrega"
+											actionListener="#{beanDetalleNotificacionPersonalOrip.generarDocumentoEntrega()}"
+											value="#{messageBeanSNR.commonLabelGenerarDocumentoEntrega}"
+											style="display:none" global="true"/>
+										<p:commandButton icon="fa fa-download" id="idVisualizarDocumento"
+											actionListener="#{beanDetalleNotificacionPersonalOrip.visualizarDocumentoEntrega()}"
+											value="#{messageBeanSNR.commonButtonVisualizarDocumento}"
+											style="display:none" onclick="accionBotonVisualizarDocumentoEntrega();">
+											<p:fileDownload value="#{beanDetalleNotificacionPersonalOrip.documentoEntregaDescarga}" />
+										</p:commandButton>
+										<p:commandButton icon="fa fa-save" id="idGuardarDocumento"
+											actionListener="#{beanDetalleNotificacionPersonalOrip.guardarDocumentoEntrega()}"
+											value="#{messageBeanSNR.commonButtonGuardarDocumento}"
+											style="display:none" update="fDetalleEntrega:idPanelDocsImprimir,fDetalleEntrega:idDtDocsImprimir"/>
+									</div>
+								</div>
+							</p:outputPanel>
+							<!-- Fin Seccion Documento -->
+							<br />
+							<p:outputPanel id="idPanelDocsImprimir">
+								<p:panel
+									header="#{messageBeanSNR.commonLabelDocumentosAImprimir}"
+									toggleable="true"
+									rendered="#{beanDetalleNotificacionPersonalOrip.isValidCollection(beanDetalleNotificacionPersonalOrip.documentosImprimir)}">
+									<p:outputPanel>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<p:dataTable id="idDtDocsImprimir" var="item"
+													value="#{beanDetalleNotificacionPersonalOrip.documentosImprimir}"
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelDocumento}">
+														<h:outputText value="#{item.tipo}" />
+													</p:column>
+													<p:column headerText="#{messageBeanSNR.commonLabelEstado}">
+														<h:outputText id="estadoDocumento"
+															value="#{item.estadoImpresion}" />
+													</p:column>
+												</p:dataTable>
+											</div>
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<p:commandButton
+													value="#{messageBeanSNR.commonLabelImprimir}"
+													global="false" icon="fa fa-print" id="botonImprimir"
+													widgetVar="botonImprimir"
+													onclick="mostrarElementos('fDetalleEntrega:idCBEnviar');"
+													actionListener="#{beanDetalleNotificacionPersonalOrip.imprimirDocumentos(true,'fDetalleEntrega')}" />
+											</div>
+										</div>
+									</p:outputPanel>
+								</p:panel>
+							</p:outputPanel>
+							<!-- Inicia Seccion Botones -->
+							<p:outputPanel>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left" ajax="false"
+										actionListener="#{beanDetalleNotificacionPersonalOrip.accionVolverDetalle}">
+									</p:commandButton>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton id="idCBEnviar"
+										value="#{messageBeanSNR.commonButtonEnviar}" icon="fa fa-save"
+										iconPos="left" ajax="false" style="display:inline"
+										action="#{beanDetalleNotificacionPersonalOrip.accionSalvar()}">
+									</p:commandButton>
+								</div>
+							</p:outputPanel>
+							<br />
+							<br />
+							<br />
+							<!-- Fin Seccion Botones -->
+						</p:panel>
+					</p:outputPanel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

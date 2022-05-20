@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBuscar}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultaTrazabilidad}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelConsultaSGD}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fCalificacion" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true" redisplay="false"/>
+				<center>
+
+					<p:panel header="#{messageBeanSNR.commonLabelBandejaDeEntrada}"
+						style="min-width:800px;" toggleable="true">
+						<div class="ui-g">
+							<p:dataTable id="idDtResultadosConsulta"
+								value="#{beanConsultaSGD.resultadosConsulta}" var="item"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+								<p:column headerText="#{messageBeanSNR.commonLabelCirculo}"
+									width="14%">
+									<h:outputText value="#{item.idOrip}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelNIR}"
+									width="34%" sortBy="#{item.nir}">
+									<div align="center">
+										<h:outputText value="#{item.nir}" />
+									</div>
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelTurno}"
+									width="20%" sortBy="#{item.turno}">
+									<h:outputText value="#{item.turno}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelTipoDocumental}"
+									width="20%">
+									<h:outputText value="#{item.docType} - #{item.docName}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelDocumentoRegistrado}"
+									width="20%">
+									<h:outputText
+										value="#{item.docRegistrado} - #{item.numeroDoc} - #{item.fechaDocumento} - #{item.entidadOrigen} - #{item.nombreDepartamento} - #{item.nombreMunicipio}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelMatriculasInmobiliarias}"
+									width="20%">
+									<h:outputText value="#{item.matriculas}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelDetalle}"
+									width="8%" style="aling-content:center">
+									<p:commandLink action="#{beanConsultaSGD.envioVisorSGD(item)}"
+										target="_blank" ajax="false">
+										<center>
+											<p:graphicImage id="idIPdf" width="50%"
+												value="../images/pdf.png" />
+										</center>
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</div>
+						<br />
+					</p:panel>
+					<p:spacer />
+					<div align="left">
+
+						<p:ajaxStatus onstart="PF('statusDialog').show()"
+							onsuccess="PF('statusDialog').hide()" />
+
+						<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+							closable="false" resizable="false" showHeader="false">
+							<p:graphicImage value="/images/ajaxloadingbar.gif" />
+						</p:dialog>
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="#{beanConsultaSGD.accionRegresar()}">
+						</p:commandButton>
+					</div>
+					<br />
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

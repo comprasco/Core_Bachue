@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+	xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+	<globalConfiguration>
+		<parameter name="attachments.implementation"
+			value="org.apache.axis.attachments.AttachmentsImpl" />
+		<parameter name="disablePrettyXML" value="false" />
+		<parameter name="sendMultiRefs" value="true" />
+		<parameter name="sendXMLDeclaration" value="true" />
+		<parameter name="sendXsiTypes" value="true" />
+		<requestFlow>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="session" />
+			</handler>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="request" />
+				<parameter name="extension" value=".jwr" />
+			</handler>
+		</requestFlow>
+	</globalConfiguration>
+	<handler name="Authenticate"
+		type="java:org.apache.axis.handlers.SimpleAuthenticationHandler" />
+	<handler name="LocalResponder"
+		type="java:org.apache.axis.transport.local.LocalResponder" />
+	<handler name="URLMapper"
+		type="java:org.apache.axis.handlers.http.URLMapper" />
+	<service name="AdminService" provider="java:MSG">
+		<parameter name="allowedMethods" value="AdminService" />
+		<parameter name="enableRemoteAdmin" value="false" />
+		<parameter name="className"
+			value="org.apache.axis.utils.Admin" />
+		<namespace>http://xml.apache.org/axis/wsdd/</namespace>
+	</service>
+	<service name="Version" provider="java:RPC">
+		<parameter name="allowedMethods" value="getVersion" />
+		<parameter name="className" value="org.apache.axis.Version" />
+	</service>
+
+	<!-- Services from BS_SBB_CB_RRRMatriculas WSDL service -->
+
+	<service name="BS_SBB_CB_RRRMatriculasPort" provider="java:RPC"
+		style="document" use="literal">
+		<parameter name="wsdlTargetNamespace"
+			value="https://www.supernotariado.gov.co/services/bachue/ee/RRRMatriculas/v1" />
+		<parameter name="wsdlServiceElement"
+			value="BS_SBB_CB_RRRMatriculas" />
+		<parameter name="schemaQualified"
+			value="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1" />
+		<parameter name="wsdlServicePort"
+			value="BS_SBB_CB_RRRMatriculasPort" />
+		<parameter name="className"
+			value="co.gov.supernotariado.www.services.bachue.ee.RRRMatriculas.v1.BS_SBB_CB_RRRMatriculas_BindingSkeleton" />
+		<parameter name="wsdlPortType"
+			value="BS_SBB_CB_RRRMatriculas" />
+		<parameter name="typeMappingVersion" value="1.2" />
+		<parameter name="allowedMethods" value="*" />
+		<wsdlFile>./wsdl/BS_SBB_CB_RRRMatriculasPort.wsdl</wsdlFile>
+
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>>tipoSalidaConsultarRRRMatriculas>listaPublicidades>publicidad>intervinientes"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaPublicidadesPublicidadIntervinientesInterviniente[]"
+			innerType="cmp-ns:>>>>tipoSalidaConsultarRRRMatriculas>listaPublicidades>publicidad>intervinientes>interviniente"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>>>tipoSalidaConsultarRRRMatriculas>listaRestricciones>restriccion>intervinientes>interviniente"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaRestriccionesRestriccionIntervinientesInterviniente"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>tipoSalidaConsultarRRRMatriculas>listaResponsabilidades"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaResponsabilidadesResponsabilidad[]"
+			innerType="cmp-ns:>>tipoSalidaConsultarRRRMatriculas>listaResponsabilidades>responsabilidad"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>tipoSalidaConsultarRRRMatriculas>listaPublicidades"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaPublicidadesPublicidad[]"
+			innerType="cmp-ns:>>tipoSalidaConsultarRRRMatriculas>listaPublicidades>publicidad"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>tipoSalidaConsultarRRRMatriculas>listaDerechos"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaDerechosDerecho[]"
+			innerType="cmp-ns:>>tipoSalidaConsultarRRRMatriculas>listaDerechos>derecho"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:tipoSalidaConsultarRRRMatriculas"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculas"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>>tipoSalidaConsultarRRRMatriculas>listaHipotecas>hipoteca>intervinientes"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaHipotecasHipotecaIntervinientesInterviniente[]"
+			innerType="cmp-ns:>>>>tipoSalidaConsultarRRRMatriculas>listaHipotecas>hipoteca>intervinientes>interviniente"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>>>tipoSalidaConsultarRRRMatriculas>listaDerechos>derecho>intervinientes>interviniente"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaDerechosDerechoIntervinientesInterviniente"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>>tipoSalidaConsultarRRRMatriculas>listaDerechos>derecho>intervinientes"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaDerechosDerechoIntervinientesInterviniente[]"
+			innerType="cmp-ns:>>>>tipoSalidaConsultarRRRMatriculas>listaDerechos>derecho>intervinientes>interviniente"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:tipoEntradaConsultarRRRMatriculas"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoEntradaConsultarRRRMatriculas"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>tipoSalidaConsultarRRRMatriculas>listaResponsabilidades>responsabilidad"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaResponsabilidadesResponsabilidad"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>tipoEntradaConsultarRRRMatriculas>tipoIdentificacionPredio"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoEntradaConsultarRRRMatriculasTipoIdentificacionPredio"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>>>tipoSalidaConsultarRRRMatriculas>listaPublicidades>publicidad>intervinientes>interviniente"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaPublicidadesPublicidadIntervinientesInterviniente"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>tipoSalidaConsultarRRRMatriculas>listaRestricciones>restriccion"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaRestriccionesRestriccion"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>>tipoSalidaConsultarRRRMatriculas>listaRestricciones>restriccion>intervinientes"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaRestriccionesRestriccionIntervinientesInterviniente[]"
+			innerType="cmp-ns:>>>>tipoSalidaConsultarRRRMatriculas>listaRestricciones>restriccion>intervinientes>interviniente"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>>tipoSalidaConsultarRRRMatriculas>listaResponsabilidades>responsabilidad>intervinientes"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaResponsabilidadesResponsabilidadIntervinientesInterviniente[]"
+			innerType="cmp-ns:>>>>tipoSalidaConsultarRRRMatriculas>listaResponsabilidades>responsabilidad>intervinientes>interviniente"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>tipoSalidaConsultarRRRMatriculas>listaRestricciones"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaRestriccionesRestriccion[]"
+			innerType="cmp-ns:>>tipoSalidaConsultarRRRMatriculas>listaRestricciones>restriccion"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>tipoSalidaConsultarRRRMatriculas>listaDerechos>derecho"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaDerechosDerecho"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>>>tipoSalidaConsultarRRRMatriculas>listaResponsabilidades>responsabilidad>intervinientes>interviniente"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaResponsabilidadesResponsabilidadIntervinientesInterviniente"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>tipoSalidaConsultarRRRMatriculas>listaHipotecas>hipoteca"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaHipotecasHipoteca"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>tipoSalidaConsultarRRRMatriculas>listaPublicidades>publicidad"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaPublicidadesPublicidad"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>>>>tipoSalidaConsultarRRRMatriculas>listaHipotecas>hipoteca>intervinientes>interviniente"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaHipotecasHipotecaIntervinientesInterviniente"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			qname="ns:>tipoSalidaConsultarRRRMatriculas>listaHipotecas"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.RRRMatriculas.consultarRRRMatriculas.v1.TipoSalidaConsultarRRRMatriculasListaHipotecasHipoteca[]"
+			innerType="cmp-ns:>>tipoSalidaConsultarRRRMatriculas>listaHipotecas>hipoteca"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/RRRMatriculas/consultarRRRMatriculas/v1"
+			encodingStyle="" />
+	</service>
+	<transport name="http">
+		<requestFlow>
+			<handler type="URLMapper" />
+			<handler
+				type="java:org.apache.axis.handlers.http.HTTPAuthHandler" />
+		</requestFlow>
+		<parameter name="qs:list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs:wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+		<parameter name="qs.list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs.method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs:method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs.wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+	</transport>
+	<transport name="local">
+		<responseFlow>
+			<handler type="LocalResponder" />
+		</responseFlow>
+	</transport>
+</deployment>

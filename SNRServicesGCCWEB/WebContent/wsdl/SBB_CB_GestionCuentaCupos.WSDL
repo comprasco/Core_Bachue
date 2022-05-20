@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+  targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/gestioncuentacupos/v1"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/gestioncuentacupos/v1"
+  xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/inscribirusuario/v1"
+  xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/cancelarusuario/v1"
+  xmlns:bachue3="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/consultarusuario/v1"
+  xmlns:bachue4="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/consultarusuarios/v1"
+  xmlns:bachue5="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/consultarsaldo/v1"
+  xmlns:bachue6="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/consultarmovimientos/v1"
+  xmlns:bachue7="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/pagarcuentacupo/v1"
+  xmlns:bachue8="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/consultaridcuentacupo/v1"
+  xmlns:bachue9="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/actualizarentidad/v1"
+  xmlns:bachue10="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/consultarSaldosNotaCredito/v1"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+    <xsd:schema
+      targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/inscribirusuario/v1"
+      elementFormDefault="qualified">
+      <xsd:complexType name="tipoEntradaInscribirUsuario">
+        <xsd:sequence>
+          <xsd:element name="modulo" type="xsd:string" />
+          <xsd:element name="IDCuentaCupo" type="xsd:string" />
+          <xsd:element name="admin" type="bachue1:tipoAdminIUI" />
+          <xsd:element name="usuario"
+            type="bachue1:tipoUsuarioIUI" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoAdminIUI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocAdmin" type="xsd:string" />
+          <xsd:element name="numDocAdmin" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoUsuarioIUI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocUsuario" type="xsd:string" />
+          <xsd:element name="numDocUsuario" type="xsd:string" />
+          <xsd:element name="primerNombreUsuario"
+            type="xsd:string" />
+          <xsd:element name="segundoNombreUsuario"
+            type="xsd:string" minOccurs="0" nillable="true" />
+          <xsd:element name="primerApellidoUsuario"
+            type="xsd:string" />
+          <xsd:element name="segundoApellidoUsuario"
+            type="xsd:string" minOccurs="0" nillable="true" />
+          <xsd:element name="correoElectronicoCorporativoUsuario"
+            type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="entradaInscribirUsuario"
+        type="bachue1:tipoEntradaInscribirUsuario" />
+
+      <xsd:complexType name="tipoSalidaInscribirUsuario">
+        <xsd:sequence>
+          <xsd:element name="codigoMensaje" type="xsd:integer" />
+          <xsd:element name="descripcionMensaje"
+            type="xsd:string" minOccurs="0" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="salidaInscribirUsuario"
+        type="bachue1:tipoSalidaInscribirUsuario" />
+    </xsd:schema>
+    <xsd:schema
+      targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/cancelarusuario/v1"
+      elementFormDefault="qualified">
+      <xsd:complexType name="tipoEntradaCancelarUsuario">
+        <xsd:sequence>
+          <xsd:element name="modulo" type="xsd:string" />
+          <xsd:element name="IDCuentaCupo" type="xsd:string" />
+          <xsd:element name="admin" type="bachue2:tipoAdminCNUI" />
+          <xsd:element name="usuario"
+            type="bachue2:tipoUsuarioCNUI" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoAdminCNUI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocAdmin" type="xsd:string" />
+          <xsd:element name="numDocAdmin" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoUsuarioCNUI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocUsuario" type="xsd:string" />
+          <xsd:element name="numDocUsuario" type="xsd:string" />
+          <xsd:element name="primerNombreUsuario"
+            type="xsd:string" />
+          <xsd:element name="segundoNombreUsuario"
+            type="xsd:string" minOccurs="0" nillable="true" />
+          <xsd:element name="primerApellidoUsuario"
+            type="xsd:string" />
+          <xsd:element name="segundoApellidoUsuario"
+            type="xsd:string" minOccurs="0" nillable="true" />
+          <xsd:element name="correoElectronicoCorporativoUsuario"
+            type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="entradaCancelarUsuario"
+        type="bachue2:tipoEntradaCancelarUsuario" />
+
+      <xsd:complexType name="tipoSalidaCancelarUsuario">
+        <xsd:sequence>
+          <xsd:element name="codigoMensaje" type="xsd:integer" />
+          <xsd:element name="descripcionMensaje"
+            type="xsd:string" minOccurs="0" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="salidaCancelarUsuario"
+        type="bachue2:tipoSalidaCancelarUsuario" />
+    </xsd:schema>
+    <xsd:schema
+      targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/consultarusuario/v1"
+      elementFormDefault="qualified">
+      <xsd:complexType name="tipoEntradaConsultarUsuario">
+        <xsd:sequence>
+          <xsd:element name="modulo" type="xsd:string" />
+          <xsd:element name="IDCuentaCupo" type="xsd:string" />
+          <xsd:element name="admin" type="bachue3:tipoAdminCUI" />
+          <xsd:element name="usuario"
+            type="bachue3:tipoUsuarioCUI" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoAdminCUI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocAdmin" type="xsd:string" />
+          <xsd:element name="numDocAdmin" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoUsuarioCUI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocUsuario" type="xsd:string" />
+          <xsd:element name="numDocUsuario" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="entradaConsultarUsuario"
+        type="bachue3:tipoEntradaConsultarUsuario" />
+
+      <xsd:complexType name="tipoSalidaConsultarUsuario">
+        <xsd:sequence>
+          <xsd:element name="usuario"
+            type="bachue3:tipoUsuarioCUO" />
+          <xsd:element name="codigoMensaje" type="xsd:integer" />
+          <xsd:element name="descripcionMensaje"
+            type="xsd:string" minOccurs="0" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoUsuarioCUO">
+        <xsd:sequence>
+          <xsd:element name="tipoDocUsuario" type="xsd:string" />
+          <xsd:element name="numDocUsuario" type="xsd:string" />
+          <xsd:element name="primerNombreUsuario"
+            type="xsd:string" />
+          <xsd:element name="segundoNombreUsuario"
+            type="xsd:string" minOccurs="0" nillable="true" />
+          <xsd:element name="primerApellidoUsuario"
+            type="xsd:string" />
+          <xsd:element name="segundoApellidoUsuario"
+            type="xsd:string" minOccurs="0" nillable="true" />
+          <xsd:element name="correoElectronicoCorporativoUsuario"
+            type="xsd:string" />
+          <xsd:element name="estado" type="xsd:string" />
+          <xsd:element name="fechaCreacion" type="xsd:dateTime"
+            minOccurs="0" nillable="true" />
+          <xsd:element name="fechaCancelacion"
+            type="xsd:dateTime" minOccurs="0" nillable="true" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="salidaConsultarUsuario"
+        type="bachue3:tipoSalidaConsultarUsuario" />
+    </xsd:schema>
+    <xsd:schema
+      targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/consultarusuarios/v1"
+      elementFormDefault="qualified">
+      <xsd:complexType name="tipoEntradaConsultarUsuarios">
+        <xsd:sequence>
+          <xsd:element name="modulo" type="xsd:string" />
+          <xsd:element name="IDCuentaCupo" type="xsd:string" />
+          <xsd:element name="admin" type="bachue4:tipoAdminCUSI" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoAdminCUSI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocAdmin" type="xsd:string" />
+          <xsd:element name="numDocAdmin" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="entradaConsultarUsuarios"
+        type="bachue4:tipoEntradaConsultarUsuarios" />
+
+      <xsd:complexType name="tipoSalidaConsultarUsuarios">
+        <xsd:sequence>
+          <xsd:element name="usuarios">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="usuario"
+                  type="bachue4:tipoUsuarioCUSO" minOccurs="0"
+                  maxOccurs="unbounded" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="codigoMensaje" type="xsd:integer" />
+          <xsd:element name="descripcionMensaje"
+            type="xsd:string" minOccurs="0" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoUsuarioCUSO">
+        <xsd:sequence>
+          <xsd:element name="tipoDocUsuario" type="xsd:string" />
+          <xsd:element name="numDocUsuario" type="xsd:string" />
+          <xsd:element name="primerNombreUsuario"
+            type="xsd:string" />
+          <xsd:element name="segundoNombreUsuario"
+            type="xsd:string" minOccurs="0" nillable="true" />
+          <xsd:element name="primerApellidoUsuario"
+            type="xsd:string" />
+          <xsd:element name="segundoApellidoUsuario"
+            type="xsd:string" minOccurs="0" nillable="true" />
+          <xsd:element name="correoElectronicoCorporativoUsuario"
+            type="xsd:string" />
+          <xsd:element name="estado" type="xsd:string" />
+          <xsd:element name="fechaCreacion" type="xsd:dateTime"
+            minOccurs="0" nillable="true" />
+          <xsd:element name="fechaCancelacion"
+            type="xsd:dateTime" minOccurs="0" nillable="true" />
+          <xsd:element name="estado" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="salidaConsultarUsuarios"
+        type="bachue4:tipoSalidaConsultarUsuarios" />
+    </xsd:schema>
+    <xsd:schema
+      targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/consultarsaldo/v1"
+      elementFormDefault="qualified">
+      <xsd:complexType name="tipoEntradaConsultarSaldo">
+        <xsd:sequence>
+          <xsd:element name="modulo" type="xsd:string" />
+          <xsd:element name="IDCuentaCupo" type="xsd:string" />
+          <xsd:element name="admin" type="bachue5:tipoAdminCSI" />
+          <xsd:element name="usuario"
+            type="bachue5:tipoUsuarioCSI" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoAdminCSI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocAdmin" type="xsd:string" />
+          <xsd:element name="numDocAdmin" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoUsuarioCSI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocUsuario" type="xsd:string" />
+          <xsd:element name="numDocUsuario" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="entradaConsultarSaldo"
+        type="bachue5:tipoEntradaConsultarSaldo" />
+
+      <xsd:complexType name="tipoSalidaConsultarSaldo">
+        <xsd:sequence>
+          <xsd:element name="saldoActual" type="xsd:decimal" />
+          <xsd:element name="ultimaRecargaFecha"
+            type="xsd:dateTime" />
+          <xsd:element name="ultimaRecargaValor"
+            type="xsd:decimal" />
+          <xsd:element name="codigoMensaje" type="xsd:integer" />
+          <xsd:element name="descripcionMensaje"
+            type="xsd:string" minOccurs="0" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="salidaConsultarSaldo"
+        type="bachue5:tipoSalidaConsultarSaldo" />
+    </xsd:schema>
+    <xsd:schema
+      targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/consultarmovimientos/v1"
+      elementFormDefault="qualified">
+      <xsd:complexType
+        name="tipoEntradaConsultarMovimientos">
+        <xsd:sequence>
+          <xsd:element name="modulo" type="xsd:string" />
+          <xsd:element name="IDCuentaCupo" type="xsd:string" />
+          <xsd:element name="admin" type="bachue6:tipoAdminCMI" />
+          <xsd:element name="fechaInicial" type="xsd:dateTime" />
+          <xsd:element name="fechaFinal" type="xsd:dateTime" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoAdminCMI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocAdmin" type="xsd:string" />
+          <xsd:element name="numDocAdmin" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="entradaConsultarMovimientos"
+        type="bachue6:tipoEntradaConsultarMovimientos" />
+
+      <xsd:complexType
+        name="tipoSalidaConsultarMovimientos">
+        <xsd:sequence>
+          <xsd:element name="movimientos">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="movimiento"
+                  type="bachue6:tipoMovimientoCMO" minOccurs="0"
+                  maxOccurs="unbounded" />
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="codigoMensaje" type="xsd:integer" />
+          <xsd:element name="descripcionMensaje"
+            type="xsd:string" minOccurs="0" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoMovimientoCMO">
+        <xsd:sequence>
+          <xsd:element name="idMovimiento" type="xsd:string" />
+          <xsd:element name="fechaMovimiento" type="xsd:dateTime" />
+          <xsd:element name="tipo" type="xsd:string" />
+          <xsd:element name="notaCredito"
+            type="bachue6:tipoNotaCreditoCMO" minOccurs="0" />
+          <xsd:element name="reciboCaja"
+            type="bachue6:tipoReciboCajaCMO" minOccurs="0" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoNotaCreditoCMO">
+        <xsd:sequence>
+          <xsd:element name="numero" type="xsd:string" />
+          <xsd:element name="valor" type="xsd:decimal"
+            minOccurs="0" nillable="true" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoReciboCajaCMO">
+        <xsd:sequence>
+          <xsd:element name="numero" type="xsd:string" />
+          <xsd:element name="valorConsumo" type="xsd:decimal"
+            minOccurs="0" nillable="true" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="salidaConsultarMovimientos"
+        type="bachue6:tipoSalidaConsultarMovimientos" />
+    </xsd:schema>
+    <xsd:schema
+      targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/pagarcuentacupo/v1"
+      elementFormDefault="qualified">
+      <xsd:complexType name="tipoEntradaPagarCuentaCupo">
+        <xsd:sequence>
+          <xsd:element name="modulo" type="xsd:string" />
+          <xsd:element name="IDCuentaCupo" type="xsd:string" />
+          <xsd:element name="correoElectronicoCorporativoUsuario"
+            type="xsd:string" />
+          <xsd:element name="montoPago" type="xsd:decimal" />
+          <xsd:element name="fechaPago" type="xsd:dateTime" />
+          <xsd:element name="referenciaPago" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="entradaPagarCuentaCupo"
+        type="bachue7:tipoEntradaPagarCuentaCupo" />
+
+      <xsd:complexType name="tipoSalidaPagarCuentaCupo">
+        <xsd:sequence>
+          <xsd:element name="codigoMensaje" type="xsd:integer" />
+          <xsd:element name="descripcionMensaje"
+            type="xsd:string" minOccurs="0" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="salidaPagarCuentaCupo"
+        type="bachue7:tipoSalidaPagarCuentaCupo" />
+    </xsd:schema>
+    <xsd:schema
+      targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/consultaridcuentacupo/v1"
+      elementFormDefault="qualified">
+      <xsd:complexType
+        name="tipoEntradaConsultarIDCuentaCupo">
+        <xsd:sequence>
+          <xsd:element name="modulo" type="xsd:string" />
+          <xsd:element name="admin" type="bachue8:tipoAdminCICCI" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoAdminCICCI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocAdmin" type="xsd:string" />
+          <xsd:element name="numDocAdmin" type="xsd:string" />
+          <xsd:element name="correoElectronicoCorporativoUsuario"
+            type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="entradaConsultarIDCuentaCupo"
+        type="bachue8:tipoEntradaConsultarIDCuentaCupo" />
+
+      <xsd:complexType
+        name="tipoSalidaConsultarIDCuentaCupo">
+        <xsd:sequence>
+          <xsd:element name="ID" type="xsd:string" />
+          <xsd:element name="estado" type="xsd:string" />
+          <xsd:element name="fechaCreacion" type="xsd:dateTime" />
+          <xsd:element name="valorMinimo" type="xsd:decimal" />
+          <xsd:element name="valorMaximo" type="xsd:decimal" />
+          <xsd:element name="saldo" type="xsd:decimal" />
+          <xsd:element name="codigoMensaje" type="xsd:integer" />
+          <xsd:element name="descripcionMensaje"
+            type="xsd:string" minOccurs="0" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="salidaConsultarIDCuentaCupo"
+        type="bachue8:tipoSalidaConsultarIDCuentaCupo" />
+    </xsd:schema>
+    <xsd:schema
+      targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/actualizarentidad/v1"
+      elementFormDefault="qualified">
+      <xsd:complexType name="tipoEntradaActualizarEntidad">
+        <xsd:sequence>
+          <xsd:element name="modulo" type="xsd:string" />
+          <xsd:element name="empresa"
+            type="bachue9:tipoEmpresaAEI" />
+          <xsd:element name="representanteLegal"
+            type="bachue9:tipoRepresentanteLegalAEI" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoEmpresaAEI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocumentoEmpresa"
+            type="xsd:string" />
+          <xsd:element name="numeroDocumentoEmpresa"
+            type="xsd:string" />
+          <xsd:element name="razonSocialEmpresa"
+            type="xsd:string" />
+          <xsd:element name="paisEmpresa" type="xsd:string" />
+          <xsd:element name="departamentoEmpresa"
+            type="xsd:string" />
+          <xsd:element name="municipioEmpresa" type="xsd:string" />
+          <xsd:element name="tipoEntidadEmpresa"
+            type="xsd:string" />
+          <xsd:element name="actividadEconomica"
+            type="xsd:string" />
+          <xsd:element name="telefonoEmpresa" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoRepresentanteLegalAEI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocumentoRepresentanteLegal"
+            type="xsd:string" />
+          <xsd:element name="numeroDocumentoRepresentanteLegal"
+            type="xsd:string" />
+          <xsd:element name="primerNombre" type="xsd:string" />
+          <xsd:element name="segundoNombre" type="xsd:string" />
+          <xsd:element name="departamentoEmpresa"
+            type="xsd:string" />
+          <xsd:element name="primerApellido" type="xsd:string" />
+          <xsd:element name="segundoApellido" type="xsd:string" />
+          <xsd:element name="telefono" type="xsd:string" />
+          <xsd:element name="correoElectronicoCorporativoUsuario"
+            type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="entradaActualizarEntidad"
+        type="bachue9:tipoEntradaActualizarEntidad" />
+
+      <xsd:complexType name="tipoSalidaActualizarEntidad">
+        <xsd:sequence>
+          <xsd:element name="codigoMensaje" type="xsd:integer" />
+          <xsd:element name="descripcionMensaje"
+            type="xsd:string" minOccurs="0" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="salidaActualizarEntidad"
+        type="bachue9:tipoSalidaActualizarEntidad" />
+    </xsd:schema>
+    <xsd:schema
+      targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/consultarSaldosNotaCredito/v1"
+      elementFormDefault="qualified">
+      <xsd:complexType
+        name="tipoEntradaConsultarSaldosNotaCredito">
+        <xsd:sequence>
+          <xsd:element name="modulo" type="xsd:string" />
+          <xsd:element name="IDCuentaCupo" type="xsd:string" />
+          <xsd:element name="admin" type="bachue10:tipoAdminCSI" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="tipoAdminCSI">
+        <xsd:sequence>
+          <xsd:element name="tipoDocAdmin" type="xsd:string" />
+          <xsd:element name="numDocAdmin" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="entradaConsultarSaldosNotaCredito"
+        type="bachue10:tipoEntradaConsultarSaldosNotaCredito" />
+
+      <xsd:complexType
+        name="tipoSalidaConsultarSaldosNotaCredito">
+        <xsd:sequence>
+          <xsd:element name="notasCreditos" maxOccurs="unbounded"
+            minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="notaCredito" minOccurs="0">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="codigo" type="xsd:string"
+                        minOccurs="0" />
+                      <xsd:element name="fecha" type="xsd:date"
+                        minOccurs="0" />
+                      <xsd:element name="valorRecarga"
+                        type="xsd:string" minOccurs="0" />
+                      <xsd:element name="saldo" type="xsd:string"
+                        minOccurs="0" />
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="codigoMensaje" type="xsd:integer" />
+          <xsd:element name="descripcionMensaje"
+            type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="salidaConsultarSaldosNotaCredito"
+        type="bachue10:tipoSalidaConsultarSaldosNotaCredito" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="InscribirUsuario_Request">
+    <wsdl:part name="entrada"
+      element="bachue1:entradaInscribirUsuario" />
+  </wsdl:message>
+  <wsdl:message name="InscribirUsuario_Response">
+    <wsdl:part name="salida"
+      element="bachue1:salidaInscribirUsuario" />
+  </wsdl:message>
+  <wsdl:message name="CancelarUsuario_Request">
+    <wsdl:part name="entrada"
+      element="bachue2:entradaCancelarUsuario" />
+  </wsdl:message>
+  <wsdl:message name="CancelarUsuario_Response">
+    <wsdl:part name="salida"
+      element="bachue2:salidaCancelarUsuario" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarUsuario_Request">
+    <wsdl:part name="entrada"
+      element="bachue3:entradaConsultarUsuario" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarUsuario_Response">
+    <wsdl:part name="salida"
+      element="bachue3:salidaConsultarUsuario" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarUsuarios_Request">
+    <wsdl:part name="entrada"
+      element="bachue4:entradaConsultarUsuarios" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarUsuarios_Response">
+    <wsdl:part name="salida"
+      element="bachue4:salidaConsultarUsuarios" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarSaldo_Request">
+    <wsdl:part name="entrada"
+      element="bachue5:entradaConsultarSaldo" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarSaldo_Response">
+    <wsdl:part name="salida"
+      element="bachue5:salidaConsultarSaldo" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarMovimientos_Request">
+    <wsdl:part name="entrada"
+      element="bachue6:entradaConsultarMovimientos" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarMovimientos_Response">
+    <wsdl:part name="salida"
+      element="bachue6:salidaConsultarMovimientos" />
+  </wsdl:message>
+  <wsdl:message name="PagarCuentaCupo_Request">
+    <wsdl:part name="entrada"
+      element="bachue7:entradaPagarCuentaCupo" />
+  </wsdl:message>
+  <wsdl:message name="PagarCuentaCupo_Response">
+    <wsdl:part name="salida"
+      element="bachue7:salidaPagarCuentaCupo" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarIDCuentaCupo_Request">
+    <wsdl:part name="entrada"
+      element="bachue8:entradaConsultarIDCuentaCupo" />
+  </wsdl:message>
+  <wsdl:message name="ConsultarIDCuentaCupo_Response">
+    <wsdl:part name="salida"
+      element="bachue8:salidaConsultarIDCuentaCupo" />
+  </wsdl:message>
+  <wsdl:message name="ActualizarEntidad_Request">
+    <wsdl:part name="entrada"
+      element="bachue9:entradaActualizarEntidad" />
+  </wsdl:message>
+  <wsdl:message name="ActualizarEntidad_Response">
+    <wsdl:part name="salida"
+      element="bachue9:salidaActualizarEntidad" />
+  </wsdl:message>
+  <wsdl:message name="consultarSaldosNotaCredito_Request">
+    <wsdl:part name="entrada"
+      element="bachue10:entradaConsultarSaldosNotaCredito" />
+  </wsdl:message>
+  <wsdl:message name="consultarSaldosNotaCredito_Response">
+    <wsdl:part name="salida"
+      element="bachue10:salidaConsultarSaldosNotaCredito" />
+  </wsdl:message>
+  <wsdl:portType name="SBB_CB_GestionCuentaCupos">
+    <wsdl:operation name="InscribirUsuario">
+      <wsdl:input message="bachue:InscribirUsuario_Request" />
+      <wsdl:output message="bachue:InscribirUsuario_Response" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelarUsuario">
+      <wsdl:input message="bachue:CancelarUsuario_Request" />
+      <wsdl:output message="bachue:CancelarUsuario_Response" />
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarUsuario">
+      <wsdl:input message="bachue:ConsultarUsuario_Request" />
+      <wsdl:output message="bachue:ConsultarUsuario_Response" />
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarUsuarios">
+      <wsdl:input message="bachue:ConsultarUsuarios_Request" />
+      <wsdl:output message="bachue:ConsultarUsuarios_Response" />
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarSaldo">
+      <wsdl:input message="bachue:ConsultarSaldo_Request" />
+      <wsdl:output message="bachue:ConsultarSaldo_Response" />
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarMovimientos">
+      <wsdl:input message="bachue:ConsultarMovimientos_Request" />
+      <wsdl:output
+        message="bachue:ConsultarMovimientos_Response" />
+    </wsdl:operation>
+    <wsdl:operation name="PagarCuentaCupo">
+      <wsdl:input message="bachue:PagarCuentaCupo_Request" />
+      <wsdl:output message="bachue:PagarCuentaCupo_Response" />
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarIDCuentaCupo">
+      <wsdl:input message="bachue:ConsultarIDCuentaCupo_Request" />
+      <wsdl:output
+        message="bachue:ConsultarIDCuentaCupo_Response" />
+    </wsdl:operation>
+    <wsdl:operation name="ActualizarEntidad">
+      <wsdl:input message="bachue:ActualizarEntidad_Request" />
+      <wsdl:output message="bachue:ActualizarEntidad_Response" />
+    </wsdl:operation>
+    <wsdl:operation name="consultarSaldosNotaCredito">
+      <wsdl:input
+        message="bachue:consultarSaldosNotaCredito_Request" />
+      <wsdl:output
+        message="bachue:consultarSaldosNotaCredito_Response" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding
+    name="SBB_CB_GestionCuentaCuposSOAP12Binding"
+    type="bachue:SBB_CB_GestionCuentaCupos">
+    <soap:binding style="document"
+      transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="InscribirUsuario">
+      <soap:operation style="document"
+        soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestioncuentacupos/v1/InscribirUsuario" />
+      <wsdl:input>
+        <soap:body use="literal" parts="entrada" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="salida" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelarUsuario">
+      <soap:operation style="document"
+        soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestioncuentacupos/v1/CancelarUsuario" />
+      <wsdl:input>
+        <soap:body use="literal" parts="entrada" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="salida" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarUsuario">
+      <soap:operation style="document"
+        soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestioncuentacupos/v1/ConsultarUsuario" />
+      <wsdl:input>
+        <soap:body use="literal" parts="entrada" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="salida" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarUsuarios">
+      <soap:operation style="document"
+        soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestioncuentacupos/v1/ConsultarUsuarios" />
+      <wsdl:input>
+        <soap:body use="literal" parts="entrada" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="salida" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarSaldo">
+      <soap:operation style="document"
+        soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestioncuentacupos/v1/ConsultarSaldo" />
+      <wsdl:input>
+        <soap:body use="literal" parts="entrada" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="salida" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarMovimientos">
+      <soap:operation style="document"
+        soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestioncuentacupos/v1/ConsultarMovimientos" />
+      <wsdl:input>
+        <soap:body use="literal" parts="entrada" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="salida" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PagarCuentaCupo">
+      <soap:operation style="document"
+        soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestioncuentacupos/v1/PagarCuentaCupo" />
+      <wsdl:input>
+        <soap:body use="literal" parts="entrada" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="salida" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConsultarIDCuentaCupo">
+      <soap:operation style="document"
+        soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestioncuentacupos/v1/ConsultarIDCuentaCupo" />
+      <wsdl:input>
+        <soap:body use="literal" parts="entrada" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="salida" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ActualizarEntidad">
+      <soap:operation style="document"
+        soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestioncuentacupos/v1/ActualizarEntidad" />
+      <wsdl:input>
+        <soap:body use="literal" parts="entrada" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="salida" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="consultarSaldosNotaCredito">
+      <soap:operation style="document"
+        soapAction="https://www.supernotariado.gov.co/schemas/bachue/cb/gestioncuentacupos/consultarSaldosNotaCredito/v1" />
+      <wsdl:input>
+        <soap:body use="literal" parts="entrada" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="salida" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SBB_CB_GestionCuentaCupos">
+    <wsdl:port name="SBB_CB_GestionCuentaCuposPort"
+      binding="bachue:SBB_CB_GestionCuentaCuposSOAP12Binding">
+      <soap:address
+        location="http://localhost:7001/SNRServicesGCCWEB/services/SBB_CB_GestionCuentaCuposPort" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

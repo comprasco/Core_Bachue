@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/matriculasrelacionadas/v1"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/matriculasrelacionadas/v1"
+	xmlns:bachueCMD="https://www.supernotariado.gov.co/services/bachue/cb/matriculasrelacionadas/consultarMatriculasDerivadas/v1"
+	xmlns:bachueCMM="https://www.supernotariado.gov.co/services/bachue/cb/matriculasrelacionadas/consultarMatriculasMatriz/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/matriculasrelacionadas/consultarMatriculasDerivadas/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaDatosMatriculasDerivadas">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de entrada para la operacion consultarMatriculasDerivadas
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="tipoIdentificacionPredio"
+						minOccurs="0" nillable="false">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al tipo de identificacion por el
+								cual podemos buscar un predio.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="matricula">
+									<xsd:annotation>
+										<xsd:documentation>En el campo numIdentificacionPredio deberá
+											venir los
+											tres primeros caracteres del cículo y luego si el
+											número de
+											matrícula
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredial">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al CHIP, si es Bogotá o a la
+											referencia o cédula catastral del predio.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredialAnterior">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al anterior numero de
+											Identifiación Predial.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="NUPRE">
+									<xsd:annotation>
+										<xsd:documentation>Número Único Predial
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numIdentificacionPredio"
+						minOccurs="0" nillable="false">
+						<xsd:annotation>
+							<xsd:documentation>Al seleccionar un tipo de Identificación
+								predio,
+								se espera en este campo el número correspondiente; para
+								el caso
+								de
+								matricula, el sistema toma los tres primeros caracteres
+								como
+								Código Circulo Registral y los siguientes como el Número de
+								Matrícula Inmobiliaria.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType
+				name="tipoSalidaDatosMatriculasDerivadas">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de salida para la operacion
+						consultarDatosMatriculasDerivadas
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="matriculasDerivadas" minOccurs="0"
+						maxOccurs="unbounded" type="bachueCMD:tipoMatriculaDerivadas" />
+					<xsd:element name="codMensaje" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>200 cuando no hay error, 4* por errores de
+								validación de campos de entrada o validación de negocio y 500
+								cuando existen errores de sistema
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="descripcionMensaje" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a al mensaje de error para los
+								casos
+								en qeue la consulta no fue exitosa, vacío cuando la
+								consulta es
+								exitosa
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoMatriculaDerivadas">
+				<xsd:sequence>
+					<xsd:element name="numMatriculaInmobiliaria"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>corresponde a un número de matrícula de las
+								matrículas derivadas
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="codCirculoRegistral" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al círculo donde registró el
+								predio
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="direccionPredio" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>corresponde a la descripción de la matricula
+								relacionada
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="NIR" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation></xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="radicacion" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>corresponde a la radicación de la anotación
+								sobre la matricula relacionada
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="anotacionRelacionada" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>corresponde al número de anotación de la
+								matricula relacionada
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaDatosMatriculasDerivadas"
+				type="bachueCMD:tipoEntradaDatosMatriculasDerivadas" />
+
+			<xsd:element name="salidaDatosMatriculasDerivadas"
+				type="bachueCMD:tipoSalidaDatosMatriculasDerivadas" />
+			<!-- Últimas modificaciones 2020-02-03 17:25 -->
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/matriculasrelacionadas/consultarMatriculasMatriz/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaDatosMatriculasMatriz">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de entrada para la operacion consultarMatriculasMatriz
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="tipoIdentificacionPredio"
+						minOccurs="0" nillable="false">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al tipo de identificacion por el
+								cual podemos buscar un predio.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="matricula">
+									<xsd:annotation>
+										<xsd:documentation>En el campo numIdentificacionPredio deberá
+											venir los
+											tres primeros caracteres del cículo y luego si el
+											número de
+											matrícula
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredial">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al CHIP, si es Bogotá o a la
+											referencia o cédula catastral del predio.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="numeroPredialAnterior">
+									<xsd:annotation>
+										<xsd:documentation>Corresponde al anterior numero de
+											Identifiación Predial.
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="NUPRE">
+									<xsd:annotation>
+										<xsd:documentation>Número Único Predial
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numIdentificacionPredio"
+						minOccurs="0" nillable="false">
+						<xsd:annotation>
+							<xsd:documentation>Al seleccionar un tipo de Identificación
+								predio,
+								se espera en este campo el número correspondiente; para
+								el caso
+								de
+								matricula, el sistema toma los tres primeros caracteres
+								como
+								Código Circulo Registral y los siguientes como el Número de
+								Matrícula Inmobiliaria.
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType
+				name="tipoSalidaDatosMatriculasMatriz">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="es">El esquema define los
+						datos de salida para la operacion consultarDatosMatriculasMatriz
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="matriculasMatriz" minOccurs="0"
+						maxOccurs="unbounded" type="bachueCMM:tipoMatriculaMatriz" />
+					<xsd:element name="codMensaje" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>200 cuando no hay error, 4* por errores de
+								validación de campos de entrada o validación de negocio y 500
+								cuando existen errores de sistema
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="descripcionMensaje" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde a al mensaje de error para los
+								casos
+								en qeue la consulta no fue exitosa, vacío cuando la
+								consulta es
+								exitosa
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoMatriculaMatriz">
+				<xsd:sequence>
+					<xsd:element name="numMatriculaInmobiliaria"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>corresponde a un número de matrícula de las
+								matrículas matriz
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="codCirculoRegistral" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al círculo donde registró el
+								predio
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaDatosMatriculasMatriz"
+				type="bachueCMM:tipoEntradaDatosMatriculasMatriz" />
+
+			<xsd:element name="salidaDatosMatriculasMatriz"
+				type="bachueCMM:tipoSalidaDatosMatriculasMatriz" />
+			<!-- Últimas modificaciones 2020-02-03 17:25 -->
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- INICIO WSDL:mesage -->
+	<wsdl:message name="ConsultarMatriculasDerivadas_Request">
+		<wsdl:part name="entrada"
+			element="bachueCMD:entradaDatosMatriculasDerivadas">
+		</wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="ConsultarMatriculasDerivadas_Response">
+		<wsdl:part name="salida"
+			element="bachueCMD:salidaDatosMatriculasDerivadas">
+		</wsdl:part>
+	</wsdl:message>
+
+
+	<wsdl:message name="ConsultarMatriculasMatriz_Request">
+		<wsdl:part name="entrada"
+			element="bachueCMM:entradaDatosMatriculasMatriz">
+		</wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="ConsultarMatriculasMatriz_Response">
+		<wsdl:part name="salida"
+			element="bachueCMM:salidaDatosMatriculasMatriz">
+		</wsdl:part>
+	</wsdl:message>
+
+	<!-- INICIO WSDL:portType -->
+	<wsdl:portType name="SBB_CB_Matriculas">
+		<!-- Inicio Operacion consultarMatriculasDerivadas -->
+		<wsdl:operation name="consultarMatriculasDerivadas">
+			<wsdl:input
+				message="bachue:ConsultarMatriculasDerivadas_Request"></wsdl:input>
+			<wsdl:output
+				message="bachue:ConsultarMatriculasDerivadas_Response"></wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Operacion consultarMatriculasDerivadas -->
+
+		<!-- Inicio Operacion consultarMatriculasMatriz -->
+		<wsdl:operation name="consultarMatriculasMatriz">
+			<wsdl:input
+				message="bachue:ConsultarMatriculasMatriz_Request"></wsdl:input>
+			<wsdl:output
+				message="bachue:ConsultarMatriculasMatriz_Response"></wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Operacion consultarMatriculasMatriz -->
+	</wsdl:portType>
+
+	<!-- INICIO WSDL:binding -->
+	<wsdl:binding
+		name="SBB_CB_MatriculasRelacionadasSOAP12Binding"
+		type="bachue:SBB_CB_Matriculas">
+
+		<!-- Inicio Binding MatriculasDerivadas -->
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="consultarMatriculasDerivadas">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/matriculasrelacionadas/v1/consultarMatriculasDerivadas" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Binding MatriculasDerivadas -->
+
+		<!-- Inicio Binding MatriculasMatriz -->
+		<wsdl:operation name="consultarMatriculasMatriz">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/matriculasrelacionadas/v1/consultarMatriculasMatriz" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<!-- Fin Binding MatriculasMatriz -->
+	</wsdl:binding>
+
+	<wsdl:service name="SBB_CB_Matriculas">
+		<wsdl:port name="SBB_CB_MatriculasPort"
+			binding="bachue:SBB_CB_MatriculasRelacionadasSOAP12Binding">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+	<!-- Últimas modificaciones 2020-02-27 16:24 -->
+</wsdl:definitions>

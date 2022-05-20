@@ -1,0 +1,6 @@
+<project name="Build" default="borrarDespliegues" basedir=".">
+	<property name="deploy.dir" location="C:\Oracle\Middleware\Oracle_Home\user_projects\domains\base_domain\autodeploy" />
+	<target name="borrarDespliegues">
+		<delete dir="${deploy.dir}" verbose="true" />
+	</target>
+</project>

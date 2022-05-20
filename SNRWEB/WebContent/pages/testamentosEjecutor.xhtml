@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelTestamentos}" /></li>
+				<li class="breadcrumb-item active"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleTurno}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+
+		<ui:define name="content">
+			<ui:include src="detalleActoInclude.xhtml" />
+			<h:form id="fIdTramites">
+				<p:growl id="idGrowl" sticky="false" showDetail="true" life="20000"
+					redisplay="false" globalOnly="true" />
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+					closable="false" resizable="false" showHeader="false"
+					appendTo="@(body)">
+					<p:graphicImage value="/images/ajaxloadingbar.gif" />
+				</p:dialog>
+				<p:panel id="idDataTestador"
+					header="#{messageBeanSNR.commonLabelDatosBasicosTestador}"
+					rendered="#{beanTestamentos.aprobacionRegistro}" toggleable="true"
+					style="text-align:center">
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelTipoDeDocumento}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoDocumento}"
+								value="#{beanTestamentos.solicitudTestamento.interesadoDocumentoTipo.ilicode}" />
+							<br />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelDocumento}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeNumeroDocumento}"
+								value="#{beanTestamentos.solicitudTestamento.persona.numeroDocumento}" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+								value="#{messageBeanSNR.commonLabelPrimerNombre}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosPrimerNombre}"
+								value="#{beanTestamentos.solicitudTestamento.persona.primerNombre}">
+							</p:inputText>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeOficinaOrigen}"
+								value="#{beanTestamentos.solicitudTestamento.persona.segundoNombre}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelPrimerApellido}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoOficina}"
+								value="#{beanTestamentos.solicitudTestamento.persona.primerApellido}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoOficina}"
+								value="#{beanTestamentos.solicitudTestamento.persona.segundoApellido}" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelRol}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludePais}"
+								value="#{beanTestamentos.solicitudTestamento.solicitudInterviniente.rolPersona}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelCalidadInteresado}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeDepartamento}"
+								value="#{beanTestamentos.solicitudTestamento.calidadSolicitante.nombre}" />
+						</div>
+					</div>
+				</p:panel>
+				<p:panel id="idDatadocumento"
+					header="#{messageBeanSNR.commonLabelDatosDelRegistro}"
+					rendered="#{beanTestamentos.aprobacionRegistro and !beanTestamentos.renderedRepConstancia}"
+					toggleable="true" style="text-align:center">
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoDocumento}"
+								value="#{beanTestamentos.solicitudTestamento.libroTestamento.idCirculo}" />
+							<br />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelAño}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosAno}"
+								value="#{beanTestamentos.solicitudTestamento.libroTestamento.ano}" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelLibro}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeNumeroDocumento}"
+								value="#{beanTestamentos.solicitudTestamento.libroTestamento.libro}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+								value="#{messageBeanSNR.commonLabelTomo}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosTomo}"
+								value="#{beanTestamentos.solicitudTestamento.libroTestamento.tomo}">
+							</p:inputText>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelFolio}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosFolio}"
+								value="#{beanTestamentos.solicitudTestamento.libroTestamento.folio}" />
+						</div>
+
+					</div>
+				</p:panel>
+				<p:outputPanel rendered="#{beanTestamentos.renderedRepConstancia}">
+					<br />
+				</p:outputPanel>
+				<p:panel id="idDatadocumentoNoRegistro"
+					header="#{messageBeanSNR.commonLabelDatosDelRegistro}"
+					rendered="#{beanTestamentos.renderedRepConstancia}"
+					toggleable="true" style="text-align:center">
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoDocumento}"
+								value="#{beanTestamentos.dataReproduccionConstancia.testamento.idCirculo}" />
+							<br />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelAño}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosAno}"
+								value="#{beanTestamentos.dataReproduccionConstancia.testamento.anoTestamento}" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelLibro}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeNumeroDocumento}"
+								value="#{beanTestamentos.dataReproduccionConstancia.testamento.libro}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+								value="#{messageBeanSNR.commonLabelTomo}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosTomo}"
+								value="#{beanTestamentos.dataReproduccionConstancia.testamento.tomo}">
+							</p:inputText>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelFolio}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosFolio}"
+								value="#{beanTestamentos.dataReproduccionConstancia.testamento.folio}" />
+						</div>
+					</div>
+				</p:panel>
+				<p:outputPanel
+					rendered="#{beanTestamentos.solicitudTestamento.testamento.idTipoTestamento ne '1'}">
+					<br />
+				</p:outputPanel>
+				<p:panel id="idDatadocumentoAnterior"
+					header="#{messageBeanSNR.commonLabelDatosDelRegistroAnterior}"
+					rendered="#{beanTestamentos.solicitudTestamento.testamento.idTipoTestamento ne '1'}"
+					toggleable="true" style="text-align:center">
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-3 ui-lg-3">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoDocumento}"
+								value="#{beanTestamentos.solicitudTestamento.testamentoAnterior.idCirculo}" />
+							<br />
+						</div>
+
+						<div class="ui-g-12 ui-md-3 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelLibro}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeNumeroDocumento}"
+								value="#{beanTestamentos.solicitudTestamento.testamentoAnterior.libro}" />
+						</div>
+						<div class="ui-g-12 ui-md3 ui-lg-3">
+							<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+								value="#{messageBeanSNR.commonLabelTomo}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosTomo}"
+								value="#{beanTestamentos.solicitudTestamento.testamentoAnterior.tomo}">
+							</p:inputText>
+						</div>
+						<div class="ui-g-12 ui-md-3 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelFolio}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosFolio}"
+								value="#{beanTestamentos.solicitudTestamento.testamentoAnterior.folio}" />
+						</div>
+
+					</div>
+					<div class="ui-g">
+
+						<div class="ui-g-12 ui-md-2 ui-lg-2">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelAño}" />
+							<br />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosAno}"
+								value="#{beanTestamentos.solicitudTestamento.testamentoAnterior.anoTestamento}" />
+						</div>
+						<div class="ui-g-12 ui-md-3 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelTipoDocumento}" />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosTipoDocumento}"
+								value="#{beanTestamentos.solicitudTestamento.documentoAnterior.tipoDocumento.nombre}" />
+						</div>
+						<div class="ui-g-12 ui-md-2 ui-lg-2">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelNumero}" />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosNumero}"
+								value="#{beanTestamentos.solicitudTestamento.documentoAnterior.numero}" />
+						</div>
+						<div class="ui-g-12 ui-md-2 ui-lg-2">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosNumero}"
+								value="#{beanTestamentos.solicitudTestamento.documentoAnterior.fechaDocumento}" />
+						</div>
+						<div class="ui-g-12 ui-md-3 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelTipoOficina}" />
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosTestamentosTipoOficina}"
+								value="#{beanTestamentos.solicitudTestamento.documentoAnterior.tipoOficina.nombre}" />
+						</div>
+					</div>
+
+				</p:panel>
+				<p:outputPanel
+					rendered="#{beanTestamentos.renderedRepConstancia and beanTestamentos.mostrarPanelTurno}">
+					<br />
+				</p:outputPanel>
+				<p:panel id="idConsultaPorTurno"
+					rendered="#{beanTestamentos.renderedRepConstancia and beanTestamentos.mostrarPanelTurno}"
+					header="#{messageBeanSNR.commonLabelConsultaPorTurno}">
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-5">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelTurnoORadicacion}#{messageBeanSNR.commonLabelObligatorio}" />
+							<br />
+							<p:inputText onblur="value=value.toUpperCase()"
+								title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoTurnoRadicacion}"
+								placeholder="#{messageBeanSNR.commonLabelTurnoORadicacion}"
+								maxlength="100" id="idItTurnRadicacion"
+								value="#{beanTestamentos.idTurno}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-5">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelCirculoRegistral}#{messageBeanSNR.commonLabelObligatorio}" />
+							<br />
+							<p:selectOneMenu style="width:100%"
+								value="#{beanTestamentos.idTurnoCirculo}" id="idSOMIdCirculo">
+								<f:selectItem
+									itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+									itemValue="" />
+								<f:selectItems itemValue="#{item.idCirculo}"
+									value="#{beanReference.findCirculoRegistral(false)}" var="item"
+									itemLabel="#{item.idCirculo} - #{item.nombre}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-12 ui-md-12" align="center">
+							<p:commandButton id="idBuscarPorTurno" iconPos="left"
+								value="#{messageBeanSNR.commonLabelBuscar}" icon="lupa"
+								action="#{beanTestamentos.buscarRepConstanciaTurnoTest()}"
+								update="idDtListadoDocumentos,idPanleConsultaDocumento,idGrowl" />
+							<p:commandButton value="#{messageBeanSNR.commonButtonLimpiar}"
+								icon="fa fa-undo" iconPos="left"
+								actionListener="#{beanTestamentos.limpiarRepConstanciaTurno()}" />
+						</div>
+					</div>
+				</p:panel>
+				<p:outputPanel
+					rendered="#{beanTestamentos.renderedRepConstancia and beanTestamentos.mostrarPanelDocumento}">
+					<br />
+				</p:outputPanel>
+				<p:panel
+					rendered="#{beanTestamentos.renderedRepConstancia and beanTestamentos.mostrarPanelDocumento}"
+					header="#{messageBeanSNR.commonLabelConsultaDocumento}"
+					id="idPanleConsultaDocumento">
+					<p:outputPanel rendered="#{beanTestamentos.renderedRepConstancia}">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-6 ui-lg-5">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+								<br />
+								<p:selectOneMenu style="width:100%"
+									id="idSOMCirculoRegistralAntSistemaConstancia"
+									title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoCirculoRegistral}"
+									value="#{beanTestamentos.circuloIdTurno}">
+									<p:ajax update="@this" process="@this" />
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanReference.findCirculoRegistral(false)}"
+										var="circuloAntSistema"
+										itemValue="#{circuloAntSistema.idCirculo}"
+										itemLabel="#{circuloAntSistema.idCirculo} - #{circuloAntSistema.nombre}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{beanTestamentos.renderedRepConstancia}">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-6 ui-lg-5">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}">
+								</p:outputLabel>
+								<br />
+								<p:selectOneMenu id="idSOMEscritura" style="width:100%"
+									title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoTipoDocumento}"
+									value="#{beanTestamentos.bgnDocumento.idTipoDocumento}">
+									<p:ajax event="change"
+										listener="#{beanTestamentos.findTipoOficina()}"
+										update="idSOMTipoOficina,idSOMTipoEntidad" />
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanReference.findTipoDocumentoPublicoActivo()}"
+										var="item" itemLabel="#{item.nombre}"
+										itemValue="#{item.idTipoDocumento}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelNumeroDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idItDocuActo"
+									title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoNumeroDocumento}"
+									placeholder="#{messageBeanSNR.commonLabelDocumento}"
+									maxlength="20" value="#{beanTestamentos.bgnDocumento.numero}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelFechaDelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:calendar id="idCalFechaDoc" size="10" mask="true" locale="es"
+									placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+									value="#{beanTestamentos.bgnDocumento.fechaDocumento}"
+									showOn="button"
+									title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoFechaDocumento}">
+								</p:calendar>
+							</div>
+						</div>
+						<div class="ui-g">
+							<p:outputPanel id="datosB" style="width:100%">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeOficina}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoOficina" style="width:100%"
+										value="#{beanTestamentos.bgnDocumento.idTipoOficina}"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoTipoOficina}">
+										<p:ajax event="change"
+											actionListener="#{beanTestamentos.findTipoEntidadDocumento()}"
+											update="idSOMTipoEntidad" />
+										<f:selectItems value="#{beanTestamentos.tipoOficinaDocumento}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoOficina}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeEntidad} #{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoEntidad" style="width:100%"
+										value="#{beanTestamentos.bgnDocumento.tipoEntidad}"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoTipoEntidad}"
+										disabled="true">
+										<f:selectItem itemLabel="" itemValue="" />
+										<f:selectItems value="#{beanReference.findTipoEntidad()}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoEntidad}" />
+									</p:selectOneMenu>
+								</div>
+							</p:outputPanel>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-6 ui-lg-5">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelPais} #{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idPaisDocumento" style="width:100%;"
+									value="#{beanTestamentos.bgnDocumento.idPais}"
+									title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoPais}">
+									<f:selectItem itemValue=""
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+									<f:selectItems value="#{beanReference.findPaises()}"
+										var="paises" itemValue="#{paises.idPais}"
+										itemLabel="#{paises.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelDepartamento} #{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMDepartamento" style="width:100%"
+									value="#{beanTestamentos.bgnDocumento.idDepartamento}"
+									title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoDepartamento}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems value="#{beanTestamentos.findDepartamentos()}"
+										var="item" itemValue="#{item.idDepartamento}"
+										itemLabel="#{item.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMMunicipio" style="width:100%"
+									value="#{beanTestamentos.bgnDocumento.idMunicipio}"
+									title="#{beanTestamentoNR.procesosRegistroDatosDocumentoMunicipio}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems value="#{beanTestamentos.findMunicipios()}"
+										var="munRes" itemValue="#{munRes.idMunicipio}"
+										itemLabel="#{munRes.nombre}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-8 ui-lg-8">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelOficinaDeOrigen}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMOficinaOrigen" style="width:100%"
+									value="#{beanTestamentos.bgnDocumento.idOficinaOrigen}"
+									title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoOficinaOrigen}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems value="#{beanTestamentos.getOficinaOrigen()}"
+										var="orig" itemLabel="#{orig.nombre}"
+										itemValue="#{orig.idOficinaOrigen}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-12" align="center">
+								<p:commandButton id="idBuscarPorDocumento"
+									value="#{messageBeanSNR.commonLabelBuscar}" icon="lupa"
+									iconPos="left"
+									action="#{beanTestamentos.buscarRepConstanciaDocumento()}"
+									update="fIdTramites" />
+								<p:commandButton value="#{messageBeanSNR.commonButtonLimpiar}"
+									icon="fa fa-undo" iconPos="left"
+									actionListener="#{beanTestamentos.limpiarRepConstanciaTurno()}" />
+							</div>
+						</div>
+					</p:outputPanel>
+				</p:panel>
+				<p:outputPanel rendered="#{beanTestamentos.renderedRepConstancia}">
+					<br />
+				</p:outputPanel>
+				<p:panel
+					rendered="#{beanTestamentos.renderedRepConstancia and beanTestamentos.dataReproduccionConstancia != null}">
+					<p:dataTable id="idDtListadoDocumentos"
+						value="#{beanTestamentos.dataReproduccionConstancia}" var="item"
+						emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+						<p:column style="width:100px"
+							headerText="#{messageBeanSNR.commonLabelVerDetalle}">
+							<p:rowToggler />
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+							<div align="center">
+								<h:outputText value="#{item.documento.nombreTipoDocumento}" />
+							</div>
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelFechaDelDocumento}">
+							<div align="center">
+								<h:outputText value="#{item.documento.fechaDocumento}" />
+							</div>
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelNumero}">
+							<div align="center">
+								<h:outputText value="#{item.documento.numero}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="#{messageBeanSNR.commonLabelOficinaOrigen}">
+							<div align="center">
+								<h:outputText value="#{item.documento.nombreOficinaOrigen}" />
+							</div>
+						</p:column>
+						<p:rowExpansion>
+							<p:dataTable id="idDtListadoConstancia" var="detalle"
+								value="#{item.turno}"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelCirculoYMatricula}">
+									<div align="center">
+										<h:outputText value="#{detalle.idCirculo}" />
+									</div>
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+									<div align="center">
+										<h:outputText value="#{detalle.idTurno}" />
+									</div>
+								</p:column>
+								<p:column style="text-align:center"
+									headerText="#{messageBeanSNR.commonLabelSeleccione}">
+									<p:selectBooleanCheckbox
+										value="#{beanTestamentos.seleccionado}" disabled="true">
+									</p:selectBooleanCheckbox>
+								</p:column>
+								<p:column style="text-align:center"
+									headerText="#{messageBeanSNR.commonLabelCantidadDeCopiasAReproducir}">
+									<p:spinner id="idSpCantidadDeCopiasAReproducir" min="1"
+										size="5"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoCantidadCopiasReproducir}"
+										value="#{beanTestamentos.cantidadCopiasReproducir}">
+										<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+									</p:spinner>
+								</p:column>
+							</p:dataTable>
+						</p:rowExpansion>
+					</p:dataTable>
+				</p:panel>
+				<p:separator />
+				<p:outputPanel id="idObservaciones3">
+					<div align="left">
+						<strong> <p:outputLabel
+								rendered="#{beanTestamentos.solicitudTestamento.testamento.idTipoTestamento ne null}"
+								value="#{messageBeanSNR.commonLabelObservaciones}" />
+						</strong>
+						<p:inputTextarea
+							rendered="#{beanTestamentos.solicitudTestamento.testamento.idTipoTestamento ne null}"
+							rows="10" cols="240"
+							title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoObservaciones}"
+							onblur="value=value.toUpperCase()"
+							value="#{beanTestamentos.solicitudTestamento.testamento.observacion}"
+							queryDelay="750" maxlength="4000" minQueryLength="4"
+							counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+							counter="idNumeroCaracteres3">
+						</p:inputTextarea>
+					</div>
+					<div align="right">
+						<h:outputText id="idNumeroCaracteres3" />
+					</div>
+					<br />
+				</p:outputPanel>
+
+				<p:outputPanel id="idOPTramitesCalificacion">
+					<p:outputLabel rendered="#{beanTestamentos.aprobacionRegistro}"
+						value="#{messageBeanSNR.commonLabelRevisionCompleta}" />
+					<p:selectBooleanCheckbox
+						rendered="#{beanTestamentos.aprobacionRegistro}"
+						value="#{beanTestamentos.revisionCompleta}">
+					</p:selectBooleanCheckbox>
+					<p:panel
+						header="#{messageBeanSNR.commonLabelTramitesARealizarPorTestamentos}"
+						toggleable="true" style="text-align: left "
+						rendered="#{!beanTestamentos.datosBasicos}">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelMotivoTramiteDosPuntos}" />
+						<p:selectOneRadio layout="responsive" columns="3"
+							disabled="${beanTestamentos.ocultarBotonSiguiente}"
+							style="text-align: left;width:100%;font-size: 12px;"
+							value="#{beanTestamentos.motivoTramite}"
+							styleClass="ui-selectoneradiosinnegrilla">
+							<f:selectItems itemValue="#{it.idMotivo}" var="it"
+								itemLabel="#{it.descripcion}" value="#{beanTestamentos.motivos}" />
+						</p:selectOneRadio>
+					</p:panel>
+				</p:outputPanel>
+
+				<p:outputPanel>
+					<p:panel id="idModDatosBasicos"
+						rendered="#{beanTestamentos.datosBasicos}"
+						header="#{messageBeanSNR.commonLabelModDatosBasicos}"
+						toggleable="true">
+						<p:panelGrid columns="4" layout="grid">
+							<p:outputLabel for="@next"
+								value="#{messageBeanSNR.commonLabelCorregirDatosBasicos}"
+								styleClass="otherStyle" />
+							<p:selectBooleanCheckbox disabled="true"
+								value="#{beanTestamentos.datosBasicos}" />
+						</p:panelGrid>
+					</p:panel>
+					<br />
+				</p:outputPanel>
+				<p:dialog header="#{messageBeanSNR.commonLabelConfirmacion}"
+					resizable="false" modal="true" appendTo="@(body)"
+					widgetVar="idDCofirmaTD" width="50%">
+					<p:outputPanel id="idOpConfirmaDetalle" style="text-align:center;">
+						<h:outputLabel
+							value="#{beanTestamentos.guardarCopias ? messageBeanSNR.commonLabelDeseaGuardarLacantidadDecopiasDeLaSolicitud : messageBeanSNR.commonLabelDeseaGuardarConstanciaReproduccion}" />
+						<br />
+						<p:commandButton icon="fa fa-check"
+							value="#{messageBeanSNR.commonSi}">
+							<p:ajax event="click" update="fIdTramites"
+								listener="#{beanTestamentos.guardarDatosRepConstancia()}"
+								oncomplete="PF('idDCofirmaTD').hide();" />
+						</p:commandButton>
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" type="button"
+							onclick="PF('idDCofirmaTD').hide();" />
+					</p:outputPanel>
+				</p:dialog>
+				<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+					<p:commandButton id="cbGuardar"
+						value="#{messageBeanSNR.commonLabelGuardar}"
+						disabled="#{!beanTestamentos.habilitarBotonGuardar}"
+						icon="fa fa-plus-circle" iconPos="left"
+						onsuccess="PF('idDCofirmaTD').show();"
+						rendered="#{beanTestamentos.renderedRepConstancia and !beanTestamentos.guardarCopias}" />
+				</div>
+				<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+					<p:commandButton id="cbRegresar"
+						value="#{messageBeanSNR.commonLabelRegresar}"
+						icon="fa fa-arrow-circle-left" iconPos="left"
+						action="#{beanTestamentos.returnPages(beanTestamentos.tramiteCantidad)}"
+						rendered="#{!beanTestamentos.terminarProceso}" />
+				</div>
+				<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+					<p:commandButton value="#{messageBeanSNR.commonButtonContinuar}"
+						rendered="#{!beanTestamentos.ocultarBotonSiguiente}"
+						id="idDetalleActoButtonContinuar" icon="fa fa-arrow-circle-right"
+						action="#{beanTestamentos.validarMotivoTramite()}"
+						update="fIdTramites" iconPos="right" />
+					<p:commandButton id="idCbDescargarDoc"
+						value="#{messageBeanSNR.commonButtonVisualizarDocumento}"
+						rendered="#{beanTestamentos.ocultarBotonSiguiente and !beanTestamentos.renderedRepConstancia and !beanTestamentos.terminarProceso}"
+						ajax="false" icon="fa fa-arrow-down"
+						actionListener="#{beanTestamentos.generarConstanciaTestamento()}"
+						update="idCBAprobador">
+						<p:fileDownload value="#{beanTestamentos.constanciaTestamento}" />
+					</p:commandButton>
+					<p:commandButton
+						value="#{messageBeanSNR.commonButtonEnviarAlAprobador}"
+						iconPos="right" id="idCBAprobador"
+						action="#{beanTestamentos.guardarConstanciaTestamento()}"
+						rendered="#{beanTestamentos.ocultarBotonSiguiente and !beanTestamentos.renderedRepConstancia}"
+						title="#{tooltipBeanSNR.calificacionRegistroCalificacionFormsEnbglobesBotonesAprobadorVenta}"
+						icon="fa fa-chevron-right" update="@form" />
+					<p:commandButton icon="fa fa-chevron-right"
+						value="#{messageBeanSNR.commonButtonGenerarDocumento}"
+						iconPos="right" id="idCBGenerarConstancia" update="fIdTramites"
+						actionListener="#{beanTestamentos.generarConstanciaReproduccionTestamento()}"
+						rendered="#{beanTestamentos.renderedRepConstancia and beanTestamentos.habilitarGenerarRepConstancia and !beanTestamentos.terminarProceso}"
+						disabled="#{!beanTestamentos.habilitarGenerarRepConstancia}"
+						title="#{tooltipBeanSNR.procesosTestamentosBandejaEntradaDetalleTurnoVisualizarDocumento}" />
+					<p:commandButton icon="fa fa-chevron-right" ajax="false"
+						value="#{messageBeanSNR.commonButtonVisualizarDocumento}"
+						iconPos="right" id="idCBVisualizarConstancia" update="fIdTramites"
+						actionListener="#{beanTestamentos.ocultarVisualizar()}"
+						rendered="#{beanTestamentos.renderedRepConstancia and beanTestamentos.guardarCopias and beanTestamentos.mostrarVisualizar}"
+						title="#{tooltipBeanSNR.procesosTestamentosBandejaEntradaDetalleTurnoVisualizarDocumento}">
+						<p:fileDownload
+							value="#{beanTestamentos.constanciaReproduccionTestamento}" />
+					</p:commandButton>
+					<p:commandButton id="cbContinuarTerminar"
+						value="#{messageBeanSNR.commonButtonContinuar}"
+						icon="fa fa-arrow-circle-right" iconPos="right"
+						onsuccess="PF('idDCofirmaTD').show();"
+						rendered="#{beanTestamentos.renderedRepConstancia and beanTestamentos.guardarCopias and !beanTestamentos.habilitarEnviarAprobador}" />
+					<p:commandButton
+						value="#{messageBeanSNR.commonButtonEnviarAlAprobador}"
+						iconPos="right" id="idCBGenerarConstancia2"
+						action="#{beanTestamentos.guardarConstanciaReproduccionTestamento()}"
+						rendered="#{beanTestamentos.renderedRepConstancia and beanTestamentos.habilitarEnviarAprobador and !beanTestamentos.terminarProceso}"
+						disabled="#{!beanTestamentos.habilitarEnviarAprobador}"
+						title="#{tooltipBeanSNR.calificacionRegistroCalificacionFormsEnbglobesBotonesAprobadorVenta}"
+						icon="fa fa-arrow-circle-right" />
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBusqueda}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultarReciboLiquidacion}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultarReciboLiquidacionDetalle}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fConsultaLiquidacion" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />}
+				<p:remoteCommand name="failImpresion"
+					actionListener="#{beanConsultaReciboLiquidacion.errorImpresion('fConsultaLiquidacion')}"
+					update="globalMsg" partialSubmit="true" global="false" />
+				<p:remoteCommand name="imprimirDocumento"
+					actionListener="#{beanConsultaReciboLiquidacion.imprimirDocumentos('fConsultaLiquidacion')}"
+					update="globalMsg" partialSubmit="true" global="false" />
+				<center>
+					<p:panel style="min-width:550px;" id="panelPrincipal">
+						<div class="ui-g" align="center">
+							<p:dataTable var="item" id="idDTData"
+								value="#{beanConsultaReciboLiquidacion.dataLiquidacion}"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+								<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+									<h:outputText value="#{item.nir}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelNumeroDeReferencia}">
+									<h:outputText value="#{item.numeroReferencia}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelNumeroDeRecibo}">
+									<h:outputText value="#{item.numeroReciboLiquidacion}" />
+								</p:column>
+								<p:column width="10%"
+									headerText="#{messageBeanSNR.commonLabelAccion}">
+									<p:commandButton icon="fa fa-pencil"
+										update="fConsultaLiquidacion"
+										title="#{messageBeanSNR.commonLabelEditar}"
+										disabled="#{beanConsultaReciboLiquidacion.editarLiquidacion}"
+										actionListener="#{beanConsultaReciboLiquidacion.editarLiquidacion()}" />
+									<p:commandButton icon="fa fa-trash"
+										title="#{messageBeanSNR.commonLabelEliminar}"
+										update="fConsultaLiquidacion:globalMsg"
+										disabled="#{beanConsultaReciboLiquidacion.editarLiquidacion}"
+										actionListener="#{beanConsultaReciboLiquidacion.validarEliminarLiquidacion()}" />
+								</p:column>
+							</p:dataTable>
+						</div>
+						<br />
+						<p:outputPanel id="idOPDetalleLiquidacion"
+							rendered="#{!beanConsultaReciboLiquidacion.editarLiquidacion}">
+							<p:dataTable
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+								value="#{beanConsultaReciboLiquidacion.liquidacionItem}"
+								var="item" tableStyle="width:auto">
+								<f:facet name="header">
+									<h:outputText
+										value="#{messageBeanSNR.commonButtonDetalleDeLiquidacion}" />
+								</f:facet>
+								<p:columnGroup type="header">
+									<p:row>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelIdentificadorDelProceso}" />
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelNoMatriculasONuprePorOrip}" />
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelTramiteOConcepto}" />
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelCuantiaCantidadActo}" />
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelCuantiaCantidadActo}" />
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelValorAvaluo}" />
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDerechosACobrar}" />
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelConservacionDocumental}" />
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelTotalLiquidado}" />
+									</p:row>
+								</p:columnGroup>
+								<p:column>
+									<h:outputText value="#{item.idProceso}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{item.circulosRegistrales}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{item.numeroMatriculas}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{item.tramite}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{item.tarifa}" />
+								</p:column>
+								<p:column>
+									<h:outputText
+										rendered="#{item.reglaCuantiaCantidad == '1.CERTIFICADOS'}"
+										value="#{item.certificadosAsociados}" />
+									<h:outputText
+										rendered="#{item.reglaCuantiaCantidad == 'CANTIDAD' and item.cantidadActos le 0}"
+										value="#{item.cantidadActos}" />
+									<h:outputText
+										rendered="#{item.reglaCuantiaCantidad == 'CANTIDAD' and item.cantidadActos gt 0}"
+										value="#{item.certificadosAsociados}" />
+									<h:outputText
+										rendered="#{item.reglaCuantiaCantidad == 'CUANTIA'}"
+										value="#{item.cuantiaActoDouble}">
+										<f:convertNumber pattern="¤#,##0.00"
+											currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<h:outputText value="#{item.valorAvaluo}">
+										<f:convertNumber pattern="¤#,##0.00"
+											currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<h:outputText value="#{item.valorFinal}">
+										<f:convertNumber pattern="¤#,##0.00"
+											currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<h:outputText value="#{item.valorDocumental}">
+										<f:convertNumber pattern="¤#,##0.00"
+											currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<h:outputText value="#{item.valorTotal}">
+										<f:convertNumber pattern="¤#,##0.00"
+											currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+									</h:outputText>
+								</p:column>
+								<p:columnGroup type="footer">
+									<p:row>
+										<p:column colspan="7" style="text-align:right"
+											footerText="#{messageBeanSNR.commonLabelSubTotalesMayuscula}" />
+										<p:column
+											footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanConsultaReciboLiquidacion.valorTotalDerechos}" />
+										<p:column
+											footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanConsultaReciboLiquidacion.valorTotalConservacion}" />
+										<p:column
+											footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanConsultaReciboLiquidacion.valorTotalLiquidacion}" />
+									</p:row>
+								</p:columnGroup>
+							</p:dataTable>
+						</p:outputPanel>
+						<p:outputPanel id="idOPEditarLiquidacion"
+							rendered="#{beanConsultaReciboLiquidacion.editarLiquidacion}">
+							<p:wizard
+								flowListener="#{beanConsultaReciboLiquidacion.flowListener}"
+								id="myWizard" widgetVar="myWizard" showNavBar="false">
+								<p:tab id="condiciones_id" titleStyle="font-size:15px;"
+									title="#{messageBeanSNR.commonLabelCondicionesLiquidacionTitle}">
+									<p:dataTable var="datLi" sortBy="#{datLi.idTipoActo}"
+										value="#{beanConsultaReciboLiquidacion.tabsCirculos}"
+										rendered="#{!beanConsultaReciboLiquidacion.preliquidacion}"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										id="idDtCondiciones">
+										<p:column headerText="#{messageBeanSNR.commonLabelCirculo}"
+											groupRow="true">
+											<h:outputText
+												value="#{datLi.idCirculo} - #{datLi.nombreCirculo}" />
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelTipoActo}"
+											groupRow="true">
+											<h:outputText value="#{datLi.nombre}" />
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelCondicion}">
+											<h:outputText value="#{datLi.idCondicion}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelMarqueSiAplica}">
+											<p:selectBooleanCheckbox value="#{datLi.respuestaBoolean}"
+												disabled="#{datLi.automatico != 'M' and datLi.automatico != 'S'}">
+												<p:ajax
+													listener="#{beanConsultaReciboLiquidacion.cambiarRespuestaLiquidacion(datLi)}"></p:ajax>
+											</p:selectBooleanCheckbox>
+										</p:column>
+									</p:dataTable>
+									<br />
+									<p:outputPanel id="idOPDetalleLiquidacionCondiciones"
+										rendered="#{beanConsultaReciboLiquidacion.preliquidacion}">
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<p:dataTable
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+													value="#{beanConsultaReciboLiquidacion.liquidacionItem}"
+													var="item" tableStyle="width:auto">
+													<f:facet name="header">
+														<h:outputText
+															value="#{messageBeanSNR.commonButtonDetalleDeLiquidacion}" />
+													</f:facet>
+													<p:columnGroup type="header">
+														<p:row>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelIdentificadorDelProceso}" />
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelNoMatriculasONuprePorOrip}" />
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelTramiteOConcepto}" />
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelCuantiaCantidadActo}" />
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelCuantiaCantidadActo}" />
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelValorAvaluo}" />
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelDerechosACobrar}" />
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelConservacionDocumental}" />
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelTotalLiquidado}" />
+														</p:row>
+													</p:columnGroup>
+													<p:column>
+														<h:outputText value="#{item.idProceso}" />
+													</p:column>
+													<p:column>
+														<h:outputText value="#{item.circulosRegistrales}" />
+													</p:column>
+													<p:column>
+														<h:outputText value="#{item.numeroMatriculas}" />
+													</p:column>
+													<p:column>
+														<h:outputText value="#{item.tramite}" />
+													</p:column>
+													<p:column>
+														<h:outputText value="#{item.tarifa}" />
+													</p:column>
+													<p:column>
+														<h:outputText
+															rendered="#{item.reglaCuantiaCantidad == '1.CERTIFICADOS'}"
+															value="#{item.certificadosAsociados}" />
+														<h:outputText
+															rendered="#{item.reglaCuantiaCantidad == 'CANTIDAD' and item.cantidadActos le 0}"
+															value="#{item.cantidadActos}" />
+														<h:outputText
+															rendered="#{item.reglaCuantiaCantidad == 'CANTIDAD' and item.cantidadActos gt 0}"
+															value="#{item.certificadosAsociados}" />
+														<h:outputText
+															rendered="#{item.reglaCuantiaCantidad == 'CUANTIA'}"
+															value="#{item.cuantiaActoDouble}">
+															<f:convertNumber pattern="¤#,##0.00"
+																currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+														</h:outputText>
+													</p:column>
+													<p:column>
+														<h:outputText value="#{item.valorAvaluo}">
+															<f:convertNumber pattern="¤#,##0.00"
+																currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+														</h:outputText>
+													</p:column>
+													<p:column>
+														<h:outputText value="#{item.valorFinal}">
+															<f:convertNumber pattern="¤#,##0.00"
+																currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+														</h:outputText>
+													</p:column>
+													<p:column>
+														<h:outputText value="#{item.valorDocumental}">
+															<f:convertNumber pattern="¤#,##0.00"
+																currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+														</h:outputText>
+													</p:column>
+													<p:column>
+														<h:outputText value="#{item.valorTotal}">
+															<f:convertNumber pattern="¤#,##0.00"
+																currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+														</h:outputText>
+													</p:column>
+													<p:columnGroup type="footer">
+														<p:row>
+															<p:column colspan="7" style="text-align:right"
+																footerText="#{messageBeanSNR.commonLabelSubTotalesMayuscula}" />
+															<p:column
+																footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanConsultaReciboLiquidacion.valorTotalDerechos}" />
+															<p:column
+																footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanConsultaReciboLiquidacion.valorTotalConservacion}" />
+															<p:column
+																footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanConsultaReciboLiquidacion.valorTotalLiquidacion}" />
+														</p:row>
+													</p:columnGroup>
+												</p:dataTable>
+											</div>
+										</div>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-12 ui-lg-6">
+												<p:dataTable
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+													value="#{beanConsultaReciboLiquidacion.resumenPorOrip}"
+													var="item" tableStyle="width:100%">
+													<f:facet name="header">
+														<h:outputText
+															value="#{messageBeanSNR.commonLabelResumenPorOripMayuscula}" />
+													</f:facet>
+													<p:columnGroup type="header">
+														<p:row>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelTotalLiquidado}" />
+														</p:row>
+													</p:columnGroup>
+													<p:column>
+														<h:outputText value="#{item.circulosRegistrales}" />
+													</p:column>
+													<p:column>
+														<h:outputText value="#{item.valorTotal}">
+															<f:convertNumber pattern="¤#,##0.00"
+																currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+														</h:outputText>
+													</p:column>
+												</p:dataTable>
+											</div>
+											<div class="ui-g-12 ui-md-12 ui-lg-3" align="right">
+												<strong>
+													<h:outputText
+														value="#{messageBeanSNR.commonLabelValorTotalAPagar}" />
+												</strong>
+											</div>
+											<div class="ui-g-12 ui-md-12 ui-lg-3" align="right">
+												<h:outputText
+													value="#{messageBeanSNR.commonLabelSignoPesos}#{beanConsultaReciboLiquidacion.valorTotalLiquidacionConservacion}"
+													style="font-size: 20px;" />
+											</div>
+										</div>
+									</p:outputPanel>
+									<br />
+									<p:commandButton id="cbPreliquidarLiq"
+										value="#{messageBeanSNR.commonButtonPreliquidar}"
+										icon="fa fa-check-circle" iconPos="left"
+										actionListener="#{beanConsultaReciboLiquidacion.preLiquidarRecibo()}"
+										rendered="#{!beanConsultaReciboLiquidacion.preliquidacion}"
+										update="idOPEditarLiquidacion,globalMsg">
+									</p:commandButton>
+									<p:commandButton id="cbTerminarLiq"
+										value="#{messageBeanSNR.commonLabelTerminarProceso}"
+										icon="fa fa-check-circle" iconPos="left"
+										rendered="#{!beanConsultaReciboLiquidacion.procesoTerminado and beanConsultaReciboLiquidacion.preliquidacion}"
+										onclick="PF('dlgTerminarProceso').show();" />
+								</p:tab>
+								<p:tab id="impresion_id" titleStyle="font-size:15px;"
+									title="#{messageBeanSNR.commonLabelImpresion}">
+									<p:panel
+										header="#{messageBeanSNR.commonLabelDocumentosAImprimir}"
+										toggleable="true">
+										<p:outputPanel>
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:dataTable id="idDtDocsImprimir" var="item"
+														value="#{beanConsultaReciboLiquidacion.documentosImprimir}"
+														emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelDocumento}">
+															<h:outputText value="#{item.tipo}" />
+														</p:column>
+														<p:column headerText="#{messageBeanSNR.commonLabelEstado}">
+															<h:outputText id="estadoDocumento"
+																value="#{item.estadoImpresion}" />
+														</p:column>
+													</p:dataTable>
+												</div>
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:commandButton
+														value="#{messageBeanSNR.commonLabelImprimir}"
+														global="false" icon="fa fa-print" id="botonImprimir"
+														widgetVar="botonImprimir"
+														actionListener="#{beanConsultaReciboLiquidacion.imprimirDocumentos(true,'fConsultaLiquidacion')}" />
+												</div>
+											</div>
+										</p:outputPanel>
+									</p:panel>
+								</p:tab>
+							</p:wizard>
+						</p:outputPanel>
+						<br />
+						<div class="ui-g">
+							<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonRegresarBandeja}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									action="#{beanConsultaReciboLiquidacion.regresar()}" />
+							</div>
+							<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+								<p:commandButton value="#{messageBeanSNR.commonLabelSiguiente}"
+									icon="fa fa-arrow-circle-right" iconPos="right"
+									update="fConsultaLiquidacion" onclick="PF('myWizard').next()"
+									rendered="#{beanConsultaReciboLiquidacion.procesoTerminado and !beanConsultaReciboLiquidacion.pantallaImpresion}" />
+								<p:commandButton id="botonFinalizar"
+									value="#{messageBeanSNR.commonLabelFinalizar}"
+									style="display:none" process="@this" icon="fa fa-check"
+									action="principal?faces-redirect=true" />
+							</div>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgTerminarProceso" modal="true" height="90"
+				resizable="false">
+				<h:form id="fDialogTerminarProceso"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeTerminarElProceso}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fConsultaLiquidacion"
+							actionListener="#{beanConsultaReciboLiquidacion.terminarProcesoRecibo()}"
+							oncomplete="PF('dlgTerminarProceso').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlgTerminarProceso').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgConfirmacionEliminar" modal="true" width="700"
+				resizable="false">
+				<h:form id="dlgConfirmacionEliminar"
+					style="font-size: large; top: 50%; left: 50%;">
+					<div align="center">
+						<h:outputText
+							value="#{messageBeanSNR.commonMessageAnularLiquidacion}" />
+						<br />
+						<h:outputText
+							value="#{messageBeanSNR.commonMessageDeseaContinuar}" />
+					</div>
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonLabelSi}"
+							icon="fa fa-check" update="fConsultaLiquidacion"
+							action="#{beanConsultaReciboLiquidacion.confirmarEliminarLiquidacion()}"
+							oncomplete="PF('dlgConfirmacionEliminar').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonLabelNo}"
+							icon="fa fa-close" update="fConsultaLiquidacion"
+							oncomplete="PF('dlgConfirmacionEliminar').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

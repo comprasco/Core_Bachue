@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministrativo}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelConvenios}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fAccEntidadExternaConvenio" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:panel style="min-width:900px;">
+						<div class="ui-g" align="left">
+						<div class="ui-g-12 ui-md-6 ui-lg-12">
+							<div class="ui-g-12 ui-md-6 ui-lg-2"/>
+							<div class="ui-g-12 ui-md-12 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelNumeroConvenio}"
+									style="font-size: 100%;" align="center" />
+								<p:inputText
+									title="#{tooltipBeanSNR.administracionEntidadExternaConvenioDetalleNumeroConvenio}"
+									placeholder="#{messageBeanSNR.commonLabelNumeroConvenio}"
+									id="idNumConv" value="#{beanAccEntidadExternaConvenio.numeroConvenio}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2"/>
+							<div class="ui-g-12 ui-md-12 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelNombreEntidad}"
+									style="font-size: 100%;" align="center" />
+								<p:inputText
+									title="#{tooltipBeanSNR.administracionEntidadesNombreEntidad}"
+									placeholder="#{messageBeanSNR.commonLabelNombreEntidad}"
+									id="idNomEntidad" value="#{beanAccEntidadExternaConvenio.nombreEntidad}">
+								</p:inputText>
+							</div>
+						</div>	
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGroup>
+									<p:commandButton style="width: 15%;"
+										title="#{tooltipBeanSNR.administracionEntidadesConsultar}"
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										actionListener="#{beanAccEntidadExternaConvenio.consultarConvenios()}"
+										icon="lupa" update="fAccEntidadExternaConvenio:idPanelListados"/>
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonCrearConvenios}"
+										icon="fa fa-plus-circle" iconPos="left" update="globalMsg"
+										actionListener="#{beanAccEntidadExternaConvenio.cambiarEstado()}"
+										action="accEntidadExternaConvenioDetalle?faces-redirect=true">
+										<f:param name="pInsertarAccEntidadExternaConvenio" value="true" />
+									</p:commandButton>
+								</h:panelGroup>
+							</div>
+						</div>
+						<p:outputPanel id="idPanelListados"
+							rendered="#{beanAccEntidadExternaConvenio.tablaActiva}">
+							<p:dataTable id="idTablaEntidadExternaConvenio" var="item"
+								value="#{beanAccEntidadExternaConvenio.accEntidadExternaConvenio}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}" paginator="true"
+								rows="50" rowIndexVar="rowKey">
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelNumeroConvenio}"
+									filterBy="#{item.numeroConvenio}">
+									<div align="left">
+										<p:commandLink id="idCLink" styleClass="subrayado"
+											actionListener="#{beanAccEntidadExternaConvenio.consultaDetallada(item)}"
+											action="accEntidadExternaConvenioDetalle?faces-redirect=true">
+										<h:outputText value="#{item.numeroConvenio}" />
+										<f:param name="nombre" value="#{item.nombreConvenio}" />
+										</p:commandLink>
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelNombreConvenio}"
+									filterBy="#{item.nombreConvenio}">
+									<h:outputText value="#{item.nombreConvenio}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelNombreEntidad}"
+									filterBy="#{item.nombreEntidad}">
+									<h:outputText value="#{item.nombreEntidad}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelUsuariosAsignados}"
+									filterBy="#{item.usuarioAsignado}">
+									<h:outputText value="#{item.usuarioAsignado}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelFechaCreacion}"
+									filterBy="#{item.fechaCreacionConvenio}">
+									<h:outputText value="#{item.fechaCreacionConvenio}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelFechaVencimiento}"
+									filterBy="#{item.fechaVencimiento}">
+									<h:outputText value="#{item.fechaVencimiento}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelEstado}"
+									filterBy="#{item.activo}">
+									<h:outputText value="#{messageBeanSNR.commonLabelActivo}"
+										rendered="#{item.activo=='S'}" />
+									<h:outputText value="#{messageBeanSNR.commonLabelInactivo}"
+										rendered="#{item.activo=='N'}" />
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+						
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

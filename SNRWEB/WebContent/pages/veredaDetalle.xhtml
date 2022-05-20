@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTablaBasica}" />
+				</li>
+				<li class="breadcrumb-item" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelVeredas}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{beanVereda.insertar ? messageBeanSNR.pageInsertarVereda : messageBeanSNR.pageModificarVereda}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fVeredaDetalle" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<center>
+					<p:panel>
+						<p:panel
+							header="#{beanVereda.insertar ? messageBeanSNR.pageInsertarVereda : messageBeanSNR.pageModificarVereda}">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelPais}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idPais" style="width:100%;"
+										disabled="#{!beanVereda.insertar}"
+										title="#{tooltipBeanSNR.administracionVeredaPais}"
+										value="#{beanVereda.parametros.idPais}">
+										<p:ajax listener="#{beanVereda.pais()}"
+											update="idPais, idDepartamento" />
+										<f:selectItem itemValue=""
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+										<f:selectItems value="#{beanReference.findPaises()}"
+											var="paises" itemValue="#{paises.idPais}"
+											itemLabel="#{paises.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idDepartamento" style="width:100%;"
+										disabled="#{!beanVereda.insertar}"
+										title="#{tooltipBeanSNR.administracionVeredaDepartamento}"
+										value="#{beanVereda.parametros.idDepartamento}">
+										<p:ajax listener="#{beanVereda.departamento}"
+											update="idMunicipio" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanVereda.findDepartamentos()}"
+											var="depRes" itemValue="#{depRes.idDepartamento}"
+											itemLabel="#{depRes.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idMunicipio" style="width:100%;"
+										value="#{beanVereda.parametros.idMunicipio}"
+										title="#{tooltipBeanSNR.administracionVeredaMunicipio}"
+										disabled="#{!beanVereda.insertar}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanVereda.findMunicipios()}"
+											var="munRes" itemValue="#{munRes.idMunicipio}"
+											itemLabel="#{munRes.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelVereda}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText id="idVereda"
+										title="#{tooltipBeanSNR.administracionVeredaVereda}"
+										disabled="#{!beanVereda.insertar}" maxlength="20"
+										placeholder="#{messageBeanSNR.commonLabelVereda}"
+										value="#{beanVereda.parametros.idVereda}">
+										<p:keyFilter regEx="/[\d\-\.]/" preventPaste="false" />
+									</p:inputText>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelNombre}" />
+									<br />
+									<p:inputText id="idNombre"
+										title="#{tooltipBeanSNR.administracionVeredaNombre}"
+										onblur="value=value.toUpperCase()" maxlength="100"
+										placeholder="#{messageBeanSNR.commonLabelNombre}"
+										value="#{beanVereda.parametros.nombre}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelCabeceraMunicipal}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu style="width:100%;" id="idCabeceraMun"
+										title="#{tooltipBeanSNR.administracionVeredaCabeceraMunicipal}"
+										value="#{beanVereda.parametros.cabeceraMunicipal}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelActivo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu style="width:100%;" id="idActivo"
+										title="#{tooltipBeanSNR.administracionVeredaActivo}"
+										value="#{beanVereda.parametros.activo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<br />
+								<p:dataTable id="idDetalle" var="item"
+									rendered="#{!beanVereda.insertar}"
+									value="#{beanVereda.parametros}"
+									emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+									<f:facet name="header">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+									</f:facet>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+										<h:outputText value="#{item.idUsuarioCreacion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+										<h:outputText value="#{item.fechaCreacion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+										<h:outputText value="#{item.idUsuarioModificacion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+										<h:outputText value="#{item.fechaModificacion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelIpModificación}">
+										<h:outputText value="#{item.ipModificacion}" />
+									</p:column>
+								</p:dataTable>
+							<br />
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										update="globalMsg" action="veredas?faces-redirect=true" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton
+										value="#{beanVereda.insertar ? messageBeanSNR.commonButtonInsertarVereda : messageBeanSNR.commonButtonModificarVereda}"
+										icon="fa fa-pencil" iconPos="left" update="globalMsg"
+										action="#{beanVereda.salvar()}" />
+								</div>
+
+							</div>
+						</p:panel>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

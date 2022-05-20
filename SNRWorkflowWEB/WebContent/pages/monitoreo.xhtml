@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelMonitoreo}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fMonitoreo" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="15000" redisplay="false" />
+				<center>
+					<p:outputPanel id="camposConsulta">
+						<p:panel header="#{messageBeanSNR.commonLabelMonitoreo}"
+							style="min-width:800px;" id="pConsultaTrazabilidad">
+							<div class="ui-g" align="center">
+								<div class="ui-g-6 ui-md-6 ui-lg-6" align="center">
+									<h:panelGrid columns="2">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+											styleClass="textosConsultaEstadoPredio" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()" id="idNIR"
+											label="#{messageBeanSNR.commonLabelNIR}"
+											onkeypress="if (event.keyCode == 13) {value=value.toUpperCase();}"
+											title="#{tooltipBeanSNR.buscarConsultaDeTrazabilidadNir}"
+											placeholder="#{messageBeanSNR.commonLabelNIR}"
+											value="#{beanWorkflow.nir}" maxlength="20" />
+									</h:panelGrid>
+								</div>
+								<div class="ui-g-6 ui-md-6 ui-lg-6" align="center">
+									<h:panelGrid columns="2">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()" id="idTurno"
+											title="#{tooltipBeanSNR.buscarConsultaDeTrazabilidadTurno}"
+											label="#{messageBeanSNR.commonLabelTurno}"
+											placeholder="#{messageBeanSNR.commonLabelTurno}"
+											value="#{beanWorkflow.idTurnoConsulta}" maxlength="20" />
+									</h:panelGrid>
+								</div>
+							</div>
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<p:commandButton value="#{messageBeanSNR.commonLabelConsultar}"
+										icon="lupa" iconPos="left"
+										actionListener="#{beanWorkflow.findDataTurnos}"
+										update="camposConsulta,consultaTrazaPorNir,globalMsg" />
+								</div>
+							</div>
+							<br />
+							<p:outputPanel id="consultaTrazaPorNir">
+								<p:panel rendered="#{beanWorkflow.estado}" toggleable="true"
+									header="#{messageBeanSNR.commonLabelConsultaTurnos}">
+									<p:dataTable id="idDtListado" style="min-width:500px;"
+										value="#{beanWorkflow.turnos}" var="item"
+										emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+										<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+											<p:commandLink ajax="false"
+												action="#{beanWorkflow.findMonitoreo(item,true)}">
+												<f:param name="nirTraza" value="#{item.solicitud.nir}" />
+												<h:outputText value="#{item.solicitud.nir}"
+													styleClass="subrayado" />
+											</p:commandLink>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+											<p:commandLink
+												action="#{beanWorkflow.findMonitoreo(item,false)}">
+												<f:param name="idTurno" value="#{item.turno.idTurno}" />
+												<h:outputText value="#{item.turno.idTurno}"
+													styleClass="subrayado" />
+											</p:commandLink>
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelFaseDelTurno}">
+											<h:outputText value="#{item.fases.nombre}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelProcesoDelTurno}">
+											<h:outputText value="#{item.proceso.nombre}" />
+										</p:column>
+									</p:dataTable>
+								</p:panel>
+							</p:outputPanel>
+						</p:panel>
+					</p:outputPanel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

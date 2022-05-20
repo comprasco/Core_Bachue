@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/ee/solicituddecopias/v1" xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecopias/ingresosolicitud/v1" xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecopias/consultarsolicitud/v1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.supernotariado.gov.co/services/bachue/ee/solicituddecopias/v1">
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecopias/ingresosolicitud/v1">
+			<xsd:complexType name="tipoEntradaIngresoSolicitud">
+				<xsd:sequence>
+					<xsd:element name="listaDocumentos">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" name="documentoSGD">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="dId" type="xsd:string"/>
+											<xsd:element name="docName" type="xsd:string"/>
+											<xsd:element name="tipoDocumental" type="xsd:string"/>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaIngresoSolicitud" type="bachue1:tipoEntradaIngresoSolicitud"/>
+			<xsd:complexType name="tipoSalidaIngresoSolicitud">
+				<xsd:sequence>
+					<xsd:element name="idSolicitudCopias" type="xsd:string"/>
+					<xsd:element name="codigo">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200"/>
+								<xsd:enumeration value="500"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="mensaje" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaIngresoSolicitud" type="bachue1:tipoSalidaIngresoSolicitud"/>
+		</xsd:schema>
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecopias/consultarsolicitud/v1">
+			<xsd:complexType name="tipoEntradaConsultarSolicitud">
+				<xsd:sequence>
+					<xsd:element name="NIR" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarSolicitud" type="bachue2:tipoEntradaConsultarSolicitud"/>
+			<xsd:complexType name="tipoSalidaConsultarSolicitud">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="valorPago" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="referenciaPago" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="estado" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="fechaLiquidacion" type="xsd:date"/>
+					<xsd:element minOccurs="0" name="fechaVencimientoPago" type="xsd:date"/>
+					<xsd:element name="codigo">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200"/>
+								<xsd:enumeration value="500"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="mensaje" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarSolicitud" type="bachue2:tipoSalidaConsultarSolicitud"/>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="IngresoSolicitud_Request">
+		<wsdl:part element="bachue1:entradaIngresoSolicitud" name="entrada"/>
+	</wsdl:message>
+	<wsdl:message name="IngresoSolicitud_Response">
+		<wsdl:part element="bachue1:salidaIngresoSolicitud" name="salida"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultarSolicitud_Request">
+		<wsdl:part element="bachue2:entradaConsultarSolicitud" name="entrada"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultarSolicitud_Response">
+		<wsdl:part element="bachue2:salidaConsultarSolicitud" name="salida"/>
+	</wsdl:message>
+	<wsdl:portType name="BS_SDI_CB_SolicitudDeCopias">
+		<wsdl:operation name="IngresoSolicitud">
+			<wsdl:input message="bachue:IngresoSolicitud_Request"/>
+			<wsdl:output message="bachue:IngresoSolicitud_Response"/>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarSolicitud">
+			<wsdl:input message="bachue:ConsultarSolicitud_Request"/>
+			<wsdl:output message="bachue:ConsultarSolicitud_Response"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="BS_SDI_CB_SolicitudDeCopias" type="bachue:BS_SDI_CB_SolicitudDeCopias">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="IngresoSolicitud">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecopias/ingresosolicitud/v1" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarSolicitud">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/schemas/bachue/ee/solicituddecopias/consultarsolicitud/v1" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="BS_SDI_CB_SolicitudDeCopias">
+		<wsdl:port binding="bachue:BS_SDI_CB_SolicitudDeCopias" name="BS_SDI_CB_SolicitudDeCopiasPort">
+			<soap:address location="http://localhost:7001/SNRServicesSDCWEB/services/BS_SDI_CB_SolicitudDeCopiasPort"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

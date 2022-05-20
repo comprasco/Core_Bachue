@@ -1,0 +1,785 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelCalificacion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelModDatosBasicosYmatriculas}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:growl id="idGrowl" sticky="false" showDetail="true" life="20000"
+				globalOnly="true" redisplay="false"/>
+			<ui:include src="detalleActoInclude.xhtml" />
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fCalifCorrecBasic">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<center>
+					<p:tabView style="min-width:800px;" id="idTab">
+						<p:tab id="idTabDatosBasicos"
+							title="#{messageBeanSNR.commonLabelCorregirDatosBasicos}"
+							rendered="#{beanConfrontacion.datosBasicos}">
+							<p:fragment>
+								<p:autoUpdate />
+								<p:panel id="idPanelApertura">
+									<p:outputPanel id="idUpTurnoSiVinculado"
+										rendered="#{beanConfrontacion.indVinculado}">
+										<div align="right">
+											<p:dataTable
+												emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}."
+												value="#{beanConfrontacion.infoTurnos}" var="row">
+												<p:column headerText="#{messageBeanSNR.commonLabelIdTurno}">
+													<div align="center">
+														<h:outputText value="#{row.turno}"
+															styleClass="#{beanConfrontacion.turnoVinculado eq row.turno ? 'negrita' : 'sinNegrita'}" />
+													</div>
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelEstadoDelTurno}">
+													<div align="center">
+														<h:outputText value="#{row.faseTurno}"
+															styleClass="#{beanConfrontacion.turnoVinculado eq row.turno ? 'negrita' : 'sinNegrita'}" />
+													</div>
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelEstadoActividad}">
+													<div align="center">
+														<h:outputText value="#{row.especificacion}"
+															styleClass="#{beanConfrontacion.turnoVinculado eq row.turno ? 'negrita' : 'sinNegrita'}" />
+													</div>
+												</p:column>
+												<p:column headerText="#{messageBeanSNR.commonLabelDetalle}">
+													<div align="center">
+														<p:commandButton id="idCbDetalleDocumentoTurno"
+															disabled="#{beanConfrontacion.turnoSeleccionado}"
+															actionListener="#{beanConfrontacion.detalleTurnoSeleccionado(row)}"
+															icon="lupa" image="../images/find.png">
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</div>
+										<br />
+										<br />
+										<p:panel id="idUpDetalleTurnoSiVinculado"
+											rendered="#{beanConfrontacion.turnoSeleccionado}">
+											<div class="ui-g" align="left">
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<div>
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelTipoDeDocumento}" />
+														<br />
+														<p:inputText style="width: 85% !important;"
+															title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosTipoDocumento}"
+															value="#{beanConfrontacion.documentosVinculado.get(0)['TIPO_DOCUMENTO']}"
+															readonly="true" />
+														&nbsp;&nbsp;&nbsp;
+														<p:selectBooleanCheckbox id="idSbcTipoDocumentoVinculado"
+															title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosTipoDocumento}"
+															value="#{beanConfrontacion.calificaciones.tipoDocumento}">
+															<p:ajax
+																listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.tipoDocumento,'tipoDocumento')}" />
+														</p:selectBooleanCheckbox>
+													</div>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelNumeroDelDocumento}" />
+													<br />
+													<p:inputText style="width: 85% !important;"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosNumeroDocumento}"
+														value="#{beanConfrontacion.documentosVinculado.get(0)['NUMERO']}"
+														readonly="true" />
+													&nbsp;&nbsp;&nbsp;
+													<p:selectBooleanCheckbox id="idSbcNumeroDocumentoVinculado"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosNumeroDocumento}"
+														value="#{beanConfrontacion.calificaciones.numeroDoc}" />
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+													<br />
+													<p:inputText style="width: 85% !important;"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosFechaDocumento}"
+														value="#{beanConfrontacion.documentosVinculado.get(0)['FECHA_DOCUMENTO']}"
+														readonly="true">
+														<f:convertDateTime pattern="dd/MM/yyyy" />
+													</p:inputText>
+													&nbsp;&nbsp;&nbsp;
+													<p:selectBooleanCheckbox id="idSbcFechaDocumentoVinculado"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosFechaDocumento}"
+														value="#{beanConfrontacion.calificaciones.fechaDoc}" />
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelTipoOficina}" />
+													<br />
+													<p:inputText style="width: 85% !important;"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosTipoOficina}"
+														value="#{beanConfrontacion.documentosVinculado.get(0)['TIPO_OFICINA']}"
+														readonly="true" />
+													&nbsp;&nbsp;&nbsp;
+													<p:selectBooleanCheckbox id="idSbcTipoOficinaVinculado"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosTipoOficina}"
+														value="#{beanConfrontacion.calificaciones.tipoOficina}">
+														<p:ajax
+															listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.tipoOficina,'tipoOficina')}" />
+													</p:selectBooleanCheckbox>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel value="Pa&iacute;s" />
+													<br />
+													<p:inputText style="width: 85% !important;"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosPais}"
+														value="#{beanConfrontacion.documentosVinculado.get(0)['PAIS']}"
+														readonly="true" />
+													&nbsp;&nbsp;&nbsp;
+													<p:selectBooleanCheckbox id="idSbcPaisVinculado"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosPais}"
+														value="#{beanConfrontacion.calificaciones.pais}">
+														<p:ajax
+															listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.pais,'pais')}" />
+													</p:selectBooleanCheckbox>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel value="Departamento - Oficina" />
+													<br />
+													<p:inputText style="width: 85% !important;"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosDepartamentoOficina}"
+														value="#{beanConfrontacion.documentosVinculado.get(0)['DEPARTAMENTO']}"
+														readonly="true" />
+													&nbsp;&nbsp;&nbsp;
+													<p:selectBooleanCheckbox id="idSbcDepartamentoVinculado"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosDepartamentoOficina}"
+														value="#{beanConfrontacion.calificaciones.departamentoOficina}">
+														<p:ajax
+															listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.departamentoOficina,'departamento')}" />
+													</p:selectBooleanCheckbox>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel value="Municipio - Oficina" />
+													<br />
+													<p:inputText style="width: 85% !important;"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosMunicipioOficina}"
+														value="#{beanConfrontacion.documentosVinculado.get(0)['MUNICIPIO']}"
+														readonly="true" />
+													&nbsp;&nbsp;&nbsp;
+													<p:selectBooleanCheckbox id="idSbcMunicipioVinculado"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosMunicipioOficina}"
+														value="#{beanConfrontacion.calificaciones.municipioOficina}">
+														<p:ajax
+															listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.municipioOficina,'municipio')}" />
+													</p:selectBooleanCheckbox>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel value="Oficina origen*" />
+													<br />
+													<p:inputText style="width: 85% !important;"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosOficinaOrigen}"
+														value="#{beanConfrontacion.documentosVinculado.get(0)['NOMBRE_OFICINA']}"
+														readonly="true" />
+													&nbsp;&nbsp;&nbsp;
+													<p:selectBooleanCheckbox id="idSbcOficinaOrigenVinculado"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosOficinaOrigen}"
+														value="#{beanConfrontacion.calificaciones.oficinaOrigen}">
+														<p:ajax
+															listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.oficinaOrigen,'oficinaOrigen')}" />
+													</p:selectBooleanCheckbox>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelFechaEjecutoria}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:inputText style="width: 85% !important;"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosFechaEjecutoria}"
+														value="#{beanConfrontacion.documentosVinculado.get(0)['FECHA_EJECUTORIA']}"
+														readonly="true">
+														<p:ajax
+															listener="#{beanConfrontacion.validarActoEjecutoria()}" />
+													</p:inputText>
+													&nbsp;&nbsp;&nbsp;
+													<p:selectBooleanCheckbox id="idSbcFechaEjecutoriaVinculado"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosFechaEjecutoria}"
+														value="#{beanConfrontacion.calificaciones.fechaEjecutoria}">
+														<p:ajax
+															listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.fechaEjecutoria,'fechaEjecutoria')}" />
+													</p:selectBooleanCheckbox>
+												</div>
+											</div>
+											<div class="ui-g" align="left">
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<div align="right">
+														<p:commandButton id="idCbGuardarDocumentoTurno"
+															value="#{messageBeanSNR.commonButtonModificarDatosBasicos}"
+															disabled="#{not(beanConfrontacion.indVinculado)}"
+															actionListener="#{beanConfrontacion.salvarTurnoSeleccionado}"
+															icon="fa fa-chevron-right" iconPos="right">
+														</p:commandButton>
+													</div>
+												</div>
+											</div>
+										</p:panel>
+									</p:outputPanel>
+
+									<p:outputPanel id="idUpTurnoNoVinculado"
+										rendered="#{not(beanConfrontacion.indVinculado)}">
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<div>
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelTipoDeDocumento}" />
+													<br />
+													<p:inputText style="width: 85% !important;"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosTipoDocumento}"
+														value="#{beanConfrontacion.documentos.get(0)['TIPO_DOCUMENTO']}"
+														readonly="true" />
+													&nbsp;&nbsp;&nbsp;
+													<p:selectBooleanCheckbox id="idSbcTipoDocumento"
+														title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosTipoDocumento}"
+														value="#{beanConfrontacion.calificaciones.tipoDocumento}">
+														<p:ajax
+															listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.tipoDocumento,'tipoDocumento')}" />
+													</p:selectBooleanCheckbox>
+												</div>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelNumeroDelDocumento}" />
+												<br />
+												<p:inputText style="width: 85% !important;"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosNumeroDocumento}"
+													value="#{beanConfrontacion.documentos.get(0)['NUMERO']}"
+													readonly="true" />
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox id="idSbcNumeroDocumento"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosNumeroDocumento}"
+													value="#{beanConfrontacion.calificaciones.numeroDoc}" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+												<br />
+												<p:inputText style="width: 85% !important;"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosFechaDocumento}"
+													value="#{beanConfrontacion.documentos.get(0)['FECHA_DOCUMENTO']}"
+													readonly="true">
+													<f:convertDateTime pattern="dd/MM/yyyy" />
+												</p:inputText>
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox id="idSbcFechaDocumento"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosFechaDocumento}"
+													value="#{beanConfrontacion.calificaciones.fechaDoc}" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTipoOficina}" />
+												<br />
+												<p:inputText style="width: 85% !important;"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosTipoOficina}"
+													value="#{beanConfrontacion.documentos.get(0)['TIPO_OFICINA']}"
+													readonly="true" />
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox id="idSbcTipoOficina"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosTipoOficina}"
+													value="#{beanConfrontacion.calificaciones.tipoOficina}">
+													<p:ajax
+														listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.tipoOficina,'tipoOficina')}" />
+												</p:selectBooleanCheckbox>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel value="Pa&iacute;s" />
+												<br />
+												<p:inputText style="width: 85% !important;"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosPais}"
+													value="#{beanConfrontacion.documentos.get(0)['PAIS']}"
+													readonly="true" />
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox id="idSbcPais"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosPais}"
+													value="#{beanConfrontacion.calificaciones.pais}">
+													<p:ajax
+														listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.pais,'pais')}" />
+												</p:selectBooleanCheckbox>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel value="Departamento - Oficina" />
+												<br />
+												<p:inputText style="width: 85% !important;"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosDepartamentoOficina}"
+													value="#{beanConfrontacion.documentos.get(0)['DEPARTAMENTO']}"
+													readonly="true" />
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox id="idSbcDepartamento"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosDepartamentoOficina}"
+													value="#{beanConfrontacion.calificaciones.departamentoOficina}">
+													<p:ajax
+														listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.departamentoOficina,'departamento')}" />
+												</p:selectBooleanCheckbox>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel value="Municipio- Oficina" />
+												<br />
+												<p:inputText style="width: 85% !important;"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosMunicipioOficina}"
+													value="#{beanConfrontacion.documentos.get(0)['MUNICIPIO']}"
+													readonly="true" />
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox id="idSbcMunicipio"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosMunicipioOficina}"
+													value="#{beanConfrontacion.calificaciones.municipioOficina}">
+													<p:ajax
+														listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.municipioOficina,'municipio')}" />
+												</p:selectBooleanCheckbox>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel value="Oficina origen*" />
+												<br />
+												<p:inputText style="width: 85% !important;"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosOficinaOrigen}"
+													value="#{beanConfrontacion.documentos.get(0)['NOMBRE_OFICINA']}"
+													readonly="true" />
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox id="idSbcOficinaOrigen"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosOficinaOrigen}"
+													value="#{beanConfrontacion.calificaciones.oficinaOrigen}">
+													<p:ajax
+														listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.oficinaOrigen,'oficinaOrigen')}" />
+												</p:selectBooleanCheckbox>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelFechaEjecutoria}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:inputText style="width: 85% !important;"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosFechaEjecutoria}"
+													value="#{beanConfrontacion.documentos.get(0)['FECHA_EJECUTORIA']}"
+													readonly="true">
+													<p:ajax
+														listener="#{beanConfrontacion.validarActoEjecutoria()}" />
+												</p:inputText>
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox id="idSbcFechaEjecutoria"
+													title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionCorregirDatosBasicosFechaEjecutoria}"
+													value="#{beanConfrontacion.calificaciones.fechaEjecutoria}">
+													<p:ajax
+														listener="#{beanConfrontacion.validarChecks(beanConfrontacion.calificaciones.fechaEjecutoria,'fechaEjecutoria')}" />
+												</p:selectBooleanCheckbox>
+											</div>
+										</div>
+									</p:outputPanel>
+								</p:panel>
+							</p:fragment>
+						</p:tab>
+						<!-- Inicio insertar matricula -->
+						<p:tab id="datosPredio_id" titleStyle="font-size:15px;"
+							title="#{messageBeanSNR.commonLabelInsertarMatricula}"
+							rendered="#{beanConfrontacion.insertaMatricula}">
+							<p:fragment>
+								<p:autoUpdate />
+								<p:panel header="" toggleable="true">
+									<div class="ui-c">
+										<div class="ui-g-12">
+											<p:panelGrid id="idPgTipoMatricula">
+												<p:selectOneRadio id="idSorIndividualMasiva"
+													value="#{beanConfrontacion.seccionTipoMatricula}">
+													<f:selectItem itemLabel="Matrícula inmobiliaria individual"
+														itemValue="S" />
+													<br />
+													<f:selectItem itemLabel="Matrículas masivas" itemValue="N" />
+													<p:ajax update="idPMostrarMasiva,idPnActosResumen" />
+												</p:selectOneRadio>
+											</p:panelGrid>
+										</div>
+									</div>
+									<div class="ui-c">
+										<div class="ui-g-12">
+											<p:panelGrid>
+												<div class="ui-c">
+													<div class="ui-g-12 ui-md-1" align="left">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelCirculoDosPuntos}" />
+													</div>
+													<div class="ui-g-12 ui-md-11" align="left">
+														<p:inputText value="#{beanConfrontacion.circulo}"
+															title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaCirculo}"
+															readonly="true" />
+													</div>
+												</div>
+											</p:panelGrid>
+										</div>
+									</div>
+								</p:panel>
+								<br />
+								<p:panel header="Matrículas masivas" toggleable="true"
+									rendered="#{beanConfrontacion.seccionTipoMatricula eq 'N'}"
+									id="idPMostrarMasiva">
+									<div class="ui-c">
+										<div class="ui-g-12 ui-md-4">
+											<p:outputLabel value="Desde" />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idItDesde" placeholder="Desde"
+												title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaMatriculasMasivasDesde}"
+												value="#{beanConfrontacion.rangoInicio}">
+												<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+											</p:inputText>
+										</div>
+										<div class="ui-g-12 ui-md-4">
+											<p:outputLabel value="Hasta" />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idItHasta" placeholder="Hasta"
+												title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaMatriculasMasivasHasta}"
+												value="#{beanConfrontacion.rangoFin}">
+												<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+											</p:inputText>
+										</div>
+										<div class="ui-g-12 ui-md-4">
+											<p:commandButton
+												value="#{messageBeanSNR.commonLabelAgregarActosAsociados}"
+												update="idDtActoAsociadoGeneral" icon="fa fa-plus-circle"
+												iconPos="left"
+												title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaMatriculasMasivasAgregarActosAsociados}"
+												actionListener="#{beanConfrontacion.agregarActosMasivos}" />
+										</div>
+									</div>
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-12" align="right">
+											<p:commandButton id="idCLDescargarPlantilla"
+												value="#{messageBeanSNR.commonLabelDescargarPlantilla}"
+												ajax="false" icon="fa fa-file-excel-o" iconPos="left"
+												actionListener="#{beanRegistro.descargarPlantillaMatriculas()}">
+												<p:fileDownload value="#{beanRegistro.imagen}" />
+											</p:commandButton>
+										</div>
+									</div>
+									<div class="ui-c">
+										<div class="ui-g-12">
+											<p:fileUpload
+												fileUploadListener="#{beanConfrontacion.processFile}"
+												mode="advanced" dragDropSupport="true"
+												cancelLabel="#{messageBeanSNR.commonLabelCancelar}"
+												uploadLabel="#{messageBeanSNR.commonLabelCargar}"
+												fileLimitMessage="#{messageBeanSNR.commonLabelSoloCargarUnArchivoALaVez}"
+												invalidFileMessage="#{messageBeanSNR.commonLabelElArchivoCargueDebeSerExcel}"
+												label="#{messageBeanSNR.commonLabelCargarExcelDeActos}"
+												sizeLimit="#{beanConfrontacion.cargarConstanteTamanoLimiteArchivo()}"
+												invalidSizeMessage="#{messageBeanSNR.commonLabelElArchivoCargueNoPuedeExcederLos500Kb}"
+												id="idFuLoadFile" widgetVar="idFuLoadFile"
+												update="idPnActosResumen,idPMostrarMasiva,idClnkRespuesta,idGrowl"
+												fileLimit="1" allowTypes="/(\.|\/)(xls?x)$/"
+												oncomplete="PF('idFuLoadFile').clear();" />
+										</div>
+										<div class="ui-g-12">
+											<p:commandLink id="idClnkRespuesta" ajax="false"
+												title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaMatriculasMasivasArchivoSalida}"
+												onclick="PrimeFaces.monitorDownload(start, stop);"
+												rendered="#{beanConfrontacion.file != null}">
+												<p:graphicImage value="/images/excel_ico.png" width="48" />
+												<p:fileDownload value="#{beanConfrontacion.file}" />
+											</p:commandLink>
+											<br></br>
+											<p:outputLabel id="idOlLinkExcel" value="Archivo de Salida"
+												rendered="#{beanConfrontacion.file != null}">
+											</p:outputLabel>
+										</div>
+									</div>
+
+									<script type="text/javascript">
+										function start()
+										{
+											PF('statusDownload').show();
+										}
+
+										function stop()
+										{
+											PF('statusDownload').hide();
+										}
+									</script>
+
+									<p:dialog modal="true" widgetVar="statusDownload"
+										header="Status" draggable="false" closable="false"
+										resizable="false">
+										<p:graphicImage value="/images/ajaxloadingbar.gif" />
+									</p:dialog>
+								</p:panel>
+								<br />
+								<p:panel id="idPnActosResumen"
+									header="#{messageBeanSNR.commonLabelActosAsociados}"
+									toggleable="true">
+									<p:dataTable id="idDtActoAsociadoGeneral"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{beanConfrontacion.actosAsociadosGeneral}" var="item"
+										scrollable="true">
+										<p:column headerText="Matrículas">
+											<p:inputText onblur="value=value.toUpperCase()"
+												title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaActosAsociadosMatriculas}"
+												maxlength="10" value="#{item.matricula}">
+												<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+												<p:ajax
+													listener="#{beanConfrontacion.cargarDireccionPredio(item)}"
+													event="blur" update="idDtActoAsociadoGeneral,idGrowl" />
+											</p:inputText>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelNupre}">
+											<p:inputText onblur="value=value.toUpperCase()"
+												title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaActosAsociadosNupre}"
+												disabled="true" maxlength="18" value="#{item.nupre}">
+												<p:ajax
+													listener="#{beanConfrontacion.cargarDireccionPredio(item)}"
+													event="blur" update="idDtActoAsociadoGeneral" />
+												<p:keyFilter regEx="/[a-z0-9_]/i" preventPaste="false" />
+											</p:inputText>
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}">
+											<p:outputLabel id="idOlDireccionPredio"
+												value="#{item.direccion}" />
+										</p:column>
+										<p:columns value="#{beanConfrontacion.columns}" var="column">
+											<f:facet name="header">
+												<h:outputText value="#{column.header}" />
+												<br />
+												<h:outputText value="Cuantía $ #{column.cuantia}" />
+											</f:facet>
+											<p:selectBooleanCheckbox id="idSbcbActosAsociados"
+												title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaActosAsociadosCuantia}"
+												value="#{item.actos[column.idActo]}" />
+											<p:tooltip id="idTtActosAsociados" for="idSbcbActosAsociados"
+												value="#{column.name}" trackMouse="true" />
+										</p:columns>
+										<p:column headerText="Acción">
+											<p:commandButton id="btnEliminiar"
+												title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionInsertarMatriculaActosAsociadosEliminar}"
+												update="idDtActoAsociadoGeneral" icon="fa fa-trash"
+												actionListener="#{beanConfrontacion.deleteActoSelected(item)}" />
+										</p:column>
+									</p:dataTable>
+									<div class="ui-c">
+										<div class="ui-g-12">
+											<p:commandButton id="btnAgregar"
+												value="#{messageBeanSNR.commonLabelAgregarActoAsociadoIndividual}"
+												update="idDtActoAsociadoGeneral" icon="fa fa-plus-circle"
+												iconPos="left"
+												actionListener="#{beanConfrontacion.agregarActosIndividual}"
+												rendered="#{beanConfrontacion.seccionTipoMatricula == 'S'}" />
+										</div>
+									</div>
+								</p:panel>
+							</p:fragment>
+						</p:tab>
+						<!-- Fin insertar matricula -->
+						<!-- Inicio eliminar matricula -->
+						<p:tab title="#{messageBeanSNR.commonLabelDesasociarMatricula}"
+							rendered="#{beanConfrontacion.eliminaMatricula}">
+							<p:fragment>
+								<p:autoUpdate />
+								<p:panel>
+									<p:panel id="idPnActosResumenEliminar"
+										header="#{messageBeanSNR.commonLabelFoliosDeMatricula}"
+										toggleable="true">
+										<p:dataTable id="idDtFoliosEliminar"
+											emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+											value="#{beanConfrontacion.matriculasActos}" var="item"
+											scrollable="true"
+											selection="#{beanConfrontacion.selectedMatriculas}"
+											rowKey="#{item.matricula}">
+											<p:column selectionMode="multiple"
+												headerText="#{messageBeanSNR.commonLabelSeleccione}"
+												style="width:70px;text-align:center">
+											</p:column>
+											<p:column headerText="Matrículas">
+												<p:outputLabel id="idOlMatriculaPredioEliminar"
+													value="#{item.matricula}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}">
+												<p:outputLabel id="idOlDireccionPredioEliminar"
+													value="#{item.direccion}" />
+											</p:column>
+											<p:columns value="#{beanConfrontacion.columns}" var="column">
+												<f:facet name="header">
+													<h:outputText value="#{column.header}" />
+													<br />
+													<h:outputText value="Cuantía $ #{column.cuantia}" />
+												</f:facet>
+												<p:selectBooleanCheckbox id="idSbcbActosAsociadosEliminar"
+													value="#{item.actos[column.idActo]}" disabled="true" />
+												<p:tooltip id="idTtActosAsociadosEliminar"
+													for="idSbcbActosAsociadosEliminar" value="#{column.name}"
+													trackMouse="true" />
+											</p:columns>
+										</p:dataTable>
+									</p:panel>
+								</p:panel>
+							</p:fragment>
+						</p:tab>
+						<!-- Fin eliminar matricula -->
+						<!-- Tab para verificar folio -->
+						<p:tab title="#{messageBeanSNR.commonLabelVerificarFolioCerrado}"
+							rendered="#{beanConfrontacion.verificaFolioCerrado}">
+							<p:panel
+								header="#{messageBeanSNR.commonLabelObservacionesReabrirFolio}#{messageBeanSNR.commonLabelObligatorio}"
+								style="text-align:center" toggleable="true">
+								<div align="center">
+									<p:inputTextarea rows="6" cols="166"
+										id="idObservacionesReabrirFolio"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionVerificarFolioCerradoObservaciones}"
+										label="Observaciones Reabrir Folio"
+										value="#{beanConfrontacion.observacionesVerificarFolio}"
+										required="false" maxlength="400"
+										requiredMessage="El campo Observaciones Reabrir Folio es obligatorio"
+										counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+										counter="idNumeroCaracteres1" />
+								</div>
+								<div align="right">
+									<h:outputText id="idNumeroCaracteres1" />
+								</div>
+							</p:panel>
+						</p:tab>
+					</p:tabView>
+
+					<div align="left">
+						<p:panel
+							header="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+							style="text-align:center" toggleable="true">
+							<p:inputTextarea rows="6" cols="170" disabled="true"
+								onblur="value=value.toUpperCase()" maxlength="400"
+								title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionObservacionesProcesoAnterior}"
+								value="#{beanConfrontacion.observacionesProcesoAnterior}" />
+						</p:panel>
+						<p:panel
+							header="#{messageBeanSNR.commonLabelJustificacion}#{messageBeanSNR.commonLabelObligatorio}"
+							toggleable="true" style="text-align:center">
+							<p:inputTextarea rows="6" cols="170" label="Justificación"
+								onblur="value=value.toUpperCase()" id="idITAJustificacion"
+								title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionJustificacion}"
+								value="#{beanConfrontacion.justificacion}" maxlength="400"
+								requiredMessage="El campo Justificación es requerido"
+								counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+								counter="idNumeroCaracteres" />
+							<div align="right">
+								<h:outputText id="idNumeroCaracteres" />
+							</div>
+						</p:panel>
+						<p:spacer />
+						<div class="ui-g">
+							<div class="ui-g-6" align="left">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionRegresar}"
+									action="#{beanConfrontacion.regresar()}">
+									<f:param name="idTurno"
+										value="#{beanPredioDocumentoActo.idTurno}" />
+									<f:param name="idMotivo"
+										value="#{beanPredioDocumentoActo.motivoTramite}" />
+									<f:param name="idConfrontacion"
+										value="#{beanPredioDocumentoActo.confrontacion}" />
+									<f:param name="datosBasicos"
+										value="#{beanPredioDocumentoActo.datosBasicos}" />
+									<f:param name="insertarMatricula"
+										value="#{beanPredioDocumentoActo.insertaMatricula}" />
+									<f:param name="eliminarMatricula"
+										value="#{beanPredioDocumentoActo.eliminaMatricula}" />
+									<f:param name="varificarFolioCerrado"
+										value="#{beanPredioDocumentoActo.verificaFolioCerrado}" />
+								</p:commandButton>
+							</div>
+							<div class="ui-g-6" align="right">
+								<p:commandButton id="idCBEnviarMod"
+									title="#{tooltipBeanSNR.procesosCalificacionModDatosBasicosYMatriculasRevisionConfrontacionEnviarConfrontador}"
+									value="#{messageBeanSNR.commonButtonEnviarAModificacionDatosBasicos}"
+									icon="fa fa-chevron-right" iconPos="right" update="idGrowl"
+									ajax="true" action="#{beanConfrontacion.enviarCalifTemp}">
+								</p:commandButton>
+							</div>
+						</div>
+					</div>
+				</center>
+			</h:form>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgDesasociarMatriculaConfrontacion" modal="true"
+				height="90" resizable="false">
+				<h:form id="dlgDesasociarMatriculaConfrontacion"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeDesasociarMatriculaConfrontacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fCalifCorrecBasic"
+							actionListener="#{beanConfrontacion.setDecisionEliminaMatricula(true)}"
+							action="#{beanConfrontacion.enviarCalifTemp}"
+							oncomplete="PF('dlgDesasociarMatriculaConfrontacion').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							actionListener="#{beanConfrontacion.setDecisionEliminaMatricula(false)}"
+							icon="fa fa-close"
+							onclick="PF('dlgDesasociarMatriculaConfrontacion').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgVerificarFolioCerradoConfrontacion" modal="true"
+				height="90" resizable="false">
+				<h:form id="dlgVerificarFolioCerradoConfrontacion"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeVerificarFolioCerradoConfrontacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fCalifCorrecBasic"
+							actionListener="#{beanConfrontacion.setDecisionverificaFolioCerrado(true)}"
+							action="#{beanConfrontacion.enviarCalifTemp}"
+							oncomplete="PF('dlgVerificarFolioCerradoConfrontacion').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							actionListener="#{beanConfrontacion.setDecisionverificaFolioCerrado(false)}"
+							icon="fa fa-close"
+							onclick="PF('dlgVerificarFolioCerradoConfrontacion').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

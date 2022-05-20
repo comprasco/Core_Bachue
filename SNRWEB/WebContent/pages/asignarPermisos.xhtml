@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelRoles}" /></li>
+				<li class="breadcrumb-item" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.pageModificarRol}" /></li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.pageAsignarPermisos}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fAsignarPermisos" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<center>
+				<br />
+				<div class="ui-g" align="center">
+					<p:outputLabel value="#{beanAsignarPermisos.rolActual.nombre}" />
+				</div>
+				<br />
+					<p:panel header="#{messageBeanSNR.pageAsignarPermisos}"
+						style="width:100%">
+						<p:repeat var="item" value="#{beanAsignarPermisos.componentes}">
+							<p:panel header="#{item.titulos}" toggleable="true"
+								style="text-align:center"
+								collapsed="#{item.isVacios()}">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6 ui-lg-12" align="center">
+										<p:pickList id="picklist" value="#{item.opciones}"
+											showCheckbox="true" var="opcionitem"
+											label="#{item.idComponente}"
+											responsive="true"
+											itemLabel="#{opcionitem.idOpcion}-#{opcionitem.opcion}"
+											itemValue="#{opcionitem.idOpcion}">
+											<p:ajax event="transfer"
+												listener="#{beanAsignarPermisos.retornoPermisos}" />
+										</p:pickList>
+									</div>
+								</div>
+							</p:panel>
+						</p:repeat>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									title="#{tooltipBeanSNR.administracionRolDetalleInsertarRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									update="globalMsg"
+									action="#{beanAsignarPermisos.returnPages()}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-10" align="right">
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelGuardarInformacion}"
+									title="#{tooltipBeanSNR.administracionRolDetalleInsertarRegresar}"
+									icon="fa fa-save" iconPos="left" update="globalMsg"
+									action="#{beanAsignarPermisos.guardar()}" />
+							</div>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

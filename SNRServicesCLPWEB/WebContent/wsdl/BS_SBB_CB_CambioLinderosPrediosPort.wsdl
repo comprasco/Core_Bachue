@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/ee/cambiolinderospredios/v1" xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/ee/cambioLinderosPredios/consultaSegregacionSinCambioPropietario/v1" xmlns:bachue3="https://www.supernotariado.gov.co/schemas/bachue/ee/cambioLinderosPredios/consultaSegregacionConCambioPropietario/v1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.supernotariado.gov.co/services/bachue/ee/cambiolinderospredios/v1">
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/cambioLinderosPredios/consultaSegregacionSinCambioPropietario/v1">
+			<xsd:complexType name="tipoEntradaConsultaSegregacionSinCambioPropietario">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="0" name="tipoIdentificacionPredio">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="matricula"/>
+								<xsd:enumeration value="numeroPredial"/>
+								<xsd:enumeration value="numeroPredialAnterior"/>
+								<xsd:enumeration value="NUPRE"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element maxOccurs="1" minOccurs="0" name="numIdentificacionPredio" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultaSegregacionSinCambioPropietario" type="bachue2:tipoEntradaConsultaSegregacionSinCambioPropietario"/>
+			<xsd:complexType name="tipoSalidaConsultaSegregacionSinCambioPropietario">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="0" name="codDepartamento" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="codMunicipio" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="codCirculoRegistral" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="segregacion">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="1" minOccurs="0" name="codigoActo" nillable="true" type="xsd:string"/>
+								<xsd:element maxOccurs="1" minOccurs="0" name="descripcionActo" nillable="true" type="xsd:string"/>
+								<xsd:element minOccurs="0" name="matriculaMatriz">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element minOccurs="0" name="anotacionPredio">
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element minOccurs="0" name="comentario" type="xsd:string"/>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+											<xsd:element minOccurs="0" name="numMatriculaInmobiliaria" type="xsd:int"/>
+											<xsd:element minOccurs="0" name="direccion" type="xsd:string"/>
+											<xsd:element maxOccurs="1" minOccurs="0" name="estado" nillable="true" type="xsd:string"/>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element minOccurs="0" name="matriculasSegregadas">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element maxOccurs="unbounded" minOccurs="0" name="matriculaSegregada">
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element minOccurs="0" name="anotacionPredio">
+															<xsd:complexType>
+																<xsd:sequence>
+																	<xsd:element maxOccurs="1" minOccurs="0" name="comentario" nillable="true" type="xsd:string"/>
+																</xsd:sequence>
+															</xsd:complexType>
+														</xsd:element>
+														<xsd:element maxOccurs="1" minOccurs="0" name="numMatriculaInmobiliaria" nillable="true" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="direccion" type="xsd:string"/>
+														<xsd:element maxOccurs="1" minOccurs="0" name="estado" nillable="true" type="xsd:string"/>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="agregacion">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element minOccurs="0" name="codigoActo" type="xsd:string"/>
+								<xsd:element maxOccurs="1" minOccurs="0" name="descripcionActo" nillable="true" type="xsd:string"/>
+								<xsd:element minOccurs="0" name="matriculasMatrices">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element maxOccurs="unbounded" minOccurs="0" name="matriculaMatriz">
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element minOccurs="0" name="anotacionPredio">
+															<xsd:complexType>
+																<xsd:sequence>
+																	<xsd:element maxOccurs="1" minOccurs="0" name="comentario" nillable="true" type="xsd:string"/>
+																</xsd:sequence>
+															</xsd:complexType>
+														</xsd:element>
+														<xsd:element minOccurs="0" name="numMatriculaInmobiliaria" type="xsd:string"/>
+														<xsd:element maxOccurs="1" minOccurs="0" name="direccion" nillable="true" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="estado" type="xsd:string"/>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element minOccurs="0" name="matriculaAgregada">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element minOccurs="0" name="anotacionPredio">
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element maxOccurs="1" minOccurs="0" name="comentario" nillable="true" type="xsd:string"/>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+											<xsd:element maxOccurs="1" minOccurs="0" name="numMatriculaInmobiliaria" nillable="true" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="direccion" type="xsd:string"/>
+											<xsd:element maxOccurs="1" minOccurs="0" name="estado" nillable="true" type="xsd:string"/>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codMensaje" type="xsd:integer"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="descripcionMensaje" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultaSegregacionSinCambioPropietario" type="bachue2:tipoSalidaConsultaSegregacionSinCambioPropietario"/>
+		</xsd:schema>
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/cambioLinderosPredios/consultaSegregacionConCambioPropietario/v1">
+			<xsd:complexType name="tipoEntradaConsultaSegregacionConCambioPropietario">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="0" name="tipoIdentificacionPredio">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="matricula"/>
+								<xsd:enumeration value="numeroPredial"/>
+								<xsd:enumeration value="numeroPredialAnterior"/>
+								<xsd:enumeration value="NUPRE"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element maxOccurs="1" minOccurs="0" name="numIdentificacionPredio" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultaSegregacionConCambioPropietario" type="bachue3:tipoEntradaConsultaSegregacionConCambioPropietario"/>
+			<xsd:complexType name="tipoSalidaConsultaSegregacionConCambioPropietario">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="0" name="codDepartamento" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="codMunicipio" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="codCirculoRegistral" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="segregacion">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="1" minOccurs="0" name="codigoActo" nillable="true" type="xsd:string"/>
+								<xsd:element maxOccurs="1" minOccurs="0" name="descripcionActo" nillable="true" type="xsd:string"/>
+								<xsd:element minOccurs="0" name="matriculaMatriz">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element minOccurs="0" name="numMatriculaInmobiliaria" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="direccion" type="xsd:string"/>
+											<xsd:element maxOccurs="1" minOccurs="0" name="estado" nillable="true" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="anotacionPredio">
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element minOccurs="0" name="comentario" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="fechaAnotacion" type="xsd:dateTime"/>
+														<xsd:element minOccurs="0" name="valorActo" type="xsd:double"/>
+														<xsd:element minOccurs="0" name="propietarios">
+															<xsd:complexType>
+																<xsd:sequence>
+																	<xsd:element maxOccurs="unbounded" minOccurs="0" name="propietario">
+																		<xsd:complexType>
+																			<xsd:sequence>
+																				<xsd:element minOccurs="0" name="tipoPersona" type="xsd:string"/>
+																				<xsd:element minOccurs="0" name="tipoDocumentoPersona" type="xsd:string"/>
+																				<xsd:element minOccurs="0" name="numDocumentoPersona" type="xsd:string"/>
+																				<xsd:element minOccurs="0" name="DRR" type="xsd:string"/>
+																				<xsd:element minOccurs="0" name="porcentajeParticipacion" type="xsd:string"/>
+																			</xsd:sequence>
+																		</xsd:complexType>
+																	</xsd:element>
+																</xsd:sequence>
+															</xsd:complexType>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element minOccurs="0" name="matriculasSegregadas">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element maxOccurs="unbounded" minOccurs="0" name="matriculaSegregada">
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element maxOccurs="1" minOccurs="0" name="numMatriculaInmobiliaria" nillable="true" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="direccion" type="xsd:string"/>
+														<xsd:element maxOccurs="1" minOccurs="0" name="estado" nillable="true" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="anotacionPredio">
+															<xsd:complexType>
+																<xsd:sequence>
+																	<xsd:element minOccurs="0" name="comentario" type="xsd:string"/>
+																	<xsd:element minOccurs="0" name="fechaAnotacion" type="xsd:dateTime"/>
+																	<xsd:element minOccurs="0" name="valorActo" type="xsd:double"/>
+																	<xsd:element minOccurs="0" name="propietarios">
+																		<xsd:complexType>
+																			<xsd:sequence>
+																				<xsd:element maxOccurs="unbounded" minOccurs="0" name="propietario">
+																					<xsd:complexType>
+																						<xsd:sequence>
+																							<xsd:element minOccurs="0" name="tipoPersona" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="tipoDocumentoPersona" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="numDocumentoPersona" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="DRR" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="porcentajeParticipacion" type="xsd:string"/>
+																						</xsd:sequence>
+																					</xsd:complexType>
+																				</xsd:element>
+																			</xsd:sequence>
+																		</xsd:complexType>
+																	</xsd:element>
+																</xsd:sequence>
+															</xsd:complexType>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="agregacion">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element minOccurs="0" name="codigoActo" type="xsd:string"/>
+								<xsd:element maxOccurs="1" minOccurs="0" name="descripcionActo" nillable="true" type="xsd:string"/>
+								<xsd:element minOccurs="0" name="matriculasMatrices">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element maxOccurs="unbounded" minOccurs="0" name="matriculaMatriz">
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element minOccurs="0" name="numMatriculaInmobiliaria" type="xsd:string"/>
+														<xsd:element maxOccurs="1" minOccurs="0" name="direccion" nillable="true" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="estado" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="anotacionPredio">
+															<xsd:complexType>
+																<xsd:sequence>
+																	<xsd:element minOccurs="0" name="comentario" type="xsd:string"/>
+																	<xsd:element minOccurs="0" name="fechaAnotacion" type="xsd:dateTime"/>
+																	<xsd:element minOccurs="0" name="valorActo" type="xsd:double"/>
+																	<xsd:element minOccurs="0" name="propietarios">
+																		<xsd:complexType>
+																			<xsd:sequence>
+																				<xsd:element maxOccurs="unbounded" minOccurs="0" name="propietario">
+																					<xsd:complexType>
+																						<xsd:sequence>
+																							<xsd:element minOccurs="0" name="tipoPersona" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="tipoDocumentoPersona" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="numDocumentoPersona" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="DRR" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="porcentajeParticipacion" type="xsd:string"/>
+																						</xsd:sequence>
+																					</xsd:complexType>
+																				</xsd:element>
+																			</xsd:sequence>
+																		</xsd:complexType>
+																	</xsd:element>
+																</xsd:sequence>
+															</xsd:complexType>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element minOccurs="0" name="matriculaAgregada">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element maxOccurs="1" minOccurs="0" name="numMatriculaInmobiliaria" nillable="true" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="direccion" type="xsd:string"/>
+											<xsd:element maxOccurs="1" minOccurs="0" name="estado" nillable="true" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="anotacionPredio">
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element minOccurs="0" name="comentario" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="fechaAnotacion" type="xsd:dateTime"/>
+														<xsd:element minOccurs="0" name="valorActo" type="xsd:double"/>
+														<xsd:element minOccurs="0" name="propietarios">
+															<xsd:complexType>
+																<xsd:sequence>
+																	<xsd:element maxOccurs="unbounded" minOccurs="0" name="propietario">
+																		<xsd:complexType>
+																			<xsd:sequence>
+																				<xsd:element minOccurs="0" name="tipoPersona" type="xsd:string"/>
+																				<xsd:element minOccurs="0" name="tipoDocumentoPersona" type="xsd:string"/>
+																				<xsd:element minOccurs="0" name="numDocumentoPersona" type="xsd:string"/>
+																				<xsd:element minOccurs="0" name="DRR" type="xsd:string"/>
+																				<xsd:element minOccurs="0" name="porcentajeParticipacion" type="xsd:string"/>
+																			</xsd:sequence>
+																		</xsd:complexType>
+																	</xsd:element>
+																</xsd:sequence>
+															</xsd:complexType>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codMensaje" type="xsd:integer"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="descripcionMensaje" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultaSegregacionConCambioPropietario" type="bachue3:tipoSalidaConsultaSegregacionConCambioPropietario"/>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="ConsultaSegregacionSinCambioPropietario_Request">
+		<wsdl:part element="bachue2:entradaConsultaSegregacionSinCambioPropietario" name="entrada"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultaSegregacionSinCambioPropietario_Response">
+		<wsdl:part element="bachue2:salidaConsultaSegregacionSinCambioPropietario" name="salida"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultaSegregacionConCambioPropietario_Request">
+		<wsdl:part element="bachue3:entradaConsultaSegregacionConCambioPropietario" name="entrada"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultaSegregacionConCambioPropietario_Response">
+		<wsdl:part element="bachue3:salidaConsultaSegregacionConCambioPropietario" name="salida"/>
+	</wsdl:message>
+	<wsdl:portType name="BS_SBB_CB_CambioLinderosPredios">
+		<wsdl:operation name="ConsultaSegregacionSinCambioPropietario">
+			<wsdl:input message="bachue:ConsultaSegregacionSinCambioPropietario_Request"/>
+			<wsdl:output message="bachue:ConsultaSegregacionSinCambioPropietario_Response"/>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultaSegregacionConCambioPropietario">
+			<wsdl:input message="bachue:ConsultaSegregacionConCambioPropietario_Request"/>
+			<wsdl:output message="bachue:ConsultaSegregacionConCambioPropietario_Response"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="BS_SBB_CB_CambioLinderosPredios" type="bachue:BS_SBB_CB_CambioLinderosPredios">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="ConsultaSegregacionSinCambioPropietario">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/schemas/bachue/ee/cambioLinderosPredios/consultaSegregacionSinCambioPropietario/v1" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultaSegregacionConCambioPropietario">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/schemas/bachue/ee/cambioLinderosPredios/consultaSegregacionConCambioPropietario/v1" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="BS_SBB_CB_CambioLinderosPredios">
+		<wsdl:port binding="bachue:BS_SBB_CB_CambioLinderosPredios" name="BS_SBB_CB_CambioLinderosPrediosPort">
+			<soap:address location="http://localhost:7001/SNRServicesCLPWEB/services/BS_SBB_CB_CambioLinderosPrediosPort"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelApoyoNacional}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelFinalizarSolicitud}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<h:form id="fBandejaAprobacion" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true"
+					redisplay="false" />
+				<center>
+
+					<br />
+					<p:panel header="#{messageBeanSNR.commonLabelBandejaDeEntrada}"
+						style="min-width:800px;" toggleable="true">
+
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+										style="font-size: 100%;" />
+									<p:inputText placeholder="#{messageBeanSNR.commonLabelNIR}"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaNir}"
+										id="nir" value="#{beanSolicitudApoyoNacional.nir}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGroup>
+									<p:commandButton id="idCBConsultaMotivo"
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										actionListener="#{beanSolicitudApoyoNacional.consultarTurnosReasignadosApoyoNacional()}"
+										ajax="false" icon="lupa" update="idOPBandejaPrincipal" />
+								</h:panelGroup>
+							</div>
+						</div>
+
+						<p:outputPanel id="idOPBandejaPrincipal">
+							<p:outputPanel>
+								<div class="ui-g"> 
+									<p:dataTable id="idDtTramiteCantidad" value="#{beanSolicitudApoyoNacional.solicitudesApoyoNacional}"
+										var="item"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+										<f:facet name="header">
+											<h:outputText value="#{messageBeanSNR.commonLabelTramites}" />
+										</f:facet>
+										<p:column headerText="#{messageBeanSNR.commonLabelNIR}"
+											sortBy="#{item.nir}">
+											<h:outputText value="#{item.nir}" />
+										</p:column>
+
+										<p:column headerText="#{messageBeanSNR.commonLabelNIRRegistro}"
+											sortBy="#{item.nirRegistro}">
+											<div align="center">
+												<h:outputText
+													value="#{item.nirRegistro}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelTurnoRegistro}"
+											sortBy="#{item.idTurnoRegistro}">
+											<div align="center">
+												<h:outputText
+													value="#{item.idTurnoRegistro}" />
+											</div>
+										</p:column>
+										
+										<p:column headerText="#{messageBeanSNR.commonLabelEtapaActual}"
+											sortBy="#{item.etapaActual}">
+											<div align="center">
+												<h:outputText
+													value="#{item.etapaActual}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelObservaciones}"
+											sortBy="#{item.etapaActual}">
+											<div align="center">
+												<h:outputText
+													value="#{item.observacion}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelFinalizar}">
+											<p:selectBooleanCheckbox id="seleccionObli"
+												disabled="true"
+												value="#{item.finalizada}" />
+										</p:column>
+
+									</p:dataTable>
+								</div>
+								<p:commandButton id="idFinalizarSolicitud"
+									value="#{messageBeanSNR.commonButtonFinalizar}"
+									rendered="#{beanSolicitudApoyoNacional.finalizada}"
+									action="#{beanSolicitudApoyoNacional.terminarSolicitudApoyoNacional()}"
+									icon="fa fa-check" iconPos="left"
+									ajax="false" />
+							</p:outputPanel>
+						</p:outputPanel>
+						<p:dialog appendTo="@(body)" modal="true"
+							widgetVar="statusDownload" draggable="false" closable="false"
+							resizable="false">
+							<p:graphicImage value="/images/ajaxloadingbar.gif" />
+						</p:dialog>
+					</p:panel>
+					<p:spacer />
+					<div align="left">
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="bandejaFinalizarApoyoNacional?faces-redirect=true" />
+						</div>
+
+						<p:ajaxStatus onstart="PF('statusDialog').show()"
+							onsuccess="PF('statusDialog').hide()" />
+						<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+							closable="false" resizable="false" showHeader="false"
+							appendTo="@(body)">
+							<p:graphicImage value="/images/ajaxloadingbar.gif" />
+						</p:dialog>
+					</div>
+					<br />
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

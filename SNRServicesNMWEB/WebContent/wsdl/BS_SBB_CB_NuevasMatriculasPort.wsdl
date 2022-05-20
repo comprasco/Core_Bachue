@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/ee/nuevasMatriculas/v1" xmlns:bachue5="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.supernotariado.gov.co/services/bachue/ee/nuevasMatriculas/v1">
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1">
+			<xsd:complexType name="tipoEntradaConsultarNuevasMatriculas">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="agrupacionEspacial">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element minOccurs="0" name="codDepartamento" type="xsd:string"/>
+								<xsd:element minOccurs="0" name="codMunicipio" type="xsd:string"/>
+								<xsd:element minOccurs="0" name="codCirculoRegistral" type="xsd:string"/>
+								<xsd:element minOccurs="0" name="fechaInicial" type="xsd:dateTime"/>
+								<xsd:element minOccurs="0" name="fechaFinal" type="xsd:dateTime"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarNuevasMatriculas" type="bachue5:tipoEntradaConsultarNuevasMatriculas"/>
+			<xsd:complexType name="tipoSalidaConsultarNuevasMatriculas">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="codDepartamento" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="codMunicipio" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="codCirculoRegistral" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="nuevasMatriculas">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="0" name="nuevaMatricula">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element minOccurs="0" name="anotacionPredio">
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element minOccurs="0" name="numMatriculaInmobiliaria" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="codNaturalezaJuridicaFolio" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="nomNaturalezaJuridicaFolio" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="NUPRE" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="comentario" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="fechaAnotacion" type="xsd:dateTime"/>
+														<xsd:element minOccurs="0" name="DRR" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="codigoRegistralDerecho" type="xsd:string"/>
+														<xsd:element minOccurs="0" name="propietarios">
+															<xsd:complexType>
+																<xsd:sequence>
+																	<xsd:element maxOccurs="unbounded" minOccurs="0" name="propietario">
+																		<xsd:complexType>
+																			<xsd:sequence>
+																				<xsd:element minOccurs="0" name="tipoPersona" type="xsd:string"/>
+																				<xsd:element minOccurs="0" name="tipoDocumentoPersona" type="xsd:string"/>
+																				<xsd:element minOccurs="0" name="numDocumentoPersona" type="xsd:string"/>
+																				<xsd:element minOccurs="0" name="porcentajeParticipacion" type="xsd:string"/>
+																			</xsd:sequence>
+																		</xsd:complexType>
+																	</xsd:element>
+																</xsd:sequence>
+															</xsd:complexType>
+														</xsd:element>
+														<xsd:element minOccurs="0" name="fuentesAdministrativas">
+															<xsd:complexType>
+																<xsd:sequence>
+																	<xsd:element maxOccurs="unbounded" minOccurs="0" name="fuenteAdministrativa">
+																		<xsd:complexType>
+																			<xsd:sequence>
+																				<xsd:element minOccurs="0" name="numDocumentoPublico" type="xsd:string"/>
+																				<xsd:element minOccurs="0" name="tipoDocumentoPublico" type="xsd:string"/>
+																				<xsd:element minOccurs="0" name="fechaDocumento" type="xsd:dateTime"/>
+																			</xsd:sequence>
+																		</xsd:complexType>
+																	</xsd:element>
+																</xsd:sequence>
+															</xsd:complexType>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+											<xsd:element minOccurs="0" name="listaPublicidades">
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element maxOccurs="unbounded" minOccurs="0" name="publicidad">
+															<xsd:complexType>
+																<xsd:sequence>
+																	<xsd:element minOccurs="0" name="numAnotacion" type="xsd:string"/>
+																	<xsd:element minOccurs="0" name="comentario" type="xsd:string"/>
+																	<xsd:element minOccurs="0" name="fechaAnotacion" type="xsd:dateTime"/>
+																	<xsd:element minOccurs="0" name="codNaturalezaJuridicaFolio" type="xsd:string"/>
+																	<xsd:element minOccurs="0" name="nomNaturalezaJuridicaFolio" type="xsd:string"/>
+																	<xsd:element minOccurs="0" name="dominioDRR" type="xsd:string"/>
+																	<xsd:element minOccurs="0" name="intervinientes">
+																		<xsd:complexType>
+																			<xsd:sequence>
+																				<xsd:element maxOccurs="unbounded" minOccurs="0" name="interviniente">
+																					<xsd:complexType>
+																						<xsd:sequence>
+																							<xsd:element minOccurs="0" name="tipoDocumentoPersona" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="numDocumentoPersona" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="primerNombre" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="segundoNombre" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="primerApellido" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="segundoApellido" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="razonSocial" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="rolInterviniente" type="xsd:string"/>
+																							<xsd:element minOccurs="0" name="tipoParteInteresada" type="xsd:string"/>
+																						</xsd:sequence>
+																					</xsd:complexType>
+																				</xsd:element>
+																			</xsd:sequence>
+																		</xsd:complexType>
+																	</xsd:element>
+																</xsd:sequence>
+															</xsd:complexType>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codMensaje" type="xsd:integer"/>
+					<xsd:element minOccurs="0" name="descripcionMensaje" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarNuevasMatriculas" type="bachue5:tipoSalidaConsultarNuevasMatriculas"/>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="ConsultarNuevasMatriculas_Request">
+		<wsdl:part element="bachue5:entradaConsultarNuevasMatriculas" name="entrada"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultarNuevasMatriculas_Response">
+		<wsdl:part element="bachue5:salidaConsultarNuevasMatriculas" name="salida"/>
+	</wsdl:message>
+	<wsdl:portType name="BS_SBB_CB_NuevasMatriculas">
+		<wsdl:operation name="ConsultarNuevasMatriculas">
+			<wsdl:input message="bachue:ConsultarNuevasMatriculas_Request"/>
+			<wsdl:output message="bachue:ConsultarNuevasMatriculas_Response"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="BS_SBB_CB_NuevasMatriculas" type="bachue:BS_SBB_CB_NuevasMatriculas">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="ConsultarNuevasMatriculas">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/services/bachue/ee/NuevasMatriculas/v1/ConsultarNuevasMatriculas" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="BS_SBB_CB_NuevasMatriculas">
+		<wsdl:port binding="bachue:BS_SBB_CB_NuevasMatriculas" name="BS_SBB_CB_NuevasMatriculasPort">
+			<soap:address location="http://localhost:7001/SNRServicesNMWEB/services/BS_SBB_CB_NuevasMatriculasPort"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelNegocio}" />
+				</li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelTiposActo}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{beanTiposActo.insert ? messageBeanSNR.commonLabelInsertarTipoActo : messageBeanSNR.commonLabelModificarTipoActo}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fTiposActoDetalle" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="gTiposADetMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<center>
+
+					<p:panel id="idPInsertUpdate"
+						header="#{beanTiposActo.insert ? messageBeanSNR.pageInsertarTipoActo : messageBeanSNR.pageEditarTipoActo}">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoActo}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText id="idItTipoActo" maxlength="20"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleTipoActo}"
+									disabled="#{!beanTiposActo.insert}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelTipoActo}"
+									value="#{beanTiposActo.tipoActo.idTipoActo}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelNombre}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText id="idItNombre" maxlength="250"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleNombre}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelNombre}"
+									value="#{beanTiposActo.tipoActo.nombre}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTipoCalculo}" />
+								<br />
+								<p:inputText id="idItTipoCalculo" maxlength="20"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleTipoCalculo}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelTipoCalculo}"
+									value="#{beanTiposActo.tipoActo.idTipoCalculo}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelAplicaTarifaRetencionDocumental}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idretencionDocumental"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleActoAplicaTarifaRetencionDocumental}"
+									style="width:100%;"
+									value="#{beanTiposActo.tipoActo.aplicaTarifaRetencionDocumental}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelActivo}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItActivo" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleActivo}"
+									value="#{beanTiposActo.tipoActo.activo}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelLineaProduccion}" />
+								<br />
+								<p:selectOneMenu id="idItLineaProduccion" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleLineaProduccion}"
+									value="#{beanTiposActo.tipoActo.lineaProduccion}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanTiposActo.findAllLineaProduccion()}"
+										itemValue="#{lineas.idLineaProduccion}" var="lineas"
+										itemLabel="#{lineas.idLineaProduccion} - #{lineas.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelRequiereCuantia}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItRequiereCuantia"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleActoRequiereCuantia}"
+									style="width:100%;"
+									value="#{beanTiposActo.tipoActo.requiereCuantia}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelDesborde}#{messageBeanSNR.commonLabelObligatorio}" />
+								<p:selectOneMenu id="idaplicaDesborde"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleActoDesborde}"
+									style="width:100%;"
+									value="#{beanTiposActo.tipoActo.aplicaDesborde}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelAvaluo}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItAvaluo" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleAvaluo}"
+									value="#{beanTiposActo.tipoActo.avaluo}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelRequiereMatricula}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItRequiereMatricula" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleRequiereMatricula}"
+									value="#{beanTiposActo.tipoActo.requiereMatricula}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelVersion}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText id="idversion" maxlength="250"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleActoVersion}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelVersion}"
+									value="#{beanTiposActo.tipoActo.version}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTarifaExenta}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idtarifaexenta" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleActoTarifaExenta}"
+									value="#{beanTiposActo.tipoActo.tarifaExenta}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelActoSincuantia}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItActoSinCuantia" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleActoSincuantia}"
+									value="#{beanTiposActo.tipoActo.actoSinCuantia}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelAperturaMatricula}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItAperturaMatricula" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleAperturaMatricula}"
+									value="#{beanTiposActo.tipoActo.aperturaMatricula}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelCertificadoObligatorio}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItCertificadoObligatorio"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleCertificadoObligatorio}"
+									style="width:100%;"
+									value="#{beanTiposActo.tipoActo.certificadoObligatorioString}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelGeneraSegregacion}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItGeneraSegregacion" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleGeneraSegregacion}"
+									value="#{beanTiposActo.tipoActo.generaSegregacion}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelImpuestoRegistro}" />
+								<br />
+								<p:selectOneMenu id="idItImpuestoRegistro" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleImpuestoRegistro}"
+									value="#{beanTiposActo.tipoActo.impuestoRegistro}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelInscripcionAdicional}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItInscripcionAdicional"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleInscripcionAdicional}"
+									style="width:100%;"
+									value="#{beanTiposActo.tipoActo.inscripcionAdicional}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelRequiereTipoAdquisicion}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItRequiereTipoAdquisicion"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleRequiereTipoAdquisicion}"
+									style="width:100%;"
+									value="#{beanTiposActo.tipoActo.requiereTipoAdquisicion}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelValidarArea}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItValidarArea" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleValidarArea}"
+									value="#{beanTiposActo.tipoActo.validarAreaString}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelSumatoriaCoeficiente}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSumatoriaCoeficiente" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleSumatoriaCoeficiente}"
+									value="#{beanTiposActo.tipoActo.sumatoriaCoeficiente}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelSumatoriaArea}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSumatoriaArea" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleSumatoriaArea}"
+									value="#{beanTiposActo.tipoActo.sumatoriaArea}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTarifaFija}" />
+								<br />
+								<p:selectOneMenu id="idTarifaFija" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleTarifaFija}"
+									value="#{beanTiposActo.tipoActo.idTarifaFija}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelEtapaInicial}" />
+								<br />
+								<p:selectOneMenu id="idEtapaInicial" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleEtapaInicial}"
+									value="#{beanTiposActo.tipoActo.idEtapaInicial}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelHabilitaSecuencia}" />
+								<br />
+								<p:selectOneMenu id="idHabilitaSecuencia" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleHabilitaSecuencia}"
+									value="#{beanTiposActo.tipoActo.habilitarSecuencia}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelCambioTipoCuantia}" />
+								<br />
+								<p:selectOneMenu id="idCambioTipoCuantia" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTiposActoTiposActoDetalleCambioTipoCuantia}"
+									value="#{beanTiposActo.tipoActo.cambioTipoCuantia}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							
+							
+							
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelAlertaTitular}" />
+								<br />
+								<p:selectOneMenu id="alertaTitularSTR" style="width:100%;"
+									value="#{beanTiposActo.tipoActo.alertaTitular}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelCuotaParteDonacion}" />
+								<br />
+								<p:selectOneMenu id="cuotaParteDonSTR" style="width:100%;"
+									value="#{beanTiposActo.tipoActo.cuotaparteDonacionString}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelPrestacionesPeriodicas}" />
+								<br />
+								<p:selectOneMenu id="prestacionesPerSTR" style="width:100%;"
+									value="#{beanTiposActo.tipoActo.prestacionesPeriodicasString}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							
+							
+							
+						</div>
+						<br />
+						<p:dataTable id="idDetalleTraza" var="item"
+								value="#{beanTiposActo.datosAuditoria}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}"
+								rendered="#{!beanTiposActo.insert}">
+								<f:facet name="header">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+								</f:facet>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+									<h:outputText value="#{item.idUsuarioCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<h:outputText value="#{item.fechaCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+									<h:outputText value="#{item.idUsuarioModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+									<h:outputText value="#{item.fechaModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIpModificación}">
+									<h:outputText value="#{item.ipModificacion}" />
+								</p:column>
+							</p:dataTable>
+						<br />
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-8">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									update="fTiposActoDetalle,gTiposADetMsg"
+									action="tiposActo?faces-redirect=true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4" align="right">
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelActualizarTipoActo}"
+									rendered="#{!beanTiposActo.insert}" icon="fa fa-check-circle"
+									iconPos="left" update="fTiposActoDetalle gTiposADetMsg"
+									ajax="false"
+									action="#{beanTiposActo.insertUpdateTipoActo(false)}" />
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelCrearTipoActo}"
+									rendered="#{beanTiposActo.insert}" icon="fa fa-check-circle"
+									iconPos="left" update="fTiposActoDetalle,gTiposADetMsg"
+									action="#{beanTiposActo.insertUpdateTipoActo(true)}"
+									ajax="false" />
+							</div>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

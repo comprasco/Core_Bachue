@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{beanPredioDocumentoActo.aprobacion.vieneDeAprobacion ? messageBeanSNR.commonLabelAprobacion : messageBeanSNR.commonLabelCalificacion}" /></li>
+			<li style="display: #{beanPredioDocumentoActo.aprobacion.vieneDeAprobacion ? 'none' : 'inline-block'}" class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleTurno}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<ui:include src="detalleRepConstanciaInclude.xhtml" />
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="confrontacionForm">
+				<p:growl id="idGrowl" sticky="false" showDetail="true" life="20000"
+					globalOnly="true" redisplay="false" />
+				<br />
+				<!-- Panel Motivos Tramite -->
+				<p:outputPanel id="idOPTramitesCalificacion"
+					rendered="#{!beanPredioDocumentoActo.aprobacion.vieneDeAprobacion}">
+					<p:panel
+						header="#{messageBeanSNR.commonLabelTramitesARealizarPorCalificacion}"
+						toggleable="true" rendered="#{!beanPredioDocumentoActo.lectura}"
+						style="text-align:center">
+						<h:panelGrid columns="4" cellpadding="5">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelMotivoTramiteDosPuntos}" />
+							<p:selectOneRadio layout="grid" columns="4"
+								style="text-align: initial;width:100%;"
+								value="#{beanPredioDocumentoActo.motivoTramite}"
+								styleClass="ui-selectoneradiosinnegrilla">
+								<f:selectItems itemValue="#{it.idMotivo}" var="it"
+									itemLabel="#{it.descripcion}"
+									value="#{beanPredioDocumentoActo.motivos}" />
+							</p:selectOneRadio>
+						</h:panelGrid>
+					</p:panel>
+				</p:outputPanel>
+
+
+				<p:outputPanel
+					rendered="#{!beanPredioDocumentoActo.aprobacion.vieneDeAprobacion}">
+					<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+						rendered="#{!beanPredioDocumentoActo.confrontacion}"
+						icon="fa fa-arrow-circle-left" iconPos="left"
+						action="turnos?faces-redirect=true">
+					</p:commandButton>
+					<p:commandButton value="#{messageBeanSNR.commonButtonContinuar}"
+						action="#{beanPredioDocumentoActo.enviaPagina}" ajax="false"
+						update="confrontacion1,volver" icon="fa fa-arrow-circle-right"
+						onclick="PrimeFaces.monitorDownload(start, stop);" iconPos="right">
+						<f:param name="idTurno" value="#{beanPredioDocumentoActo.idTurno}" />
+						<f:param name="idMotivo"
+							value="#{beanPredioDocumentoActo.motivoTramite}" />
+						<f:param name="idConfrontacion"
+							value="#{beanPredioDocumentoActo.confrontacion}" />
+						<f:param name="datosBasicos"
+							value="#{beanPredioDocumentoActo.datosBasicos}" />
+						<f:param name="insertarMatricula"
+							value="#{beanPredioDocumentoActo.insertaMatricula}" />
+						<f:param name="eliminarMatricula"
+							value="#{beanPredioDocumentoActo.eliminaMatricula}" />
+						<f:param name="varificarFolioCerrado"
+							value="#{beanPredioDocumentoActo.verificaFolioCerrado}" />
+					</p:commandButton>
+				</p:outputPanel>
+
+
+			</h:form>
+			<script type="text/javascript">
+				function start()
+				{
+					PF('statusDownload').show();
+				}
+
+				function stop()
+				{
+					PF('statusDownload').hide();
+				}
+			</script>
+			<p:dialog modal="true" widgetVar="statusDownload" draggable="false"
+				closable="false" resizable="false">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

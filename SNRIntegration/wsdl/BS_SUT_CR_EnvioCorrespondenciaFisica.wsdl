@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cr/enviocorrespondenciafisica/v1"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cr/enviocorrespondenciafisica/v1"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/cr/enviocorrespondenciafisica/enviarcorrespondenciafisica/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cr/enviocorrespondenciafisica/enviarcorrespondenciafisica/v1"
+			elementFormDefault="qualified" version="1.3">
+			<xsd:complexType
+				name="tipoEntradaEnviarCorrespondenciaFisica">
+				<xsd:sequence>
+					<xsd:element name="identificador" type="xsd:string"
+						minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaEnviarCorrespondenciaFisica"
+				type="bachue1:tipoEntradaEnviarCorrespondenciaFisica" />
+			<xsd:complexType
+				name="tipoSalidaEnviarCorrespondenciaFisica">
+				<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaEnviarCorrespondenciaFisica"
+				type="bachue1:tipoSalidaEnviarCorrespondenciaFisica" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="EnviarCorrespondenciaFisica_Request">
+		<wsdl:part name="entrada"
+			element="bachue1:entradaEnviarCorrespondenciaFisica" />
+	</wsdl:message>
+	<wsdl:message name="EnviarCorrespondenciaFisica_Response">
+		<wsdl:part name="salida"
+			element="bachue1:salidaEnviarCorrespondenciaFisica" />
+	</wsdl:message>
+
+	<wsdl:portType name="SUT_CR_EnvioCorrespondenciaFisica">
+		<wsdl:operation name="EnviarCorrespondenciaFisica">
+			<wsdl:input
+				message="bachue:EnviarCorrespondenciaFisica_Request" />
+			<wsdl:output
+				message="bachue:EnviarCorrespondenciaFisica_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding
+		name="SUT_CR_EnvioCorrespondenciaFisicaSOAP12Binding"
+		type="bachue:SUT_CR_EnvioCorrespondenciaFisica">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="EnviarCorrespondenciaFisica">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cr/enviocorrespondenciafisica/v1/EnviarCorrespondenciaFisica" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SUT_CR_EnvioCorrespondenciaFisica">
+		<wsdl:port name="SUT_CR_EnvioCorrespondenciaFisicaPort"
+			binding="bachue:SUT_CR_EnvioCorrespondenciaFisicaSOAP12Binding">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

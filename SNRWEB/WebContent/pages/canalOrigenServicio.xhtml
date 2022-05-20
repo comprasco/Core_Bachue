@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelNegocio}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelCanalOrigenServicio}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fsiCanalOrigenServicio" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false"/>
+
+				<p:panel id="idPCanalOrigenServicio" style="min-width:800px;">
+
+					<div class="ui-g" align="left">
+						<div class="ui-g-12 ui-md-6 ui-lg-4">
+							<p:commandButton
+								value="#{messageBeanSNR.commonButtonInsertarCanalOrigenServicio}"
+								icon="fa fa-plus-circle" iconPos="left" update="globalMsg"
+								actionListener="#{beanCanalOrigenServicio.cambiarEstado()}"
+								action="canalOrigenServicioDetalle?faces-redirect=true">
+								<f:param name="pInsertarCanalOrigenServicio" value="true" />
+							</p:commandButton>
+						</div>
+					</div>
+
+					<p:dataTable
+						emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronCanalOrigenServicio}"
+						id="idDTRecurso" var="item"
+						value="#{beanCanalOrigenServicio.findAllCanalOrigenServicio()}"
+						paginator="true" rows="50" rowIndexVar="rowKey">
+						<f:facet name="header">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelCanalOrigenServicio}" />
+						</f:facet>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelCanalOrigenServicio}"
+							filterBy="#{item.idCanalOrigenServicio}">
+							<h:outputText value="#{item.idCanalOrigenServicio}" />
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelNombre}"
+							filterBy="#{item.nombreCanalOrigenServicio}">
+							<p:commandLink id="idCLink" styleClass="subrayado"
+									actionListener="#{beanCanalOrigenServicio.consultaDetallada(item)}"
+									action="canalOrigenServicioDetalle?faces-redirect=true">
+									<h:outputText value="#{item.nombreCanalOrigenServicio}" />
+									<f:param name="idCanalOrigenServicio"
+										value="#{item.idCanalOrigenServicio}" />
+							</p:commandLink>
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelCodigo}"
+							filterBy="#{item.codigoCanalOrigenServicio}">
+							<h:outputText value="#{item.codigoCanalOrigenServicio}" />
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelActivo}"
+							filterBy="#{item.activo}">
+							<h:outputText value="#{messageBeanSNR.commonLabelActivo}"
+								rendered="#{item.activo=='S'}" />
+							<h:outputText value="#{messageBeanSNR.commonLabelInactivo}"
+								rendered="#{item.activo=='N'}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

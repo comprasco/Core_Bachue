@@ -1,0 +1,2015 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb" style="#{beanPredioDocumentoActo.testamentos  or beanPredioDocumentoActo.proyectar ? 'display:none;' : ''}">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item" style="#{beanTurnos.idEtapa == 410 ? '' : 'display:none'}">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelRecursos}"/>
+				</li>
+				<li class="breadcrumb-item" style="#{beanPredioDocumentoActo.idEtapa eq 650 or beanPredioDocumentoActo.idEtapa eq 651 ? '' : 'display:none'}">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTrasladosDeMatriculas}"/>
+				</li>
+				<li class="breadcrumb-item" style="#{beanPredioDocumentoActo.idEtapa eq 175 or beanPredioDocumentoActo.idEtapa eq 170 ? '' : 'display:none'}">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelActuacionesAdministrativas}"/>
+				</li>
+				<li class="breadcrumb-item" style="#{beanPredioDocumentoActo.idEtapa eq 375 or beanPredioDocumentoActo.idEtapa eq 380 ? '' : 'display:none'}">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDevoluciones}"/>
+				</li>
+				<li class="breadcrumb-item">					
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelEjecucionDeTraslados}"
+						rendered="#{beanAprobacion.vieneDeEjecucionTraslado}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelPublicaciones}"
+						rendered="#{beanPredioDocumentoActo.idEtapa eq 232 or beanPredioDocumentoActo.idEtapa eq 234}"/>
+					<p:outputLabel
+						value="#{beanPredioDocumentoActo.aprobacion.vieneDeAprobacion ? (beanPredioDocumentoActo.aprobacion.procesoCoordinadorJuridico ? 
+						messageBeanSNR.commonLabelCoordinadorJuridico : beanPredioDocumentoActo.idEtapa eq 675 ?
+						messageBeanSNR.commonLabelAprobacionAsesoriaJuridica : beanPredioDocumentoActo.idEtapa eq 680 ? 
+						messageBeanSNR.commonLabelAprobacionFirmaDespacho : beanPredioDocumentoActo.idEtapa eq 380 ? 
+						messageBeanSNR.commonLabelResponsableTesoreria : beanPredioDocumentoActo.idEtapa eq 685 ? 
+						messageBeanSNR.commonLabelAprobacionDespachoSuperintendente : messageBeanSNR.commonLabelAprobacion) : (beanPredioDocumentoActo.aprobacion.vieneDeAntiguoSistema ?
+						messageBeanSNR.commonLabelAprobacionAntiguoSistema : (beanPredioDocumentoActo.homologacionActosLiquidacion ? 
+						messageBeanSNR.commonLabelHomologacionActosLiquidacion : (beanPredioDocumentoActo.idEtapa eq 130 ? 
+						messageBeanSNR.commonLabelCorrecciones : beanPredioDocumentoActo.idEtapa eq 132 ? 
+						messageBeanSNR.commonLabelEjecucionDeCorrecciones : beanPredioDocumentoActo.idEtapa eq 350 ?
+						messageBeanSNR.commonLabelAnalistaDeCopias : beanPredioDocumentoActo.idEtapa eq 170 ? 
+						messageBeanSNR.commonLabelResponsableActuacionesAdministrativas : beanPredioDocumentoActo.idEtapa eq 175 ?
+						messageBeanSNR.commonLabelSustanciadorActuacionesAdministrativas : beanPredioDocumentoActo.idEtapa eq 410 ? 
+						messageBeanSNR.commonLabelAnalisisAbogadoSustanciadorRecursos : beanPredioDocumentoActo.idEtapa eq 415 ?
+						messageBeanSNR.commonLabelAsignacionTurnosManualRechazoRecursos : beanPredioDocumentoActo.idEtapa eq 650 or beanTurnos.idEtapa == 651 ? 
+						messageBeanSNR.commonLabelAnalisisDeTraslados : beanPredioDocumentoActo.idEtapa eq 114 ? 
+						messageBeanSNR.commonLabelAutorizaFirmaLibroAntiguoSistema : beanPredioDocumentoActo.idEtapa eq 460 ? 
+						messageBeanSNR.commonLabelCoordinadorSegundaInstancia : beanPredioDocumentoActo.idEtapa eq 430 ? 
+						messageBeanSNR.commonLabelAnalisisDeSegundaInstancia : beanPredioDocumentoActo.idEtapa eq 375 ?
+						messageBeanSNR.commonLabelAnalisisDeDevolucionDeDinero : beanPredioDocumentoActo.idEtapa eq 377 ? 
+						messageBeanSNR.commonLabelEmisionDeActoAdministrativo  : messageBeanSNR.commonLabelCalificacion)))}"
+						rendered="#{!beanAprobacion.vieneDeEjecucionTraslado 
+							and not(beanPredioDocumentoActo.idEtapa eq 232 or beanPredioDocumentoActo.idEtapa eq 234)}"/>
+				</li>
+				<li
+					class="breadcrumb-item">
+					<p:outputLabel
+						rendered="#{not(beanPredioDocumentoActo.idEtapa eq 232 or beanPredioDocumentoActo.idEtapa eq 234)}"
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+					<p:outputLabel
+					rendered="#{beanPredioDocumentoActo.idEtapa eq 232 or beanPredioDocumentoActo.idEtapa eq 234}"
+						value="#{messageBeanSNR.commonLabelPublicacionAvisosWeb}" />
+				</li>
+				<li style="display: #{beanPredioDocumentoActo.aprobacion.vieneDeAprobacion ? '' : 'display:none'}"
+					class="breadcrumb-item">
+					<p:outputLabel 
+						rendered="#{not(beanPredioDocumentoActo.idEtapa eq 232 or beanPredioDocumentoActo.idEtapa eq 234)}"
+						value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+					<p:outputLabel 
+						rendered="#{beanPredioDocumentoActo.idEtapa eq 232}"
+						value="#{messageBeanSNR.commonLabelFijacionAvisosOficinaOrigen}" />
+					<p:outputLabel 
+						rendered="#{beanPredioDocumentoActo.idEtapa eq 234}"
+						value="#{messageBeanSNR.commonLabelFijacionAvisosOficinaDestino}" />
+				</li>
+				<li style="#{beanPredioDocumentoActo.idEtapa eq 375 or beanPredioDocumentoActo.idEtapa eq 380 
+						or (beanPredioDocumentoActo.idEtapa eq 232 or beanPredioDocumentoActo.idEtapa eq 234) ? '' : 'display:none'}"
+					class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionDelegadoRegistro}"
+						rendered="#{beanAprobacion.vieneDeAprobacionVisitas}"/>
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionSuperintendiente}"
+						rendered="#{beanAprobacion.vieneDeAprobacionSuperintendente}" />
+					<p:outputLabel 
+						value="#{beanPredioDocumentoActo.aprobacion.procesoCoordinadorJuridico ? messageBeanSNR.commonLabelRevisionCoordinadorJuridico : messageBeanSNR.commonLabelAprobacionDelRegistrador}" 
+						rendered="#{!beanAprobacion.vieneDeAprobacionVisitas and !beanAprobacion.vieneDeAprobacionSuperintendente} "/>
+					<p:outputLabel 
+						value="#{beanPredioDocumentoActo.aprobacion.procesoCoordinadorJuridico ? messageBeanSNR.commonLabelRevisionCoordinadorJuridico : messageBeanSNR.commonLabelAprobacionDelRegistrador}" 
+						rendered="#{!beanAprobacion.vieneDeAprobacionVisitas and !beanAprobacion.vieneDeAprobacionSuperintendente} "/>
+					<p:outputLabel 
+						rendered="#{beanPredioDocumentoActo.idEtapa eq 651}"
+						value="#{messageBeanSNR.commonLabelAnalisisDeTrasladosOficinaDestino}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+				</li>
+			</ol>
+			<ol class="breadcrumb" style="#{beanPredioDocumentoActo.testamentos ? '' : 'display:none;'}">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelTestamentos}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleTurno}" /></li>
+			</ol>
+			
+			<ol class="breadcrumb" style="#{beanPredioDocumentoActo.proyectar ? '' : 'display:none;'}">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTrasladosDeMatriculas}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAnalisisDeTraslados}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelProyectarResolucion}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<h:panelGroup id="idIncludePagina">
+			    <h:panelGroup id="idRenderPag350" rendered="#{beanPredioDocumentoActo.idEtapa eq 350}">
+			        <ui:include src="detalleActoIncludeCopias.xhtml" />
+			    </h:panelGroup>
+			    <h:panelGroup id="idRenderPag" rendered="#{beanPredioDocumentoActo.idEtapa ne 350}">
+			        <ui:include src="detalleActoInclude.xhtml" />
+			    </h:panelGroup>
+			</h:panelGroup>
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			
+			<ui:fragment
+				rendered="#{beanPredioDocumentoActo.mostrarDatosDelInteresadoANotificar}">
+				<br />
+			</ui:fragment>
+			
+			<p:outputPanel id="idOPDatosInteresado">
+				<p:panel
+					header="#{messageBeanSNR.commonLabelDatosDelInteresadoANotificar}"
+					rendered="#{beanPredioDocumentoActo.mostrarDatosDelInteresadoANotificar}"
+					id="idpInteresadoANotificar" style="text-align:center"
+					toggleable="true">
+					<p:outputPanel id="idPanelListados">
+						<br />
+						<div class="ui-g" align="left">
+							<p:dataTable id="idDtPersonas"
+								value="#{beanRecepcionDocumentos.parametros.personas}"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+								var="item">
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelTipoDocumento}">
+									<h:outputText value="#{item.idDocumentoTipo}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+									<h:outputText value="#{item.numeroDocumento}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelNombres}">
+									<h:outputText
+										value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.nombreCompleto}" />
+								</p:column>
+							</p:dataTable>
+							<br />
+						</div>
+					</p:outputPanel>
+					<br />
+					<p:panel id="idPPanelDatosBasicos" collapsed="true"
+						header="#{messageBeanSNR.commonLabelDatosBasicosDelInteresado}"
+						toggleable="true">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoDePersona}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMTipoPersona" style="width:100%"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoPersona}"
+									value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.persona.idTipoPersona}"
+									disabled="true">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems value="#{beanReference.findTipoPersona()}"
+										var="tipoPersona" itemValue="#{tipoPersona.idTipoPersona}"
+										itemLabel="#{tipoPersona.descripcion}" />
+									<p:ajax event="change"
+										listener="#{beanRecepcionDocumentos.validarTipoPersonaDocumento()}"
+										update="idSOMTipoPersona idSOMTipoDoc idPanelDirRes idOLNombre idOLApellido idOLRazon @this,idOlDocumento,idSOMNacionalidad,idSOMGenero,idOlPNombre,idOlSNombre,idOlPApellido,idOlSApellido,idOlRazonSocial" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMTipoDoc" style="width:100%"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoDocumento}"
+									value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.persona.idDocumentoTipo}"
+									disabled="true">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanReference.findTipoDocumentoActivo()}"
+										var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+										itemLabel="#{tipoDoc.descripcion}" />
+									<p:ajax event="change"
+										listener="#{beanRecepcionDocumentos.validarTipoPersonaDocumento()}"
+										update="idSOMTipoPersona idSOMTipoDoc idPanelDirRes idOLNombre idOLApellido idOLRazon @this,idOlDocumento,idSOMNacionalidad,idSOMGenero,idOlPNombre,idOlSNombre,idOlPApellido,idOlSApellido,idOlRazonSocial" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idOlDocumento"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoDocumento}"
+									placeholder="#{messageBeanSNR.commonLabelDocumento}"
+									maxlength="20"
+									value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.persona.numeroDocumento}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelNacionalidad}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMNacionalidad" style="width:100%"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoNacionalidad}"
+									value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.persona.idPais}">
+									<p:ajax update="idSOMNacionalidad" />
+									<f:selectItem itemValue=""
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+									<f:selectItems value="#{beanReference.findPaises()}"
+										var="paises" itemValue="#{paises.idPais}"
+										itemLabel="#{paises.nombre}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+									value="#{messageBeanSNR.commonLabelCalidadEnQueActua}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idITCalidad" style="width:100%"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoCalidadActua}"
+									value="#{beanRecepcionDocumentos.parametros.solicitud2.idCalidadSolicitante}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanReference.findCalidadSolicitante()}"
+										var="calSol" itemValue="#{calSol.idCalidadSolicitante}"
+										itemLabel="#{calSol.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel for="idOlPNombre" id="idOLNombre"
+									indicateRequired="#{!beanRecepcionDocumentos.deshabilitarCamposPorNit}"
+									value="#{messageBeanSNR.commonLabelPrimerNombre}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idOlPNombre" maxlength="100"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerNombre}"
+									placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+									value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.persona.primerNombre}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel for="idOlSNombre"
+									value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idOlSNombre" maxlength="100"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoNombre}"
+									placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+									value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.persona.segundoNombre}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel for="idOlPApellido" id="idOLApellido"
+									indicateRequired="#{!beanRecepcionDocumentos.deshabilitarCamposPorNit}"
+									value="#{messageBeanSNR.commonLabelPrimerApellido}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idOlPApellido" maxlength="150"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerApellido}"
+									placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+									value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.persona.primerApellido}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel for="idOlSApellido"
+									value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idOlSApellido" maxlength="100"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoApellido}"
+									placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+									value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.persona.segundoApellido}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-2">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelGenero}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMGenero" style="width:100%"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoGenero}"
+									value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.persona.idNaturalGenero}">
+									<p:ajax update="idSOMGenero" />
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems value="#{beanReference.findGeneros()}"
+										var="generos" itemValue="#{generos.idNaturalGenero}"
+										itemLabel="#{generos.ilicode}" />
+								</p:selectOneMenu>
+							</div>
+	
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-6">
+								<p:outputLabel for="idOlRazonSocial" id="idOLRazon"
+									indicateRequired="#{beanRecepcionDocumentos.deshabilitarCamposPorNit}"
+									value="#{messageBeanSNR.commonLabelRazonSocial}" />
+								<br />
+								<p:inputText
+									title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoRazonSocial}"
+									onblur="value=value.toUpperCase()" id="idOlRazonSocial"
+									disabled="true"
+									placeholder="#{messageBeanSNR.commonLabelRazonSocial}"
+									value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.persona.razonSocial}" />
+							</div>
+						</div>
+					</p:panel>
+					<br />
+					<p:panel id="idPanelDirRes" toggleable="true" collapsed="true"
+						widgetVar="wvPanelDireccionR"
+						style="#{beanRecepcionDocumentos.parametros.datosDelInteresado.persona.idTipoPersona eq 'J' ? 'display: none' : ''}"
+						header="#{messageBeanSNR.commonLabelDireccionDeResidencia}">
+						<ui:include src="direccionResidenciaInclude.xhtml"/>
+					</p:panel>
+					<br />
+					<p:panel id="idPanelDirCorr" toggleable="true" collapsed="true"
+						widgetVar="wvPanelDireccionC"
+						header="#{messageBeanSNR.commonLabelDireccionDeCorrespondencia}">
+						<ui:include src="direccionCorrespondenciaInclude.xhtml"/>
+					</p:panel>
+					<br />
+					<p:panel id="idPanelDatosContacto" widgetVar="wvPanelDatosC"
+						header="#{messageBeanSNR.commonLabelDatosDelContacto}"
+						toggleable="true" collapsed="true">
+						<p:outputPanel id="idOpTelFijo">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelPaisDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:selectOneMenu id="idSOMPaisTel" style="width:80%"
+											disabled="true"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoPaisTelefonoFijo}"
+											value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.telefonoFijo.idPais}">
+											<p:ajax
+												listener="#{beanRecepcionDocumentos.cambiarPaisTelefono}"
+												update="idSOMDepTel,idItIndicativo" />
+											<f:selectItem itemValue=""
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+											<f:selectItems value="#{beanReference.findPaises()}"
+												var="paises" itemValue="#{paises.idPais}"
+												itemLabel="#{paises.nombre}" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDepartamentoDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:selectOneMenu id="idSOMDepTel" style="width:80%"
+											disabled="true"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoDepartamentoTelefonoFijo}"
+											value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.telefonoFijo.idDepartamento}">
+											<p:ajax
+												listener="#{beanRecepcionDocumentos.findIndicativoDepartamento}"
+												update="idItIndicativo" />
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems
+												value="#{beanRecepcionDocumentos.findDepartamentosTelefono()}"
+												var="depRes" itemValue="#{depRes.idDepartamento}"
+												itemLabel="#{depRes.nombre}" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<div class="ui-g-4 ui-md-4 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelIndicativo}" />
+									</div>
+									<div class="ui-g-2 ui-md-2 ui-lg-2">
+										<p:inputText onblur="value=value.toUpperCase()"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoIndicativo}"
+											id="idItIndicativo" disabled="true" size="4"
+											value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.telefonoFijo.indicativo}"
+											maxlength="15" />
+									</div>
+									<div class="ui-g-1 ui-md-1 ui-lg-1">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelSignoNumero}" />
+									</div>
+									<div class="ui-g-5 ui-md-5 ui-lg-4">
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idItTelefonoFijo"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoTelefonoFijo}"
+											placeholder="#{messageBeanSNR.commonLabelTelefonoFijo}"
+											maxlength="7"
+											disabled="true"
+											value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.telefonoFijo.telefono}">
+											<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+										</p:inputText>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelPaisDelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:selectOneMenu id="idSOMPaisTelMov" style="width:80%"
+											disabled="true"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoPaisTelefonoMovil}"
+											value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.telefonoMovil.idPais}">
+											<p:ajax update="idItIndicativoMovil" />
+											<f:selectItem itemValue=""
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+											<f:selectItems value="#{beanReference.findPaises()}"
+												var="paises" itemValue="#{paises.idPais}"
+												itemLabel="#{paises.nombre}" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<div class="ui-g-4 ui-md-4 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelIndicativo}" />
+										<p:spacer />
+									</div>
+									<div class="ui-g-2 ui-md-2 ui-lg-2">
+										<p:inputText onblur="value=value.toUpperCase()"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoIndicativoMovil}"
+											id="idItIndicativoMovil" disabled="true" size="4"
+											value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.telefonoMovil.idPais}" />
+									</div>
+									<div class="ui-g-1 ui-md-1 ui-lg-1">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelSignoNumero}" />
+										<p:spacer />
+									</div>
+	
+									<div class="ui-g-5 ui-md-5 ui-lg-5">
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idItTelefonoMovil"
+											disabled="true"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoTelefonoMovil}"
+											placeholder="#{messageBeanSNR.commonLabelTelefonoMovil}"
+											value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.telefonoMovil.telefono}"
+											maxlength="10">
+											<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+										</p:inputText>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelCorreoElectronico}#{messageBeanSNR.commonLabelObligatorio}" />
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idItEmail" style="width:83% !important"
+											title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoCorreoElectronico}"
+											placeholder="#{messageBeanSNR.commonLabelEjemploCorreo}"
+											size="30" maxlength="100"
+											disabled="true"
+											value="#{beanRecepcionDocumentos.parametros.datosDelInteresado.correoElectronico.correoElectronico}" />
+									</div>
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:panel>
+				</p:panel>
+				<br />
+			</p:outputPanel>
+			
+			<h:form id="confrontacionForm">
+				<p:growl id="idGrowl" sticky="false" showDetail="true" life="20000"
+					globalOnly="true" redisplay="false"/>
+				<br/>
+				
+				<p:remoteCommand name="failImpresion"
+					actionListener="#{beanPublicacionAvisosWeb.errorImpresion('confrontacionForm')}"
+					update="idGrowl" partialSubmit="true" global="false" />
+				<p:remoteCommand name="imprimirDocumento"
+					actionListener="#{beanPublicacionAvisosWeb.imprimirDocumentos('confrontacionForm')}"
+					update="idGrowl" partialSubmit="true" global="false" />
+				
+				<p:dataTable id="idDtCompletitudDocumentales"
+					rendered="#{beanPredioDocumentoActo.completitudDocumental != null}"
+					emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+					value="#{beanPredioDocumentoActo.completitudDocumental}" var="tiposDoc">
+					
+					<f:facet name="header">
+						<h:outputText value="#{messageBeanSNR.commonLabelDocumentosAportados}" />
+					</f:facet>
+					
+					<p:columnGroup type="header">
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelTipoDocumental}"
+							style="width: 15%;" />
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelObligatoriedad}"
+							style="width: 10%;" />
+						<p:column headerText="#{messageBeanSNR.commonLabelRecepcion}"
+							style="width: 10%" />
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelObservaciones}"
+							style="width: 23%;" />
+					</p:columnGroup>
+
+					<p:column>
+						<p:selectOneMenu id="idSOMTipoDocumental"
+							disabled="true"
+							title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosTipoDocumental}"
+							style="width:100%" value="#{tiposDoc.idTipoDocumental}">
+							<f:selectItems itemValue="#{doc.idTipoDocumental}"
+								value="#{beanReference.findAllTiposDocumentales()}"
+								var="doc"
+								itemLabel="#{doc.nombre} - #{doc.idTipoDocumental}" />
+							<p:ajax update="idSOMTipoDocumental"/>
+						</p:selectOneMenu>
+					</p:column>
+					<p:column>
+						<p:selectBooleanCheckbox id="seleccionObli"
+							disabled="true"
+							value="#{tiposDoc.seleccionado}" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu id="idSOMEntregado"
+							disabled="true"
+							style="width:100%" value="#{tiposDoc.entregado}">
+							<f:selectItem
+								itemLabel="#{messageBeanSNR.commonLabelNo}"
+								itemValue="N" />
+							<f:selectItem
+								itemLabel="#{messageBeanSNR.commonLabelSi}"
+								itemValue="S" />
+							<p:ajax update="idSOMEntregado"/>
+						</p:selectOneMenu>
+					</p:column>
+
+					<p:column>
+						<p:selectOneMenu id="idSOMRecepcionDocumento"
+							disabled="true"
+							title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosRecepcionDocumento}"
+							style="width:100%" value="#{tiposDoc.medioRecepcion}">
+							<f:selectItem
+									itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+									itemValue="" />
+							<f:selectItems itemValue="#{comp}"
+								value="#{beanReference.findAllRecepcionDocumento()}"
+								var="comp"
+								itemLabel="#{comp}" />
+							<p:ajax update="idSOMTipoDocumental"/>
+						</p:selectOneMenu>
+					</p:column>
+					
+					<p:column>
+						<p:inputText id="observaTipo"
+							onblur="value=value.toUpperCase()"
+							disabled="true"
+							style="#{tiposDoc.campoRojoObservacion ? 'border-color:red !important;width:100%;' : 'width:100%;'};"
+							value="#{tiposDoc.observaciones}" maxlength="200"
+							title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosObservaciones}"
+							placeholder="#{messageBeanSNR.commonLabelObservaciones}">
+							<p:ajax event="blur" update="observaTipo"/>
+						</p:inputText>
+					</p:column>
+				</p:dataTable>
+				
+				<!-- Panel resultados de traslados -->
+				<p:outputPanel id="idOPMatriculasTraslados660"
+					rendered="#{beanPredioDocumentoActo.aprobacion.vieneDeEjecutorTraslados}">
+					<p:panel header="#{!beanPredioDocumentoActo.confirmarTraslados660Dialog and !beanPredioDocumentoActo.confirmarTraslados660 ? messageBeanSNR.commonLabelMatriculasTrasladar : messageBeanSNR.commonLabelResultadoTraslado}"
+						style="text-align:center">
+						<p:dataTable
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+							value="#{beanPredioDocumentoActo.ejecucionMatriculasTraslado}"
+							var="item">
+							<p:column headerText="#{messageBeanSNR.commonLabelCirculoRegistralOrigen}">
+								<h:outputText value="#{item.idCirculoOrigen}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelMatriculaOrigen}">
+								<h:outputText value="#{item.idMatriculaOrigen}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}">
+								<h:outputText value="#{item.direccionOrigen}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelNoAnotaciones}">
+								<h:outputText value="#{item.anotacionesOrigen}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelCirculoRegistralDestino}">
+								<h:outputText value="#{item.idCirculoDestino}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelMatriculaDestino}" 
+								rendered="#{beanPredioDocumentoActo.confirmarTraslados660Dialog and beanPredioDocumentoActo.confirmarTraslados660}">
+								<h:outputText value="#{item.idMatriculaDestinoTmp}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}"
+								rendered="#{beanPredioDocumentoActo.confirmarTraslados660Dialog and beanPredioDocumentoActo.confirmarTraslados660}">
+								<h:outputText value="#{item.direccionDestino}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelNoAnotaciones}"
+								rendered="#{beanPredioDocumentoActo.confirmarTraslados660Dialog and beanPredioDocumentoActo.confirmarTraslados660}">
+								<h:outputText value="#{item.anotacionesDestino}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelConsultaMatricula}"
+								rendered="#{!beanPredioDocumentoActo.confirmarTraslados660Dialog and !beanPredioDocumentoActo.confirmarTraslados660}">
+								<div align="center">
+									<p:commandButton icon="fa fa-trash" iconPos="left"
+										actionListener="#{beanPredioDocumentoActo.setSeleccionTrasladoMatricula(item)}"
+										onclick="PF('dlgInactivarMatriculaTraslado').show();" />
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</p:outputPanel>
+				
+				<p:panel header="#{messageBeanSNR.commonLabelApoyoNacional}"
+					rendered="#{beanPredioDocumentoActo.idEtapa eq '760'}">
+					<div class="ui-g" align="center">
+						<div class="ui-g-12 ui-md-4 ui-lg-2">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelOripSolicitante}" />
+							<br />
+							<p:selectOneMenu style="width:100%" id="idCirculo"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoOripSolicitante}"
+								disabled="true"
+								value="#{beanPredioDocumentoActo.idCirculoOripSolicitante}">
+								<f:selectItem
+									itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+									itemValue="" />
+								<f:selectItems
+									value="#{beanReference.findCirculoRegistral(false)}"
+									var="circulo"
+									itemValue="#{circulo.idCirculo}"
+									itemLabel="#{circulo.idCirculo} - #{circulo.nombre}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+					
+					<br/>
+					
+					<p:outputPanel id="opCheksRegional">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelRegional}" />
+						<div class="ui-g">
+							<ui:repeat var="item" value="#{beanPredioDocumentoActo.regionales}">
+								<div class="ui-g-12 ui-md-6 ui-lg-2">
+									<h:outputText value="#{item.nombre}" />
+									<p:spacer/>
+									<p:spacer/>
+									<p:spacer/>
+									<p:selectBooleanCheckbox value="#{item.seleccionado}" />
+								</div>
+							</ui:repeat>
+						</div>
+					</p:outputPanel>
+					
+					<div class="ui-g" align="center">
+						<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+							<h:panelGroup>
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonCargar}"
+									actionListener="#{beanPredioDocumentoActo.cargarSolicitudRegionalOrip()}"
+									ajax="true" icon="fa fa-newspaper-o"
+									update="idDSolicitudRegionalOrip" />
+							</h:panelGroup>
+						</div>
+					</div>
+					
+					<br />
+					
+					<div class="ui-g">
+						<p:dataTable id="idDSolicitudRegionalOrip"
+							value="#{beanPredioDocumentoActo.solicitudRegionalOrip}"
+							var="item" paginator="true" rows="50"
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+							<p:column headerText="#{messageBeanSNR.commonLabelOrip}">
+								<h:outputText value="#{item.nombreOrip}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelRegional}">
+								<h:outputText value="#{item.nombreRegional}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelHabilitar}">
+								<p:selectOneMenu id="idSOMHabilitar"
+									style="width:100%" value="#{item.habilitar}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelNo}"
+										itemValue="N" />
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSi}"
+										itemValue="S" />
+									<p:ajax update="idDSolicitudRegionalOrip"></p:ajax>
+								</p:selectOneMenu>
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelOrden}">
+								<p:inputNumber value="#{item.orden}"
+									decimalPlaces="0">
+									<p:keyFilter regEx="/[\d\-\.]/" preventPaste="false" />
+								</p:inputNumber>
+							</p:column>
+							<p:column width="30%"
+								headerText="#{messageBeanSNR.commonLabelObservaciones}">
+								<p:inputText value="#{item.observaciones}"
+									placeholder="#{messageBeanSNR.commonLabelObservaciones}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelRevision}">
+								<div align="center">
+									<p:commandButton
+										icon="fa fa-check" iconPos="left"
+										rendered="#{item.parametrizacionCalificadores eq 'S'}"
+										disabled="true">
+									</p:commandButton>
+									<p:commandButton
+										rendered="#{item.parametrizacionCalificadores ne 'S'}"
+										icon="fa fa-times" iconPos="left"
+										disabled="true">
+									</p:commandButton>
+								</div>
+							</p:column>
+														
+							<p:column headerText="#{messageBeanSNR.commonLabelHabilitarCalificadores}"
+									width="8%">
+								<div align="center">
+									<h:commandButton 
+										rendered="#{item.habilitar eq 'S'}"
+										value="#{messageBeanSNR.commonLabelVerDetalle}"
+										action="#{beanPredioDocumentoActo.cargarParametricaUsuarioLinea(item)}"
+										image="../images/find.png">
+									</h:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</div>
+					
+					<div class="ui-g" align="center">
+						<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+							<h:panelGroup>
+								<p:commandButton
+									id="idGuardarCambios"
+									value="#{messageBeanSNR.commonLabelGuardarCambios}"
+									disabled="#{beanPredioDocumentoActo.solicitudesRegionalOripGuardadas || !beanPredioDocumentoActo.habilitarApoyoNacional}"
+									actionListener="#{beanPredioDocumentoActo.guardarSolicitudesApoyoRegionalOrip()}"
+									icon="fa fa-check"
+									update="confrontacionForm:idGrowl,idGuardarCambios" />
+							</h:panelGroup>
+						</div>
+					</div>
+				</p:panel>
+				
+				<!-- Panel Motivos Tramite de etapas diferentes a correcciones -->
+				<p:outputPanel id="idOPTramitesCalificacion"
+					rendered="#{!beanPredioDocumentoActo.aprobacion.vieneDeAprobacion and !beanPredioDocumentoActo.aprobacion.vieneDeAntiguoSistema and 
+						!beanPredioDocumentoActo.homologacionActosLiquidacion and beanPredioDocumentoActo.idEtapa ne 375 and beanPredioDocumentoActo.idEtapa ne '380' and beanPredioDocumentoActo.idEtapa ne 232 and beanPredioDocumentoActo.idEtapa ne 234}">
+					<p:panel
+						header="#{messageBeanSNR.commonLabelTramitesARealizar}"
+						toggleable="true" rendered="#{!beanPredioDocumentoActo.lectura}"
+						style="text-align: left">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelMotivoTramiteDosPuntos}" />
+						<p:selectOneRadio layout="responsive" columns="2" 
+							style="text-align: left; font-size: 12px;"
+							value="#{beanPredioDocumentoActo.motivoTramite}"
+							styleClass="ui-selectoneradiosinnegrilla">
+							<f:selectItems itemValue="#{it.idMotivo}" var="it"
+								itemLabel="#{it.descripcion}"
+								value="#{beanPredioDocumentoActo.motivos}" />
+							<p:ajax listener="#{beanPredioDocumentoActo.cargarDecision}" 
+								update="confrontacionForm:opObservacionesCorreciones,confrontacionForm:idDetalleActoButtonContinuar,idIncludePagina"/>
+						</p:selectOneRadio>
+					</p:panel>
+				</p:outputPanel>
+				
+				<p:panel widgetVar="panelResultadoConsulta"
+					header="#{messageBeanSNR.commonLabelResultadoDeLaConsulta}"
+					rendered="#{beanPredioDocumentoActo.idEtapa eq 375}"
+					toggleable="true">
+					
+					<p:dataTable
+						rendered="#{beanPredioDocumentoActo.mostrarLiquidacionItem}"
+						emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+						value="#{beanPredioDocumentoActo.liquidacionItem}" var="item"
+						tableStyle="width:auto">
+						<f:facet name="header">
+							<h:outputText
+								value="#{messageBeanSNR.commonButtonDetalleDeLiquidacion}" />
+						</f:facet>
+						<p:columnGroup type="header">
+							<p:row>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIdentificadorDelProceso}" />
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelCodigoDelActo}" />
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+								<p:column headerText="#{messageBeanSNR.commonLabelCantidad}" />
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelCuantiaDelActo}" />
+								<p:column headerText="#{messageBeanSNR.commonLabelValorAvaluo}" />
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelCantidadDeActos}" />
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelDerechosACobrar}" />
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelConservacionDocumental}" />
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelTotalLiquidado}" />
+							</p:row>
+						</p:columnGroup>
+						<p:column>
+							<h:outputText
+								value="#{item.proceso.idProceso} - #{item.proceso.nombre}" />
+						</p:column>
+						<p:column>
+							<h:outputText
+								value="#{item.tipoActo.idTipoActo} - #{item.tipoActo.nombre}" />
+						</p:column>
+						<p:column>
+							<h:outputText
+								value="#{item.circuloRegistral.idCirculo} - #{item.circuloRegistral.nombre}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{item.cantidad}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{item.accActo.cuantia}">
+								<f:convertNumber pattern="¤#,##0.00"
+									currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<h:outputText value="#{item.accActo.valorAvaluo}">
+								<f:convertNumber pattern="¤#,##0.00"
+									currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<h:outputText value="#{item.accActo.cantidadActos}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{item.valorFinal}">
+								<f:convertNumber pattern="¤#,##0.00"
+									currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<h:outputText value="#{item.valorConservDocumental}">
+								<f:convertNumber pattern="¤#,##0.00"
+									currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<h:outputText value="#{item.valorTotal}">
+								<f:convertNumber pattern="¤#,##0.00"
+									currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
+					
+					<p:dataTable id="idDtListadoTurnosDevolucion"
+						rendered="#{!beanPredioDocumentoActo.mostrarLiquidacionItem}"
+						value="#{beanPredioDocumentoActo.actosDevolucionDinero}"
+						var="item"
+						emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+						<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+							<h:outputText value="#{item.nir}" />
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+							<p:commandLink
+								action="#{beanPredioDocumentoActo.detalleTurno}">
+								<f:param name="idTurno" value="#{item.idTurno}" />
+								<h:outputText value="#{item.idTurno}"
+									styleClass="subrayado" />
+							</p:commandLink>
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelActo}">
+							<p:commandLink id="idCLinkActo" styleClass="subrayado"
+								actionListener="#{beanPredioDocumentoActo.consultaLiquidacion(item)}"
+								update="dlgdetalleLiq:idDtRegistrosDetalleLiq">
+								<h:outputText
+									value="#{item.idTipoActo} - #{item.especificacionActo}" />
+							</p:commandLink>
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelValorDerechosDeRegistro}">
+							<h:outputText value="#{item.valorDerechos}" />
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelTotalLiquidado}">
+							<h:outputText value="#{item.valorTotalLiquidado}" />
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelSeleccione}">
+							<p:selectBooleanCheckbox value="#{item.seleccionado}">
+								<p:ajax
+									listener="#{beanPredioDocumentoActo.validarTurnoSeleccionado(item)}"
+									update="confrontacionForm:idDtListadoTurnosDevolucion" />
+							</p:selectBooleanCheckbox>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+				
+				<!-- Panel Seleccion Correcion etapa 130 -->
+				<p:outputPanel rendered="#{beanPredioDocumentoActo.correccion}">
+					<p:panel id="idPcorrecciones"
+						header="#{beanPredioDocumentoActo.nombreMotivoTramite}"
+						toggleable="true">
+						<p:fragment>
+							<p:autoUpdate />
+							<p:panelGrid columns="4" layout="grid">
+								<p:outputLabel for="@next"
+									value="#{messageBeanSNR.commonLabelAsociarMatricula}"
+									styleClass="otherStyle" />
+								<p:selectBooleanCheckbox
+									value="#{beanPredioDocumentoActo.insertaMatriculaCorreccion}">
+									<p:ajax listener="#{beanPredioDocumentoActo.validarDecision}" />
+								</p:selectBooleanCheckbox>
+								<p:outputLabel for="@next"
+									value="#{messageBeanSNR.commonLabelDesasociarMatricula}"
+									styleClass="otherStyle" />
+								<p:selectBooleanCheckbox
+									disabled="#{beanPredioDocumentoActo.baldios}"
+									value="#{beanPredioDocumentoActo.eliminarMatriculaCorreccion}">
+									<p:ajax listener="#{beanPredioDocumentoActo.validarDecision}" />
+								</p:selectBooleanCheckbox>
+								<p:outputLabel for="@next"
+									value="#{messageBeanSNR.commonLabelVerificarFolioCerrado}"
+									rendered="#{beanPredioDocumentoActo.idEtapa ne 170 and beanPredioDocumentoActo.idEtapa ne 175 and beanPredioDocumentoActo.idEtapa ne 460}"
+									styleClass="otherStyle" />
+								<p:selectBooleanCheckbox
+									disabled="#{beanPredioDocumentoActo.baldios}"
+									rendered="#{beanPredioDocumentoActo.idEtapa ne 170 and beanPredioDocumentoActo.idEtapa ne 175 and beanPredioDocumentoActo.idEtapa ne 460}"
+									value="#{beanPredioDocumentoActo.verificaFolioCerradoCorreccion}">
+									<p:ajax
+										listener="#{beanPredioDocumentoActo.validarDecision(false)}" />
+								</p:selectBooleanCheckbox>
+							</p:panelGrid>
+						</p:fragment>
+					</p:panel>
+				</p:outputPanel>
+				<!-- Panel Motivos Tramite de etapa correcciones -->
+				<p:outputPanel id="opObservacionesCorreciones">
+					<p:outputPanel rendered="#{(beanPredioDocumentoActo.idEtapa == 130 or beanPredioDocumentoActo.idEtapa == 170 or beanPredioDocumentoActo.idEtapa == 650 or beanPredioDocumentoActo.idEtapa == 415 or beanPredioDocumentoActo.antiguoSistemaActuacionesAdministrativas) and !beanAprobacion.vieneDeCorrecciones}">
+						<br />
+						<div align="left">
+							<strong>
+								<p:outputLabel for="idObservacionesEtapa130"
+									value="#{beanPredioDocumentoActo.actuacionesAdministrativas or beanPredioDocumentoActo.antiguoSistemaActuacionesAdministrativas ? messageBeanSNR.commonLabelJustificacion : messageBeanSNR.commonLabelObservaciones}#{beanPredioDocumentoActo.actuacionesAdministrativas or beanPredioDocumentoActo.antiguoSistemaActuacionesAdministrativas ? messageBeanSNR.commonLabelObligatorio : ''}"/>
+							</strong>
+							<p:inputTextarea rows="5" cols="240" id="idObservacionesEtapa130"
+								title="#{beanPredioDocumentoActo.actuacionesAdministrativas or beanPredioDocumentoActo.antiguoSistemaActuacionesAdministrativas ? tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoMayorValorJustificacion : tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoRegistroCalificacionObservaciones}"
+								onblur="value=value.toUpperCase()"
+								value="#{beanPredioDocumentoActo.observacionesEtapa130}"
+								queryDelay="750" maxlength="4000" minQueryLength="4"
+								onkeyup="contarCaracteres('confrontacionForm:idObservacionesEtapa130','confrontacionForm:idContadorObservaciones')">
+							</p:inputTextarea>
+							<div align="right">
+								<h:outputText id="idContadorObservaciones" align="right"
+									value="#{beanPredioDocumentoActo.contar(beanPredioDocumentoActo.observacionesEtapa130)}" />
+								<h:outputText value=" #{messageBeanSNR.commonLabelCaracteres}" />
+							</div>
+						</div>
+					</p:outputPanel>
+				</p:outputPanel>
+				<p:outputPanel id="idOPHomologacionActosLiquidacion"
+					rendered="#{beanPredioDocumentoActo.homologacionActosLiquidacion}">
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:outputLabel id="idOLObservacionesCalificacion"
+								value="#{messageBeanSNR.commonLabelObservacionesCalificacion}#{messageBeanSNR.commonLabelObligatorio}" />
+							<p:inputTextarea id="idITAObservacionesCalificacion" rows="6"
+								cols="50"
+								onmouseover="contarCaracteres('confrontacionForm:idITAObservacionesCalificacion','confrontacionForm:idOTNumCaracteresObservacionesCalificacion')"
+								onkeydown="contarCaracteres('confrontacionForm:idITAObservacionesCalificacion','confrontacionForm:idOTNumCaracteresObservacionesCalificacion')"
+								onkeyup="contarCaracteres('confrontacionForm:idITAObservacionesCalificacion','confrontacionForm:idOTNumCaracteresObservacionesCalificacion')"
+								onblur="value=value.toUpperCase()" maxlength="400"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoMayorValorJustificacion}"
+								value="#{beanPredioDocumentoActo.observacionesCalificacion}"
+								disabled="true" />
+							<p:outputPanel>
+								<div align="right">
+									<h:outputText id="idOTNumCaracteresObservacionesCalificacion"
+										align="right"
+										value="#{beanPredioDocumentoActo.contarCaracteres(beanPredioDocumentoActo.observacionesCalificacion)}" />
+									<h:outputText value=" #{messageBeanSNR.commonLabelCaracteres}" />
+								</div>
+							</p:outputPanel>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:panel header="#{messageBeanSNR.commonLabelTramitesARealizar}"
+								toggleable="true" style="text-align: left">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelMotivoTramiteDosPuntos}" />
+								<p:selectOneRadio layout="responsive" columns="1"
+									style="text-align: left;width:100%;font-size: 12px;"
+									value="#{beanPredioDocumentoActo.motivoTramite}"
+									styleClass="ui-selectoneradiosinnegrilla">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelCargarActos}"
+										itemValue="#{beanPredioDocumentoActo.motivoHomologacionActosLiquidacion}" />
+								</p:selectOneRadio>
+							</p:panel>
+						</div>
+					</div>
+				</p:outputPanel>
+				<p:outputPanel id="idOPTramitesAprobacion"
+					rendered="#{beanPredioDocumentoActo.aprobacion.vieneDeAprobacion or beanPredioDocumentoActo.aprobacion.vieneDeAntiguoSistema}">
+					<p:panel
+						header="#{messageBeanSNR.commonLabelJustificacionCierreFolio}"
+						toggleable="true" 
+						rendered="#{!beanPredioDocumentoActo.vieneDeVisitas and !beanPredioDocumentoActo.lectura and !beanAprobacion.vieneDeCorrecciones and not(beanPredioDocumentoActo.idEtapa eq 675 or beanPredioDocumentoActo.idEtapa eq 680 or beanPredioDocumentoActo.idEtapa eq 685) and beanPredioDocumentoActo.idEtapa ne '380' and beanPredioDocumentoActo.idEtapa ne '385' and beanPredioDocumentoActo.idEtapa ne '760'}"
+						style="text-align:center">
+						<p:inputTextarea cols="50" rows="6"
+							id="idITAjustificacionCierreFolio" readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoJustificacionCierreFolio}"
+							value="#{beanPredioDocumentoActo.justificacionCierreFolio}" />
+					</p:panel>
+					<ui:fragment
+						rendered="#{!beanPredioDocumentoActo.lectura and !beanAprobacion.vieneDeCorrecciones and not(beanPredioDocumentoActo.idEtapa eq 675 or beanPredioDocumentoActo.idEtapa eq 680 or beanPredioDocumentoActo.idEtapa eq 685)}">
+						<br />
+					</ui:fragment>
+					<p:panel toggleable="true"
+						header="#{beanPredioDocumentoActo.aprobacion.procesoCoordinadorJuridico ? messageBeanSNR.commonLabelTramitesARealizarPorCoordinadorJuridico : messageBeanSNR.commonLabelTramitesARealizarPorAprobacion}"
+						style="text-align:center">
+						<div class="ui-g" align="center">
+							<div align="center" class="ui-g-12 ui-md-12 ui-lg-12">
+								<p:selectOneRadio layout="responsive" columns="2"
+									style="text-align: initial;width:100%;"
+									rendered="#{!beanPredioDocumentoActo.esAprobadorSecuencia and !beanPredioDocumentoActo.esGrabacionMatriculas and !beanPredioDocumentoActo.esProrrogaEntregaPruebas and beanPredioDocumentoActo.idEtapa ne '760' and beanPredioDocumentoActo.idEtapa eq '810'}"
+									value="#{beanPredioDocumentoActo.decisionAprobacion}"
+									styleClass="ui-selectoneradiosinnegrilla">
+									<f:selectItem itemValue="F"
+										itemLabel="#{beanPredioDocumentoActo.negarSolicitudGrabacion ? messageBeanSNR.commonLabelNegarSolicitudProrrogaDocumentacion : messageBeanSNR.commonLabelTurnoRevisadoMayus}" />
+										<f:selectItem itemValue="D"
+										itemLabel="#{beanPredioDocumentoActo.aprobacion.devolucionAntiguoSistema ? messageBeanSNR.commonLabelAnalisisAntiguoSistemaMayus : messageBeanSNR.commonLabelDevolverAEtapaAnterior}"/>
+									<p:ajax event="click"
+										update="idOPCausalDevolucion,idOPBotonesAprobacion" />
+								</p:selectOneRadio>
+								
+								<p:selectOneRadio layout="responsive" columns="2"
+									style="text-align: initial;width:100%;"
+									rendered="#{!beanPredioDocumentoActo.esAprobadorSecuencia and !beanPredioDocumentoActo.esGrabacionMatriculas and !beanPredioDocumentoActo.esProrrogaEntregaPruebas and beanPredioDocumentoActo.idEtapa ne '760' and beanPredioDocumentoActo.idEtapa ne '810'}"
+									value="#{beanPredioDocumentoActo.decisionAprobacion}"
+									styleClass="ui-selectoneradiosinnegrilla">
+									<f:selectItem itemValue="F"
+										itemLabel="#{beanPredioDocumentoActo.negarSolicitudGrabacion ? messageBeanSNR.commonLabelNegarSolicitudProrrogaDocumentacion : messageBeanSNR.commonLabelTurnoRevisadoMayus}" />
+									<f:selectItem itemValue="D"
+										itemLabel="#{beanPredioDocumentoActo.aprobacion.devolucionAntiguoSistema ? messageBeanSNR.commonLabelAnalisisAntiguoSistemaMayus : messageBeanSNR.commonLabelDevolverAEtapaAnterior}"/>
+									<p:ajax event="click"
+										update="idOPCausalDevolucion,idOPBotonesAprobacion" />
+								</p:selectOneRadio>
+								
+								<p:selectOneRadio layout="responsive" columns="2"
+									style="text-align: initial;width:100%;"
+									rendered="#{beanPredioDocumentoActo.idEtapa eq '760'}"
+									value="#{beanPredioDocumentoActo.decisionAprobacion}"
+									styleClass="ui-selectoneradiosinnegrilla">
+									<f:selectItem itemValue="A"
+										itemLabel="#{messageBeanSNR.commonLabelAprobarReasignacion}" />
+									<f:selectItem itemValue="D"
+										itemLabel="#{messageBeanSNR.commonLabelNegarSolicitudDeApoyo}" />
+									<p:ajax event="click"
+										update="idOPCausalDevolucion,idOPBotonesAprobacion" />
+								</p:selectOneRadio>
+								
+								<p:selectOneRadio layout="responsive" columns="2"
+									style="text-align: initial;width:100%;"
+									rendered="#{beanPredioDocumentoActo.esProrrogaEntregaPruebas}"
+									value="#{beanPredioDocumentoActo.decisionAprobacion}"
+									styleClass="ui-selectoneradiosinnegrilla">
+									<f:selectItem itemValue="A"
+										itemLabel="#{messageBeanSNR.commonLabelAprobarProrrogaEntregaDePruebas}" />
+									<f:selectItem itemValue="N"
+										itemLabel="#{messageBeanSNR.commonLabelNegarProrrogaEntregaDePruebas}" />
+									<p:ajax event="click"
+										update="idOPCausalDevolucion,idOPBotonesAprobacion" />
+								</p:selectOneRadio>
+
+								<p:selectOneRadio layout="responsive" columns="2"
+									rendered="#{beanPredioDocumentoActo.esAprobadorSecuencia and !beanPredioDocumentoActo.esGrabacionMatriculas}"
+									style="text-align: initial;width:100%;"
+									value="#{beanPredioDocumentoActo.decisionAprobacion}"
+									styleClass="ui-selectoneradiosinnegrilla">
+									<f:selectItem itemValue="D"
+										itemLabel="#{beanPredioDocumentoActo.aprobacion.devolucionAntiguoSistema ? messageBeanSNR.commonLabelAnalisisAntiguoSistemaMayus : 
+												beanPredioDocumentoActo.idEtapa eq 195  ? messageBeanSNR.commonLabelDevolverAEjecutorDeCorrecciones : messageBeanSNR.commonLabelDevolverCalificacionMayus}" />
+									<p:ajax event="click"
+										update="idOPCausalDevolucion,idOPBotonesAprobacion" />
+								</p:selectOneRadio>
+								
+								<p:selectOneRadio layout="responsive" columns="2"
+									style="text-align: initial;width:100%;"
+									rendered="#{beanPredioDocumentoActo.esGrabacionMatriculas}"
+									value="#{beanPredioDocumentoActo.decisionAprobacion}"
+									styleClass="ui-selectoneradiosinnegrilla">
+									<f:selectItem itemValue="F"
+										itemLabel="#{beanPredioDocumentoActo.mensajeMotivoTramite}" />
+									<f:selectItem itemValue="D"
+										itemLabel="#{beanPredioDocumentoActo.aprobacion.devolucionAntiguoSistema ? messageBeanSNR.commonLabelAnalisisAntiguoSistemaMayus : messageBeanSNR.commonLabelDevolverAEtapaAnterior}" />
+									<p:ajax event="click"
+										update="idOPCausalDevolucion,idOPBotonesAprobacion" />
+								</p:selectOneRadio>
+								
+							</div>
+						</div>
+					</p:panel>
+					<br />
+				</p:outputPanel>
+				<!-- Panel Seleccion Correcion -->
+				<p:outputPanel rendered="#{beanPredioDocumentoActo.confrontacion}">
+					<p:panel id="confrontacion1"
+						header="#{messageBeanSNR.commonLabelModDatosBasicosYmatriculas}"
+						toggleable="true">
+						<p:panelGrid columns="4" layout="grid">
+							<p:outputLabel for="@next"
+								value="#{messageBeanSNR.commonLabelCorregirDatosBasicos}"
+								styleClass="otherStyle" />
+							<p:selectBooleanCheckbox
+								value="#{beanPredioDocumentoActo.datosBasicos}" />
+							<p:outputLabel for="@next"
+								value="#{messageBeanSNR.commonLabelInsertarMatricula}"
+								styleClass="otherStyle" />
+							<p:selectBooleanCheckbox
+								disabled="#{beanPredioDocumentoActo.baldios}"
+								value="#{beanPredioDocumentoActo.insertaMatricula}" />
+							<p:outputLabel for="@next"
+								value="#{messageBeanSNR.commonLabelDesasociarMatricula}"
+								styleClass="otherStyle" />
+							<p:selectBooleanCheckbox
+								disabled="#{beanPredioDocumentoActo.baldios}"
+								value="#{beanPredioDocumentoActo.eliminaMatricula}" />
+							<p:outputLabel for="@next"
+								value="#{messageBeanSNR.commonLabelVerificarFolioCerrado}"
+								styleClass="otherStyle" />
+							<p:selectBooleanCheckbox
+								disabled="#{beanPredioDocumentoActo.baldios}"
+								value="#{beanPredioDocumentoActo.verificaFolioCerrado}" />
+						</p:panelGrid>
+					</p:panel>
+					<br />
+				</p:outputPanel>
+				
+				<!-- Revisar cargada de archivos PDF -->
+								
+				<p:outputPanel id="idOPDocumentosSoporte"
+					rendered="#{beanPredioDocumentoActo.idEtapa eq 232 or beanPredioDocumentoActo.idEtapa eq 234}">
+					<p:outputPanel>
+						<br />
+						<div class="ui-c">
+							<div class="ui-g-12 ui-md-6 ui-lg-12">
+								<p:fileUpload
+									fileUploadListener="#{beanPublicacionAvisosWeb.cargarDocumentoPdf}"
+									mode="advanced" dragDropSupport="true"
+									cancelLabel="#{messageBeanSNR.commonButtonCancelar}"
+									uploadLabel="#{messageBeanSNR.commonLabelCargar}"
+									fileLimitMessage="#{messageBeanSNR.commonLabelSoloCargarUnArchivoALaVez}"
+									invalidFileMessage="#{messageBeanSNR.commonLabelElArchivoCargueDebeSerPDF}"
+									label="#{messageBeanSNR.commonLabelCargarPfdSoporte}"
+									sizeLimit="5000000"
+									update="idPDocsCargados,idDTDocsCargados,idOPDocumentosSoporte"
+									invalidSizeMessage="#{messageBeanSNR.commonLabelElArchivoCargueNoPuedeExcederLos5Mb}"
+									id="idFuFileNotificacion" widgetVar="idFuFileNotificacion"
+									fileLimit="1" allowTypes="/(\.|\/)(pdf)$/"
+									oncomplete="PF('idFuFileNotificacion').clear();" />
+							</div>
+							<br />
+							<p:panel id="idPDocsCargados"
+								header="#{messageBeanSNR.commonLabelDocumentosCargados}">
+								<p:dataTable
+									value="#{beanPublicacionAvisosWeb.documentosPdfCargados}"
+									var="doc" id="idDTDocsCargados"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelNombreDeArchivo}">
+										<h:outputText value="#{doc.name}" />
+									</p:column>
+
+									<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+										style="align: left;" width="10%">
+										<p:commandButton icon="fa fa-trash" iconPos="left"
+											update="confrontacionForm:idOPDocumentosSoporte,confrontacionForm:idPDocsCargados"
+											title="#{messageBeanSNR.commonLabelEliminar}"
+											actionListener="#{beanPublicacionAvisosWeb.eliminarDocumento(doc)}">
+										</p:commandButton>
+									</p:column>
+								</p:dataTable>
+							</p:panel>
+						</div>
+					</p:outputPanel>
+				</p:outputPanel>
+				
+				<!-- Imprimir -->
+				<p:outputPanel id="idPanelDocsImprimir">
+					<p:panel header="#{messageBeanSNR.commonLabelDocumentosAImprimir}"
+						toggleable="true"
+						rendered="#{beanPublicacionAvisosWeb.listoParaImprimir()}">
+						<p:outputPanel>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:dataTable id="idDtDocsImprimir" var="item"
+										value="#{beanPublicacionAvisosWeb.obtenerDocumentoImprimir()}"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+										<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+											<h:outputText value="#{item.tipo}" />
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelEstado}">
+											<h:outputText id="estadoDocumento"
+												value="#{item.estadoImpresion}" />
+										</p:column>
+									</p:dataTable>
+								</div>
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+									<p:commandButton value="#{messageBeanSNR.commonLabelImprimir}"
+										global="false" icon="fa fa-print" id="botonImprimir"
+										widgetVar="botonImprimir" update="confrontacionForm:idGrowl"
+										actionListener="#{beanPublicacionAvisosWeb.imprimirDocumentos(true,'confrontacionForm')}" />
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:panel>
+				</p:outputPanel>
+				
+				
+				<!-- Botones -->
+				<p:outputPanel
+					rendered="#{!beanPredioDocumentoActo.aprobacion.vieneDeAprobacion and !beanPredioDocumentoActo.aprobacion.vieneDeAntiguoSistema and beanPredioDocumentoActo.idEtapa ne '380'}">
+					<div class="ui-g">
+						<!-- Botones calificacion -->
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left"
+							style="display:#{beanPredioDocumentoActo.confrontacion and beanPredioDocumentoActo.idEtapa != 130 ? 'block' : 'none'};">
+							<p:commandButton id="volver"
+								value="#{messageBeanSNR.commonLabelRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="detalleActo?faces-redirect=true"
+								actionListener="#{beanPredioDocumentoActo.ocultarVolver}"
+								update="confrontacionForm">
+							</p:commandButton>
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left"
+							style="display:#{not(beanPredioDocumentoActo.confrontacion) and beanPredioDocumentoActo.idEtapa != 130 and !beanPredioDocumentoActo.administracionHomologacionActosLiquidacion and !beanPredioDocumentoActo.aprobacion.vieneDeEjecutorTraslados and not(beanPredioDocumentoActo.idEtapa eq 232 or beanPredioDocumentoActo.idEtapa eq 234) ? 'block' : 'none'};">
+							<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="turnos?faces-redirect=true">
+							</p:commandButton>
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left"
+							style="display:#{beanPredioDocumentoActo.administracionHomologacionActosLiquidacion ? 'block' : 'none'};">
+							<p:commandButton id="administracionHomologacionActosLiquidacion"
+								value="#{messageBeanSNR.commonLabelRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="administracionHomologacionActosLiquidacion?faces-redirect=true">
+							</p:commandButton>
+						</div>
+						<!-- Botones correcciones -->
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left"
+							style="display:#{beanPredioDocumentoActo.correccion and beanPredioDocumentoActo.idEtapa == 130 ? 'block' : 'none'};">
+							<p:commandButton id="volverCorreccion"
+								value="#{messageBeanSNR.commonLabelRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="detalleActo?faces-redirect=true"
+								actionListener="#{beanPredioDocumentoActo.ocultarVolverCorreccion}"
+								update="confrontacionForm">
+							</p:commandButton>
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left"
+							style="display:#{not(beanPredioDocumentoActo.correccion) and (beanPredioDocumentoActo.idEtapa == 130)  ? 'block' : 'none'};">
+							<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="turnos?faces-redirect=true">
+							</p:commandButton>
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left"
+							style="display:#{beanPredioDocumentoActo.idEtapa eq 232 or beanPredioDocumentoActo.idEtapa eq 234 ? 'block' : 'none'};">
+							<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="fijacionAvisos?faces-redirect=true">
+							</p:commandButton>
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="right"
+						style="display:#{!beanPredioDocumentoActo.aprobacion.vieneDeEjecutorTraslados ? 'block' : 'none'};">
+							<p:commandButton value="#{beanPredioDocumentoActo.actuacionesAdministrativas ? messageBeanSNR.commonButtonEnviarAActuacionesAdministrativas : beanPredioDocumentoActo.antiguoSistemaActuacionesAdministrativas ? messageBeanSNR.commonButtonEnviarAAntiguoSistema : messageBeanSNR.commonButtonContinuar}"
+								id="idDetalleActoButtonContinuar"
+								rendered="#{(beanPredioDocumentoActo.idEtapa ne 375) and not(beanPredioDocumentoActo.idEtapa eq 232 or beanPredioDocumentoActo.idEtapa eq 234)}"
+								action="#{beanPredioDocumentoActo.enviaPagina}" ajax="false"
+								update="confrontacion1,idPcorrecciones,volver,volverCorreccion"
+								icon="fa fa-arrow-circle-right"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								iconPos="right">
+								<f:param name="idTurno"
+									value="#{beanPredioDocumentoActo.idTurno}" />
+								<f:param name="idMotivo"
+									value="#{beanPredioDocumentoActo.motivoTramite}" />
+								<f:param name="idConfrontacion"
+									value="#{beanPredioDocumentoActo.confrontacion}" />
+								<f:param name="datosBasicos"
+									value="#{beanPredioDocumentoActo.datosBasicos}" />
+								<f:param name="insertarMatricula"
+									value="#{beanPredioDocumentoActo.insertaMatricula}" />
+								<f:param name="eliminarMatricula"
+									value="#{beanPredioDocumentoActo.eliminaMatricula}" />
+								<f:param name="varificarFolioCerrado"
+									value="#{beanPredioDocumentoActo.verificaFolioCerrado}" />
+							</p:commandButton>
+							<p:commandButton value="#{messageBeanSNR.commonButtonEnviar}"
+								rendered="#{beanPredioDocumentoActo.idEtapa eq 375}"
+								id="idDetalleActoButtonEnviar"
+								action="#{beanPredioDocumentoActo.salvarActosDevolucionDinero()}"
+								update="confrontacionForm"
+								icon="fa fa-arrow-circle-right"
+								iconPos="right">
+							</p:commandButton>
+							<p:commandButton value="#{messageBeanSNR.commonLabelGenerarResolucion}"
+								rendered="#{(beanPredioDocumentoActo.idEtapa eq 232 or beanPredioDocumentoActo.idEtapa eq 234) and !beanPredioDocumentoActo.turnoHistoria.documentoGenerado}"
+								id="idDetalleActoButtonGenerarResolucion"
+								onclick="PF('dlgConfirmacion232').show();"
+								update="confrontacionForm"
+								icon="fa fa-arrow-circle-right"
+								iconPos="right">
+							</p:commandButton>
+							<p:commandButton ajax="false"
+								rendered="#{beanPredioDocumentoActo.turnoHistoria.documentoGenerado}"
+								value="#{messageBeanSNR.commonLabelConsultaSGD}" icon="lupa"
+								iconPos="left" update="idGrowl"
+								action="#{beanPredioDocumentoActo.consultaSGD()}">
+							</p:commandButton>
+							<p:commandButton value="#{messageBeanSNR.commonButtonEnviar}"
+								rendered="#{beanPredioDocumentoActo.turnoHistoria.documentoGenerado and !beanPredioDocumentoActo.vieneDeFijacionAvisos}"
+								id="idDetalleActoButtonEnviarAvisos"
+								onclick="PF('dlgConfirmacion232Enviar').show();"
+								update="confrontacionForm"
+								icon="fa fa-arrow-circle-right"
+								iconPos="right">
+							</p:commandButton>
+							<p:commandButton value="#{messageBeanSNR.commonButtonEnviar}"
+								rendered="#{beanPredioDocumentoActo.turnoHistoria.documentoGenerado and beanPredioDocumentoActo.vieneDeFijacionAvisos}"
+								id="idDetalleActoButtonEnviarFijacionAvisos"
+								onclick="PF('dlgConfirmacionEnviarEjecutor').show();"
+								update="confrontacionForm"
+								icon="fa fa-arrow-circle-right"
+								iconPos="right">
+							</p:commandButton>
+						</div>
+					</div>
+				</p:outputPanel>
+				<p:outputPanel id="idOPObservaciones"
+					rendered="#{beanPredioDocumentoActo.aprobacion.vieneDeAprobacion or beanPredioDocumentoActo.aprobacion.vieneDeAntiguoSistema or beanPredioDocumentoActo.idEtapa eq '380'}">
+					<br />
+					<p:outputPanel id="idOPCausalDevolucion">
+						<div class="ui-g"
+							style="display: #{beanPredioDocumentoActo.decisionAprobacion == 'D' ? '' : 'none'}">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel indicateRequired="true"
+									value="#{messageBeanSNR.commonLabelCausalDevolucionDosPuntos}" 
+									rendered="#{beanPredioDocumentoActo.idEtapa ne '380' and beanPredioDocumentoActo.idEtapa ne '760'}"/>
+								<p:selectOneMenu
+									title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoMotivosDevolucion}"
+									style="width:100%;" id="idSOMMotivosDevolucion"
+									value="#{beanPredioDocumentoActo.causalDevolucion}"
+									rendered="#{beanPredioDocumentoActo.idEtapa ne '380' and beanPredioDocumentoActo.idEtapa ne '760'}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems var="causal"
+										itemLabel="#{causal.causalDevolucion}"
+										value="#{beanPredioDocumentoActo.causalesDevolucion}"
+										itemValue="#{causal.codigo}">
+									</f:selectItems>
+								</p:selectOneMenu>
+								<p:outputLabel indicateRequired="true"
+									value="#{messageBeanSNR.commonLabelCausalDevolucionDosPuntos}" 
+									rendered="#{beanPredioDocumentoActo.idEtapa eq '380' and beanPredioDocumentoActo.idEtapa ne '760'}"/>
+								<p:selectOneMenu
+									rendered="#{beanPredioDocumentoActo.idEtapa eq '380' and beanPredioDocumentoActo.idEtapa ne '760'}"
+									title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoMotivosDevolucion}"
+									style="width:100%;" id="idSOMMotivosDevolucion2"
+									value="#{beanPredioDocumentoActo.causalDevolucion}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems var="causal"
+										itemLabel="#{causal.causalDevolucion}"
+										value="#{beanDevolucionDinero.causalesDevolucion()}"
+										itemValue="#{causal.codigo}">
+									</f:selectItems>
+								</p:selectOneMenu>
+							</div>
+						</div>
+					</p:outputPanel>
+					
+					<p:outputPanel id="idPanelObservacionesPredio">
+						<div align="left">
+							<h:outputLabel id="idObservacionesPredioInconsistente"
+								value="#{beanPredioDocumentoActo.mensajePredioInconsistente}" />
+							<br />
+						</div>
+					</p:outputPanel>
+					
+					<div class="ui-g">
+						<br />
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:outputLabel id="idOLObservaciones"
+								value="#{messageBeanSNR.commonLabelObservaciones}"
+								indicateRequired="#{beanPredioDocumentoActo.decisionAprobacion == 'D'}" />
+							<p:inputTextarea id="idITAObsAprobador" rows="3" cols="50"
+								onmouseover="contarCaracteres('confrontacionForm:idITAObsAprobador','confrontacionForm:idOTNumCaracteres')"
+								onblur="value=value.toUpperCase()" maxlength="400"
+								onkeyup="contarCaracteres('confrontacionForm:idITAObsAprobador','confrontacionForm:idOTNumCaracteres')"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoObservacionesAprobacion}"
+								value="#{beanPredioDocumentoActo.observacionesAprobador}" />
+							<p:outputPanel>
+								<div align="right">
+									<h:outputText id="idOTNumCaracteres" align="right"
+										value="#{beanPredioDocumentoActo.contar(beanPredioDocumentoActo.observacionesAprobador)}" />
+									<h:outputText value=" #{messageBeanSNR.commonLabelCaracteres}" />
+								</div>
+							</p:outputPanel>
+						</div>
+					</div>
+				</p:outputPanel>
+				<p:outputPanel id="idOPObservacionesTraslados"
+					rendered="#{beanPredioDocumentoActo.aprobacion.vieneDeEjecutorTraslados}">
+					<br />
+					<div class="ui-g">
+						<br />
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:outputLabel id="idOLObservacionesTraslados"
+								value="#{messageBeanSNR.commonLabelObservaciones}"/>
+							<p:inputTextarea id="idITAObsAprobadorTraslados" rows="3" cols="50"
+								onmouseover="contarCaracteres('confrontacionForm:idITAObsAprobadorTraslados','confrontacionForm:idOTNumCaracteresTraslados')"
+								onblur="value=value.toUpperCase()" maxlength="400"
+								onkeyup="contarCaracteres('confrontacionForm:idITAObsAprobadorTraslados','confrontacionForm:idOTNumCaracteresTraslados')"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoObservacionesAprobacion}"
+								value="#{beanPredioDocumentoActo.observacionesAprobador}" />
+							<p:outputPanel>
+								<div align="right">
+									<h:outputText id="idOTNumCaracteresTraslados" align="right"
+										value="#{beanPredioDocumentoActo.contar(beanPredioDocumentoActo.observacionesAprobador)}" />
+									<h:outputText value=" #{messageBeanSNR.commonLabelCaracteres}" />
+								</div>
+							</p:outputPanel>
+						</div>
+					</div>
+				</p:outputPanel>
+				
+				<p:panel header="#{messageBeanSNR.commonLabelApoyoNacional}"
+					rendered="#{beanPredioDocumentoActo.esReasignarTurnosApoyoNac}">
+					<p:dataTable id="idDSolicitudesRegionalOrip"
+						value="#{beanPredioDocumentoActo.solicitudesApoyoNacional}"
+						var="item"
+						emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+						rowIndexVar="rowKey">
+						<p:column headerText="#{messageBeanSNR.commonLabelNro}" style="width:60px;">
+							<h:outputText value="#{rowKey + 1}" />
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelTurnoRegistro}">
+							<h:outputText value="#{item.idTurnoRegistro}" />
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelNIRRegistro}">
+							<h:outputText value="#{item.nirRegistro}" />
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelCirculoAsignado}">
+							<h:outputText value="#{item.idCirculoAsignado} - #{item.nombreCirculo}" />
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelUsuarioAsignado}">
+							<h:outputText value="#{item.idUsuarioAsignado}" />
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelObservaciones}">
+							<h:outputText value="#{item.observacion}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+				
+				<!-- Botones Aprobacion -->
+				<p:outputPanel id="idOPBotonesAprobacion"
+					rendered="#{beanPredioDocumentoActo.aprobacion.vieneDeAprobacion or beanPredioDocumentoActo.aprobacion.vieneDeAntiguoSistema or beanPredioDocumentoActo.idEtapa eq '380'}">
+					<div class="ui-g" align="center">
+						<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+							<p:commandButton icon="fa fa-arrow-circle-left" iconPos="left"
+								value="#{messageBeanSNR.commonLabelRegresar}"
+								action="aprobacion?faces-redirect=true">
+							</p:commandButton>
+						</div>
+						
+						<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+							<p:commandButton icon="fa fa-save" id="idCBReasignarTurno"
+								rendered="#{beanPredioDocumentoActo.decisionAprobacion == 'A' and beanPredioDocumentoActo.idEtapa eq '760' and !beanPredioDocumentoActo.esReasignarTurnosApoyoNac}"
+								update="confrontacionForm"
+								iconPos="left" value="#{messageBeanSNR.commonButtonRevisado}"
+								actionListener="#{beanPredioDocumentoActo.aprobarReasignacionApoyoNacional()}" />
+							<p:commandButton icon="fa fa-save" id="idCBReasignarTurnoProcesoApoyoNacional"
+								rendered="#{beanPredioDocumentoActo.decisionAprobacion == 'A' and beanPredioDocumentoActo.idEtapa eq '760' and beanPredioDocumentoActo.esReasignarTurnosApoyoNac}"
+								iconPos="left" value="#{messageBeanSNR.commonLabelTerminarProceso}"
+								action="#{beanPredioDocumentoActo.terminarProcesoApoyoNacional()}" />
+							<p:commandButton icon="fa fa-save" id="idCBRevisarTurno"
+								rendered="#{(beanPredioDocumentoActo.decisionAprobacion == 'F' or beanPredioDocumentoActo.decisionAprobacion == 'A' or beanPredioDocumentoActo.decisionAprobacion == 'N') and beanPredioDocumentoActo.idEtapa ne '760'}"
+								iconPos="left" value="#{messageBeanSNR.commonButtonRevisado}"
+								action="#{beanPredioDocumentoActo.regresarAprobacion}" />
+							<p:commandButton id="idCBDevolverTurno" icon="fa fa-save"
+								rendered="#{beanPredioDocumentoActo.decisionAprobacion == 'D' and beanPredioDocumentoActo.idEtapa ne '760'}"
+								iconPos="left" value="#{messageBeanSNR.commonLabelDevolver}"
+								update="confrontacionForm:idGrowl,idOPObservaciones"
+								action="#{beanPredioDocumentoActo.accionDevolverAprobacion(false)}" />
+							<p:commandButton id="idCBNegarApoyoNacional" icon="fa fa-save"
+								rendered="#{beanPredioDocumentoActo.decisionAprobacion == 'D' and beanPredioDocumentoActo.idEtapa eq '760'}"
+								iconPos="left" value="#{messageBeanSNR.commonLabelDevolver}"
+								update="confrontacionForm:idGrowl,idOPObservaciones"
+								action="#{beanPredioDocumentoActo.accionDevolverAprobacion(true)}" />
+						</div> 
+					</div>
+				</p:outputPanel>
+				
+				<!-- Botones Ejecutor Traslados -->
+				<p:outputPanel id="idOPBotonesTraslados"
+					rendered="#{beanPredioDocumentoActo.aprobacion.vieneDeEjecutorTraslados}">
+					<div class="ui-g" align="center">
+						<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+							<p:commandButton icon="fa fa-arrow-circle-left" iconPos="left"
+								id="idButtonRegresarTraslados"
+								value="#{messageBeanSNR.commonLabelRegresar}"
+								action="aprobacion?faces-redirect=true">
+							</p:commandButton>
+						</div>
+						
+						<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+							<p:commandButton value="#{!beanPredioDocumentoActo.confirmarTraslados660 ? messageBeanSNR.commonButtonEjecutar : messageBeanSNR.commonButtonEnviarAlAprobador}" 
+								id="idButtonContinuarTraslados"
+								action="#{beanPredioDocumentoActo.enviaPagina}" ajax="false"
+								update="confrontacion1,idPcorrecciones,volver,volverCorreccion"
+								icon="fa fa-arrow-circle-right"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								iconPos="right">
+								<f:param name="idTurno"
+									value="#{beanPredioDocumentoActo.idTurno}" />
+								<f:param name="idMotivo"
+									value="#{beanPredioDocumentoActo.motivoTramite}" />
+							</p:commandButton>
+						</div>
+					</div>
+				</p:outputPanel>
+			</h:form>
+			
+			<p:dialog appendTo="@(body)" id="idDDialogoConfirmacionGR"
+					header="#{messageBeanSNR.commonLabelConfirmacion}"
+					widgetVar="dlgConfirmacion232" modal="true" height="90"
+					resizable="false">
+					<h:form id="fDialog1" style="font-size: large; top: 50%; left: 50%;">
+						<h:outputText
+							value="#{messageBeanSNR.commonMessageConfirmarInformacion}" />
+						<br />
+						<br />
+						<div align="center">
+							<p:commandButton value="#{messageBeanSNR.commonSi}"
+								id="idCBConfirmar" icon="fa fa-check"
+								action="#{beanPublicacionAvisosWeb.terminarProcesoTraslado()}"
+								oncomplete="PF('dlgConfirmacion232').hide();" />
+							<p:spacer />
+							<p:commandButton value="#{messageBeanSNR.commonNo}"
+								icon="fa fa-close" onclick="PF('dlgConfirmacion232').hide();" />
+						</div>
+					</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)" id="idDDialogoConfirmacionEnviar"
+					header="#{messageBeanSNR.commonLabelConfirmacion}"
+					widgetVar="dlgConfirmacion232Enviar" modal="true" height="90"
+					resizable="false">
+					<h:form id="fDialog3" style="font-size: large; top: 50%; left: 50%;">
+						<h:outputText
+							value="#{messageBeanSNR.commonMessageConfirmarInformacion}"/> 
+						<br />
+						<br />
+						<div align="center">
+							<p:commandButton value="#{messageBeanSNR.commonSi}"
+								id="idCBConfirmar" icon="fa fa-check"
+								action="#{beanPredioDocumentoActo.avanzarEtapa()}"
+								oncomplete="PF('dlgConfirmacion232Enviar').hide();" />
+							<p:spacer />
+							<p:commandButton value="#{messageBeanSNR.commonNo}"
+								icon="fa fa-close" onclick="PF('dlgConfirmacion232Enviar').hide();" />
+						</div>
+					</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)" id="idDDialogoConfirmacionEnviarEjecutor"
+					header="#{messageBeanSNR.commonLabelConfirmacion}"
+					widgetVar="dlgConfirmacionEnviarEjecutor" modal="true" height="90"
+					resizable="false">
+					<h:form id="fDialog4" style="font-size: large; top: 50%; left: 50%;">
+						<h:outputText
+							value="#{messageBeanSNR.commonMessagePreguntaConfirmaEnviarAlEjecutor}"/>
+						<br />
+						<br />
+						<div align="center">
+							<p:commandButton value="#{messageBeanSNR.commonSi}"
+								id="idCBConfirmar" icon="fa fa-check"
+								action="#{beanPredioDocumentoActo.avanzarEtapa()}"
+								oncomplete="PF('dlgConfirmacionEnviarEjecutor').hide();" />
+							<p:spacer />
+							<p:commandButton value="#{messageBeanSNR.commonNo}"
+								icon="fa fa-close" onclick="PF('dlgConfirmacionEnviarEjecutor').hide();" />
+						</div>
+					</h:form>
+			</p:dialog>
+					
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" closable="false"
+				widgetVar="dlgConfirmarDevolucion" modal="true" height="100" resizable="false">
+				<h:form id="fDialogDevolucion" style="font-size: large; top: 30%; left: 30%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonMessagePreguntaDevolverAprobacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" oncomplete="PF('dlgConfirmarDevolucion').hide();"
+							action="#{beanPredioDocumentoActo.accionDevolverAprobacion(true)}" />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close"
+							onclick="PF('dlgConfirmarDevolucion').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgDevolverAnalistaCorrecciones" modal="true"
+				height="360" resizable="false">
+				<h:form id="dlgDevolverAnalistaCorrecciones"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<center>
+						<h:outputText
+							value="#{messageBeanSNR.commonMessageDevolverAnalistaCorrecciones}" />
+					</center>
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="confrontacionForm,confrontacion"
+							action="#{beanPredioDocumentoActo.decisionResponsableCorrecciones(true)}"
+							oncomplete="PF('dlgDevolverAnalistaCorrecciones').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close"
+							onclick="PF('dlgDevolverAnalistaCorrecciones').hide();" />
+					</div>
+					<br />
+					<h:outputText value="#{messageBeanSNR.commonLabelObservaciones}" />
+					<br />
+					<p:inputTextarea rows="7" cols="73" counter="display"
+						id="id_comentarioaprobacion" maxlength="4000"
+						onblur="value=value.toUpperCase()"
+						counterTemplate="{0} Caracteres faltantes" autoResize="true"
+						value="#{beanPredioDocumentoActo.observacionesAprobador}">
+					</p:inputTextarea>
+					<br />
+					<h:outputText id="display" />
+					<br />
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelObservacionesObligatorias}" />
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgAprobarSecuencias" modal="true"
+				height="360" resizable="false">
+				<h:form id="dlgAprobarSecuencias"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<center>
+						<h:outputText
+							value="#{messageBeanSNR.commonMessageAprobarSecuencias}" />
+					</center>
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="confrontacionForm,confrontacion"
+							action="#{beanPredioDocumentoActo.decisionResponsableCorrecciones(false)}"/>
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close"
+							onclick="PF('dlgAprobarSecuencias').hide();" />
+					</div>
+					<br />
+					<h:outputText value="#{messageBeanSNR.commonLabelObservaciones}" />
+					<br />
+					<p:inputTextarea rows="7" cols="73" counter="display"
+						id="id_comentarioaprobacion" maxlength="4000"
+						onblur="value=value.toUpperCase()"
+						counterTemplate="{0} Caracteres faltantes" autoResize="true"
+						value="#{beanPredioDocumentoActo.observacionesAprobador}">
+					</p:inputTextarea>
+					<br />
+					<h:outputText id="display" />
+					<br />
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelObservacionesObligatorias}" />
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgAntiguoSistema" modal="true" height="90" resizable="false">
+				<h:form id="dlgAntiguoSistema"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText value="#{messageBeanSNR.commonLabelEnviarAntiguoSistema}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="confrontacionForm"
+							action="#{beanPredioDocumentoActo.vaParaAntiguoSistema()}"
+							oncomplete="PF('dlgAntiguoSistema').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlgAntiguoSistema').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgActuacionesAdministrativas" modal="true" height="90" resizable="false">
+				<h:form id="fActuacionesAdministrativas"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText value="#{messageBeanSNR.commonLabelRequiereSolicitarDocumentacionTramite}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="confrontacionForm"
+							action="#{beanPredioDocumentoActo.vaParaActuacionesAdministrativas(true)}"
+							oncomplete="PF('dlgActuacionesAdministrativas').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" 
+							action="#{beanPredioDocumentoActo.vaParaActuacionesAdministrativas(false)}"
+							oncomplete="PF('dlgActuacionesAdministrativas').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgSegundaInstancia" modal="true" height="90" resizable="false">
+				<h:form id="fSegundaInstancia"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText value="#{messageBeanSNR.commonLabelRequiereSolicitarDocumentacionTramite}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="confrontacionForm"
+							action="#{beanPredioDocumentoActo.vaParaSegundaInstancia(true)}"
+							oncomplete="PF('dlgSegundaInstancia').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" 
+							action="#{beanPredioDocumentoActo.vaParaSegundaInstancia(false)}"
+							oncomplete="PF('dlgSegundaInstancia').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)" closable="false"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgProcedeSI" modal="true" height="90" resizable="false">
+				<h:form id="fProcedeSI"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText rendered="#{!beanPredioDocumentoActo.expedienteGenerado}" 
+						value="#{messageBeanSNR.commonMessageEstaSeguroProcedeSegundaInstancia}" />
+					<h:outputText rendered="#{beanPredioDocumentoActo.expedienteGenerado}" 
+						value="#{messageBeanSNR.commonLabelCreadoExpediente}#{beanPredioDocumentoActo.expedienteSI}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							rendered="#{!beanPredioDocumentoActo.expedienteGenerado}"
+							icon="fa fa-check" update="confrontacionForm,fProcedeSI"
+							action="#{beanPredioDocumentoActo.generarExpedienteSI()}"/>
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							rendered="#{!beanPredioDocumentoActo.expedienteGenerado}"
+							icon="fa fa-close" oncomplete="PF('dlgProcedeSI').hide();" />
+						<p:commandButton value="#{messageBeanSNR.commonLabelAceptar}"
+							rendered="#{beanPredioDocumentoActo.expedienteGenerado}"
+							action="#{beanPredioDocumentoActo.procedeSIAignarA()}"
+							icon="fa fa-close" oncomplete="PF('dlgProcedeSI').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgSuspensionTramite" modal="true" height="90" resizable="false">
+				<h:form id="dlgSuspensionTramite"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText value="#{messageBeanSNR.commonLabelRequiereSolicitarDocumentacionTramite}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="confrontacionForm"
+							action="#{beanPredioDocumentoActo.vaParaSuspensionTramite(true)}"
+							oncomplete="PF('dlgSuspensionTramite').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" 
+							action="#{beanPredioDocumentoActo.vaParaSuspensionTramite(false)}"
+							oncomplete="PF('dlgSuspensionTramite').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgtraslados660" modal="true" height="90" resizable="false">
+				<h:form id="dlgtraslados660"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText value="#{messageBeanSNR.commonLabelEstaSeguroDeEjecutarTraslado}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="confrontacionForm"
+							action="#{beanPredioDocumentoActo.confirmarTraslados660(true)}"
+							oncomplete="PF('dlgtraslados660').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" 
+							action="#{beanPredioDocumentoActo.confirmarTraslados660(false)}"
+							oncomplete="PF('dlgtraslados660').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgInactivarMatriculaTraslado" modal="true" height="90" resizable="false">
+				<h:form id="dlgInactivarMatriculaTraslado"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText value="#{messageBeanSNR.commonLabelEstaSeguroDeEjecutarTraslado}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="confrontacionForm"
+							action="#{beanPredioDocumentoActo.inactivarRegistrotraslado()}"
+							oncomplete="PF('dlgInactivarMatriculaTraslado').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" 
+							onclick="PF('dlgInactivarMatriculaTraslado').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgEjecutartraslados660" modal="true" height="100" resizable="false">
+				<h:form id="dlgEjecutartraslados660"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText value="#{messageBeanSNR.commonLabelProcesoExitoso}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonButtonAceptar}"
+							icon="fa fa-check" update="confrontacionForm"
+							actionListener="#{beanPredioDocumentoActo.ejecutarTraslados660()}"
+							oncomplete="PF('dlgEjecutartraslados660').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog id="cuadroRehacerAnotacionesEliminadas" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="cdrRehacerAnotacionesEliminadas" modal="true"
+				resizable="false" width="500">
+				<h:form id="fDialog2"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaRehacerAnotacionesEliminadas" maxwidth="280"
+						cellspacing="1" cellpadding="20" border="0" align="center">
+						<tr>
+							<div align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelPreguntaRehacerAnotacionesEliminadas}"
+									id="id_cdrRepartoAutomaticoRehacerAnotacionesEliminadas" />
+							</div>
+						</tr>
+						<tr>
+							<td>
+								<div align="center">
+									<p:commandButton value="#{messageBeanSNR.commonLabelSi}"
+										ajax="false"
+										onclick="PF('cuadroRehacerAnotacionesEliminadas').hide();"
+										update="confrontacion1,idPcorrecciones,volver,volverCorreccion"
+										icon="fa fa-check" iconPos="right"
+										action="#{beanPredioDocumentoActo.realizarRegistro(true)}" />
+								</div>
+							</td>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-times"
+										value="#{messageBeanSNR.commonLabelNo}"
+										action="#{beanPredioDocumentoActo.realizarRegistro(false)}"
+										onclick="PF('cuadroRehacerAnotacionesEliminadas').hide();" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelDetalleLiquidacion}"
+				widgetVar="dlgdetalleLiquidacion" modal="true" width="85%"
+				height="30%" resizable="false">
+				<h:form id="dlgdetalleLiq">
+					<p:dataTable id="idDtRegistrosDetalleLiq" var="item"
+						emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+						value="#{beanPredioDocumentoActo.devDineroTemporal}"
+						style="max-width: 100%;margin-bottom:0;">
+						<p:column style="min-width: 170px;"
+							headerText="#{messageBeanSNR.commonLabelActo}">
+							<h:outputText value="#{item.idTipoActo}" />
+						</p:column>
+						<p:column style="min-width: 170px;"
+							headerText="#{messageBeanSNR.commonLabelEspecificacionActo}">
+							<h:outputText value="#{item.especificacionActo}" />
+						</p:column>
+						<p:column style="min-width: 170px;"
+							headerText="#{messageBeanSNR.commonLabelCuantiaDelActo}">
+							<h:outputText value="#{item.cuantiaActo}" />
+						</p:column>
+						<p:column style="min-width: 170px;"
+							headerText="#{messageBeanSNR.commonLabelTipoDeTarifa}">
+							<h:outputText value="#{item.tipoTarifaRegistral}" />
+						</p:column>
+						<p:column style="min-width: 170px;"
+							headerText="#{messageBeanSNR.commonLabelValorDelAvaluo}">
+							<h:outputText value="#{item.valorAvaluo}" />
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelCantidadDeActos}">
+							<h:outputText value="#{item.cantidadActos}" />
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelValorDerechosDeRegistro}">
+							<h:outputText value="#{item.valorDerechos}" />
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelValorConservacionDocumental}">
+							<h:outputText value="#{item.valorConservacionDocumental}" />
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelValorTotalLiquidado}">
+							<h:outputText value="#{item.valorTotalLiquidado}" />
+						</p:column>
+					</p:dataTable>
+				</h:form>
+			</p:dialog>
+			
+			<script type="text/javascript">
+				function start()
+				{
+					PF('statusDownload').show();
+				}
+
+				function stop()
+				{
+					PF('statusDownload').hide();
+				}
+			</script>
+			<p:dialog modal="true" widgetVar="statusDownload" draggable="false"
+				closable="false" resizable="false">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

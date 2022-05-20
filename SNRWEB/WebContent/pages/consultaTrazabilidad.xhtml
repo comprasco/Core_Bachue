@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBuscar}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultaTrazabilidad}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fConsultaTrazabilidad" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="15000" redisplay="false" />
+				<center>
+					<p:outputPanel id="camposConsulta">
+						<p:panel
+							header="#{messageBeanSNR.commonLabelConsultaTrazabilidad}"
+							style="min-width:800px;" id="pConsultaTrazabilidad">
+							<div class="ui-g" align="center">
+								<div class="ui-g-6 ui-md-6 ui-lg-4" align="center">
+									<h:panelGrid columns="2">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+											styleClass="textosConsultaEstadoPredio" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()" id="idNIR"
+											label="#{messageBeanSNR.commonLabelNIR}"
+											onkeypress="if (event.keyCode == 13) {value=value.toUpperCase();}"
+											title="#{tooltipBeanSNR.buscarConsultaDeTrazabilidadNir}"
+											placeholder="#{messageBeanSNR.commonLabelNIR}"
+											value="#{beanConsultaTrazabilidad.nir}" maxlength="20" />
+									</h:panelGrid>
+								</div>
+								<div class="ui-g-6 ui-md-6 ui-lg-4" align="center">
+									<h:panelGrid columns="2">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()" id="idTurno"
+											title="#{tooltipBeanSNR.buscarConsultaDeTrazabilidadTurno}"
+											label="#{messageBeanSNR.commonLabelTurno}"
+											placeholder="#{messageBeanSNR.commonLabelTurno}"
+											value="#{beanConsultaTrazabilidad.idTurnoConsulta}"
+											maxlength="20" />
+									</h:panelGrid>
+								</div>
+								<div class="ui-g-6 ui-md-6 ui-lg-4" align="center">
+									<h:panelGrid columns="2">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelExpediente}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="expediente"
+											title="#{tooltipBeanSNR.buscarConsultaDeTrazabilidadTurno}"
+											label="#{messageBeanSNR.commonLabelExpediente}"
+											placeholder="#{messageBeanSNR.commonLabelExpediente}"
+											value="#{beanConsultaTrazabilidad.expedienteConsulta}"
+											maxlength="20" />
+									</h:panelGrid>
+								</div>
+							</div>
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<p:commandButton value="#{messageBeanSNR.commonLabelConsultar}"
+										icon="lupa" iconPos="left"
+										actionListener="#{beanConsultaTrazabilidad.findAll}"
+										update="camposConsulta,idDataTurnosVinculados,idDataTramiteRecepcionDocumentos,consultaTrazaPorNir,globalMsg" />
+								</div>
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<p:commandButton
+										value="#{messageBeanSNR.commonLabelConsultaSGD}"
+										rendered="#{beanConsultaTrazabilidad.renderConsultaSGD}"
+										icon="lupa" iconPos="left"
+										action="#{beanConsultaTrazabilidad.consultaSGD(true)}"
+										update="idDataTurnosVinculados,idDataTramiteRecepcionDocumentos,consultaTrazaPorNir,globalMsg" />
+								</div>
+							</div>
+							<br />
+							<p:outputPanel id="idDataTramiteRecepcionDocumentos">
+								<p:panel widgetVar="idDataTramiteRecepcionDocumentos"
+									header="#{messageBeanSNR.commonLabelTramitePorRecepcionDocumentos}"
+									rendered="#{beanConsultaTrazabilidad.estado}" toggleable="true"
+									collapsed="#{beanConsultaTrazabilidad.nirPrincipal eq null}"
+									style="text-align:center">
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelNIRPrincipal}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.buscarConsultaTrazabilidadRecepcionDocumentosNirPrincipal}"
+												value="#{beanConsultaTrazabilidad.nirPrincipal.solicitud.nir}" />
+											<br />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTurnoPrincipal}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.buscarConsultaTrazabilidadRecepcionDocumentosTurno}"
+												value="#{beanConsultaTrazabilidad.nirPrincipal.turno.idTurno}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelEstadoDelNIR}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.buscarConsultaTrazabilidadRecepcionDocumentosEstadoNir}"
+												value="#{beanConsultaTrazabilidad.nirPrincipal.fases.nombre}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+												value="#{messageBeanSNR.commonLabelFechaCreacionNir}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.buscarConsultaTrazabilidadRecepcionDocumentosFechaCreacionNir}"
+												value="#{beanConsultaTrazabilidad.nirPrincipal.solicitud.fechaCreacion}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</p:inputText>
+										</div>
+										<div class="ui-g-12 ui-md-12 ui-lg-12">
+											<p:dataTable
+												value="#{beanConsultaTrazabilidad.nirVinculados}"
+												rendered="#{beanConsultaTrazabilidad.nirVinculados ne null and  not(empty beanConsultaTrazabilidad.nirVinculados)}"
+												var="item">
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelNIRVinculado}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoOficina}"
+														value="#{item.solicitud.nir}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelTurnoGenerado}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludePais}"
+														value="#{item.turno.idTurno}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelTramiteVinculado}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeMunicipio}"
+														value="#{item.tramiteVinculado.tipoActo.nombre}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelFechaCreacionNir}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeDepartamento}"
+														value="#{item.solicitud.fechaCreacionString}" />
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</p:panel>
+							</p:outputPanel>
+							<br />
+							<p:outputPanel id="idDataTurnosVinculados">
+								<p:panel widgetVar="idDataTurnosVinculados"
+									header="#{messageBeanSNR.commonLabelTurnosVinculados}"
+									collapsed="#{beanConsultaTrazabilidad.turnosVinculadosNirPrincipal eq null}"
+									rendered="#{beanConsultaTrazabilidad.estado}" toggleable="true"
+									style="text-align:center">
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelNIRPrincipal}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoDocumento}"
+												value="#{beanConsultaTrazabilidad.turnosVinculadosNirPrincipal.solicitud.nir}" />
+											<br />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTurnoPrincipal}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeNumeroDocumento}"
+												value="#{beanConsultaTrazabilidad.turnosVinculadosNirPrincipal.turno.idTurno}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+												value="#{messageBeanSNR.commonLabelTramitePrincipal}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeFechaDocumento}"
+												value="#{beanConsultaTrazabilidad.turnosVinculadosNirPrincipal.acto.tipoActo.nombre}">
+											</p:inputText>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelEtapaTurno}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeOficinaOrigen}"
+												value="#{beanConsultaTrazabilidad.turnosVinculadosNirPrincipal.etapa.nombre}" />
+										</div>
+										<div class="ui-g-12 ui-md-12 ui-lg-12">
+											<p:dataTable
+												value="#{beanConsultaTrazabilidad.turnosVinculadosNirVinculados}"
+												rendered="#{beanConsultaTrazabilidad.turnosVinculadosNirVinculados ne null and  not(empty beanConsultaTrazabilidad.turnosVinculadosNirVinculados)}"
+												var="item">
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelNIRVinculado}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoOficina}"
+														value="#{item.solicitud.nir}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelTurnoGenerado}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludePais}"
+														value="#{item.turno.idTurno}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelTramiteVinculado}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeMunicipio}"
+														value="#{item.tramiteVinculado.tipoActo.nombre}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelFechaCreacionNir}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeDepartamento}"
+														value="#{item.solicitud.fechaCreacion}" />
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</p:panel>
+							</p:outputPanel>
+							<br />
+							<p:outputPanel id="consultaTrazaPorNir">
+								<p:panel rendered="#{beanConsultaTrazabilidad.estado}"
+									toggleable="true"
+									header="#{messageBeanSNR.commonLabelConsultaTurnosNIR}">
+									<p:dataTable id="idDtListado" style="min-width:500px;"
+										value="#{beanConsultaTrazabilidad.trazabilidad}" var="item"
+										emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+										<p:column headerText="#{messageBeanSNR.commonLabelNIR}"
+											style="width: 16%;">
+											<p:commandLink ajax="false"
+												action="#{beanConsultaTrazabilidad.findConsultaTrazabilidadSolicitud()}">
+												<f:param name="nirTraza" value="#{item.solicitud.nir}" />
+												<h:outputText value="#{item.solicitud.nir}"
+													styleClass="subrayado" />
+											</p:commandLink>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+											<p:commandLink
+												action="#{beanConsultaTrazabilidad.detalleTurno}">
+												<f:param name="idTurno" value="#{item.turno.idTurno}" />
+												<h:outputText value="#{item.turno.idTurno}"
+													styleClass="subrayado" />
+											</p:commandLink>
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDecisionCalificacion}">
+											<h:outputText value="#{item.decisionCalificacion}" />
+										</p:column>
+										<p:column
+											rendered="#{item.tipificacionTurno != 'NORMAL'}"
+											headerText="#{messageBeanSNR.commonLabelTipificacionTurno}">
+											<p:commandLink
+												actionListener="#{beanConsultaTrazabilidad.mostrarCuadroDatosReasignacion(item, true)}">
+												<h:outputText value="#{item.tipificacionTurno}"
+													styleClass="subrayado" />
+											</p:commandLink>
+										</p:column>
+										<p:column
+											rendered="#{item.tipificacionTurno == 'NORMAL'}"
+											headerText="#{messageBeanSNR.commonLabelTipificacionTurno}">
+											<h:outputText value="#{item.tipificacionTurno}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelEstadoDelTurno}">
+											<h:outputText value="#{item.fases.nombre}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelProcesoDelTurno}">
+											<h:outputText value="#{item.proceso.nombre}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelConsultaHistorico}">
+											<p:commandButton id="idBotonHistorico"
+												rendered="#{item.turno.migrado == 'S'}"
+												value="#{messageBeanSNR.commonLabelConsultaHistorico}"
+												icon="fa fa-pencil" iconPos="right" update="globalMsg"
+												action="#{beanConsultaTrazabilidad.cargarPanelHistorico(item.turno)}"
+												ajax="false" />
+										</p:column>
+									</p:dataTable>
+								</p:panel>
+								<br />
+								<p:panel
+									rendered="#{beanConsultaTrazabilidad.bandejaHistoricos}"
+									toggleable="true"
+									header="#{messageBeanSNR.commonLabelInformacionHistorica}">
+									<p:panel
+										rendered="#{beanConsultaTrazabilidad.bandejaHistoricos}"
+										toggleable="true"
+										header="#{messageBeanSNR.commonLabelLiquidacion}">
+										<p:dataTable id="idDHistoricos" style="min-width:500px;"
+											value="#{beanConsultaTrazabilidad.liquidacionesHistoricosUI}"
+											var="item" emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+											<p:column headerText="#{messageBeanSNR.commonLabelActo}">
+												<h:outputText value="#{item.idTipoActo}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelNombreActo}">
+												<h:outputText value="#{item.nombreActo}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelCuantia}">
+												<h:outputText value="#{item.cuantia}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelValorActo}">
+												<h:outputText value="#{item.valorActo}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelTipoLiquidacion}">
+												<h:outputText value="#{item.tipoLiq}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelDescripcion}">
+												<h:outputText value="#{item.descripcion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelValorLiquidacion}">
+												<h:outputText value="#{item.valorLiquidacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelValorConservacionDocumental}">
+												<h:outputText value="#{item.valorConservacionDocumental}" />
+											</p:column>
+										</p:dataTable>
+									</p:panel>
+									<br />
+									<p:panel
+										rendered="#{beanConsultaTrazabilidad.bandejaHistoricos}"
+										toggleable="true" header="#{messageBeanSNR.commonLabelPagos}">
+										<p:dataTable id="idDPagos" style="min-width:500px;"
+											value="#{beanConsultaTrazabilidad.pagosUI}" var="item"
+											emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelReciboPago}">
+												<h:outputText value="#{item.reciboPago}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelFechaPago}">
+												<h:outputText value="#{item.fechaString}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelConcepto}">
+												<h:outputText value="#{item.concepto}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelFormaPago}">
+												<h:outputText value="#{item.formaPago}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelValor}">
+												<h:outputText value="#{item.valor}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelBanco}">
+												<h:outputText value="#{item.banco}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelCheque}">
+												<h:outputText value="#{item.cheque}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelNumeroAprobacion}">
+												<h:outputText value="#{item.aprobacion}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelCanal}">
+												<h:outputText value="#{item.canal}" />
+											</p:column>
+										</p:dataTable>
+									</p:panel>
+									<br />
+									<p:panel
+										rendered="#{beanConsultaTrazabilidad.bandejaHistoricos}"
+										toggleable="true"
+										header="#{messageBeanSNR.commonLabelTrazabilidad}">
+										<p:panel
+											rendered="#{beanConsultaTrazabilidad.bandejaHistoricos}"
+											toggleable="true" header="#{messageBeanSNR.commonLabelFolio}">
+											<p:dataTable id="idDTrazaTurnoFolio" style="min-width:500px;"
+												value="#{beanConsultaTrazabilidad.trazabilidadTurnoUIFolio}"
+												var="item" emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelEstado} / #{messageBeanSNR.commonLabelFase}">
+													<h:outputText value="#{item.estado}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelDescripcion}">
+													<h:outputText value="#{item.descripcionEstado}" />
+												</p:column>
+												<p:column headerText="#{messageBeanSNR.commonLabelUsuario}">
+													<h:outputText value="#{item.usuario}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelFechaIngreso}">
+													<h:outputText value="#{item.fechaString}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelLogCertiCorrec}">
+													<h:outputText value="#{item.logCertiCorrec}" />
+												</p:column>
+											</p:dataTable>
+										</p:panel>
+										<br />
+										<p:panel
+											rendered="#{beanConsultaTrazabilidad.bandejaHistoricos}"
+											toggleable="true" header="#{messageBeanSNR.commonLabelSir}">
+											<p:dataTable id="idDTrazaTurnoSir" style="min-width:500px;"
+												value="#{beanConsultaTrazabilidad.trazabilidadTurnoUISir}"
+												var="item" emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelEstado} / #{messageBeanSNR.commonLabelFase}">
+													<h:outputText value="#{item.estadoString}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelDescripcion}">
+													<h:outputText value="#{item.descripcionEstado}" />
+												</p:column>
+												<p:column headerText="#{messageBeanSNR.commonLabelUsuario}">
+													<h:outputText value="#{item.usuario}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelFechaIngreso}">
+													<h:outputText value="#{item.fechaString}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelLogCertiCorrec}">
+													<h:outputText value="#{item.logCertiCorrec}" />
+												</p:column>
+											</p:dataTable>
+										</p:panel>
+									</p:panel>
+								</p:panel>
+								<br />
+							</p:outputPanel>
+						</p:panel>
+					</p:outputPanel>
+				</center>
+			</h:form>
+			<p:dialog id="cuadroDatosReasignacion" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelDatosReasignacion}"
+				widgetVar="cdrDatosReasignacion" modal="true" resizable="false"
+				draggable="false" width="1500" height="580">
+				<h:form id="fDialog" style="font-size: medium; top: 80%; left: 80%;">
+
+					<p:dataTable
+						id="idTableTip" 
+						value="#{beanConsultaTrazabilidad.reasignarTurnos}"
+						var="item">
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelUsuarioAnterior}">
+							<h:outputText value="#{item.usuarioAnterior}" />
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelUsuarioQueReasigno}">
+							<h:outputText value="#{item.usuarioReasignacion}" />
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelUsuarioActual}">
+							<h:outputText value="#{item.usuarioActual}" />
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelFechaReasignacion}">
+							<h:outputText
+								value="#{beanConsultaTrazabilidad.reasignarTurnos.fechaReasignacion}"
+								id="id_horaReasignacion">
+								<f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm:ss" />
+							</h:outputText>
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelTurnosAsociados}">
+							<h:outputText value="#{item.idTurnoHijo}" />
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelObservaciones}">
+							<h:outputText value="#{item.observaciones}" />
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelJustificacion}">
+							<h:outputText value="#{item.justificacion}" />
+						</p:column>
+					</p:dataTable>
+
+					<br />
+					<div align="left">
+						<p:commandButton icon="fa fa-arrow-circle-left"
+							value="#{messageBeanSNR.commonButtonRegresar}"
+							action="#{beanConsultaTrazabilidad.mostrarCuadroDatosReasignacion(null, false)}" />
+					</div>
+					<br />
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

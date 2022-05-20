@@ -1,0 +1,2424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelCorrecciones}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeCorreccion}" />
+				</li>
+				<li class="breadcrumb-item" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+				<li class="breadcrumb-item" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelPermisosParaCorrecciones}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fPermisosCorreccion" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<center>
+					<p:fragment>
+						<p:autoUpdate />
+						<!--bandeja de resumern de matriculas -->
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+								<p:inputText readonly="true"
+									value="#{beanPermisosCorrecciones.predio.get('NIR')}"
+									title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRegistroCalificacionNIR}" />
+							</div>
+							<div class="ui-g-12 ui-md-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}" />
+								<p:inputText readonly="true"
+									value="#{beanPermisosCorrecciones.predio.get('ID_TURNO')}"
+									title="#{tooltipBeanSNR.calificacionBandejaEntradaBandejaTurnosDetalleTurnoRegistroCalificacionTurno}" />
+							</div>
+						</div>
+						<br />
+						<p:panel style="min-width:600px;border: 0px;"
+							header="#{messageBeanSNR.commonLabelPermisosParaCorrecciones}"
+							rendered="#{beanPermisosCorrecciones.mostrarBandeja}"
+							id="idPBandejaMatriculas">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:dataTable id="idPanelListadoMatriculas"
+										styleClass="estiloTablaIE"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{beanPermisosCorrecciones.solicitudMatriculas}"
+										var="item">
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelCirculoRegistral}">
+											<div align="center">
+												<h:outputText value="#{item.idCirculo}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelMatricula}">
+											<div align="center">
+												<h:outputText value="#{item.idMatricula}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelAccion}">
+											<div align="center">
+												<p:commandButton icon="lupa" image="../images/find.png"
+													actionListener="#{beanPermisosCorrecciones.consultarCausalesCorrecciones(item)}" />
+											</div>
+										</p:column>
+									</p:dataTable>
+								</div>
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelObservaciones}" />
+									<br />
+									<p:inputTextarea maxlength="4000" id="idObservaciones"
+										onmouseover="contarCaracteres('fPermisosCorreccion:idObservaciones','fPermisosCorreccion:counterObservaciones')"
+										onkeyup="contarCaracteres('fPermisosCorreccion:idObservaciones','fPermisosCorreccion:counterObservaciones')"
+										value="#{beanPermisosCorrecciones.observaciones}"
+										onblur="value=value.toUpperCase()">
+									</p:inputTextarea>
+								</div>
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+									<h:outputText id="counterObservaciones"></h:outputText>
+									<h:outputText value=" #{messageBeanSNR.commonLabelCaracteres}" />
+								</div>
+							</div>
+						</p:panel>
+						<!--detalle de matricula seleccionada -->
+						<p:panel style="min-width:600px;border: 0px;"
+							header="#{messageBeanSNR.commonLabelPermisosParaCorrecciones}"
+							rendered="#{beanPermisosCorrecciones.mostrarDetalle}"
+							id="idFormTabs">
+							<strong>
+								<p:outputLabel id="idOlMatricula" style="font-size: 20px;"
+									value="Matrícula : #{beanPermisosCorrecciones.idCirculo} - #{beanPermisosCorrecciones.idMatricula}" />
+							</strong>
+							<br />
+							<strong>
+								<p:outputLabel id="idOlTotalAnotaciones"
+									style="font-size: 20px;"
+									value="Total anotaciones del predio : #{beanPermisosCorrecciones.totalAnotaciones}" />
+							</strong>
+							<p:tabView id="TvdetalleRegistroCalif" effect="fade"
+								effectDuration="normal">
+								<p:ajax event="tabChange"
+									listener="#{beanPermisosCorrecciones.onTabChange}"
+									process="fPermisosCorreccion:TvdetalleRegistroCalif"
+									update="fPermisosCorreccion:TvdetalleRegistroCalif" />
+								<!-- Datos basicos-->
+								<p:tab id="datosBasicos_id" titleStyle="font-size:15px;"
+									disabled="#{not(beanPermisosCorrecciones.mostrarBandejaAnotaciones)}"
+									title="#{messageBeanSNR.commonLabelDatosBasicos}">
+									<p:panel id="idPanelUbicacionDB" widgetVar="wPanelUbicacion"
+										collapsed="#{!beanPermisosCorrecciones.permisosCorrecciones.ubicacion.seleccionado}"
+										header="#{messageBeanSNR.commonLabelUbicacion}"
+										toggleable="true" style="text-align:center">
+										<div class="ui-g" align="center">
+											<div class="ui-g-12 ui-md-6 ui-lg-5">
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.ubicacion.circuloRegistral}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelCirculoRegistral}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="circuloRegistral"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosUbicacionCirculoRegistral}"
+													disabled="true" style="width:100%;"
+													value="#{beanPermisosCorrecciones.datosBasicos.ubicacion.circuloRegistral.idCirculo}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanReference.findCirculoRegistral(true)}"
+														var="circulo" itemLabel="#{circulo.idCirculo}"
+														itemValue="#{circulo.idCirculo}" />
+													<p:ajax event="change" update="idSOMMunDirRe"/>
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-7">
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.ubicacion.nombreCirculoRegistral}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelNombreCirculoRegistral}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:inputText id="circuloRegistralNombre" readonly="true"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosUbicacionNombreCirculoRegistral}"
+													value="#{beanPermisosCorrecciones.datosBasicos.ubicacion.circuloRegistral.nombre}">
+													<p:autoUpdate />
+												</p:inputText>
+											</div>
+										</div>
+										<div class="ui-g" align="center">
+											<div class="ui-g-12 ui-md-4 ui-lg-5">
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.ubicacion.departamento}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMDepDirRe" style="width:100%;"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosUbicacionDepartamento}"
+													value="#{beanPermisosCorrecciones.datosBasicos.ubicacion.departamento.idDepartamento}"
+													disabled="true">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanPermisosCorrecciones.findDepartamentos()}"
+														var="depRes" itemValue="#{depRes.idDepartamento}"
+														itemLabel="#{depRes.nombre}" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-4 ui-lg-3">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.ubicacion.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.ubicacion.municipio}">
+													<p:ajax update="fPermisosCorreccion:globalMsg"
+														listener="#{beanPermisosCorrecciones.validarCheks('ubicacion','municipio',beanPermisosCorrecciones.permisosCorrecciones.ubicacion.municipio)}" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMMunDirRe" style="width:100%;"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosUbicacionMunicipio}"
+													value="#{beanPermisosCorrecciones.datosBasicos.ubicacion.municipio.idMunicipio}"
+													disabled="true">
+													<p:ajax
+														listener="#{beanPermisosCorrecciones.cambiarMunicipio}" />
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanPermisosCorrecciones.findMunicipiosByCirculo(beanPermisosCorrecciones.datosBasicos.ubicacion.circuloRegistral.idCirculo)}"
+														var="munRes" itemValue="#{munRes.idMunicipio}"
+														itemLabel="#{munRes.nombre}" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-4 ui-lg-4">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.ubicacion.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.ubicacion.vereda}">
+													<p:ajax update="fPermisosCorreccion:globalMsg"
+														listener="#{beanPermisosCorrecciones.validarCheks('ubicacion','vereda',beanPermisosCorrecciones.permisosCorrecciones.ubicacion.vereda)}" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelVereda}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:inputText id="idSOMVerDirRe" style="width:100%;"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosUbicacionVereda}"
+													value="#{beanPermisosCorrecciones.datosBasicos.ubicacion.vereda.nombre} "
+													disabled="true">
+												</p:inputText>
+											</div>
+										</div>
+
+										<div class="ui-g" align="center">
+											<div class="ui-g-12 ui-md-6 ui-lg-5">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.ubicacion.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.ubicacion.estadoPredio}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelEstadoDelPredio}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMestadoPredio"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosUbicacionEstadoDelPredio}"
+													style="width:100%;"
+													value="#{beanPermisosCorrecciones.datosBasicos.ubicacion.estadoPredio.idEstadoPredio}"
+													disabled="true">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanPermisosCorrecciones.findEstadoPredio()}"
+														var="esPredio" itemValue="#{esPredio.idEstadoPredio}"
+														itemLabel="#{esPredio.nombre}" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-7">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.ubicacion.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.ubicacion.nupre}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel value="#{messageBeanSNR.commonLabelNupre}" />
+												<br />
+												<p:inputText id="Nupre" maxlength="20" disabled="true"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosUbicacionNupre}"
+													value="#{beanPermisosCorrecciones.datosBasicos.ubicacion.nupre}">
+													<p:keyFilter regEx="/[a-z0-9_]/i" preventPaste="false" />
+												</p:inputText>
+											</div>
+										</div>
+									</p:panel>
+									<br />
+									<p:panel id="idPanelApertura" widgetVar="wPanelApertura"
+										collapsed="#{!beanPermisosCorrecciones.permisosCorrecciones.apertura.seleccionado}"
+										header="#{messageBeanSNR.commonLabelInformacionDeApertura}"
+										toggleable="true" style="text-align:center">
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-6 ui-lg-5">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.apertura.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.apertura.fechaApertura}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelFechaApertura}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:calendar id="idCalFechaApertura" size="10"
+													disabled="true"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosInformacionDeAperturaFechaDeApertura}"
+													mask="true" locale="es" placeholder="DD/MM/AAAA"
+													pattern="dd/MM/yyyy"
+													value="#{beanPermisosCorrecciones.datosBasicos.apertura.fechaApertura}"
+													showOn="button">
+												</p:calendar>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-3">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.apertura.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.apertura.radicacion}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelRadicacion}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:inputText disabled="true"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosInformacionDeAperturaRadicacion}"
+													id="idItRadicacion"
+													placeholder="#{messageBeanSNR.commonLabelRadicacion}"
+													maxlength="20"
+													value="#{beanPermisosCorrecciones.datosBasicos.apertura.radicacion}">
+												</p:inputText>
+											</div>
+										</div>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-6 ui-lg-5">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.apertura.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.apertura.tipoDocumento}">
+													<p:ajax update="fPermisosCorreccion:globalMsg"
+														listener="#{beanPermisosCorrecciones.validarCheks('apertura','tipoDocumento',beanPermisosCorrecciones.permisosCorrecciones.apertura.tipoDocumento)}" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMEscrituraDoc" disabled="true"
+													style="width:100%;"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosInformacionDeAperturaTipoDeDocumento}"
+													value="#{beanPermisosCorrecciones.datosBasicos.apertura.documento.idTipoDocumento}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanReference.findTipoDocumentoPublico()}"
+														var="item" itemLabel="#{item.nombre}"
+														itemValue="#{item.idTipoDocumento}" />
+													<p:ajax
+														listener="#{beanPermisosCorrecciones.validarExistenciaDocumento}"
+														update=":fPermisosCorreccion:globalMsg,idPanelApertura" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-3">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.apertura.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.apertura.numeroDocumento}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelNumeroDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:inputText id="idItDocuActoDoc" disabled="true"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosInformacionDeAperturaNumeroDeDocumento}"
+													placeholder="#{messageBeanSNR.commonLabelDocumento}"
+													maxlength="20"
+													value="#{beanPermisosCorrecciones.datosBasicos.apertura.documento.numero}">
+													<p:ajax
+														listener="#{beanPermisosCorrecciones.validarExistenciaDocumento}"
+														event="blur"
+														update=":fPermisosCorreccion:globalMsg,idPanelApertura" />
+												</p:inputText>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.apertura.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.apertura.fechaDocumento}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelFechaDelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:calendar id="idCalFecha" size="10" mask="true"
+													locale="es" placeholder="DD/MM/AAAA" disabled="true"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosInformacionDeAperturaFechaDelDocumento}"
+													pattern="dd/MM/yyyy"
+													value="#{beanPermisosCorrecciones.datosBasicos.apertura.documento.fechaDocumento}"
+													showOn="button">
+													<p:ajax event="dateSelect"
+														listener="#{beanPermisosCorrecciones.validarExistenciaDocumento}"
+														update=":fPermisosCorreccion:globalMsg,idPanelApertura" />
+												</p:calendar>
+											</div>
+										</div>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-6 ui-lg-5">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.apertura.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.apertura.tipoOficina}">
+													<p:ajax update="fPermisosCorreccion:globalMsg"
+														listener="#{beanPermisosCorrecciones.validarCheks('apertura','tipoOficina',beanPermisosCorrecciones.permisosCorrecciones.apertura.tipoOficina)}" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTipoDeOficina}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMTipoOficinaDoc"
+													style="width:100%;"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosInformacionDeAperturaTipoDeOficina}"
+													value="#{beanPermisosCorrecciones.datosBasicos.apertura.idTipoOficina}"
+													disabled="true">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems value="#{beanReference.findTipoOficina()}"
+														var="item" itemLabel="#{item.nombre}"
+														itemValue="#{item.idTipoOficina}" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-3">
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.apertura.tipoEntidad}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTipoDeEntidad}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMTipoEntidadDoc" disabled="true"
+													style="width:100%;"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosInformacionDeAperturaTipoDeEntidad}"
+													value="#{beanPermisosCorrecciones.datosBasicos.apertura.idTipoEntidad}">
+													<f:selectItems value="#{beanReference.findTipoEntidad()}"
+														var="item" itemLabel="#{item.nombre}"
+														itemValue="#{item.idTipoEntidad}" />
+													<p:ajax
+														listener="#{beanPermisosCorrecciones.validarExistenciaDocumento}"
+														update=":fPermisosCorreccion:globalMsg,idPanelApertura" />
+												</p:selectOneMenu>
+											</div>
+										</div>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-6 ui-lg-5">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.apertura.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.apertura.pais}">
+													<p:ajax update="fPermisosCorreccion:globalMsg"
+														listener="#{beanPermisosCorrecciones.validarCheks('apertura','pais',beanPermisosCorrecciones.permisosCorrecciones.apertura.pais)}" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelPais}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idPaisDocumento" style="width:100%;"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosInformacionDeAperturaPais}"
+													value="#{beanPermisosCorrecciones.datosBasicos.apertura.idPais}"
+													disabled="true">
+													<p:ajax listener="#{beanPermisosCorrecciones.pais}"
+														update="idPanelApertura" />
+													<p:ajax
+														listener="#{beanPermisosCorrecciones.validarExistenciaDocumento}"
+														update=":fPermisosCorreccion:globalMsg,idPanelApertura" />
+													<f:selectItem itemValue=""
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+													<f:selectItems value="#{beanReference.findPaises()}"
+														var="paises" itemValue="#{paises.idPais}"
+														itemLabel="#{paises.nombre}" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-3">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.apertura.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.apertura.departamento}">
+													<p:ajax update="fPermisosCorreccion:globalMsg"
+														listener="#{beanPermisosCorrecciones.validarCheks('apertura','departamento',beanPermisosCorrecciones.permisosCorrecciones.apertura.departamento)}" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMDepartamento" style="width:100%;"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosInformacionDeAperturaDepartamento}"
+													value="#{beanPermisosCorrecciones.datosBasicos.apertura.idDepartamento}"
+													disabled="true">
+
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanPermisosCorrecciones.findDepartamentos()}"
+														var="item" itemValue="#{item.idDepartamento}"
+														itemLabel="#{item.nombre}" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.apertura.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.apertura.municipio}">
+													<p:ajax update="fPermisosCorreccion:globalMsg"
+														listener="#{beanPermisosCorrecciones.validarCheks('apertura','municipio',beanPermisosCorrecciones.permisosCorrecciones.apertura.municipio)}" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMMunicipio" style="width:100%;"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosInformacionDeAperturaMunicipio}"
+													value="#{beanPermisosCorrecciones.datosBasicos.apertura.idMunicipio}"
+													disabled="true">
+													<p:ajax
+														listener="#{beanPermisosCorrecciones.validarExistenciaDocumento}"
+														update=":fPermisosCorreccion:globalMsg,idPanelApertura" />
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanPermisosCorrecciones.findMunicipioApertura()}"
+														var="munRes" itemValue="#{munRes.idMunicipio}"
+														itemLabel="#{munRes.nombre}" />
+												</p:selectOneMenu>
+											</div>
+										</div>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.apertura.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.apertura.oficinaOrigen}">
+													<p:ajax update="fPermisosCorreccion:globalMsg"
+														listener="#{beanPermisosCorrecciones.validarCheks('apertura','oficinaOrigen',beanPermisosCorrecciones.permisosCorrecciones.apertura.oficinaOrigen)}" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelOficinaDeOrigen}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMOficinaOrigen" style="width:100%;"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosInformacionDeAperturaOficinaDeOrigen}"
+													value="#{beanPermisosCorrecciones.datosBasicos.apertura.idOficinaOrigen}"
+													disabled="true">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanPermisosCorrecciones.getOficinaOrigenApertura()}"
+														var="orig" itemLabel="#{orig.nombre}"
+														itemValue="#{orig.idOficinaOrigen}" />
+													<p:ajax
+														listener="#{beanPermisosCorrecciones.validarExistenciaDocumento}"
+														update=":fPermisosCorreccion:globalMsg,idPanelApertura" />
+												</p:selectOneMenu>
+											</div>
+										</div>
+									</p:panel>
+									<br />
+									<p:panel id="idPanelMatriculaBase"
+										widgetVar="wPanelMatriculasBase"
+										collapsed="#{!beanPermisosCorrecciones.permisosCorrecciones.matriculasAbiertas.seleccionado}"
+										header="#{messageBeanSNR.commonLabelMatriculaAbiertaConBase}"
+										toggleable="true" style="text-align:center">
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<p:dataTable id="idPrediosSegregadosMatricula"
+													style="min-width:500px;"
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+													value="#{beanPermisosCorrecciones.datosBasicos.predioSegregado}"
+													var="item">
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelMatriculas}">
+														<h:outputText
+															value="#{item.idCirculo} - #{item.idMatricula}" />
+													</p:column>
+													<p:column width="30%"
+														headerText="#{messageBeanSNR.commonLabelSeleccione}">
+														<div align="center">
+															<p:selectBooleanCheckbox
+																disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.matriculasAbiertas.seleccionado}"
+																value="#{item.seleccionado}">
+																<p:ajax update="@this" process="@this" />
+															</p:selectBooleanCheckbox>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-6">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.matriculasAbiertas.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.matriculasAbiertas.agregar}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:commandButton disabled="true"
+													value="#{messageBeanSNR.commonButtonAgregar}" />
+											</div>
+										</div>
+									</p:panel>
+									<br />
+									<p:panel widgetVar="wPanelCatastral"
+										collapsed="#{!beanPermisosCorrecciones.permisosCorrecciones.catastral.seleccionado}"
+										header="#{messageBeanSNR.commonLabelInformacionCatastral}"
+										toggleable="true" style="text-align:center">
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-6 ui-lg-5">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.catastral.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.catastral.codigoCatastral}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelCodigoCatastral}" />
+												<br />
+												<p:inputText id="idItCodigoCatastral" disabled="true"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosInformacionCatastralCodigoCatastral}"
+													value="#{beanPermisosCorrecciones.datosBasicos.codigoCatastral}">
+													<p:keyFilter regEx="/[a-z0-9]/i" preventPaste="false" />
+												</p:inputText>
+											</div>
+											<div class="ui-g-12 ui-md-4 ui-lg-3">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.catastral.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.catastral.codigoCatastralAnt}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelCodigoCatastralAnterior}" />
+												<br />
+												<p:inputText id="idItCodigoCatastralAnterior"
+													disabled="true"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDatosBasicosInformacionCatastralCodigoCatastralAnterior}"
+													value="#{beanPermisosCorrecciones.datosBasicos.codigoCatastralAnterior}">
+													<p:keyFilter regEx="/[a-z0-9]/i" preventPaste="false" />
+												</p:inputText>
+											</div>
+										</div>
+									</p:panel>
+									<br />
+									<p:panel widgetVar="wPanelSegregacion"
+										collapsed="#{!beanPermisosCorrecciones.permisosCorrecciones.matriculasSegregacion.seleccionado}"
+										header="#{messageBeanSNR.commonLabelMatriculasSegregadas}"
+										toggleable="true" style="text-align:center">
+										<p:outputPanel id="idPanelSegregacion">
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:dataTable id="idDTPrediosSegregados"
+														style="min-width:500px;" paginator="true" rows="50"
+														emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+														value="#{beanPermisosCorrecciones.prediosSegregados}"
+														var="item">
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelMatriculas}">
+															<h:outputText
+																value="#{item.idCirculo1} - #{item.idMatricula1}" />
+														</p:column>
+														<p:column width="20%"
+															headerText="#{messageBeanSNR.commonLabelSeleccione}">
+															<div align="center">
+																<p:selectBooleanCheckbox
+																	disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.matriculasSegregacion.seleccionado}"
+																	value="#{item.seleccionado}">
+																	<p:ajax update="@this" process="@this" />
+																</p:selectBooleanCheckbox>
+															</div>
+														</p:column>
+													</p:dataTable>
+												</div>
+											</div>
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:selectBooleanCheckbox
+														disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.matriculasSegregacion.seleccionado}"
+														value="#{beanPermisosCorrecciones.permisosCorrecciones.matriculasSegregacion.agregarNueva}">
+														<p:ajax update="@this,idSCantidadSegregacion" process="@this,idSCantidadSegregacion" />
+													</p:selectBooleanCheckbox>
+													<p:spacer width="10" />
+													<p:commandButton disabled="true"
+														value="#{messageBeanSNR.commonLabelCrearMatriculas}" />
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:selectBooleanCheckbox
+														disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.matriculasSegregacion.seleccionado}"
+														value="#{beanPermisosCorrecciones.permisosCorrecciones.matriculasSegregacion.agregarExistente}">
+														<p:ajax update="@this" process="@this" />
+													</p:selectBooleanCheckbox>
+													<p:spacer width="10" />
+													<p:commandButton disabled="true"
+														value="#{messageBeanSNR.commonLabelAgregarMatriculasExistentes}" />
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:outputLabel
+														rendered="#{beanPermisosCorrecciones.permisosCorrecciones.matriculasSegregacion.agregarNueva}"
+														value="#{messageBeanSNR.commonLabelCantidadMatriculas}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:spinner min="0" max="100" id="idSCantidadSegregacion"
+														rendered="#{beanPermisosCorrecciones.permisosCorrecciones.matriculasSegregacion.agregarNueva}"
+														value="#{beanPermisosCorrecciones.permisosCorrecciones.matriculasSegregacion.cantidad}">
+														<p:ajax update="@this" process="@this" />
+													</p:spinner>
+												</div>
+											</div>
+										</p:outputPanel>
+									</p:panel>
+									<br />
+									<p:panel widgetVar="wPanelAntSistema"
+										collapsed="#{!beanPermisosCorrecciones.permisosCorrecciones.antSistema.seleccionado}"
+										header="#{messageBeanSNR.commonLabelDatosAntiguoSistemaSolicitud}"
+										toggleable="true" style="text-align:center">
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-4">
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.antSistema.circuloRegistral}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+												<br />
+												<p:selectOneMenu id="idSOMCirculoRegistralAntSistema"
+													style="width:100%"
+													title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaCirculoRegistral}"
+													value="#{beanPermisosCorrecciones.antiguoSistemaData.idCirculo}"
+													disabled="true">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanRegistro.findCirculoRegistral()}"
+														var="circuloAntSistema"
+														itemValue="#{circuloAntSistema.idCirculo}"
+														itemLabel="#{circuloAntSistema.idCirculo} - #{circuloAntSistema.nombre}" />
+													<p:ajax event="change" update="idSOMMunAntSistema"/>
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-4">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.antSistema.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.antSistema.tipoPredio}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTipoDePredio}" />
+												<br />
+												<p:selectOneMenu id="idSOMTipoPredioAntSistema"
+													style="width:100%" widgetVar="wvTipoPredioAntSistema"
+													disabled="true"
+													title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaTipoPredio}"
+													value="#{beanPermisosCorrecciones.antiguoSistemaData.idTipoPredio}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems value="#{beanReference.findTipoPredio()}"
+														var="tipoPredioAntSistema"
+														itemValue="#{tipoPredioAntSistema.idTipoPredio}"
+														itemLabel="#{tipoPredioAntSistema.descripcion}" />
+												</p:selectOneMenu>
+											</div>
+
+											<div class="ui-g-12 ui-md-4">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.antSistema.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.antSistema.nombrePredio}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel id="idOLNombrePredio"
+													value="#{messageBeanSNR.commonLabelNombreDelPredio}" />
+												<br />
+												<p:inputText onblur="value=value.toUpperCase()"
+													id="idItNomAntSistema" maxlength="400" disabled="true"
+													title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaNombrePredio}"
+													value="#{beanPermisosCorrecciones.antiguoSistemaData.nombrePredio}" />
+											</div>
+										</div>
+
+										<div class="ui-c" align="left">
+											<div class="ui-g-12 ui-md-4">
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.antSistema.pais}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel value="#{messageBeanSNR.commonLabelPais}" />
+												<br />
+												<p:selectOneMenu id="idSOMPaisAntSistema" style="width:100%"
+													title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaPais}"
+													value="#{beanPermisosCorrecciones.antiguoSistemaData.idPais}"
+													disabled="true">
+													<p:ajax update="idSOMDepAntSistema,idSOMMunAntSistema" />
+													<f:selectItem itemValue="57" itemLabel="COLOMBIA" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-4">
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.antSistema.departamento}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelDepartamento}" />
+												<br />
+												<p:selectOneMenu id="idSOMDepAntSistema" style="width:100%"
+													title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaDepartamento}"
+													value="#{beanPermisosCorrecciones.antiguoSistemaData.idDepartamento}"
+													disabled="true">
+													<p:ajax event="change" update="idSOMMunAntSistema" />
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanReference.findDepartamentos(beanPermisosCorrecciones.antiguoSistemaData.idPais)}"
+														var="depAntSistema"
+														itemValue="#{depAntSistema.idDepartamento}"
+														itemLabel="#{depAntSistema.nombre}" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-4">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.antSistema.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.antSistema.municipio}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelMunicipio}" />
+												<br />
+												<p:selectOneMenu id="idSOMMunAntSistema" style="width:100%"
+													disabled="true"
+													title="#{tooltipBeanSNR.procesosRegistroDatosPredioAntiguoSistemaPredioAntiguoSistemaMunicipio}"
+													value="#{beanPermisosCorrecciones.antiguoSistemaData.idMunicipio}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanReference.findMunicipiosByCirculo(beanPermisosCorrecciones.antiguoSistemaData.idCirculo)}"
+														var="munAntSistema"
+														itemValue="#{munAntSistema.idMunicipio}"
+														itemLabel="#{munAntSistema.nombre}" />
+												</p:selectOneMenu>
+											</div>
+										</div>
+										<div class="ui-c" align="left">
+											<div class="ui-g-12 ui-md-4">
+												<p:selectBooleanCheckbox
+													disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.antSistema.seleccionado}"
+													value="#{beanPermisosCorrecciones.permisosCorrecciones.antSistema.cantidadCertificados}">
+													<p:ajax update="@this" process="@this" />
+												</p:selectBooleanCheckbox>
+												<p:spacer width="10" />
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelCantidadDeCertificados}" />
+												<br />
+												<p:inputNumber onblur="value=value.toUpperCase()"
+													style="width:100%" id="idITCantidadCertificados"
+													disabled="true" maxlength="39" decimalPlaces="0"
+													value="#{beanPermisosCorrecciones.antiguoSistemaData.cantidadCertificados}">
+													<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+												</p:inputNumber>
+											</div>
+										</div>
+									</p:panel>
+									<br />
+									<p:panel widgetVar="wPanelDetalleAntSistema"
+										collapsed="#{!beanPermisosCorrecciones.permisosCorrecciones.detalleAntSistema.seleccionado}"
+										header="#{messageBeanSNR.commonLabelDetalleDatosAntSistema}"
+										toggleable="true" style="text-align:center">
+										<p:outputPanel
+											rendered="#{beanPermisosCorrecciones.antiguoSistemaData ne null}">
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:dataTable id="idDTDetallesPredioAntSisConsulta"
+														var="detalle"
+														value="#{beanPermisosCorrecciones.detallesAntSistema}"
+														emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+														<p:columnGroup type="header">
+															<p:row>
+																<p:column width="20%"
+																	headerText="#{messageBeanSNR.commonLabelLibro}" />
+																<p:column headerText="#{messageBeanSNR.commonLabelTomo}" />
+																<p:column
+																	headerText="#{messageBeanSNR.commonLabelFolio}" />
+																<p:column
+																	headerText="#{messageBeanSNR.commonLabelNumeroPartida}" />
+																<p:column
+																	headerText="#{messageBeanSNR.commonLabelSeleccione}" />
+															</p:row>
+														</p:columnGroup>
+														<p:column width="20%">
+															<div align="left">
+																<p:commandLink id="idCLMostrarDetalleConsulta"
+																	update="fDialogDetallePredio:idPDatosLibro,fDialogDetallePredio:idPDatosDocAntSistema"
+																	value="#{detalle.nombreLibro}"
+																	actionListener="#{beanPermisosCorrecciones.mostrarDialogDetallePredio(detalle)}"
+																	styleClass="subrayado">
+																</p:commandLink>
+															</div>
+														</p:column>
+														<p:column>
+															<div align="left">
+																<h:outputText value="#{detalle.tomo}" />
+															</div>
+														</p:column>
+														<p:column>
+															<div align="left">
+																<h:outputText value="#{detalle.folio}" />
+															</div>
+														</p:column>
+														<p:column>
+															<div align="left">
+																<h:outputText value="#{detalle.numeroPartida}" />
+															</div>
+														</p:column>
+														<p:column>
+															<p:selectBooleanCheckbox
+																disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.detalleAntSistema.seleccionado}"
+																value="#{detalle.seleccionado}">
+																<p:ajax update="@this" process="@this" />
+															</p:selectBooleanCheckbox>
+														</p:column>
+													</p:dataTable>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:selectBooleanCheckbox
+														disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.detalleAntSistema.seleccionado}"
+														value="#{beanPermisosCorrecciones.permisosCorrecciones.detalleAntSistema.agregar}">
+														<p:ajax update="@this" process="@this" />
+													</p:selectBooleanCheckbox>
+													<p:spacer width="10" />
+													<p:commandButton disabled="true"
+														value="#{messageBeanSNR.commonButtonAgregar}" />
+												</div>
+											</div>
+										</p:outputPanel>
+									</p:panel>
+								</p:tab>
+								<!-- descripción predio  -->
+								<p:tab id="Descripcion_predio" titleStyle="font-size:15px;"
+									disabled="#{not(beanPermisosCorrecciones.mostrarBandejaAnotaciones)}"
+									title="#{messageBeanSNR.commonLabelDescripcionPredio}">
+									<p:fragment>
+										<p:panel id="idPanelCabidaLinderos" widgetVar="wPanelLinderos"
+											collapsed="#{!beanPermisosCorrecciones.permisosCorrecciones.linderos.seleccionado}"
+											header="#{messageBeanSNR.commonLabelLinderos}"
+											toggleable="true" style="text-align:center">
+											<div class="ui-g" align="center">
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:selectBooleanCheckbox
+														disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.linderos.seleccionado}"
+														value="#{beanPermisosCorrecciones.permisosCorrecciones.linderos.linderos}">
+														<p:ajax update="@this" process="@this" />
+													</p:selectBooleanCheckbox>
+													<p:spacer width="10" />
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelLinderos}" />
+												</div>
+												<p:inputTextarea rows="6" cols="50" style="width: 100%"
+													disabled="true"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaDescripcionCabidaYLinderosLinderos}"
+													queryDelay="750" maxlength="50000" minQueryLength="4"
+													id="idITALinderos"
+													value="#{beanPermisosCorrecciones.cabidaLinderos.linderos}" />
+											</div>
+										</p:panel>
+										<br />
+										<p:panel id="idPanelComplementacion"
+											widgetVar="wPanelComplementacion"
+											collapsed="#{!beanPermisosCorrecciones.permisosCorrecciones.complementacion.seleccionado}"
+											header="#{messageBeanSNR.commonLabelComplementacion}"
+											toggleable="true" style="text-align:center">
+											<div class="ui-g" align="center">
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:selectBooleanCheckbox
+														disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.complementacion.seleccionado}"
+														value="#{beanPermisosCorrecciones.permisosCorrecciones.complementacion.complementacion}">
+														<p:ajax update="@this" process="@this" />
+													</p:selectBooleanCheckbox>
+													<p:spacer width="10" />
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelComplementacion}" />
+												</div>
+												<p:inputTextarea rows="6" cols="50" style="width: 100%"
+													disabled="true" queryDelay="750" maxlength="50000"
+													minQueryLength="4" id="idcomplementacionComplementacion"
+													value="#{beanPermisosCorrecciones.cabidaLinderos.complementacion.complementacion}" />
+											</div>
+										</p:panel>
+										<br />
+										<p:panel header="#{messageBeanSNR.commonLabelAreaPredio}"
+											widgetVar="wPanelArea"
+											collapsed="#{!beanPermisosCorrecciones.permisosCorrecciones.areaPredio.seleccionado}"
+											toggleable="true" style="text-align:center">
+											<div class="ui-g" align="center">
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:selectBooleanCheckbox
+														disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.areaPredio.seleccionado}"
+														value="#{beanPermisosCorrecciones.permisosCorrecciones.areaPredio.areaPrivada}">
+														<p:ajax update="@this" process="@this" />
+													</p:selectBooleanCheckbox>
+													<p:spacer width="10" />
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelAreaPrivada}" />
+													<br />
+													<p:inputText disabled="true" thousandSeparator=""
+														title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaAreaPredioAreaPrivada}"
+														label="#{messageBeanSNR.commonLabelAreaPrivada}"
+														placeholder="#{messageBeanSNR.commonLabelAreaPrivada}"
+														value="#{beanPermisosCorrecciones.areaUI.detalleAreaPrivada.areaLectura}"
+														maxValue="9999999999.9999999999" decimalPlaces="10" />
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:selectBooleanCheckbox
+														disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.areaPredio.seleccionado}"
+														value="#{beanPermisosCorrecciones.permisosCorrecciones.areaPredio.areaConstruida}">
+														<p:ajax update="@this" process="@this" />
+													</p:selectBooleanCheckbox>
+													<p:spacer width="10" />
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelAreaConstruida}" />
+													<br />
+													<p:inputText disabled="true" thousandSeparator=""
+														title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaAreaPredioAreaConstruida}"
+														label="#{messageBeanSNR.commonLabelAreaConstruida}"
+														placeholder="#{messageBeanSNR.commonLabelAreaConstruida}"
+														value="#{beanPermisosCorrecciones.areaUI.detalleAreaConstruida.areaLectura}"
+														maxValue="9999999999.9999999999" decimalPlaces="10" />
+												</div>
+											</div>
+											<div class="ui-g" align="center">
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:selectBooleanCheckbox
+														disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.areaPredio.seleccionado}"
+														value="#{beanPermisosCorrecciones.permisosCorrecciones.areaPredio.coeficiente}">
+														<p:ajax update="@this" process="@this" />
+													</p:selectBooleanCheckbox>
+													<p:spacer width="10" />
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelCoeficiente}" />
+													<br />
+													<p:inputText id="idItCoeficiente"
+														title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaAreaPredioCoeficiente}"
+														disabled="true"
+														label="#{messageBeanSNR.commonLabelCoeficiente}"
+														placeholder="#{messageBeanSNR.commonLabelCoeficiente}"
+														value="#{beanPermisosCorrecciones.areaUI.areaPredio.coeficiente}">
+														<p:keyFilter regEx="/[\d\.]/" preventPaste="false" />
+													</p:inputText>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:selectBooleanCheckbox
+														disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.areaPredio.seleccionado}"
+														value="#{beanPermisosCorrecciones.permisosCorrecciones.areaPredio.usoPredio}">
+														<p:ajax update="@this" process="@this" />
+													</p:selectBooleanCheckbox>
+													<p:spacer width="10" />
+													<p:outputLabel indicateRequired="true"
+														value="#{messageBeanSNR.commonLabelUsoDelPredio}" />
+													<br />
+													<p:inputText disabled="true"
+														title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaAreaPredioUsoDelPredio}"
+														id="usoDelPredio2"
+														label="#{messageBeanSNR.commonLabelUsoDelPredio}"
+														placeholder="#{messageBeanSNR.commonLabelUsoDelPredio}"
+														value="#{beanPermisosCorrecciones.descripcionTipoUsoSuelo}" />
+												</div>
+												<br />
+											</div>
+											<div class="ui-g" align="center">
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:selectBooleanCheckbox
+														disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.areaPredio.seleccionado}"
+														value="#{beanPermisosCorrecciones.permisosCorrecciones.areaPredio.areaTerreno}">
+														<p:ajax update="@this" process="@this" />
+													</p:selectBooleanCheckbox>
+													<p:spacer width="10" />
+													<p:outputLabel indicateRequired="true"
+														value="#{messageBeanSNR.commonLabelAreaDelTerreno}" />
+													<br />
+													<p:inputText disabled="true"
+														title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoTramitesAntiguoSistemaCrearMatriculaAreaPredioAreaDeTerreno}"
+														maxlength="24" id="idItAreaTerreno"
+														label="#{messageBeanSNR.commonLabelAreaDelTerreno}"
+														placeholder="#{messageBeanSNR.commonLabelAreaDelTerreno}"
+														value="#{beanPermisosCorrecciones.areaUI.areaTerreno}">
+														<p:keyFilter regEx="/[\d\.]/" preventPaste="false" />
+													</p:inputText>
+												</div>
+											</div>
+										</p:panel>
+										<br />
+										<p:panel id="idPanelDirecciones" widgetVar="wPanelDireccion"
+											collapsed="#{!beanPermisosCorrecciones.permisosCorrecciones.direccionPredio.seleccionado}"
+											header="#{messageBeanSNR.commonLabelDireccionesDelPredio}"
+											toggleable="true" style="text-align:center">
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:dataTable id="idDTDireccionesPredios"
+														emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronArchivos}"
+														value="#{beanPermisosCorrecciones.direccionesPredio}"
+														var="item" scrollable="true">
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelDireccionPredio}">
+															<h:outputText id="idOTNombreArchivo"
+																value="#{item.direccion}" />
+														</p:column>
+														<p:column width="20%"
+															headerText="#{messageBeanSNR.commonLabelSeleccione}">
+															<div align="center">
+																<p:selectBooleanCheckbox
+																	disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.direccionPredio.seleccionado}"
+																	value="#{item.seleccionado}">
+																	<p:ajax update="@this" process="@this" />
+																</p:selectBooleanCheckbox>
+															</div>
+														</p:column>
+													</p:dataTable>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-6">
+													<p:selectBooleanCheckbox
+														disabled="#{!beanPermisosCorrecciones.permisosCorrecciones.direccionPredio.seleccionado}"
+														value="#{beanPermisosCorrecciones.permisosCorrecciones.direccionPredio.agregar}">
+														<p:ajax update="@this" process="@this" />
+													</p:selectBooleanCheckbox>
+													<p:spacer width="10" />
+													<p:commandButton disabled="true"
+														value="#{messageBeanSNR.commonButtonAgregar}" />
+												</div>
+											</div>
+										</p:panel>
+									</p:fragment>
+								</p:tab>
+								<!-- Anotaciones -->
+								<p:tab id="Anotaciones_id" titleStyle="font-size:15px;"
+									title="#{messageBeanSNR.commonLabelAnotaciones}">
+									<p:fragment>
+										<p:autoUpdate />
+										<!-- Resumen de anotaciones por matricula-->
+										<p:outputPanel
+											rendered="#{beanPermisosCorrecciones.mostrarBandejaAnotaciones}">
+											<div class="ui-g">
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:dataTable id="idDtAnotacionesAgregadas" var="item"
+														value="#{beanPermisosCorrecciones.anotacionesAgregadas}"
+														emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+														<f:facet name="header">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelAnotacionesAgregadas}" />
+														</f:facet>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelNumeroAnotacion}">
+															<h:outputText value="#{item.anotacionPredio.idAnotacion}" />
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelDescripcionActo}">
+															<h:outputText value="#{item.naturalezaJuridica}" />
+														</p:column>
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelDescripcion}">
+															<h:outputText
+																value="#{item.anotacionPredio.especificacion}" />
+														</p:column>
+														<p:column headerText="#{messageBeanSNR.commonLabelAccion}">
+															<div align="center">
+																<p:commandButton
+																	title="#{messageBeanSNR.commonButtonConsultar}"
+																	icon="lupa" image="../images/find.png"
+																	update="fPermisosCorreccion:TvdetalleRegistroCalif:idOPAnotacion"
+																	actionListener="#{beanPermisosCorrecciones.consultarAnotacion(item)}" />
+															</div>
+														</p:column>
+													</p:dataTable>
+												</div>
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:selectBooleanCheckbox disabled="true"
+														value="#{beanPermisosCorrecciones.permisosCorrecciones.agregarAnotacion}">
+														<p:ajax update="@this" process="@this" />
+													</p:selectBooleanCheckbox>
+													<p:spacer width="10" />
+													<p:commandButton disabled="true"
+														value="#{messageBeanSNR.commonButtonAgregar}" />
+												</div>
+											</div>
+										</p:outputPanel>
+										<!-- detalle de anotacion seleccionada-->
+										<p:outputPanel id="idOPAnotacion"
+											rendered="#{beanPermisosCorrecciones.mostrarDetalleAnotaciones}">
+											<p:panel id="pDatosAnotacion"
+												widgetVar="wPanelDatosAnotacion"
+												header="#{messageBeanSNR.commonLabelDatosAnotacion}"
+												collapsed="#{not(beanPermisosCorrecciones.anotacion.panelDatosAnotaciones.seleccionado)}"
+												toggleable="true">
+												<div class="ui-g" align="left">
+													<div class="ui-g-12 ui-md-6 ui-lg-3">
+														<p:selectBooleanCheckbox disabled="true"
+															value="#{beanPermisosCorrecciones.anotacion.panelDatosAnotaciones.numeroAnotacion}">
+															<p:ajax update="@this" process="@this" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelNumeroAnotacion}#{messageBeanSNR.commonLabelObligatorio}"
+															style="width:200px" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosAnotacionNumeroAnotacion}"
+															id="idItNumeroAnotacionID"
+															label="#{messageBeanSNR.commonLabelNumeroAnotacion}"
+															placeholder="#{messageBeanSNR.commonLabelNumeroAnotacion}"
+															value="#{beanPermisosCorrecciones.numeroAnotacion}"
+															disabled="true" maxlength="10" />
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-3">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelDatosAnotaciones.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelDatosAnotaciones.fechaAnotacion}">
+															<p:ajax update="@this" process="@this" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelFechaAnotacion}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:calendar id="idCalFechaAnotacion" size="10"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosAnotacionFechaAnotacion}"
+															mask="true" locale="es" placeholder="DD/MM/AAAA"
+															pattern="dd/MM/yyyy" disabled="true"
+															value="#{beanPermisosCorrecciones.anotacionPredio.fechaRadicacion}"
+															showOn="button">
+															<p:ajax event="dateSelect"
+																listener="#{beanPermisosCorrecciones.validarFechaDocumentoRadicacion(true)}" />
+															<p:ajax event="change"
+																listener="#{beanPermisosCorrecciones.validarFechaDocumentoRadicacion(true)}" />
+														</p:calendar>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-3">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelDatosAnotaciones.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelDatosAnotaciones.radicacion}">
+															<p:ajax update="@this" process="@this" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelRadicacion}#{messageBeanSNR.commonLabelObligatorio}"
+															style="width:200px" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosAnotacionRadicacion}"
+															id="idItRadicacionID" disabled="true"
+															label="#{messageBeanSNR.commonLabelRadicacion}"
+															placeholder="#{messageBeanSNR.commonLabelRadicacion}"
+															value="#{beanPermisosCorrecciones.anotacionPredio.radicacion}"
+															maxlength="100" />
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-2">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelDatosAnotaciones.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelDatosAnotaciones.estadoAnotacion}">
+															<p:ajax update="@this" process="@this" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelEstadoAnotacion}" />
+														<br />
+														<p:selectOneMenu id="idSOMEstadoAnotacion"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosAnotacionEstadoAnotacion}"
+															style="width:100%" disabled="true"
+															value="#{beanPermisosCorrecciones.anotacionPredio.idEstadoAnotacion}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanReference.findEstadoAnotacion()}"
+																var="item" itemValue="#{item.idEstadoAnotacion}"
+																itemLabel="#{item.nombre}" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+											</p:panel>
+											<br />
+											<p:panel id="pDatosDocumento"
+												widgetVar="wPanelDatosDocumento"
+												header="#{messageBeanSNR.commonLabelDatosDelDocumento}"
+												collapsed="#{not(beanPermisosCorrecciones.anotacion.panelDatosDocumento.seleccionado)}"
+												toggleable="true">
+												<div class="ui-g">
+													<div class="ui-g-12 ui-md-6 ui-lg-5">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelDatosDocumento.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelDatosDocumento.tipoDocumento}">
+															<p:ajax update="fPermisosCorreccion:globalMsg"
+																listener="#{beanPermisosCorrecciones.validarCheks('documento','tipoDocumento',beanPermisosCorrecciones.anotacion.panelDatosDocumento.tipoDocumento)}" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idSOMEscrituraD"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoTipoDeDocumento}"
+															style="width:100%" disabled="true"
+															value="#{beanPermisosCorrecciones.documento.idTipoDocumento}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanReference.findTipoDocumentoPublicoActivo()}"
+																var="item" itemLabel="#{item.nombre}"
+																itemValue="#{item.idTipoDocumento}" />
+															<p:ajax event="change" update="idSOMTipoOficinaD"
+																listener="#{beanPermisosCorrecciones.cargarTiposOficinaAnotaciones('A')}" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-4">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelDatosDocumento.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelDatosDocumento.numeroDocumento}">
+															<p:ajax update="@this" process="@this" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelNumeroDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															id="idItDocuActoD"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoNumeroDocumento}"
+															placeholder="#{messageBeanSNR.commonLabelDocumento}"
+															maxlength="20" disabled="true"
+															value="#{beanPermisosCorrecciones.documento.numero}">
+														</p:inputText>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-3">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelDatosDocumento.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelDatosDocumento.fechaDocumento}">
+															<p:ajax update="@this" process="@this" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+														<br />
+														<p:calendar id="idCalFechaDocD" size="10" mask="true"
+															locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+															value="#{beanPermisosCorrecciones.documento.fechaDocumento}"
+															disabled="true"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoFechaDocumento}"
+															showOn="button">
+															<p:ajax event="dateSelect"
+																listener="#{beanPermisosCorrecciones.validarFechaDocumentoRadicacion(true)}" />
+															<p:ajax event="change"
+																listener="#{beanPermisosCorrecciones.validarFechaDocumentoRadicacion(true)}" />
+														</p:calendar>
+													</div>
+												</div>
+												<div class="ui-g">
+													<div class="ui-g-12 ui-md-6 ui-lg-5">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelDatosDocumento.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelDatosDocumento.tipoOficina}">
+															<p:ajax update="fPermisosCorreccion:globalMsg"
+																listener="#{beanPermisosCorrecciones.validarCheks('documento','tipoOficina',beanPermisosCorrecciones.anotacion.panelDatosDocumento.tipoOficina)}" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelTipoDeOficina}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idSOMTipoOficinaD" style="width:100%"
+															disabled="true"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoTipoOficina}"
+															value="#{beanPermisosCorrecciones.documento.idTipoOficina}">
+															<p:ajax
+																listener="#{beanPermisosCorrecciones.cargarListasDesplegablesDocumento}"
+																update="idSOMTipoEntidadD,idPaisDocumentoD,idSOMDepartamentoD,idSOMMunicipioD,idSOMOficinaOrigenD" />
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanPermisosCorrecciones.tiposOficinaDoc}"
+																var="item" itemLabel="#{item.nombre}"
+																itemValue="#{item.idTipoOficina}" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-4">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelDatosDocumento.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelDatosDocumento.tipoEntidad}">
+															<p:ajax update="@this" process="@this" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelTipoDeEntidad}" />
+														<br />
+														<p:selectOneMenu id="idSOMTipoEntidadD" style="width:100%"
+															disabled="true"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoTipoEntidad}"
+															value="#{beanPermisosCorrecciones.documento.tipoEntidad}">
+															<f:selectItems value="#{beanReference.findTipoEntidad()}"
+																var="item" itemLabel="#{item.nombre}"
+																itemValue="#{item.idTipoEntidad}" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+												<div class="ui-g">
+													<div class="ui-g-12 ui-md-6 ui-lg-5">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelDatosDocumento.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelDatosDocumento.pais}">
+															<p:ajax update="fPermisosCorreccion:globalMsg"
+																listener="#{beanPermisosCorrecciones.validarCheks('documento','pais',beanPermisosCorrecciones.anotacion.panelDatosDocumento.pais)}" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelPais}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idPaisDocumentoD" style="width:100%"
+															disabled="true"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoPais}"
+															value="#{beanPermisosCorrecciones.documento.idPais}">
+															<p:ajax
+																listener="#{beanPermisosCorrecciones.cargarPaisDocumento}"
+																update="idSOMDepartamentoD,idSOMMunicipioD,idSOMOficinaOrigenD" />
+															<f:selectItem itemValue=""
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+															<f:selectItems value="#{beanReference.findPaises()}"
+																var="paises" itemValue="#{paises.idPais}"
+																itemLabel="#{paises.nombre}" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-4">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelDatosDocumento.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelDatosDocumento.departamento}">
+															<p:ajax update="fPermisosCorreccion:globalMsg"
+																listener="#{beanPermisosCorrecciones.validarCheks('documento','departamento',beanPermisosCorrecciones.anotacion.panelDatosDocumento.departamento)}" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idSOMDepartamentoD"
+															style="width:100%" disabled="true"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoDepartamento}"
+															value="#{beanPermisosCorrecciones.documento.idDepartamento}">
+															<p:ajax
+																listener="#{beanPermisosCorrecciones.cargarDepartamentoDocumento}"
+																update="idSOMMunicipioD,idSOMOficinaOrigenD" />
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanPermisosCorrecciones.findDepartamentosDocumento()}"
+																var="item" itemValue="#{item.idDepartamento}"
+																itemLabel="#{item.nombre}" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-3">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelDatosDocumento.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelDatosDocumento.municipio}">
+															<p:ajax update="fPermisosCorreccion:globalMsg"
+																listener="#{beanPermisosCorrecciones.validarCheks('documento','municipio',beanPermisosCorrecciones.anotacion.panelDatosDocumento.municipio)}" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idSOMMunicipioD" style="width:100%"
+															disabled="true"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoMunicipio}"
+															value="#{beanPermisosCorrecciones.documento.idMunicipio}">
+															<p:ajax
+																listener="#{beanPermisosCorrecciones.cargarOficinaOrigen}"
+																update="idSOMOficinaOrigenD" />
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanPermisosCorrecciones.findMunicipiosDocumento()}"
+																var="munRes" itemValue="#{munRes.idMunicipio}"
+																itemLabel="#{munRes.nombre}" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+												<div class="ui-g">
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelDatosDocumento.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelDatosDocumento.oficinaOrigen}">
+															<p:ajax update="fPermisosCorreccion:globalMsg"
+																listener="#{beanPermisosCorrecciones.validarCheks('documento','oficinaOrigen',beanPermisosCorrecciones.anotacion.panelDatosDocumento.oficinaOrigen)}" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelOficinaDeOrigen}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idSOMOficinaOrigenD"
+															style="width:100%" disabled="true"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosDocumentoOficinaOrigen}"
+															value="#{beanPermisosCorrecciones.documento.idOficinaOrigen}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanPermisosCorrecciones.getOficinaOrigen()}"
+																var="orig" itemLabel="#{orig.nombre}"
+																itemValue="#{orig.idOficinaOrigen}" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+											</p:panel>
+											<br />
+											<p:panel id="pAntSistema"
+												widgetVar="wPanelDetalleAntSistemaAnotacion"
+												header="#{messageBeanSNR.commonLabelDatosAntiguoSistema}"
+												collapsed="#{not(beanPermisosCorrecciones.anotacion.panelDetalleAntSistemaAnotacion.seleccionado)}"
+												toggleable="true">
+												<p:dataTable id="idDTDetallesPredio" var="detalle"
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+													value="#{beanPermisosCorrecciones.anotacion.detallesAntSistema}">
+													<p:column headerText="#{messageBeanSNR.commonLabelLibro}">
+														<div align="left">
+															<p:commandLink id="idCLMostrarDetalle"
+																value="#{detalle.nombreLibro}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosAntSistemaLibro}"
+																update="fDialogDetallePredio:idPDatosLibro,fDialogDetallePredio:idPDatosDocAntSistema"
+																actionListener="#{beanPermisosCorrecciones.mostrarDialogDetallePredio(detalle)}"
+																styleClass="subrayado">
+															</p:commandLink>
+														</div>
+													</p:column>
+													<p:column headerText="#{messageBeanSNR.commonLabelTomo}">
+														<div align="left">
+															<h:outputText value="#{detalle.tomo}" />
+														</div>
+													</p:column>
+													<p:column headerText="#{messageBeanSNR.commonLabelFolio}">
+														<div align="left">
+															<h:outputText value="#{detalle.folio}" />
+														</div>
+													</p:column>
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelNumeroPartida}">
+														<div align="left">
+															<h:outputText value="#{detalle.numeroPartida}" />
+														</div>
+													</p:column>
+													<p:column style="width:10%;"
+														headerText="#{messageBeanSNR.commonLabelSeleccione}">
+														<p:selectBooleanCheckbox value="#{detalle.seleccionado}"
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelDetalleAntSistemaAnotacion.seleccionado)}"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesDatosAntSistemaSeleccione}">
+															<p:ajax update="idDTDetallesPredio"
+																listener="#{beanPermisosCorrecciones.seleccionarDatosAntSistemaAnotacion(detalle)}" />
+														</p:selectBooleanCheckbox>
+													</p:column>
+												</p:dataTable>
+											</p:panel>
+											<br />
+											<p:panel id="pEspecificacion"
+												widgetVar="wPanelEspecificacion"
+												header="#{messageBeanSNR.commonLabelEspecificacion}"
+												collapsed="#{not(beanPermisosCorrecciones.anotacion.panelEspecificacion.seleccionado)}"
+												toggleable="true">
+												<div class="ui-g">
+													<div class="ui-g-12 ui-md-6 ui-lg-3">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelEspecificacion.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelEspecificacion.codigoActo}">
+															<p:ajax update="@this" process="@this" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelCodigoDelActo}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idSOMCodigoActo" style="width:100%"
+															disabled="true"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesEspecificacionCodigoActo}"
+															value="#{beanPermisosCorrecciones.codigoNaturalezaJuridicaSeleccionada}">
+															<p:ajax
+																listener="#{beanPermisosCorrecciones.cambiarTipoActo}"
+																update="idSOMTipoActo,idItAnotacionCancela,idOlCalidadInteresado" />
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanReference.findAllNaturalezaJuridica(false)}"
+																var="item" itemLabel="#{item.idNaturalezaJuridica}"
+																itemValue="#{item.llavePrimaria}" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-3">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelEspecificacion.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelEspecificacion.descripcionActo}">
+															<p:ajax update="@this" process="@this" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelDescripcionActo}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:selectOneMenu id="idSOMTipoActo" style="width:100%"
+															disabled="true"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesEspecificacionDescripcionActo}"
+															value="#{beanPermisosCorrecciones.naturalezaJuridicaSeleccionada}">
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanReference.findAllNaturalezaJuridica(false)}"
+																var="item" itemLabel="#{item.nombre}"
+																itemValue="#{item.llavePrimaria}" />
+															<p:ajax
+																listener="#{beanPermisosCorrecciones.cambiarCodigoTipoActo}"
+																update="idSOMCodigoActo,idItAnotacionCancela,idOlCalidadInteresado" />
+														</p:selectOneMenu>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-3">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelEspecificacion.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelEspecificacion.valorActo}">
+															<p:ajax update="@this" process="@this" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelValorActo}#{messageBeanSNR.commonLabelObligatorio}"
+															style="width:200px" />
+														<br />
+														<p:inputNumber id="idItValorActo" maxlength="20"
+															placeholder="#{messageBeanSNR.commonLabelValorActo}"
+															symbol="$" disabled="true"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesEspecificacionValorActo}"
+															value="#{beanPermisosCorrecciones.anotacionPredio.valor}">
+															<p:keyFilter regEx="/[\d\-\.]/" preventPaste="false" />
+														</p:inputNumber>
+													</div>
+													<div class="ui-g-12 ui-md-6 ui-lg-3">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelEspecificacion.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelEspecificacion.anotacionCancela}">
+															<p:ajax update="@this" process="@this" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelAnotacionQSeCancela}#{messageBeanSNR.commonLabelObligatorio}" />
+														<br />
+														<p:inputText onblur="value=value.toUpperCase()"
+															id="idItAnotacionCancela" disabled="true"
+															label="#{messageBeanSNR.commonLabelAnotacionQSeCancela}"
+															placeholder="#{messageBeanSNR.commonLabelAnotacionQSeCancela}"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesEspecificacionAnotacionCancela}"
+															value="#{beanPermisosCorrecciones.anotacionCancelacion.idAnotacion1}"
+															maxlength="10" />
+													</div>
+												</div>
+												<div class="ui-g">
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:selectBooleanCheckbox
+															disabled="#{not(beanPermisosCorrecciones.anotacion.panelEspecificacion.seleccionado)}"
+															value="#{beanPermisosCorrecciones.anotacion.panelEspecificacion.comentario}">
+															<p:ajax update="@this" process="@this" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelComentario}"
+															style="width:200px" />
+														<br />
+														<p:inputTextarea rows="5"
+															onblur="value=value.toUpperCase()" disabled="true"
+															value="#{beanPermisosCorrecciones.anotacionPredio.comentario}"
+															placeholder="#{messageBeanSNR.commonLabelComentario}"
+															queryDelay="750" maxlength="1000" minQueryLength="4"
+															title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesEspecificacionComentario}"
+															counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+															counter="idNumCarCom">
+														</p:inputTextarea>
+														<h:outputText id="idNumCarCom" />
+													</div>
+												</div>
+											</p:panel>
+											<br />
+											<p:panel id="pInterviniente" toggleable="true"
+												widgetVar="wPanelIntervinientes"
+												header="#{messageBeanSNR.commonLabelInterviniente}"
+												collapsed="#{not(beanPermisosCorrecciones.anotacion.panelIntervinientes.seleccionado)}">
+												<p:panel
+													header="#{messageBeanSNR.commonLabelDatosBasicosDelInterveniente}">
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:selectBooleanCheckbox
+																disabled="#{not(beanPermisosCorrecciones.bloquearModificarIntervenientes)}"
+																value="#{beanPermisosCorrecciones.panelDetalleIntervinientes.datosPersona}">
+																<p:ajax update="@this" process="@this" />
+															</p:selectBooleanCheckbox>
+															<p:spacer width="10" />
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDatosDePersona}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+														</div>
+													</div>
+													<p:panel>
+														<div class="ui-g" align="left">
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelTipoDePersona}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:selectOneMenu id="idSOMTipoPersonaInter"
+																	style="width:100%" disabled="true"
+																	value="#{beanPermisosCorrecciones.persona.idTipoPersona}">
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItems
+																		value="#{beanReference.findTipoPersona()}"
+																		var="tipoPersona"
+																		itemValue="#{tipoPersona.idTipoPersona}"
+																		itemLabel="#{tipoPersona.descripcion}" />
+																</p:selectOneMenu>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:selectOneMenu id="idSOMTipoDocInter"
+																	style="width:100%" disabled="true"
+																	value="#{beanPermisosCorrecciones.persona.idDocumentoTipo}">
+																	<p:ajax
+																		listener="#{beanPermisosCorrecciones.deshabilitarCamposNit}"
+																		update="idOlDocumentoInter,idSOMGeneroInter,idOlPNombreInter,idOlSNombreInter,idOlPApellidoInter,idOlSApellidoInter,idOlRazonSocialInter,idSOMTipoDocInter" />
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItems
+																		value="#{beanAccionPrediosAntSistema.findTipoDocumentoSecuencia()}"
+																		var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+																		itemLabel="#{tipoDoc.descripcion}" />
+																</p:selectOneMenu>
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:inputText onblur="value=value.toUpperCase()"
+																	disabled="true" id="idOlDocumentoInter"
+																	placeholder="#{messageBeanSNR.commonLabelDocumento}"
+																	maxlength="20"
+																	value="#{beanPermisosCorrecciones.persona.numeroDocumento}" />
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelGenero}" />
+																<br />
+																<p:selectOneMenu id="idSOMGeneroInter"
+																	style="width:100%"
+																	value="#{beanPermisosCorrecciones.persona.idNaturalGenero}"
+																	title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesGenero}"
+																	disabled="true">
+																	<f:selectItem
+																		itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																		itemValue="" />
+																	<f:selectItems value="#{beanReference.findGeneros()}"
+																		var="generos" itemValue="#{generos.idNaturalGenero}"
+																		itemLabel="#{generos.ilicode}" />
+																</p:selectOneMenu>
+															</div>
+														</div>
+														<div class="ui-g" align="left">
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel for="idOlPNombreInter"
+																	value="#{messageBeanSNR.commonLabelPrimerNombre}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idOlPNombreInter"
+																	placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+																	value="#{beanPermisosCorrecciones.persona.primerNombre}"
+																	disabled="true" />
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel for="idOlSNombreInter"
+																	value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+																<br />
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idOlSNombreInter"
+																	placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+																	value="#{beanPermisosCorrecciones.persona.segundoNombre}"
+																	disabled="true" style="width:160px;" />
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel for="idOlPApellidoInter"
+																	value="#{messageBeanSNR.commonLabelPrimerApellido}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idOlPApellidoInter"
+																	placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+																	value="#{beanPermisosCorrecciones.persona.primerApellido}"
+																	disabled="true" />
+															</div>
+															<div class="ui-g-12 ui-md-6 ui-lg-3">
+																<p:outputLabel for="idOlSApellidoInter"
+																	value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+																<br />
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idOlSApellidoInter"
+																	placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+																	value="#{beanPermisosCorrecciones.persona.segundoApellido}"
+																	disabled="true" />
+															</div>
+														</div>
+														<div class="ui-g" align="left">
+															<div class="ui-g-12 ui-md-12 ui-lg-12">
+																<p:outputLabel for="idOlRazonSocialInter"
+																	value="#{messageBeanSNR.commonLabelRazonSocial}#{messageBeanSNR.commonLabelObligatorio}" />
+																<br />
+																<p:inputText onblur="value=value.toUpperCase()"
+																	id="idOlRazonSocialInter"
+																	placeholder="#{messageBeanSNR.commonLabelRazonSocial}"
+																	value="#{beanPermisosCorrecciones.persona.razonSocial}"
+																	title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesRazonSocial}"
+																	disabled="true" />
+															</div>
+														</div>
+													</p:panel>
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:selectBooleanCheckbox
+																disabled="#{not(beanPermisosCorrecciones.bloquearModificarIntervenientes)}"
+																value="#{beanPermisosCorrecciones.panelDetalleIntervinientes.rol}">
+																<p:ajax update="@this" process="@this" />
+															</p:selectBooleanCheckbox>
+															<p:spacer width="10" />
+															<p:outputLabel for="idOlRolInter"
+																value="#{messageBeanSNR.commonLabelRol}#{messageBeanSNR.commonLabelObligatorio}" />
+															<br />
+															<p:selectOneMenu id="idOlRolInter" style="width:100%"
+																disabled="true"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesRol}"
+																value="#{beanPermisosCorrecciones.solicitudInterviniente.rolPersona}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelDe}"
+																	itemValue="De" />
+																<f:selectItem itemLabel="#{messageBeanSNR.commonLabelA}"
+																	itemValue="A" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:selectBooleanCheckbox
+																disabled="#{not(beanPermisosCorrecciones.bloquearModificarIntervenientes)}"
+																value="#{beanPermisosCorrecciones.panelDetalleIntervinientes.propietario}">
+																<p:ajax update="@this" process="@this" />
+															</p:selectBooleanCheckbox>
+															<p:spacer width="10" />
+															<p:outputLabel for="idOlPropietario"
+																value="#{messageBeanSNR.commonLabelPropietario}" />
+															<br />
+															<p:selectOneMenu id="idOlPropietario" style="width:100%"
+																disabled="true"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesPropietario}"
+																value="#{beanPermisosCorrecciones.anotacionPredioCiudadano.propietario}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItem itemLabel="I" itemValue="I" />
+																<f:selectItem itemLabel="X" itemValue="X" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:selectBooleanCheckbox
+																disabled="#{not(beanPermisosCorrecciones.bloquearModificarIntervenientes)}"
+																value="#{beanPermisosCorrecciones.panelDetalleIntervinientes.porcentaje}">
+																<p:ajax update="@this" process="@this" />
+															</p:selectBooleanCheckbox>
+															<p:spacer width="10" />
+															<p:outputLabel for="idOlPorcentajePart"
+																value="#{messageBeanSNR.commonLabelPorcentajeParticipacion}" />
+															<br />
+															<p:inputText onblur="value=value.toUpperCase()"
+																id="idOlPorcentajePart" disabled="true"
+																placeholder="#{messageBeanSNR.commonLabelPorcentajeParticipacion}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesPorcentaje}"
+																value="#{beanPermisosCorrecciones.anotacionPredioCiudadano.porcentajeParticipacion}">
+																<p:keyFilter regEx="/[\d\.]/" preventPaste="false" />
+															</p:inputText>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<p:selectBooleanCheckbox
+																disabled="#{not(beanPermisosCorrecciones.bloquearModificarIntervenientes)}"
+																value="#{beanPermisosCorrecciones.panelDetalleIntervinientes.calidadInterviniente}">
+																<p:ajax update="@this" process="@this" />
+															</p:selectBooleanCheckbox>
+															<p:spacer width="10" />
+															<p:outputLabel for="idOlCalidadInteresado"
+																value="#{messageBeanSNR.commonLabelCalidadInterviniente}" />
+															<br />
+															<p:selectOneMenu id="idOlCalidadInteresado"
+																style="width:100%" disabled="true"
+																value="#{beanPermisosCorrecciones.anotacionPredioCiudadano.idInteresadaRrr}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanPermisosCorrecciones.findRrr()}"
+																	var="item" itemValue="#{item.idDocumentoTipo}"
+																	itemLabel="#{item.descripcion}" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+													<div class="ui-g" align="right">
+														<div class="ui-g-12 ui-md-6 ui-lg-3">
+															<br />
+															<p:commandButton icon="fa fa-plus-circle" iconPos="left"
+																value="#{messageBeanSNR.commonButtonAplicarSeleccionIntervinientes}"
+																title="#{tooltipBeanSNR.procesosAntiguoSistemaAntSistemaProcesosCrearMatriculaAnotacionesIntervinientesAgregar}"
+																disabled="#{not(beanPermisosCorrecciones.bloquearModificarIntervenientes)}"
+																update="fPermisosCorreccion:globalMsg,idDtListadoSolInter"
+																actionListener="#{beanPermisosCorrecciones.agregarIntervinientes(true)}" />
+														</div>
+													</div>
+												</p:panel>
+												<br />
+												<div class="ui-g">
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:dataTable id="idDtListadoSolInter" var="item"
+															sortOrder="descending"
+															sortBy="#{item.solicitudInterviniente.rolPersona}"
+															value="#{beanPermisosCorrecciones.intervinientesAgregados}"
+															style="font-size: 11px;"
+															emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+															<f:facet name="header">
+																<p:outputLabel
+																	value="#{messageBeanSNR.commonLabelIntervenientesAgregados}" />
+															</f:facet>
+															<p:column headerText="#{messageBeanSNR.commonLabelRol}"
+																style="width: 4%;">
+																<h:outputText
+																	value="#{item.solicitudInterviniente.rolPersona}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelPrimerNombre}">
+																<h:outputText value="#{item.persona.primerNombre}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelSegundoNombre}">
+																<h:outputText value="#{item.persona.segundoNombre}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelPrimerApellido}">
+																<h:outputText value="#{item.persona.primerApellido}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelSegundoApellido}">
+																<h:outputText value="#{item.persona.segundoApellido}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelRazonSocial}">
+																<h:outputText value="#{item.persona.razonSocial}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+																<h:outputText value="#{item.persona.idDocumentoTipo}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelDocumento}">
+																<h:outputText value="#{item.persona.numeroDocumento}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelPropietario}">
+																<h:outputText
+																	value="#{item.anotacionPredioCiudadano.propietario}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelPorcentaje}">
+																<h:outputText
+																	value="#{item.anotacionPredioCiudadano.porcentajeParticipacion}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelCalidadInterviniente}">
+																<h:outputText
+																	value="#{item.anotacionPredioCiudadano.nombreInteresadaRRR}" />
+															</p:column>
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelAccion}">
+																<p:commandButton icon="fa fa-pencil" iconPos="center"
+																	disabled="#{beanPermisosCorrecciones.bloquearModificarIntervenientes}"
+																	title="#{messageBeanSNR.commonLabelModificar}"
+																	actionListener="#{beanPermisosCorrecciones.modificarInterviniente(item)}" />
+															</p:column>
+														</p:dataTable>
+													</div>
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:selectBooleanCheckbox
+															disabled="#{!beanPermisosCorrecciones.anotacion.panelIntervinientes.seleccionado}"
+															value="#{beanPermisosCorrecciones.anotacion.panelIntervinientes.agregar}">
+															<p:ajax update="@this" process="@this" />
+														</p:selectBooleanCheckbox>
+														<p:spacer width="10" />
+														<p:commandButton disabled="true"
+															value="#{messageBeanSNR.commonButtonAgregar}" />
+													</div>
+												</div>
+											</p:panel>
+											<br />
+										</p:outputPanel>
+									</p:fragment>
+								</p:tab>
+							</p:tabView>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelObservaciones}" />
+									<br />
+									<p:inputTextarea maxlength="4000" id="idObservaciones2"
+										onblur="value=value.toUpperCase()"
+										onmouseover="contarCaracteres('fPermisosCorreccion:idObservaciones2','fPermisosCorreccion:counterObservaciones2')"
+										onkeyup="contarCaracteres('fPermisosCorreccion:idObservaciones2','fPermisosCorreccion:counterObservaciones2')"
+										value="#{beanPermisosCorrecciones.observaciones}">
+									</p:inputTextarea>
+								</div>
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+									<h:outputText id="counterObservaciones2"></h:outputText>
+									<h:outputText value=" #{messageBeanSNR.commonLabelCaracteres}" />
+								</div>
+							</div>
+						</p:panel>
+
+						<p:outputPanel id="opBotonesCrearGrabar" rendered="true">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+									<p:commandButton id="idCmBtnVolver"
+										value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										action="#{beanPermisosCorrecciones.accionVolverPermisos()}">
+									</p:commandButton>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton id="idCmBtnSalvar"
+										value="#{messageBeanSNR.commonButtonEnviarAlEjecutor}"
+										icon="fa fa-save" iconPos="left" update="fDialog"
+										rendered="#{not(beanPermisosCorrecciones.mostrarDetalleAnotaciones) and !beanPermisosCorrecciones.mostrarDetalle}"
+										onclick="PF('dlgConfirmacion').show();" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton id="idCmBtnSalvar1"
+										value="#{messageBeanSNR.commonLabelGuardarInformacion}"
+										icon="fa fa-save" iconPos="left" update="fDialog"
+										rendered="#{not(beanPermisosCorrecciones.mostrarDetalleAnotaciones) and beanPermisosCorrecciones.mostrarDetalle}"
+										onclick="PF('dlgConfirmacion1').show();" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton id="idCmBtnSalvarAnotacion"
+										value="#{messageBeanSNR.commonLabelGuardarInformacion}"
+										icon="fa fa-save" iconPos="left"
+										rendered="#{beanPermisosCorrecciones.mostrarDetalleAnotaciones}"
+										actionListener="#{beanPermisosCorrecciones.guardarCheksAnotaciones()}" />
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:fragment>
+				</center>
+			</h:form>
+			<!--Dialog detalle de antiguo sistema de matricula seleccionada -->
+			<p:dialog appendTo="@(body)" id="idDDetallePredio"
+				header="#{messageBeanSNR.commonLabelInformacionDelLibro}"
+				widgetVar="detallePredio" modal="true" resizable="false" width="900"
+				height="400" style="text-align:center" maximizable="true">
+				<h:form id="fDialogDetallePredio">
+					<p:panel id="idPDatosLibro" style="text-align:center"
+						header="#{messageBeanSNR.commonLabelDetalleDatosAntSistema}">
+						<div class="ui-c" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOlLibro"
+									value="#{messageBeanSNR.commonLabelLibro}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()" id="idSOMLibro"
+									maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudLibro}"
+									value="#{beanPermisosCorrecciones.detalleAntSistemaCargado.libroAntiguoSistema.nombre}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idSOMMunTomo" maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudMunicipio}"
+									value="#{beanPermisosCorrecciones.detalleAntSistemaCargado.municipioTomo.nombre}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOltomo"
+									value="#{messageBeanSNR.commonLabelTomo}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()" id="idSOMTomo"
+									maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTomo}"
+									value="#{beanPermisosCorrecciones.detalleAntSistemaCargado.tomo}">
+								</p:inputText>
+							</div>
+						</div>
+						<div class="ui-c" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOlFolio"
+									value="#{messageBeanSNR.commonLabelFolio}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()" id="idSOMFolio"
+									maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudFolio}"
+									value="#{beanPermisosCorrecciones.detalleAntSistemaCargado.folio}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOLNumeroPartida"
+									value="#{messageBeanSNR.commonLabelNumeroPartida}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idItNumeroPartida" maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudNumeroPartida}"
+									value="#{beanPermisosCorrecciones.detalleAntSistemaCargado.numeroPartida}">
+									<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOlPartida"
+									value="#{messageBeanSNR.commonLabelTipoPartida}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idSOMPartida" maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTipoPartida}"
+									value="#{beanPermisosCorrecciones.detalleAntSistemaCargado.partida}">
+								</p:inputText>
+							</div>
+						</div>
+						<div class="ui-c" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOlano"
+									value="#{messageBeanSNR.commonLabelAnio}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()" id="idSOMAno"
+									maxlength="39" disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudAnio}"
+									value="#{beanPermisosCorrecciones.detalleAntSistemaCargado.anio}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOLCirDetAntSis"
+									value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idSOMCirculoRegistralAntSistemaLibroSegundo" maxlength="39"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudCirculoRegistral}"
+									value="#{beanPermisosCorrecciones.detalleAntSistemaCargado.circuloRegistral.idCirculo} - #{beanPermisosCorrecciones.detalleAntSistemaCargado.circuloRegistral.nombre}">
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOLTipoPredioDetAntSis"
+									value="#{messageBeanSNR.commonLabelTipoDePredio}" />
+								<br />
+								<p:inputText onblur="value=value.toUpperCase()"
+									id="idSOMTipoPredioAntSistemaLibroSegundo" maxlength="39"
+									disabled="true"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTipoPredio}"
+									value="#{beanPermisosCorrecciones.detalleAntSistemaCargado.predioTipo.descripcion}">
+								</p:inputText>
+							</div>
+						</div>
+						<div class="ui-c" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:outputLabel id="idOLMatriculaDetAntSis"
+									value="#{messageBeanSNR.commonLabelMatricula}" />
+								<p:inputText onblur="value=value.toUpperCase()" disabled="true"
+									id="datosPredioIdMatricula" style="width: 100%;"
+									label="#{messageBeanSNR.commonLabelMatricula}"
+									title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudMatricula}"
+									placeholder="#{messageBeanSNR.commonLabelMatricula}"
+									value="#{beanPermisosCorrecciones.detalleAntSistemaCargado.idMatricula}"
+									maxlength="20"
+									onkeypress="if (event.keyCode == 13) { validarPredio(); return false; }">
+								</p:inputText>
+							</div>
+						</div>
+					</p:panel>
+					<br />
+					<p:outputPanel id="idPDatosDocAntSistema">
+						<p:outputPanel
+							rendered="#{beanPermisosCorrecciones.documentoDetalleCargado != null}">
+							<p:panel toggleable="true" style="text-align:center"
+								header="#{messageBeanSNR.commonLabelDatosDelDocumento}">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6 ui-lg-5">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+										</p:outputLabel>
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idSOMEscrituraAntSis" maxlength="39" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTipoDocumento}"
+											value="#{beanPermisosCorrecciones.documentoDetalleCargado.tipoDocumento.nombre}">
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelNumeroDeDocumento}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idItDocuActoAntSis" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudNumeroDocumento}"
+											placeholder="#{messageBeanSNR.commonLabelDocumento}"
+											maxlength="20"
+											value="#{beanPermisosCorrecciones.documentoDetalleCargado.numero}">
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-4">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+										<br />
+										<p:calendar id="idCalFechaDocAntSis" size="10" mask="true"
+											locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+											value="#{beanPermisosCorrecciones.documentoDetalleCargado.fechaDocumento}"
+											showOn="button" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudFechaDocumento}">
+										</p:calendar>
+									</div>
+								</div>
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6 ui-lg-5">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTipoDeOficina}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idSOMTipoOficinaAntSis" maxlength="39" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTipoOficina}"
+											value="#{beanPermisosCorrecciones.documentoDetalleCargado.tipoOficina.nombre}">
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTipoDeEntidad}" />
+										<br />
+										<p:selectOneMenu id="idSOMTipoEntidadAntSis"
+											style="width:100%"
+											value="#{beanPermisosCorrecciones.idTipoEntidad}"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudTipoEntidad}"
+											disabled="true">
+											<f:selectItems value="#{beanReference.findTipoEntidad()}"
+												var="item" itemLabel="#{item.nombre}"
+												itemValue="#{item.idTipoEntidad}" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-4">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelFechaEjecutoria}" />
+										<br />
+										<p:calendar id="idCalFechaEjecutoriaAntSis" size="10"
+											mask="true" disabled="true" locale="es"
+											placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+											value="#{beanPermisosCorrecciones.documentoDetalleCargado.fechaEjecutoria}"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudFechaEjecutoria}"
+											showOn="button">
+										</p:calendar>
+									</div>
+								</div>
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6 ui-lg-5">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelPais}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idPaisDocumentoAntSis" maxlength="39" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudPais}"
+											value="#{beanPermisosCorrecciones.documentoDetalleCargado.pais.nombre}">
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelDepartamento}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idSOMDepartamentoAntSis" maxlength="39" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudDepartamento}"
+											value="#{beanPermisosCorrecciones.documentoDetalleCargado.departamento.nombre}">
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-4">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idSOMMunicipioAntSis" maxlength="39" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudMunicipio}"
+											value="#{beanPermisosCorrecciones.documentoDetalleCargado.municipio.nombre}">
+										</p:inputText>
+									</div>
+								</div>
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6 ui-lg-5">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelOficinaDeOrigen}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idSOMOficinaOrigenAntSis" maxlength="39" disabled="true"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosSolicitudOficinaOrigen}"
+											value="#{beanPermisosCorrecciones.documentoDetalleCargado.oficinaOrigen.nombre}">
+										</p:inputText>
+									</div>
+								</div>
+							</p:panel>
+						</p:outputPanel>
+					</p:outputPanel>
+					<br />
+				</h:form>
+			</p:dialog>
+			<!--Dialog detalle de causales de correccion de matricula seleccionada -->
+			<p:dialog appendTo="@(body)" id="dlgCorrecciones"
+				header="#{messageBeanSNR.commonLabelConsultaMatriculaCorreccion}"
+				widgetVar="dlgCorrecciones" modal="true" resizable="false"
+				draggable="false" width="1200" height="500">
+				<h:form id="fCorrecciones">
+					<p:dataTable id="idDTCausales" var="item"
+						emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+						value="#{beanPermisosCorrecciones.causales}">
+						<p:column headerText="#{messageBeanSNR.commonLabelGrupoCausal}">
+							<div align="center">
+								<h:outputText value="#{item.grupoCausal}" />
+							</div>
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelCausalCorreccion}">
+							<div align="center">
+								<h:outputText value="#{item.nombre}" />
+							</div>
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelDescripcion}">
+							<div align="center">
+								<h:outputText value="#{item.descripcion}" />
+							</div>
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelSeleccione}"
+							width="10%">
+							<div align="center">
+								<p:selectBooleanCheckbox value="#{item.seleccionado}"
+									title="#{tooltipBeanSNR.procesosCorreccionesDatosDelPredioConsultaMatriculaCorreccionSeleccione}">
+									<p:ajax update="idCausalObservacion" />
+								</p:selectBooleanCheckbox>
+							</div>
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelObservaciones}">
+							<p:inputTextarea onblur="value=value.toUpperCase()"
+								maxlength="4000" id="idCausalObservacion"
+								disabled="#{!item.seleccionado}"
+								title="#{tooltipBeanSNR.procesosCorreccionesDatosDelPredioConsultaMatriculaCorreccionObservaciones}"
+								placeholder="#{messageBeanSNR.commonLabelObservaciones}"
+								value="#{item.observaciones}" />
+						</p:column>
+					</p:dataTable>
+					<div class="ui-g">
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+							<p:commandButton icon="fa fa-arrow-circle-left" iconPos="left"
+								value="#{messageBeanSNR.commonLabelRegresar}"
+								title="#{tooltipBeanSNR.procesosCorreccionesDatosDelPredioConsultaMatriculaCorreccionRegresar}"
+								actionListener="#{beanPermisosCorrecciones.cerrarCausalesCorreccion}"
+								onclick="PF('dlgCorrecciones').hide();" />
+						</div>
+						<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+							<p:commandButton icon="fa fa-check" iconPos="left"
+								value="#{messageBeanSNR.commonButtonContinuar}"
+								update="@(.ui-panel),fPermisosCorreccion:globalMsg"
+								id="idCBAplicar"
+								title="#{tooltipBeanSNR.procesosCorreccionesDatosDelPredioConsultaMatriculaCorreccionSalvar}"
+								actionListener="#{beanPermisosCorrecciones.salvarCausalesCorreccion}" />
+						</div>
+					</div>
+				</h:form>
+			</p:dialog>
+			<!--Dialog de confirmacion para la seleccion realizada -->
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgConfirmacion" modal="true" height="90"
+				resizable="false">
+				<h:form id="fDialog" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelMensajeConfirmarEjecutorCorrecciones}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fPermisosCorreccion"
+							action="#{beanPermisosCorrecciones.salvarPermisos()}"
+							oncomplete="PF('dlgConfirmacion').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlgConfirmacion').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgConfirmacion1" modal="true" height="90"
+				resizable="false">
+				<h:form id="fDialog1" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelMensajeConfirmarChecksCorrecciones}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fPermisosCorreccion"
+							action="#{beanPermisosCorrecciones.salvarCheks()}"
+							oncomplete="PF('dlgConfirmacion1').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlgConfirmacion1').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

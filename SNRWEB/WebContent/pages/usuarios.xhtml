@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelUsuario}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelUsuarios}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="bean_Usuarios" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="5000" redisplay="false"/>
+				<center>
+					<p:panel style="min-width:900px;">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelBuscarUsuario}"
+										style="font-size: 100%;" align="center" />
+									<p:inputText
+										title="#{tooltipBeanSNR.administracionusuariosIdUsuario}"
+										placeholder="#{messageBeanSNR.commonLabelIdUsuario}"
+										id="idTurno" value="#{beanUsuarios.usuario.idUsuario}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGroup>
+									<p:commandButton style="width: 15%;"
+										title="#{tooltipBeanSNR.administracionusuariosConsultar}"
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										actionListener="#{beanUsuarios.consultarUsuarios()}"
+										icon="lupa" update=":bean_Usuarios:idPanelListados" />
+								</h:panelGroup>
+							</div>
+						</div>
+						<p:outputPanel id="idPanelListados"
+							rendered="#{beanUsuarios.rendered}">
+							<p:dataTable
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}"
+								class="tabla-usuarios" id="idDtListado" var="item"
+								value="#{beanUsuarios.usuariosColeccion}" paginator="true"
+								rows="50">
+
+								<p:column headerText="#{messageBeanSNR.commonLabelIdUsuario}"
+									filterBy="#{item.idUsuario}">
+									<div align="left">
+										<p:commandLink id="idClickIdUsuario" ajax="false"
+											title="#{tooltipBeanSNR.administracionusuariosIdUsuario}"
+											value="#{item.idUsuario}" styleClass="subrayado" color="blue"
+											action="#{beanUsuarios.botonActualizar(item.idUsuario)}">
+										</p:commandLink>
+									</div>
+								</p:column>
+
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelNumeroDeDocumento}"
+									filterBy="#{item.numeroDocumento}">
+									<div align="left">
+										<h:outputText value="#{item.numeroDocumento}"
+											title="#{tooltipBeanSNR.administracionusuariosNumeroDocumento}" />
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+									<div align="left">
+										<h:outputText value="#{item.idDocumentoTipo}" />
+									</div>
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelNombreCompleto}">
+									<div align="left">
+										<h:outputText
+											value="#{item.primerNombre} #{item.segundoNombre} #{item.primerApellido} #{item.segundoApellido}" />
+									</div>
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelCorreoElectronico}">
+									<div align="left">
+										<h:outputText value="#{item.correoElectronico}" />
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelLineasProduccion}">
+									<div align="left">
+										<h:outputText value="#{item.lineasProduccion}" />
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<div align="left">
+										<h:outputText value="#{item.fechaCreacion}" />
+									</div>
+								</p:column>
+
+							</p:dataTable>
+						</p:outputPanel>
+
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

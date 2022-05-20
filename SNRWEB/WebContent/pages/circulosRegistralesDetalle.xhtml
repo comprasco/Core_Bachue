@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelTablaBasica}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelCirculosRegistrales}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fCirculosRegistralesDetalle" style="width: 100%;">
+				<p:growl id="gCirculosDetMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+
+					<p:panel id="idPInsertUpdate" style="min-width:800px;"
+						header="#{beanCirculosRegistrales.insert ? messageBeanSNR.pageInsertarCirculo : messageBeanSNR.pageEditarCirculo}">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelCirculo}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText id="idItIdCirculo" maxlength="20"
+									style="width:100%;"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleIdCirculo}"
+									disabled="#{!beanCirculosRegistrales.insert}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelCirculo}"
+									value="#{beanCirculosRegistrales.circulo.idCirculo}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelNombreCirculoRegistral}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText id="idItNombreCirculo" maxlength="100"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleNombreCirculoRegistral}"
+									onblur="value=value.toUpperCase()" style="width:100%;"
+									placeholder="#{messageBeanSNR.commonLabelNombreCirculoRegistral}"
+									value="#{beanCirculosRegistrales.circulo.nombre}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelNIT}" />
+								<br />
+								<p:inputText id="idItNit" maxlength="20" style="width:100%;"
+									placeholder="#{messageBeanSNR.commonLabelNIT}"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleNIT}"
+									value="#{beanCirculosRegistrales.circulo.nit}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelCobraImpuesto}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItCobraImpuesto" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleCobraImpuesto}"
+									value="#{beanCirculosRegistrales.circulo.cobraImpuesto}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelUltimoIdMatricula}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText id="idItUltimoIdMatricula" maxlength="15"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleUltimoIdMatricula}"
+									onblur="value=value.toUpperCase()" style="width:100%;"
+									placeholder="#{messageBeanSNR.commonLabelUltimoIdMatricula}"
+									value="#{beanCirculosRegistrales.circulo.ultimoIdMatricula}" />
+								<p:keyFilter for="idItUltimoIdMatricula" regEx="/[0-9]/" preventPaste="false"/>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelOficinaDeOrigen}" />
+								<br />
+								<p:selectOneMenu id="idSOMOficinaOrigen" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleOficinaOrigen}"
+									value="#{beanTiposCausal.tipoCausal.idProceso}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanCirculosRegistrales.cargarOficinasOrigen()}"
+										itemValue="#{oficina.idOficinaOrigen}" var="oficina"
+										itemLabel="#{oficina.idOficinaOrigen} - #{oficina.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelVersion}" />
+								<br />
+								<p:inputText id="idItVersion" onblur="value=value.toUpperCase()"
+									maxlength="30"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleVersion}"
+									placeholder="#{messageBeanSNR.commonLabelVersion}"
+									style="width:100%;"
+									value="#{beanCirculosRegistrales.circulo.version}" />
+								<p:keyFilter for="idItVersion" regEx="/[0-9]/" preventPaste="false"/>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelFechaProduccion}" />
+								<br />
+								<p:calendar id="idCFechaProduccion" size="10" locale="es"
+									placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+									style="width:100%;"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleFechaProduccion}"
+									value="#{beanCirculosRegistrales.circulo.fechaProduccion}"
+									showOn="button" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelSistemaOrigen}" />
+								<br />
+								<p:inputText id="idItSistemaOrigen" maxlength="20"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleSistemaOrigen}"
+									onblur="value=value.toUpperCase()" style="width:100%;"
+									placeholder="#{messageBeanSNR.commonLabelSistemaOrigen}"
+									value="#{beanCirculosRegistrales.circulo.sistemaOrigen}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelActivo}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItActivo" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleActivo}"
+									value="#{beanCirculosRegistrales.circulo.activo}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelFechaProduccionBachue}" />
+								<br />
+								<p:calendar id="idCFechaProduccionBachue" size="10" locale="es"
+									placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+									style="width:100%;"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleFechaProduccionBachue}"
+									value="#{beanCirculosRegistrales.circulo.fechaProduccionBachue}"
+									showOn="button" />
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelIdRegional}" />
+								<br />
+								<p:selectOneMenu id="idItIdRegional" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleIdRegional}"
+									value="#{beanCirculosRegistrales.circulo.idRegional}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanReference.findAllRegionalesActivos()}"
+										itemValue="#{regional.idRegional}" var="regional"
+										itemLabel="#{regional.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTipoOficina}" />
+								<br />
+								<p:selectOneMenu id="idItTipoOficina" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleTipoOficina}"
+									value="#{beanCirculosRegistrales.circulo.tipoOficina}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelPrincipal}"
+										itemValue="P" />
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeccional}"
+										itemValue="S" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTopeMaximoReparto}" />
+								<br />
+								<p:inputText id="idItTopeMaximoReparto" maxlength="4"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleTopeMaximoReparto}"
+									onblur="value=value.toUpperCase()" style="width:100%;"
+									placeholder="#{messageBeanSNR.commonLabelTopeMaximoReparto}"
+									value="#{beanCirculosRegistrales.circulo.topeRepartoCalificador}" />
+								<p:keyFilter for="idItTopeMaximoReparto" regEx="/[0-9]/" preventPaste="false"/>
+							</div>
+						</div>
+						<br />
+							<p:dataTable id="idDetalle" var="item"
+								rendered="#{!beanCirculosRegistrales.insert}"
+								value="#{beanCirculosRegistrales.circulo}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+								<f:facet name="header">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+								</f:facet>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+									<h:outputText value="#{item.idUsuarioCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<h:outputText value="#{item.fechaCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+									<h:outputText value="#{item.idUsuarioModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+									<h:outputText value="#{item.fechaModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIpModificación}">
+									<h:outputText value="#{item.ipModificacion}" />
+								</p:column>
+							</p:dataTable>
+							<br />
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleRegresar}"
+									update="fCirculosRegistralesDetalle,gCirculosDetMsg"
+									action="circulosRegistrales?faces-redirect=true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelActualizarCirculo}"
+									rendered="#{!beanCirculosRegistrales.insert}"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleActualizarCirculo}"
+									icon="fa fa-check-circle" iconPos="left"
+									update="fCirculosRegistralesDetalle,gCirculosDetMsg"
+									action="#{beanCirculosRegistrales.insertUpdateCirculo(false)}"
+									ajax="false" />
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelCrearCirculo}"
+									rendered="#{beanCirculosRegistrales.insert}"
+									icon="fa fa-check-circle" iconPos="left"
+									title="#{tooltipBeanSNR.administracionCirculosRegistralesDetalleCrearCirculo}"
+									update="fCirculosRegistralesDetalle,gCirculosDetMsg"
+									action="#{beanCirculosRegistrales.insertUpdateCirculo(true)}"
+									ajax="false" />
+							</div>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

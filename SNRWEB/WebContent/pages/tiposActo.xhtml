@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelNegocio}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelTiposActo}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+		
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fTiposActo" style="width: 100%;">
+				<p:growl id="gTiposA" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false"/>
+				<center>
+					<p:panel id="idPListadoTiposActo" style="min-width:800px;">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:commandButton
+									title="#{tooltipBeanSNR.administracionTiposActoInsertar}"
+									value="#{messageBeanSNR.commonLabelInsertarTipoActo}"
+									icon="fa fa-plus-circle" iconPos="left"
+									update="fTiposActo,gTiposA"
+									action="#{beanTiposActo.botonInsertar(null, true)}" />
+							</div>
+						</div>
+
+						<p:dataTable
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+							id="idDtDocumentoTipos" var="item"
+							value="#{beanTiposActo.cargarTiposActo()}" paginator="true"
+							rows="50">
+							<f:facet name="header">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTipoActo}" />
+							</f:facet>
+
+							<p:column headerText="#{messageBeanSNR.commonLabelTipoActo}"
+								filterBy="#{item.idTipoActo}">
+								<div>
+									<h:outputText value="#{item.idTipoActo}"
+										title="#{tooltipBeanSNR.administracionTiposActoTipoActo}" />
+								</div>
+							</p:column>
+
+							<p:column headerText="#{messageBeanSNR.commonLabelNombre}"
+								filterBy="#{item.nombre}">
+								<div>
+									<p:commandLink id="idClNombre" ajax="false"
+										update="fTiposActo,gTiposA" value="#{item.nombre}"
+										styleClass="subrayado" color="blue"
+										title="#{tooltipBeanSNR.administracionTiposActoNombre}"
+										action="#{beanTiposActo.botonInsertar(item, false)}">
+									</p:commandLink>
+								</div>
+							</p:column>
+
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelAperturaMatricula}"
+								filterBy="#{item.aperturaMatricula}">
+								<div>
+									<h:outputText value="#{item.aperturaMatricula}"
+										title="#{tooltipBeanSNR.administracionTiposActoAperturaMatricula}" />
+								</div>
+							</p:column>
+
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelGeneraSegregacion}"
+								filterBy="#{item.generaSegregacion}">
+								<div>
+									<h:outputText value="#{item.generaSegregacion}"
+										title="#{tooltipBeanSNR.administracionTiposActoGeneraSegregacion}" />
+								</div>
+							</p:column>
+
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelInscripcionAdicional}"
+								filterBy="#{item.inscripcionAdicional}">
+								<div>
+									<h:outputText value="#{item.inscripcionAdicional}"
+										title="#{tooltipBeanSNR.administracionTiposActoInscripcionAdicional}" />
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

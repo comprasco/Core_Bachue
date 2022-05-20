@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelUsuario}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelRoles}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fRol" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:panel style="min-width:800px;">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonInsertarRol}"
+									icon="fa fa-plus-circle" iconPos="left" update="globalMsg"
+									actionListener="#{beanRol.cambiarEstado()}"
+									action="rolDetalle?faces-redirect=true">
+									<f:param name="pInsertar" value="true" />
+								</p:commandButton>
+							</div>
+						</div>
+						<p:dataTable id="idDtListado" var="item"
+							value="#{beanRol.findAllRols()}"
+							paginator="true" rows="50"
+							widgetVar="dataTable"
+							emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+							<f:facet name="header">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelRoles}" />
+							</f:facet>
+							<p:column headerText="#{messageBeanSNR.commonLabelRol}"
+								filterBy="#{item.idRol}">
+								<f:facet name="filter">
+									<p:inputText onchange="PF('dataTable').filter()" />
+								</f:facet>
+								<p:commandLink styleClass="subrayado"
+									actionListener="#{beanRol.consultaDetallada()}"
+									action="rolDetalle?faces-redirect=true">
+									<f:param name="idRol" value="#{item.idRol}" />
+									<h:outputText value="#{item.idRol}" />
+								</p:commandLink>
+							</p:column>
+							<p:column width="70%" headerText="#{messageBeanSNR.commonLabelNombre}"
+								filterBy="#{item.nombre}">
+								<f:facet name="filter">
+									<p:inputText onchange="PF('dataTable').filter()" />
+								</f:facet>
+								<h:outputText value="#{item.nombre}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelActivo}"
+								filterBy="#{item.activo}">
+								<f:facet name="filter">
+									<p:inputText onchange="PF('dataTable').filter()" />
+								</f:facet>
+								<h:outputText value="#{item.activo}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelComponente}"
+								filterBy="#{item.nombreComponente}">
+								<f:facet name="filter">
+									<p:inputText onchange="PF('dataTable').filter()" />
+								</f:facet>
+								<h:outputText value="#{item.nombreComponente}" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

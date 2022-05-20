@@ -1,0 +1,398 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAprobacionAntiguoSistema}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fAprobadorAntiguoSistema" style="width: 100%;">
+				<p:growl id="GlobalMsg" sticky="true" showDetail="true" redisplay="false"/>
+				<center>
+					<p:chart type="pie"
+						model="#{beanAprobadorAntiguoSistema.pieChartModel}"
+						rendered="#{beanAprobadorAntiguoSistema.mostrarGrafica}"
+						style="width:400px;height:300px">
+						<p:ajax event="itemSelect"
+							listener="#{beanAprobadorAntiguoSistema.itemSelect}"
+							update="GlobalMsg" />
+					</p:chart>
+					<br />
+					<p:panel style="min-width:800px;"
+						header="#{messageBeanSNR.commonLabelAprobacionAntiguoSistema}">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+										style="font-size: 100%;" />
+									<p:inputText placeholder="#{messageBeanSNR.commonLabelNIR}"
+										title="#{tooltipBeanSNR.procesosAprobadorAntiguoSistemaBandejaNir}"
+										id="nir" value="#{beanAprobadorAntiguoSistema.nirConsulta}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}"
+										style="font-size: 100%;" />
+									<p:inputText placeholder="#{messageBeanSNR.commonLabelTurno}"
+										id="idTurno"
+										value="#{beanAprobadorAntiguoSistema.idTurnoConsulta}"
+										title="#{tooltipBeanSNR.procesosAprobadorAntiguoSistemaBandejaTurno}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGroup>
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										rendered="#{!beanAprobadorAntiguoSistema.detalleAprobadorAS ? false : true}"
+										actionListener="#{beanAprobadorAntiguoSistema.generarDatosTramiteCantidad(true)}"
+										ajax="true" icon="lupa" update="idDtTramiteCantidad" />
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										rendered="#{beanAprobadorAntiguoSistema.detalleAprobadorAS ? false : true}"
+										actionListener="#{beanAprobadorAntiguoSistema.findDataAprobacion()}"
+										ajax="true" icon="lupa" update="idDtTurnos" />
+								</h:panelGroup>
+
+							</div>
+						</div>
+
+						<p:panel id="idPAprobadorAS" style="min-width:800px;"
+							header="#{messageBeanSNR.commonLabelBandejaDeAprobadorAntiguoSistema}"
+							toggleable="true">
+							<div class="ui-g">
+								<p:dataTable id="idDtTramiteCantidad"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									rendered="#{beanAprobadorAntiguoSistema.detalleAprobadorAS}"
+									value="#{beanAprobadorAntiguoSistema.datosTramiteCantidad}"
+									var="item">
+
+									<p:column headerText="#{messageBeanSNR.commonLabelIdEtapa}"
+										width="20%" sortBy="#{item.nombre}">
+										<h:outputText value="#{item.nombre}" />
+									</p:column>
+
+									<p:column headerText="#{messageBeanSNR.commonLabelCantidad}"
+										width="8%" sortBy="#{item.cantidad}">
+										<div align="center">
+											<h:outputText value="#{item.cantidad}" />
+										</div>
+									</p:column>
+
+									<p:column headerText="#{messageBeanSNR.commonLabelDetalle}"
+										width="8%">
+										<div align="center">
+											<h:commandButton value="Ver Detalle"
+												action="#{beanAprobadorAntiguoSistema.returnPages}"
+												update="idPAprobadorAS" rendered="#{item.cantidad > 0}"
+												image="../images/find.png">
+												<f:param name="idEtapa" value="#{item.idEtapa}"></f:param>
+											</h:commandButton>
+										</div>
+									</p:column>
+									<f:facet name="footer">
+										<p:column style="text-align:right">
+											<h:outputText
+												value="#{messageBeanSNR.commonLabelTotalEnBandeja}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value=" #{beanAprobadorAntiguoSistema.totalBandeja}" />
+										</p:column>
+										<p:column>
+											<h:outputText value="" />
+										</p:column>
+									</f:facet>
+
+								</p:dataTable>
+							</div>
+							<div class="ui-g">
+								<p:dataTable id="idDtTurnos"
+									rendered="#{beanAprobadorAntiguoSistema.detalleAprobadorAS ? false : true}"
+									value="#{beanAprobadorAntiguoSistema.dataAprobacion}" var="row"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									paginator="true" rows="50"
+									filteredValue="#{beanAprobadorAntiguoSistema.filtroAprobacion}"
+									tableStyle="width:auto">
+
+									<f:facet name="header">
+										<p:column>
+											<div align="right">
+												<h:outputText escape="false"
+													value="#{messageBeanSNR.commonLabelFirmarTodos}#{messageBeanSNR.commonLabelDosPuntos} " />
+												<p:selectOneMenu id="idSOMfirmarAll"
+													style="width:20% !important;"
+													title="#{tooltipBeanSNR.procesosAprobacionAntiguoSistemaFirmarTodos}"
+													value="#{beanAprobadorAntiguoSistema.filtroFirma}">
+													<f:selectItem itemLabel="Seleccione" itemValue="" />
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelAprobar}"
+														itemValue="FIRMAR" />
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelAnalisisAntiguoSistema}"
+														itemValue="ANALISTA" />
+													<p:ajax
+														listener="#{beanAprobadorAntiguoSistema.cambiarMotivo}"
+														update="idDtTurnos" />
+												</p:selectOneMenu>
+											</div>
+										</p:column>
+									</f:facet>
+									<p:column style="text-align:left"
+										headerText="#{messageBeanSNR.commonLabelFiltrarTurno}"
+										filterBy="#{row.idTurno}" filterMatchMode="contains">
+										<div align="center">
+											<h:outputText value="#{row.idTurno}" />
+										</div>
+									</p:column>
+
+									<p:column headerText="#{messageBeanSNR.commonLabelFiltrarNir}"
+										filterBy="#{row.nir}" filterMatchMode="contains"
+										style="text-align:left">
+										<div align="center">
+											<h:outputText value="#{row.nir}" />
+										</div>
+									</p:column>
+
+									<p:column headerText="#{messageBeanSNR.commonLabelMatriculasTemporalesDefinitivas}"
+										style="text-align:left">
+										<h:outputText value="#{row.matriculasRelacionadas}" />
+									</p:column>
+
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelMotivoNoTramite}"
+										style="text-align:left">
+										<h:outputText value="#{row.motivoNoTramite}" />
+									</p:column>
+
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+										style="width: 13%;">
+										<div align="center">
+											<p:commandButton id="abrirObsProcesoAnterior"
+												icon="fa fa-id-card-o"
+												actionListener="#{beanAprobadorAntiguoSistema.mostrarObservacionesProcesoAnterior(row)}"
+												title="#{tooltipBeanSNR.procesosAprobacionAntiguoSistemaObservacionesProcesoAnterior}"
+												style="width: 23%;" />
+										</div>
+									</p:column>
+
+
+									<p:column style="text-align:left"
+										headerText="#{messageBeanSNR.commonLabelCertificadosAsociados}">
+										<h:outputText value="#{row.turnosAsociados}" />
+									</p:column>
+
+									<p:column headerText="#{messageBeanSNR.commonLabelFirmar}"
+										style="text-align:left">
+										<p:selectOneMenu id="idSOMfirmarMasivo"
+											title="#{tooltipBeanSNR.procesosAprobacionAntiguoSistemaFirmar}"
+											value="#{row.firmar}" style="width:100%;">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItem itemLabel="#{messageBeanSNR.commonLabelAprobar}"
+												itemValue="FIRMAR" />
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelAnalisisAntiguoSistema}"
+												itemValue="ANALISTA" />
+										</p:selectOneMenu>
+									</p:column>
+
+									<p:column headerText="#{messageBeanSNR.commonLabelImagenes}"
+										style="text-align:left">
+
+										<p:commandLink rendered="#{row.imageValida}" ajax="false"
+											actionListener="#{beanAprobadorAntiguoSistema.donwloadZip()}">
+											<h:graphicImage id="Archivo" alt="Archivo"
+												title="#{messageBeanSNR.commonLabelDescargarZIP}" width="30"
+												url="/images/zip.png" />
+											<f:param name="idTurno" value="#{row.idTurno}" />
+											<p:fileDownload value="#{beanAprobadorAntiguoSistema.imagen}" />
+										</p:commandLink>
+									</p:column>
+
+
+									<p:column style="text-align:left"
+										headerText="#{messageBeanSNR.commonLabelObservacionesAprobador}">
+										<p:commandButton icon="fa fa-pencil"
+											id="idObservacionesAprobador"
+											title="#{tooltipBeanSNR.procesosAprobacionObservacionesAprobador}"
+											style="width: 50%; margin-bottom: 12%; height: 100%;"
+											maxlength="50"
+											actionListener="#{beanAprobadorAntiguoSistema.guardarIdTurnoHistoria(row)}">
+										</p:commandButton>
+									</p:column>
+
+								</p:dataTable>
+								<script type="text/javascript">
+									function start()
+									{
+										PF('statusDownload').show();
+									}
+
+									function stop()
+									{
+										PF('statusDownload').hide();
+									}
+								</script>
+
+								<p:dialog modal="true" widgetVar="statusDownload"
+									draggable="false" closable="false" resizable="false">
+									<p:graphicImage value="/images/ajaxloadingbar.gif" />
+								</p:dialog>
+							</div>
+						</p:panel>
+						<br />
+						<div class="ui-g" align="center">
+							<div align="left">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									rendered="#{beanAprobadorAntiguoSistema.detalleAprobadorAS}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									action="principal?faces-redirect=true">
+								</p:commandButton>
+							</div>
+							<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									update="idPAprobadorAS" icon="fa fa-arrow-left"
+									rendered="#{beanAprobadorAntiguoSistema.detalleAprobadorAS ? false : true}"
+									action="#{beanAprobadorAntiguoSistema.botonVolver}"
+									ajax="false" />
+							</div>
+							<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonContinuarProceso}"
+									update="idPAprobadorAS" icon="fa fa-save"
+									onclick="PF('dlg').show();"
+									actionListener="#{beanAprobadorAntiguoSistema.renderedMensaje()}"
+									rendered="#{beanAprobadorAntiguoSistema.detalleAprobadorAS ? false : true}" />
+							</div>
+						</div>
+
+					</p:panel>
+				</center>
+			</h:form>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg"
+				modal="true" resizable="false">
+				<h:form id="fDialogSalvar"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText id="idFirmar"
+						rendered="#{beanAprobadorAntiguoSistema.mostrarFirmar}"
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeRealizarLaAprobacionDelTurno}" />
+					<br />
+					<h:outputText id="idDevolver"
+						rendered="#{beanAprobadorAntiguoSistema.mostrarDevolver}"
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeRealizarLaDevolucionDelTurno}" />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check"
+							actionListener="#{beanAprobadorAntiguoSistema.salvar}"
+							oncomplete="PF('dlg').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlg').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelObservacionesAprobador}"
+				widgetVar="dlg5" modal="true" height="360" resizable="false"
+				width="700">
+				<h:form id="fDialog" style="font-size: medium; top: 40%; left: 40%;">
+					<center>
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelObservacionesAprobador}" />
+					</center>
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonLabelGuardar}"
+							icon="fa fa-check"
+							actionListener="#{beanAprobadorAntiguoSistema.agregarcomentario()}"
+							id="id_SiCancelar" ajax="false"
+							onclick="PrimeFaces.monitorDownload(start, stop);" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonLabelCancelar}"
+							icon="fa fa-close" oncomplete="PF('dlg5').hide();" ajax="false"
+							onclick="PrimeFaces.monitorDownload(start, stop);">
+						</p:commandButton>
+					</div>
+					<br />
+					<h:outputText value="#{messageBeanSNR.commonLabelObservaciones}" />
+					<br />
+					<p:inputTextarea rows="7" cols="73" counter="display"
+						id="id_comentarioaprobacionantiguosistema" maxlength="240"
+						onblur="value=value.toUpperCase()"
+						counterTemplate="{0} Caracteres faltantes" autoResize="true"
+						value="#{beanAprobadorAntiguoSistema.observacionesAprobadorAntiguoSistema}">
+					</p:inputTextarea>
+					<br />
+					<h:outputText id="display" />
+					<br />
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelObservacionesObligatorias}" />
+				</h:form>
+			</p:dialog>
+			<script type="text/javascript">
+				function start()
+				{
+					PF('statusDownload').show();
+				}
+
+				function stop()
+				{
+					PF('statusDownload').hide();
+				}
+			</script>
+			<p:dialog modal="true" widgetVar="statusDownload" draggable="false"
+				closable="false" resizable="false">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<p:dialog id="cuadroObsProcesoAnterior" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+				widgetVar="obsProcesoAnterior" modal="true" resizable="false"
+				width="700">
+				<h:form id="fDialogs"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaCuadroProcesoAnterior" maxwidth="280"
+						cellspacing="1" cellpadding="20" border="0" bgcolor="#1E679A"
+						align="center">
+						<tr>
+							<td id="fila1TablaCuadroProcesoAnterior" bgcolor="#ffffff">
+								<h:outputText
+									value="#{beanAprobadorAntiguoSistema.observaciones}"
+									id="id_observacionesProcesoAnterior" />
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+	</ui:composition>
+</h:body>
+</html>

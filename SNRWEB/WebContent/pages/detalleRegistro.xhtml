@@ -1,0 +1,1263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelCalificacion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelRegistroCalificacion}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAnotacionesRegistro}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:outputPanel style="min-width:800px;">
+
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+
+				<h:form id="fDetalleReg" style="width: 100%;">
+					<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+						sticky="false" life="20000" redisplay="false" />
+
+					<center>
+						<div align="center">
+							<p:outputLabel style="font-weight: bold; font-size: 25px;"
+								value="#{messageBeanSNR.commonLabelMatricula}" />
+							<br />
+							<p:outputLabel style="font-weight: bold; font-size: 25px;"
+								value="#{beanRegistroCalificacion.circulo}" />
+						</div>
+						<div align="left">
+							<h:outputText value="#{messageBeanSNR.commonMessageNota}"
+								style="font-weight: bold;" />
+							<h:outputText
+								value="#{messageBeanSNR.commonMessageAgregarMasAnotaciones}" />
+							<br />
+							<p:dashboard id="dashboard"
+								binding="#{beanRegistroCalificacion.dataModel}">
+								<p:ajax event="reorder"
+									listener="#{beanRegistroCalificacion.handleReorder}"
+									update=":fDetalleReg:globalMsg" />
+							</p:dashboard>
+						</div>
+						<br />
+						<br />
+						<div align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:commandButton value="Regresar" conPos="left"
+									icon="fa fa-chevron-circle-left"
+									action="#{beanRegistroCalificacion.retornoBandeja}"
+									immediate="true">
+								</p:commandButton>
+							</div>
+							<!-- REQ 024 Eliminar boton agregar mas anotaciones, sin borrar el código
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonAgregarMasAnotaciones}"
+									conPos="left" icon="fa fa-plus-circle" ajax="true"
+									actionListener="#{beanRegistroCalificacion.mostrarAgregarAnotacion()}">
+								</p:commandButton>
+							</div>
+							 -->
+						</div>
+						<br />
+						<br />
+					</center>
+				</h:form>
+
+				<p:dialog appendTo="@(body)"
+					header="#{messageBeanSNR.commonLabelConfirmacion}"
+					widgetVar="dlgEliminarAnotacion" id="dlgEliminarAnotacion"
+					modal="true" height="150" resizable="false">
+					<h:form id="fDialogEliminarAnotacion"
+						style="font-size: large; top: 50%; left: 50%;">
+						<div align="center">
+							<h:outputText
+								value="#{messageBeanSNR.commonLabelEstaSeguroDeEliminarAnotacionRegCalificacion}" />
+						</div>
+						<br />
+						<div align="center">
+							<p:commandButton
+								value="#{messageBeanSNR.commonLabelEliminarAnotacionErrorCreacion}"
+								icon="fa fa-check"
+								action="#{beanRegistroCalificacion.eliminarError}"
+								oncomplete="PF('dlgEliminarAnotacion').hide();" />
+							<p:spacer />
+							<p:commandButton
+								value="#{messageBeanSNR.commonLabelEliminarAnotacionRegistroParcial}"
+								icon="fa fa-check" rendered="true"
+								disabled="#{beanRegistroCalificacion.desactivarEliminarParcial or beanRegistroCalificacion.subProceso eq '7'}"
+								action="#{beanRegistroCalificacion.eliminarParcial}"
+								oncomplete="PF('dlgEliminarAnotacion').hide();" />
+						</div>
+						<br />
+						<div align="center">
+							<p:commandButton value="#{messageBeanSNR.commonButtonCancelar}"
+								icon="fa fa-close" onclick="PF('dlgEliminarAnotacion').hide();" />
+						</div>
+					</h:form>
+				</p:dialog>
+
+				<p:dialog appendTo="@(body)" id="dlgcopiarAnotaciones"
+					header="#{messageBeanSNR.commonLabelConfirmacion}"
+					widgetVar="dlgcopiarAnotaciones" modal="true" height="110"
+					resizable="false">
+					<h:form id="fDialogSalvar"
+						style="font-size: large; top: 50%; left: 50%;">
+						<h:outputText id="idDevolver"
+							value="#{beanRegistroCalificacion.msjCopiarAnotaciones}" />
+						<br />
+						<br />
+						<div align="center">
+							<p:commandButton value="#{messageBeanSNR.commonSi}"
+								icon="fa fa-check"
+								action="#{beanRegistroCalificacion.mostrarCopiarAnotaciones()}"
+								oncomplete="PF('dlgcopiarAnotaciones').hide();" />
+							<p:spacer />
+							<p:commandButton value="#{messageBeanSNR.commonNo}"
+								icon="fa fa-close" onclick="PF('dlgcopiarAnotaciones').hide();" />
+						</div>
+						<br />
+					</h:form>
+				</p:dialog>
+
+
+				<p:dialog appendTo="@(body)"
+					header="#{messageBeanSNR.commonLabelCopiaMatriculas}"
+					widgetVar="copiarMatriculas" modal="true" height="500"
+					id="copiarMatriculas" width="1200" resizable="false">
+					<h:form id="fidCopiaMatriculas"
+						style="font-size: large; top: 50%; left: 50%;">
+
+						<p:panel id="idCopiasMatriculas"
+							header="#{messageBeanSNR.commonLabelCopiaMatriculas}"
+							toggleable="false">
+							<div class="ui-g" align="center">
+								<p:panelGrid>
+									<p:selectOneRadio id="idSorMatricula"
+										value="#{beanRegistroCalificacion.opcionCopiar}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelTodasLasMatriculas}"
+											itemValue="false" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccionMatriculas}"
+											itemValue="true" />
+										<p:ajax listener="#{beanRegistro.mostrarDatosPredio}"
+											update="idOpCopiaMatriculas" />
+									</p:selectOneRadio>
+								</p:panelGrid>
+							</div>
+						</p:panel>
+						<br />
+						<p:outputPanel id="idOpCopiaMatriculas">
+							<p:panel id="idMatriculasCopia" toggleable="false"
+								rendered="#{beanRegistroCalificacion.opcionCopiar == 'true'}">
+								<div class="ui-g" align="center">
+									<p:dataTable id="idDMatriculasCop"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{beanRegistroCalificacion.infoMatriculaACopiar}"
+										var="item" scrollable="true">
+
+										<p:column headerText="#{messageBeanSNR.commonLabelMatricula}">
+											<h:outputText value="#{item.idCirculo}" />
+										</p:column>
+
+										<p:column headerText="#{messageBeanSNR.commonLabelSeleccione}">
+											<p:selectBooleanCheckbox id="idSbcDerechoPet"
+												title="#{tooltipBeanSNR.procesosCalificacionRegistroAnotacionesSeleccione}"
+												value="#{item.revision}" />
+										</p:column>
+									</p:dataTable>
+								</div>
+							</p:panel>
+
+						</p:outputPanel>
+						<br />
+						<br />
+
+						<div class="ui-g" align="center">
+							<p:commandButton id="salvarCopia"
+								actionListener="#{beanRegistroCalificacion.copiarAnotaciones}"
+								update="fDetalleReg"
+								title="#{messageBeanSNR.commonLabelCopiarMatriculas}">
+							</p:commandButton>
+						</div>
+					</h:form>
+				</p:dialog>
+
+
+				<p:dialog appendTo="@(body)"
+					header="#{messageBeanSNR.commonLabelDatosAnotacion}"
+					widgetVar="detalleAnotacion" modal="true" height="500"
+					id="detalleAnotacion" width="1200" resizable="false">
+					<h:form id="fidAnotacion"
+						style="font-size: large; top: 50%; left: 50%;">
+						<p:panel id="pDatosAnotacion"
+							header="#{messageBeanSNR.commonLabelDatosAnotacion}"
+							toggleable="true">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNumeroAnotacion}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()" disabled="true"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroNumeroAnotacion}"
+										id="idItNumeroAnotacionID"
+										label="#{messageBeanSNR.commonLabelNumeroAnotacion}"
+										placeholder="#{messageBeanSNR.commonLabelNumeroAnotacion}"
+										value="#{beanRegistroCalificacion.anotacionPredioDetalle.idAnotacion}"
+										maxlength="10" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelFechaAnotacion}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:calendar id="idCalFechaAnotacion" size="10" mask="true"
+										disabled="true"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroFechaAnotacion}"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										value="#{beanRegistroCalificacion.anotacionPredioDetalle.fechaRadicacion}"
+										showOn="button" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelRadicacion}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()" disabled="true"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroRadicacion}"
+										id="idItRadicacionID"
+										label="#{messageBeanSNR.commonLabelRadicacion}"
+										placeholder="#{messageBeanSNR.commonLabelRadicacion}"
+										value="#{beanRegistroCalificacion.anotacionPredioDetalle.radicacion}"
+										maxlength="100" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-2">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelEstadoAnotacion}" />
+									<br />
+									<p:selectOneMenu id="idSOMEstadoAnotacion" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroEstadoAnotacion}"
+										value="#{beanRegistroCalificacion.anotacionPredioDetalle.idEstadoAnotacion}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanReference.findEstadoAnotacion()}"
+											var="item" itemValue="#{item.idEstadoAnotacion}"
+											itemLabel="#{item.nombre}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+						</p:panel>
+						<br />
+						<p:panel id="pEspecificacion"
+							header="#{messageBeanSNR.commonLabelEspecificacion}"
+							toggleable="true">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoActo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoActo" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroTipoActo}"
+										value="#{beanRegistroCalificacion.anotacionPredioDetalle.idNaturalezaJuridica}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanReference.findTiposActosCodigo4Y5Digitos()}"
+											var="tipoAct" itemValue="#{tipoAct.idTipoActo}"
+											itemLabel="#{tipoAct.idTipoActo} - #{tipoAct.nombre}" />
+										<p:ajax
+											listener="#{beanRegistroCalificacion.consultarAnotacionCancelacion}"
+											update="fidAnotacion:idPanelAnotacionesACancelar" />
+										<p:ajax
+											listener="#{beanRegistroCalificacion.consultarAnotacionTipoActo()}"
+											update="fidAnotacion:idPanelAnotacionesACancelar,idSOMTipoActo,idItValorActo" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelComentario}" />
+									<br />
+									<p:inputTextarea rows="1" onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroComentario}"
+										id="idItComentario"
+										label="#{messageBeanSNR.commonLabelComentario}"
+										placeholder="#{messageBeanSNR.commonLabelComentario}"
+										value="#{beanRegistroCalificacion.anotacionPredioDetalle.comentario}"
+										queryDelay="750" maxlength="1000" minQueryLength="4"
+										counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+										counter="idNumeroCaracteres1" />
+									<h:outputText id="idNumeroCaracteres1" style="float: right;" />
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelValorActo}" />
+									<br />
+									<p:inputNumber id="idItValorActo" maxlength="20"
+										disabled="#{!beanRegistroCalificacion.requiereCuantiaTipoActo}"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroValorActo}"
+										placeholder="#{messageBeanSNR.commonLabelValorActo}"
+										symbol="$"
+										value="#{beanRegistroCalificacion.anotacionPredioDetalle.valor}">
+										<p:keyFilter regEx="/[\d\-\.]/" preventPaste="false" />
+									</p:inputNumber>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelAnotacionQSeCancela}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()"
+										id="idItAnotacionCancela"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroAnotacionCancela}"
+										label="#{messageBeanSNR.commonLabelAnotacionQSeCancela}"
+										placeholder="#{messageBeanSNR.commonLabelAnotacionQSeCancela}"
+										value="#{beanRegistroCalificacion.anotacionCancelacion.idAnotacion1}"
+										disabled="#{beanRegistroCalificacion.mostrarAnotacionCancela}"
+										maxlength="10" />
+								</div>
+							</div>
+						</p:panel>
+						<p:outputPanel id="idPanelAnotacionesACancelar">
+							<p:panel id="pAnotacionesCancelar"
+								header="#{messageBeanSNR.commonLabelAnotacionesACancelar}"
+								rendered="#{!beanRegistroCalificacion.mostrarAnotacionCancela}"
+								toggleable="true">
+								<p:dataTable id="idDtActoAsociadoGeneral"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									value="#{beanRegistroCalificacion.anotacionACancelar}"
+									var="item" scrollable="true">
+
+									<p:column headerText="#{messageBeanSNR.commonLabelMatricula}">
+										<h:outputText id="idMatriculaMatriz"
+											value="#{item.idCirculo}-#{item.idMatricula} " />
+									</p:column>
+
+									<p:column headerText="#{messageBeanSNR.commonLabelAnotaciones}">
+										<h:outputText id="idAnotacion" value="#{item.idAnotacion}" />
+									</p:column>
+
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaRegistro}">
+										<h:outputText id="idfechaRegistro"
+											value="#{item.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+
+									<p:column headerText="#{messageBeanSNR.commonLabelRadicacion}">
+										<h:outputText id="idradicacion" value="#{item.radicacion}" />
+									</p:column>
+
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelEstadoAnotacion}">
+										<h:outputText id="idEstadoAnotacion"
+											value="#{item.idEstadoAnotacion}" />
+									</p:column>
+
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelDatosDocumento}">
+										<h:outputText id="iddocumento"
+											value="#{item.documento} - #{item.numero} - #{item.fechaDocumentoStr}" />
+									</p:column>
+
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaDeOrigen}">
+										<h:outputText id="idnombreOficinaOrigen"
+											value="#{item.nombreOficinaOrigen}" />
+									</p:column>
+
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelCodigoDelActo}">
+										<h:outputText id="idcodActo" value="#{item.codActo}" />
+									</p:column>
+
+									<p:column headerText="#{messageBeanSNR.commonLabelNombreActo}">
+										<h:outputText id="idnombreActo" value="#{item.nombreActo}" />
+									</p:column>
+
+									<p:column headerText="Seleccione">
+										<p:selectBooleanCheckbox id="idSbcDerechoPet"
+											value="#{item.revision}" />
+									</p:column>
+								</p:dataTable>
+							</p:panel>
+						</p:outputPanel>
+
+						<div class="ui-g" align="center">
+							<p:commandButton id="cbAgregarAnotacion"
+								actionListener="#{beanRegistroCalificacion.agregarAnotacionData}"
+								update=":fDetalleReg:globalMsg"
+								title="#{messageBeanSNR.commonLabelModificarAnotacion}">
+							</p:commandButton>
+						</div>
+					</h:form>
+				</p:dialog>
+
+				<p:dialog appendTo="@(body)"
+					header="#{messageBeanSNR.commonLabelDatosAnotacion}"
+					widgetVar="AddAnotacion" modal="true" height="500"
+					id="AddAnotacion" width="1200" resizable="false">
+					<p:ajax event="close" update=":fDetalleReg" />
+					<h:form id="faddAnotacion">
+						<p:panel id="pDatosAnotacion"
+							header="#{messageBeanSNR.commonLabelDatosAnotacion}"
+							toggleable="true">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNumeroAnotacion}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()" disabled="true"
+										id="idItNumeroAnotacionID"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroNumeroAnotacion}"
+										label="#{messageBeanSNR.commonLabelNumeroAnotacion}"
+										placeholder="#{messageBeanSNR.commonLabelNumeroAnotacion}"
+										value="#{beanRegistroCalificacion.cantidadAnotaciones}"
+										maxlength="10" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelFechaAnotacion}" />
+									<br />
+									<p:calendar id="idCalFechaAnotacion" size="10" mask="true"
+										disabled="true"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroFechaAnotacion}"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										value="#{beanRegistroCalificacion.anotacionPredioDetalle.fechaRadicacion}"
+										showOn="button" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelRadicacion}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()"
+										id="idItRadicacionID" disabled="true"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroRadicacion}"
+										label="#{messageBeanSNR.commonLabelRadicacion}"
+										placeholder="#{messageBeanSNR.commonLabelRadicacion}"
+										value="#{beanRegistroCalificacion.anotacionPredioDetalle.radicacion}"
+										maxlength="100" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-2">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelEstadoAnotacion}" />
+									<br />
+									<p:selectOneMenu id="idSOMEstadoAnotacion" disabled="true"
+										style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroEstadoAnotacion}"
+										value="#{beanRegistroCalificacion.anotacionPredioDetalle.idEstadoAnotacion}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanReference.findEstadoAnotacion()}"
+											var="item" itemValue="#{item.idEstadoAnotacion}"
+											itemLabel="#{item.nombre}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+						</p:panel>
+						<br />
+						<p:panel id="pDatosDocumento"
+							header="#{messageBeanSNR.commonLabelDatosDelDocumento}"
+							toggleable="true">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}">
+									</p:outputLabel>
+									<br />
+									<p:selectOneMenu id="idSOMEscrituraD" style="width:100%;"
+										disabled="true"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroTipoDocumento}"
+										value="#{beanRegistroCalificacion.documentoDetalle.idTipoDocumento}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findTipoDocumentoPublicoActivo()}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoDocumento}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNumeroDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroNumeroDocumento}"
+										id="idItDocuActoD" disabled="true"
+										placeholder="#{messageBeanSNR.commonLabelDocumento}"
+										maxlength="20"
+										value="#{beanRegistroCalificacion.documentoDetalle.numero}">
+									</p:inputText>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+									<br />
+									<p:calendar id="idCalFechaDocD" size="10" mask="true"
+										disabled="true" locale="es" placeholder="DD/MM/AAAA"
+										pattern="dd/MM/yyyy"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroFechaDocumento}"
+										value="#{beanRegistroCalificacion.documentoDetalle.fechaDocumento}"
+										showOn="button">
+									</p:calendar>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeOficina}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoOficinaD" style="width:100%;"
+										disabled="true"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroTipoOficina}"
+										value="#{beanRegistroCalificacion.documentoDetalle.idTipoOficina}">
+										<p:ajax
+											listener="#{beanRegistroCalificacion.cargarListasDesplegablesDocumento}"
+											update="idSOMTipoEntidadD,idPaisDocumentoD,idSOMDepartamentoD,idSOMMunicipioD,idSOMOficinaOrigenD" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanReference.findTipoOficina()}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoOficina}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeEntidad}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoEntidadD" style="width:100%;"
+										disabled="true"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroTipoEntidad}"
+										value="#{beanRegistroCalificacion.documentoDetalle.tipoEntidad}">
+										<f:selectItems value="#{beanReference.findTipoEntidad()}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoEntidad}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelEntidadExenta}" />
+									<br />
+									<p:selectBooleanCheckbox id="idEntidadExentaD" disabled="true"
+										value="#{beanRegistroCalificacion.documentoDetalle.entidadExenta}" />
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelPais}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idPaisDocumentoD" disabled="true"
+										style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroPais}"
+										value="#{beanRegistroCalificacion.documentoDetalle.idPais}">
+										<p:ajax
+											listener="#{beanRegistroCalificacion.cargarPaisDocumento}"
+											update="idSOMDepartamentoD,idSOMMunicipioD,idSOMOficinaOrigenD" />
+										<f:selectItem itemValue=""
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+										<f:selectItems value="#{beanReference.findPaises()}"
+											var="paises" itemValue="#{paises.idPais}"
+											itemLabel="#{paises.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMDepartamentoD" style="width:100%;"
+										disabled="true"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroDepartamento}"
+										value="#{beanRegistroCalificacion.documentoDetalle.idDepartamento}">
+										<p:ajax
+											listener="#{beanRegistroCalificacion.cargarDepartamentoDocumento}"
+											update="idSOMMunicipioD,idSOMOficinaOrigenD" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanRegistroCalificacion.findDepartamentosDocumento()}"
+											var="item" itemValue="#{item.idDepartamento}"
+											itemLabel="#{item.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMMunicipioD" style="width:100%;"
+										disabled="true"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroMunicipio}"
+										value="#{beanRegistroCalificacion.documentoDetalle.idMunicipio}">
+										<p:ajax
+											listener="#{beanRegistroCalificacion.cargarOficinaOrigen}"
+											update="idSOMOficinaOrigenD" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanRegistroCalificacion.findMunicipiosDocumento()}"
+											var="munRes" itemValue="#{munRes.idMunicipio}"
+											itemLabel="#{munRes.nombre}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelOficinaDeOrigen}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMOficinaOrigenD" style="width:100%;"
+										disabled="true"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroOficinaOrigen}"
+										value="#{beanRegistroCalificacion.documentoDetalle.idOficinaOrigen}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanRegistroCalificacion.getOficinaOrigen()}"
+											var="orig" itemLabel="#{orig.nombre}"
+											itemValue="#{orig.idOficinaOrigen}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+						</p:panel>
+						<br />
+						<p:panel id="pEspecificacion"
+							header="#{messageBeanSNR.commonLabelEspecificacion}"
+							toggleable="true">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelCodigoDelActo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMCodigoActo" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroEspecificacionCodigoActo}"
+										value="#{beanRegistroCalificacion.codigoNaturalezaJuridicaSeleccionada}">
+										<p:ajax listener="#{beanRegistroCalificacion.cambiarTipoActo}"
+											update="idSOMTipoActo,idOlCalidadInteresado" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findAllNaturalezaJuridica(false)}"
+											var="item"
+											itemLabel="#{item.idNaturalezaJuridica} - #{item.nombre}"
+											itemValue="#{item.llavePrimaria}" />
+										<p:ajax
+											listener="#{beanRegistroCalificacion.cambiarCodigoTipoActo}"
+											update="idSOMCodigoActo,idOlCalidadInteresado,pAnotacionesCancelarNuevo" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoActo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoActo" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroEspecificacionTipoActo}"
+										value="#{beanRegistroCalificacion.naturalezaJuridicaSeleccionada}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findAllNaturalezaJuridica(true)}"
+											var="item"
+											itemLabel="#{item.nombre} - #{item.idNaturalezaJuridica}"
+											itemValue="#{item.llavePrimaria}" />
+										<p:ajax
+											listener="#{beanRegistroCalificacion.cambiarCodigoTipoActo}"
+											update="idSOMCodigoActo,idOlCalidadInteresado,pAnotacionesCancelarNuevo" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelValorActo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputNumber id="idItValorActo" maxlength="20"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroEspecificacionValorActo}"
+										placeholder="#{messageBeanSNR.commonLabelValorActo}"
+										symbol="$"
+										value="#{beanRegistroCalificacion.anotacionPredioDetalle.valor}">
+										<p:keyFilter regEx="/[\d\-\.]/" preventPaste="false" />
+									</p:inputNumber>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelComentario}" />
+									<br />
+									<p:inputTextarea rows="5" cols="250"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroEspecificacionComentario}"
+										onblur="value=value.toUpperCase()"
+										value="#{beanRegistroCalificacion.anotacionPredioDetalle.comentario}"
+										placeholder="#{messageBeanSNR.commonLabelComentario}"
+										queryDelay="750" maxlength="1000" minQueryLength="4"
+										counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+										counter="idNumCarCom">
+									</p:inputTextarea>
+									<h:outputText id="idNumCarCom" />
+								</div>
+							</div>
+						</p:panel>
+						<br />
+
+						<p:panel id="pAnotacionesCancelarNuevo"
+							header="#{messageBeanSNR.commonLabelAnotacionesACancelar}"
+							toggleable="true">
+							<p:dataTable id="idDtActoAsociadoGeneral"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+								value="#{beanRegistroCalificacion.anotacionACancelarNuevo}"
+								var="item" scrollable="true">
+
+								<p:column headerText="#{messageBeanSNR.commonLabelMatricula}">
+									<h:outputText id="idMatriculaMatriz"
+										value="#{item.idCirculo}-#{item.idMatricula} " />
+								</p:column>
+
+								<p:column headerText="#{messageBeanSNR.commonLabelAnotaciones}">
+									<h:outputText id="idAnotacion" value="#{item.idAnotacion}" />
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaRegistro}">
+									<h:outputText id="idfechaRegistro"
+										value="#{item.fechaRegistro}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+
+								<p:column headerText="#{messageBeanSNR.commonLabelRadicacion}">
+									<h:outputText id="idradicacion" value="#{item.radicacion}" />
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelEstadoAnotacion}">
+									<h:outputText id="idEstadoAnotacion"
+										value="#{item.idEstadoAnotacion}" />
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelDatosDocumento}">
+									<h:outputText id="iddocumento"
+										value="#{item.documento} - #{item.numero} - #{item.fechaDocumentoStr}" />
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaDeOrigen}">
+									<h:outputText id="idnombreOficinaOrigen"
+										value="#{item.nombreOficinaOrigen}" />
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelCodigoDelActo}">
+									<h:outputText id="idcodActo" value="#{item.codActo}" />
+								</p:column>
+
+								<p:column headerText="#{messageBeanSNR.commonLabelNombreActo}">
+									<h:outputText id="idnombreActo" value="#{item.nombreActo}" />
+								</p:column>
+
+								<p:column headerText="Seleccione">
+									<p:selectBooleanCheckbox id="idSbcDerechoPet"
+										disabled="#{beanRegistroCalificacion.mostrarAnotacionCancela}"
+										value="#{item.revision}" />
+								</p:column>
+							</p:dataTable>
+						</p:panel>
+
+						<br />
+						<p:panel id="pInterviniente"
+							header="#{messageBeanSNR.commonLabelInterviniente}"
+							toggleable="true">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDocumentoIdentidad}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoDocIdentidad" style="width:100%;"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinienteTipoDocumentoIdentidad}"
+										value="#{beanRegistroCalificacion.personaConsulta.tipoDocIdentidad}">
+										<p:ajax event="change"
+											update="idItDocumentoID, idSOMTipoDocInter, idOlDocumentoInter, idSOMNacionalidadInter"
+											listener="#{beanRegistroCalificacion.findTipoDocumentoSecuenciaCalificacion()}" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanRegistroCalificacion.findTipoDocumentoSecuenciaCalificacion()}"
+											var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+											itemLabel="#{tipoDoc.descripcion}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDocumentoIdentidad}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinienteDocumentoIdentidad}"
+										id="idItDocumentoID"
+										disabled="#{beanRegistroCalificacion.renderedHabilitaSecuencia}"
+										label="#{messageBeanSNR['commonLabelDocumento']}"
+										placeholder="#{messageBeanSNR['commonLabelDocumento']}"
+										value="#{beanRegistroCalificacion.personaConsulta.numeroDocumento}"
+										maxlength="20" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<br />
+									<p:commandButton value="#{messageBeanSNR.commonLabelConsultar}"
+										icon="lupa" iconPos="left"
+										update="fDetalleReg:globalMsg,idPPanelDatosBasicos,idPPanelDatosBasicosInter"
+										actionListener="#{beanRegistroCalificacion.consultarPersonaDocumento}" />
+								</div>
+							</div>
+							<p:outputPanel id="idPPanelDatosBasicos">
+								<div class="ui-g" align="left">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:dataTable id="idDtPersonas"
+											value="#{beanRegistroCalificacion.listadoIntervinientes}"
+											rendered="#{beanRegistroCalificacion.mostrarListadoPersonas}"
+											var="item">
+											<p:column headerText="Tipo Documento" width="8%"
+												sortBy="#{item.idDocumentoTipo}">
+												<h:outputText value="#{item.idDocumentoTipo}" />
+											</p:column>
+
+											<p:column headerText="Documento" width="12%"
+												sortBy="#{item.numeroDocumento}">
+												<h:outputText value="#{item.numeroDocumento}" />
+											</p:column>
+
+											<p:column headerText="Nombres" width="20%">
+												<h:outputText
+													value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.nombreCompleto}" />
+											</p:column>
+
+											<p:column width="6%" headerText="Seleccione">
+												<p:selectOneRadio value="#{item.seleccionado}">
+													<f:selectItem itemLabel="" itemValue="true" />
+													<p:ajax
+														listener="#{beanRegistroCalificacion.cargarDatosPersonales(item)}"
+														update="faddAnotacion:idPPanelDatosBasicosInter" />
+												</p:selectOneRadio>
+											</p:column>
+										</p:dataTable>
+									</div>
+								</div>
+							</p:outputPanel>
+							<p:panel id="idPPanelDatosBasicosInter"
+								header="#{messageBeanSNR.commonLabelDatosBasicosDelInterveniente}">
+								<div class="ui-g" align="left">
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTipoDePersona}#{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:selectOneMenu id="idSOMTipoPersonaInter"
+											style="width:100%;"
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinienteTipoPersona}"
+											disabled="#{beanRegistroCalificacion.deshabilitarDatosInterviniente || beanRegistroCalificacion.deshabilitarTipoPersonaInter}"
+											value="#{beanRegistroCalificacion.persona.idTipoPersona}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems value="#{beanReference.findTipoPersona()}"
+												var="tipoPersona" itemValue="#{tipoPersona.idTipoPersona}"
+												itemLabel="#{tipoPersona.descripcion}" />
+											<p:ajax event="change"
+												listener="#{beanRegistroCalificacion.validarTipoPersonaDocumentoInter(beanRegistroCalificacion.persona.idTipoPersona)}"
+												update="idSOMTipoDocInter,idOlDocumentoInter,idSOMNacionalidadInter,idSOMGeneroInter,idOLRazon,idOLPNombre,idOLPApellido,idOlPNombreInter,idOlSNombreInter,idOlPApellidoInter,idOlSApellidoInter,idOlRazonSocialInter" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:selectOneMenu id="idSOMTipoDocInter" style="width:100%;"
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinienteTipoDocumento}"
+											disabled="#{beanRegistroCalificacion.deshabilitarDatosInterviniente || beanRegistroCalificacion.deshabilitarTipoDocumentoInter}"
+											value="#{beanRegistroCalificacion.persona.idDocumentoTipo}">
+											<p:ajax event="change"
+												listener="#{beanRegistroCalificacion.validarTipoPersonaDocumentoInter(beanRegistroCalificacion.persona.idDocumentoTipo)}"
+												update="idSOMTipoPersonaInter,idOlDocumentoInter,idSOMNacionalidadInter,idSOMGeneroInter,idOLRazon,idOLPNombre,idOLPApellido,idOlPNombreInter,idOlSNombreInter,idOlPApellidoInter,idOlSApellidoInter,idOlRazonSocialInter" />
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems
+												value="#{beanRegistroCalificacion.findTipoDocumentoSecuenciaCalificacion()}"
+												var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+												itemLabel="#{tipoDoc.descripcion}" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinienteDocumento}"
+											disabled="#{beanRegistroCalificacion.deshabilitarDatosInterviniente || beanRegistroCalificacion.renderedHabilitaSecuencia}"
+											id="idOlDocumentoInter"
+											placeholder="#{messageBeanSNR.commonLabelDocumento}"
+											maxlength="20"
+											value="#{beanRegistroCalificacion.persona.numeroDocumento}" />
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelNacionalidad}#{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:selectOneMenu id="idSOMNacionalidadInter"
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinienteNacionalidad}"
+											disabled="#{beanRegistroCalificacion.deshabilitarDatosInterviniente || beanRegistroCalificacion.renderedHabilitaSecuencia}}"
+											style="width:100%;"
+											value="#{beanRegistroCalificacion.persona.idPais}">
+											<f:selectItem itemValue=""
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+											<f:selectItems value="#{beanReference.findPaises()}"
+												var="paises" itemValue="#{paises.idPais}"
+												itemLabel="#{paises.nombre}" />
+										</p:selectOneMenu>
+									</div>
+
+								</div>
+								<div class="ui-g" align="left">
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel for="idOlPNombreInter" id="idOLPNombre"
+											indicateRequired="#{!beanRegistroCalificacion.deshabilitarCamposPorNit}"
+											value="#{messageBeanSNR.commonLabelPrimerNombre}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idOlPNombreInter"
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinientePrimerNombre}"
+											placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+											value="#{beanRegistroCalificacion.persona.primerNombre}"
+											disabled="#{beanRegistroCalificacion.deshabilitarCamposPorNit or beanRegistroCalificacion.deshabilitarDatosInterviniente}" />
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel for="idOlSNombreInter"
+											value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idOlSNombreInter"
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinienteSegundoNombre}"
+											placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+											value="#{beanRegistroCalificacion.persona.segundoNombre}"
+											disabled="#{beanRegistroCalificacion.deshabilitarCamposPorNit or beanRegistroCalificacion.deshabilitarDatosInterviniente}" />
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel for="idOlPApellidoInter" id="idOLPApellido"
+											indicateRequired="#{!beanRegistroCalificacion.deshabilitarCamposPorNit}"
+											value="#{messageBeanSNR.commonLabelPrimerApellido}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idOlPApellidoInter"
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinientePrimerApeliido}"
+											placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+											value="#{beanRegistroCalificacion.persona.primerApellido}"
+											disabled="#{beanRegistroCalificacion.deshabilitarCamposPorNit or beanRegistroCalificacion.deshabilitarDatosInterviniente}" />
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel for="idOlSApellidoInter"
+											value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idOlSApellidoInter"
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinienteSegundoApellido}"
+											placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+											value="#{beanRegistroCalificacion.persona.segundoApellido}"
+											disabled="#{beanRegistroCalificacion.deshabilitarCamposPorNit or beanRegistroCalificacion.deshabilitarDatosInterviniente}" />
+									</div>
+								</div>
+								<div class="ui-g" align="left">
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel for="idOlRolInter"
+											value="#{messageBeanSNR.commonLabelRol}#{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:selectOneMenu id="idOlRolInter" style="width:100%;"
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinienteRol}"
+											value="#{beanRegistroCalificacion.solicitudInterviniente.rolPersona}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItem itemLabel="#{messageBeanSNR.commonLabelDe}"
+												itemValue="De" />
+											<f:selectItem itemLabel="#{messageBeanSNR.commonLabelA}"
+												itemValue="A" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelGenero}" />
+										<br />
+										<p:selectOneMenu id="idSOMGeneroInter" style="width:100%;"
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinienteGenero}"
+											value="#{beanRegistroCalificacion.persona.idNaturalGenero}"
+											disabled="#{beanRegistroCalificacion.deshabilitarCamposPorNit || beanRegistroCalificacion.deshabilitarTipoDocumentoInter || beanRegistroCalificacion.deshabilitarTipoPersonaInter}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems value="#{beanReference.findGeneros()}"
+												var="generos" itemValue="#{generos.idNaturalGenero}"
+												itemLabel="#{generos.ilicode}" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-6">
+										<p:outputLabel for="idOlRazonSocialInter" id="idOLRazon"
+											indicateRequired="#{beanRegistroCalificacion.deshabilitarCamposPorNit}"
+											value="#{messageBeanSNR.commonLabelRazonSocial}" />
+										<br />
+										<p:inputText
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinienteRazonSocial}"
+											onblur="value=value.toUpperCase()" id="idOlRazonSocialInter"
+											placeholder="#{messageBeanSNR.commonLabelRazonSocial}"
+											value="#{beanRegistroCalificacion.persona.razonSocial}"
+											disabled="#{!beanRegistroCalificacion.deshabilitarCamposPorNit or beanRegistroCalificacion.deshabilitarDatosInterviniente || !beanRegistroCalificacion.deshabilitarTipoDocumentoInter}" />
+									</div>
+								</div>
+								<div class="ui-g" align="left">
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel for="idOlPropietario"
+											value="#{messageBeanSNR.commonLabelPropietario}" />
+										<br />
+										<p:selectOneMenu id="idOlPropietario"
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinientePropietario}"
+											value="#{beanRegistroCalificacion.anotacionPredioCiudadano.propietario}"
+											style="width:100%;">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItem itemLabel="I" itemValue="I" />
+											<f:selectItem itemLabel="X" itemValue="X" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel for="idOlPorcentajePart"
+											value="#{messageBeanSNR.commonLabelPorcentajeParticipacion}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()"
+											id="idOlPorcentajePart"
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinientePorcentajeParticipacion}"
+											placeholder="#{messageBeanSNR.commonLabelPorcentajeParticipacion}"
+											value="#{beanRegistroCalificacion.anotacionPredioCiudadano.porcentajeParticipacion}">
+											<p:keyFilter regEx="/[\d\.]/" preventPaste="false" />
+										</p:inputText>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel for="idOlCalidadInteresado"
+											value="#{messageBeanSNR.commonLabelCalidadInterviniente}" />
+										<br />
+										<p:selectOneMenu id="idOlCalidadInteresado"
+											disabled="#{!beanRegistroCalificacion.mostrarEditarIntervinientes()}"
+											title="#{tooltipBeanSNR.procesosCalificacionDetalleRegistroIntervinienteCalidadInteresado}"
+											value="#{beanRegistroCalificacion.anotacionPredioCiudadano.idInteresadaRrr}"
+											style="width:100%;">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems value="#{beanRegistroCalificacion.findRrr()}"
+												var="item" itemValue="#{item.idDocumentoTipo}"
+												itemLabel="#{item.descripcion}" />
+										</p:selectOneMenu>
+									</div>
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<br />
+										<p:commandButton
+											value="#{beanRegistroCalificacion.idAnotacion > 0 ? messageBeanSNR.commonLabelModificarInterviniente : messageBeanSNR.commonLabelAgregarInterviniente}"
+											icon="fa fa-plus-circle" iconPos="left"
+											update="pInterviniente,:fDetalleReg:globalMsg"
+											actionListener="#{beanRegistroCalificacion.agregarIntervinientes}" />
+									</div>
+								</div>
+								<p:dataTable id="idDtListadoSolInter" var="item"
+									value="#{beanRegistroCalificacion.intervinientesAgregados}"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+									<f:facet name="header">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelIntervenientesAgregados}" />
+									</f:facet>
+									<p:column headerText="#{messageBeanSNR.commonLabelRol}">
+										<h:outputText
+											value="#{item.solicitudInterviniente.rolPersona}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+										<h:outputText value="#{item.persona.idDocumentoTipo}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+										<h:outputText value="#{item.persona.numeroDocumento}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelNombre}">
+										<h:outputText
+											rendered="#{item.persona.idDocumentoTipo != 'NIT'}"
+											value="#{item.persona.primerNombre} #{item.persona.segundoNombre} #{item.persona.primerApellido} #{item.persona.segundoApellido}" />
+										<h:outputText
+											rendered="#{item.persona.idDocumentoTipo == 'NIT'}"
+											value="#{item.persona.razonSocial}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelModificar}">
+										<p:commandButton icon="fa fa-pencil" iconPos="left"
+											disabled="#{beanRegistroCalificacion.bloquearModificarIntervenientes}"
+											update="faddAnotacion:idPPanelDatosBasicosInter"
+											title="#{messageBeanSNR.commonLabelModificar}"
+											actionListener="#{beanRegistroCalificacion.modificarInterviniente(item)}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelEliminar}">
+										<p:commandButton icon="fa fa-trash" iconPos="left"
+											disabled="#{beanRegistroCalificacion.bloquearModificarIntervenientes}"
+											update="idDtListadoSolInter"
+											title="#{messageBeanSNR.commonLabelEliminar}"
+											actionListener="#{beanRegistroCalificacion.eliminarInterviniente(item.idAnotacion)}" />
+									</p:column>
+								</p:dataTable>
+							</p:panel>
+						</p:panel>
+						<br />
+						<p:dataTable id="idDtAnotacionesAgregadas" var="item"
+							value="#{beanRegistroCalificacion.anotacionesAgregadas}"
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+							<f:facet name="header">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelAnotacionesAgregadas}" />
+							</f:facet>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelNumeroAnotacion}">
+								<h:outputText value="#{item.anotacionPredio.idAnotacion}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelTipoActo}">
+								<h:outputText value="#{item.naturalezaJuridica}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelDescripcion}">
+								<h:outputText value="#{item.anotacionPredio.especificacion}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelModificar}">
+								<p:commandButton icon="fa fa-pencil" iconPos="left"
+									update=":faddAnotacion:pInterviniente,:faddAnotacion:pEspecificacion,:faddAnotacion:idDtAnotacionesAgregadas,:faddAnotacion:pDatosDocumento,:faddAnotacion:pDatosAnotacion,:faddAnotacion:idPPanelDatosBasicosInter,:faddAnotacion:opPanelTerminarProceso"
+									title="#{messageBeanSNR.commonLabelModificar}"
+									actionListener="#{beanRegistroCalificacion.modificarAnotaciones(item)}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelEliminar}">
+								<p:commandButton icon="fa fa-trash" iconPos="left"
+									update="idDtAnotacionesAgregadas,:faddAnotacion:opPanelTerminarProceso"
+									title="#{messageBeanSNR.commonLabelEliminar}"
+									actionListener="#{beanRegistroCalificacion.eliminarAnotacion(item.idAnotacion)}" />
+							</p:column>
+						</p:dataTable>
+						<br />
+						<p:outputPanel id="opPanelTerminarProceso">
+							<p:commandButton id="cbAgregarAnotacion"
+								value="#{beanRegistroCalificacion.idAnotacionGeneral > 0 ? messageBeanSNR.commonLabelModificarAnotacion : messageBeanSNR.commonLabelAgregarAnotacion}"
+								icon="fa fa-check-circle" iconPos="left"
+								update="pDatosAnotacion,pDatosDocumento,pEspecificacion,pInterviniente,idPPanelDatosBasicosInter,:fDetalleReg:globalMsg,idDtAnotacionesAgregadas,opPanelTerminarProceso"
+								actionListener="#{beanRegistroCalificacion.agregarAnotacionPredio}" />
+							<p:commandButton id="cbTerminar"
+								value="#{messageBeanSNR.commonLabelTerminarProceso}"
+								rendered="#{beanRegistroCalificacion.anotacionAgregada}"
+								type="button" icon="fa fa-check-circle" iconPos="left"
+								onclick="PF('dlg2').show();" />
+						</p:outputPanel>
+						<br />
+					</h:form>
+				</p:dialog>
+
+				<p:dialog appendTo="@(body)"
+					header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg2"
+					modal="true" height="90" resizable="false">
+					<h:form id="fDialog" style="font-size: large; top: 50%; left: 50%;">
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelEstaSeguroDeTerminarElProceso}" />
+						<br />
+						<br />
+						<div align="center">
+							<p:commandButton value="#{messageBeanSNR.commonSi}"
+								icon="fa fa-check" update="fDetalleReg"
+								actionListener="#{beanRegistroCalificacion.salvarAnotacionData}"
+								onclick="PF('AddAnotacion').hide();" />
+							<p:spacer />
+							<p:commandButton value="#{messageBeanSNR.commonNo}"
+								icon="fa fa-close" onclick="PF('dlg2').hide();" />
+						</div>
+
+					</h:form>
+				</p:dialog>
+				
+				<p:dialog appendTo="@(body)"
+					header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg3"
+					modal="true" height="90" resizable="false">
+					<h:form id="fDialogRequiereCuantia" style="font-size: large; top: 50%; left: 50%;">
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelElActoRequiereIncluirValorDelaCuantia}" />
+						<br />
+						<br />
+						<div align="center">
+							<p:commandButton value="#{messageBeanSNR.commonSi}"
+								icon="fa fa-check" update="fidAnotacion"
+								actionListener="#{beanRegistroCalificacion.requiereValorDeLaCuantia()}"
+								oncomplete="PF('dlg3').hide();"/>
+							<p:spacer />
+							<p:commandButton value="#{messageBeanSNR.commonNo}" update="fidAnotacion"
+								actionListener="#{beanRegistroCalificacion.noRequiereValorDeLaCuantia()}"
+								icon="fa fa-close" oncomplete="PF('dlg3').hide();" />
+						</div>
+
+					</h:form>
+				</p:dialog>
+				
+				<p:dialog appendTo="@(body)"
+					header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg4"
+					modal="true" height="90" resizable="false">
+					<h:form id="fDialogNoRequiereCuantia" style="font-size: large; top: 50%; left: 50%;">
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelElActoNoRequiereValorDelaCuantia}" />
+						<br />
+						<br />
+						<div align="center">
+							<p:commandButton value="#{messageBeanSNR.commonSi}"
+								icon="fa fa-check" update="fidAnotacion"
+								actionListener="#{beanRegistroCalificacion.actoSiRequiereCuantia()}"
+								oncomplete="PF('dlg4').hide();"/>
+							<p:spacer />
+							<p:commandButton value="#{messageBeanSNR.commonNo}" update="fidAnotacion"
+								actionListener="#{beanRegistroCalificacion.noRequiereValorDeLaCuantia()}"
+								icon="fa fa-close" oncomplete="PF('dlg4').hide();" />
+						</div>
+
+					</h:form>
+				</p:dialog>
+				
+				
+			</p:outputPanel>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

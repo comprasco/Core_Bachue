@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelNegocio}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelTipoActoEjecutoria}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{beanTipoActoEjecutoria.insertar ? messageBeanSNR.commonLabelInsertarTipoActoEjecutoria : messageBeanSNR.commonLabelModificarTipoActoEjecutoria}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fsTipoActoEjecutoriaDetalle" style="width: 100%;">
+				<p:growl id="gTipoActoEjecutoriaDetMsg" globalOnly="true"
+					showDetail="true" sticky="false" life="30000" redisplay="false"/>
+				<center>
+
+					<p:panel id="idPInsertUpdate"
+						header="#{beanTipoActoEjecutoria.insertar ? messageBeanSNR.pageInsertarTipoActoEjecutoria : messageBeanSNR.pageEditarTipoActoEjecutoria}">
+						<div class="ui-g" align="center">
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoDocumento} #{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idTipoDocumento"
+									title="#{tooltipBeanSNR.administracionTipoActoEjecutoriaTipoActoEjecutoriaDetalleTipoDocumento}"
+									style="width:100%;"
+									value="#{beanTipoActoEjecutoria.parametros.idTipoDocumento}"
+									disabled="#{!beanTipoActoEjecutoria.insertar}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanReference.findTipoDocumentoPublico()}"
+										itemValue="#{tipoDocumento.idTipoDocumento}"
+										var="tipoDocumento" itemLabel="#{tipoDocumento.nombre}" />
+								</p:selectOneMenu>
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTiempoVencimiento}" />
+								<br />
+								<p:inputText id="idItTiempoVencimiento" maxlength="8"
+									title="#{tooltipBeanSNR.administracionTipoActoEjecutoriaTipoActoEjecutoriaDetalleTiempoVencimiento}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelTiempoVencimiento}"
+									value="#{beanTipoActoEjecutoria.parametros.tiempoVencimiento}" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelHabiles} #{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idHabiles" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTipoActoEjecutoriaTipoActoEjecutoriaDetalleHabiles}"
+									value="#{beanTipoActoEjecutoria.parametros.habiles}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelActivo} #{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMActivo" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionTipoActoEjecutoriaTipoActoEjecutoriaDetalleActivo}"
+									value="#{beanTipoActoEjecutoria.parametros.activo}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoActo} #{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idItTipoActo"
+									title="#{tooltipBeanSNR.administracionTipoActoEjecutoriaTipoActoEjecutoriaDetalleTipoActo}"
+									style="width:100%;"
+									value="#{beanTipoActoEjecutoria.parametros.idTipoActo}"
+									disabled="#{!beanTipoActoEjecutoria.insertar}">
+									<p:ajax
+										listener="#{beanTipoActoEjecutoria.traerMaximaVersion()}"
+										update="idItsVersion" event="itemSelect" />
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems value="#{beanReference.findTiposActosCodigo()}"
+										itemValue="#{tipoActo.idTipoActo}" var="tipoActo"
+										itemLabel="#{tipoActo.nombre} - #{tipoActo.idTipoActo}">
+									</f:selectItems>
+								</p:selectOneMenu>
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelVersion}"
+									rendered="#{!beanTipoActoEjecutoria.insertar}" />
+								<br />
+								<p:inputText id="idItsVersion"
+									rendered="#{!beanTipoActoEjecutoria.insertar}"
+									value="#{beanTipoActoEjecutoria.parametros.versionActo}"
+									readonly='true' />
+							</div>
+
+						</div>
+						<br />
+							<p:dataTable id="idDetalle" var="item"
+								rendered="#{!beanTipoActoEjecutoria.insertar}"
+								value="#{beanTipoActoEjecutoria.parametros}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+								<f:facet name="header">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+								</f:facet>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+									<h:outputText value="#{item.idUsuarioCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<h:outputText value="#{item.fechaCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+									<h:outputText value="#{item.idUsuarioModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+									<h:outputText value="#{item.fechaModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIpModificación}">
+									<h:outputText value="#{item.ipModificacion}" />
+								</p:column>
+							</p:dataTable>
+						<br />
+						<div class="ui-g" align="left">
+
+							<div class="ui-g-12 ui-md-6 ui-lg-8">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="right"
+									update="gTipoActoEjecutoriaDetMsg"
+									action="tipoActoEjecutoria?faces-redirect=true" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-4" align="right">
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelActualizarTipoActoEjecutoria}"
+									rendered="#{!beanTipoActoEjecutoria.insertar}"
+									icon="fa fa-check-circle" iconPos="left"
+									update="gTipoActoEjecutoriaDetMsg"
+									action="#{beanTipoActoEjecutoria.insertUpdateTipoActoEjecutoria(false)}"
+									ajax="false" />
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelCrearTipoActoEjecutoria}"
+									rendered="#{beanTipoActoEjecutoria.insertar}"
+									icon="fa fa-check-circle" iconPos="left"
+									update="gTipoActoEjecutoriaDetMsg"
+									action="#{beanTipoActoEjecutoria.insertUpdateTipoActoEjecutoria(true)}"
+									ajax="false" />
+							</div>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

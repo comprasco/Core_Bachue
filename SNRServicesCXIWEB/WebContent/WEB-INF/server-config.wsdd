@@ -1,0 +1,807 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+	xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+	<globalConfiguration>
+		<parameter name="attachments.implementation"
+			value="org.apache.axis.attachments.AttachmentsImpl" />
+		<parameter name="disablePrettyXML" value="false" />
+		<parameter name="sendMultiRefs" value="true" />
+		<parameter name="sendXMLDeclaration" value="true" />
+		<parameter name="sendXsiTypes" value="true" />
+		<requestFlow>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="session" />
+			</handler>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="request" />
+				<parameter name="extension" value=".jwr" />
+			</handler>
+		</requestFlow>
+	</globalConfiguration>
+	<handler name="Authenticate"
+		type="java:org.apache.axis.handlers.SimpleAuthenticationHandler" />
+	<handler name="LocalResponder"
+		type="java:org.apache.axis.transport.local.LocalResponder" />
+	<handler name="URLMapper"
+		type="java:org.apache.axis.handlers.http.URLMapper" />
+	<service name="AdminService" provider="java:MSG">
+		<parameter name="allowedMethods" value="AdminService" />
+		<parameter name="enableRemoteAdmin" value="false" />
+		<parameter name="className"
+			value="org.apache.axis.utils.Admin" />
+		<namespace>http://xml.apache.org/axis/wsdd/</namespace>
+	</service>
+	<service name="Version" provider="java:RPC">
+		<parameter name="allowedMethods" value="getVersion" />
+		<parameter name="className" value="org.apache.axis.Version" />
+	</service>
+
+	<!-- Services from SBB_CB_Inmuebles WSDL service -->
+
+	<service name="SBB_CB_InmueblesPort" provider="java:RPC"
+		style="document" use="literal">
+		<parameter name="wsdlTargetNamespace"
+			value="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/v1" />
+		<parameter name="wsdlServiceElement"
+			value="SBB_CB_Inmuebles" />
+		<parameter name="schemaQualified"
+			value="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1,https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1,https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDireccionesAnteriores/v1,https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1,https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarMatriculas/v1" />
+		<parameter name="wsdlServicePort"
+			value="SBB_CB_InmueblesPort" />
+		<parameter name="className"
+			value="co.gov.supernotariado.www.services.bachue.cb.inmuebles.v1.SBB_CB_InmueblesSOAP12BindingSkeleton" />
+		<parameter name="wsdlPortType" value="SBB_CB_Inmuebles" />
+		<parameter name="typeMappingVersion" value="1.2" />
+		<parameter name="allowedMethods" value="*" />
+		<wsdlFile>./SBB_CB_InmueblesPort.wsdl</wsdlFile>
+
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoEntradaDatosBasicosMatriculas>criterioBusqueda"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarDatosBasicos.v1.TipoEntradaDatosBasicosMatriculasCriterioBusqueda"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>NUPRE"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoPropietario>segundoApellido"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoPropietario>porcentajeParticipacion"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarMatriculas/v1"
+			qname="ns:>tipoEntradaConsultaMatriculas>codMunicipio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoPropietario>primerApellido"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoMatricula>estadoMatricula" type="java:int"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>numMatriculaInmobiliaria"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoMatricula>codMunicipio" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarMatriculas/v1"
+			qname="ns:>tipoEntradaConsultaMatriculas>convenio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:tipoPropietario"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarDatosBasicos.v1.TipoPropietario"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoEntradaDatosInmueble>numIdentificacionPredio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:tipoEntradaDatosInmueble"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarDatosImueble.v1.TipoEntradaDatosInmueble"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>linderos"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoPropietario>nomPropietario"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>estadoNUPRE"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>fechaAperturaFolio"
+			type="java:java.util.Calendar"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>numPredialAnterior"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>complementaciones"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoMatricula>direccionPredio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoMatricula>nomDepartamento"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoMatricula>nomMunicipio" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDireccionesAnteriores/v1"
+			qname="ns:tipoSalidaDireccionesAnteriores"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarDireccionesAnteriores.v1.TipoSalidaDireccionesAnteriores"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoEntradaDatosInmueble>convenio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>codMensaje"
+			type="java:java.math.BigInteger"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarMatriculas/v1"
+			qname="ns:tipoEntradaConsultaMatriculas"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarMatriculas.v1.TipoEntradaConsultaMatriculas"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoPropietario>tipoDocumentoPersona"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoPropietario>numNIT" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:tipoSalidaDatosBasicosMatriculas"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarDatosBasicos.v1.TipoSalidaDatosBasicosMatriculas"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoMatricula>codCirculoRegistral"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDireccionesAnteriores/v1"
+			qname="ns:>tipoSalidaDireccionesAnteriores>codMensaje"
+			type="java:java.math.BigInteger"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoEntradaDatosBasicosMatriculas>codMunicipio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>areaConstruida" type="java:long"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>nomDepartamento"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:tipoMatricula"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarDatosBasicos.v1.TipoMatricula"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoSalidaDatosBasicosMatriculas>descripcionMensaje"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoPropietario>tipoPersona" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoPropietario>primerNombre" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>numPredial"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoEntradaDatosPropietario>tipoIdentificacionPredio"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarPropietarios.v1.TipoEntradaDatosPropietarioTipoIdentificacionPredio"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoPropietario>segundoNombre"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>areaInmueble" type="java:long"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>nomTipoDocumentoPublico"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoPropietario>nomTipoDocumento"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoPropietario>razonSocial" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoMatricula>numMatriculaInmobiliaria"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoMatricula>tipoPredio" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoMatricula>NUPRE" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoPropietario>numDocumentoPersona"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>direccionPredio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoEntradaDatosPropietario>convenio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarMatriculas/v1"
+			qname="ns:tipoMatricula"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarMatriculas.v1.TipoMatricula"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>fechaInstrumento"
+			type="java:java.util.Calendar"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoMatricula>numPredial" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarMatriculas/v1"
+			qname="ns:tipoSalidaConsultaMatriculas"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarMatriculas.v1.TipoSalidaConsultaMatriculas"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:tipoPropietario"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarPropietarios.v1.TipoPropietario"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:tipoEntradaDatosBasicosMatriculas"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarDatosBasicos.v1.TipoEntradaDatosBasicosMatriculas"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoPropietario>segundoApellido"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoPropietario>codGenero" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoPropietario>primerApellido"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoPropietario>porcentajeParticipacion"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoMatricula>estadoNUPRE" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>codDepartamento"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoEntradaDatosPropietario>numIdentificacionPredio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDireccionesAnteriores/v1"
+			qname="ns:>tipoEntradaDireccionesAnteriores>numIdentificacionPredio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>areaPrivada" type="java:long"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoSalidaDatosBasicosMatriculas>codMensaje"
+			type="java:java.math.BigInteger"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>codMunicipio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoSalidaDatosPropietario>codMensaje"
+			type="java:java.math.BigInteger"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoPropietario>tipoDocumentoPersona"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoPropietario>numNIT" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarMatriculas/v1"
+			qname="ns:>tipoSalidaConsultaMatriculas>codMensaje"
+			type="java:java.math.BigInteger"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoMatricula>nomCirculoRegistral"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoSalidaDatosBasicosMatriculas>cantidadMatriculas"
+			type="java:java.math.BigInteger"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>nomBarrio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarMatriculas/v1"
+			qname="ns:>tipoMatricula>matricula" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:tipoSalidaDatosPropietario"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarPropietarios.v1.TipoSalidaDatosPropietario"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDireccionesAnteriores/v1"
+			qname="ns:tipoEntradaDireccionesAnteriores"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarDireccionesAnteriores.v1.TipoEntradaDireccionesAnteriores"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoSalidaDatosPropietario>descripcionMensaje"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoEntradaDatosInmueble>tipoIdentificacionPredio"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarDatosImueble.v1.TipoEntradaDatosInmuebleTipoIdentificacionPredio"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>NIR" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>nomVereda"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoEntradaDatosBasicosMatriculas>codDepartamento"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoPropietario>segundoNombre"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>nomMunicipio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:tipoEntradaDatosPropietario"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarPropietarios.v1.TipoEntradaDatosPropietario"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoPropietario>primerNombre" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoEntradaDatosBasicosMatriculas>convenio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDireccionesAnteriores/v1"
+			qname="ns:>tipoDireccionAnterior>direccionPredio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>nomCirculoRegistral"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>codCirculoRegistral"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDireccionesAnteriores/v1"
+			qname="ns:tipoDireccionAnterior"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarDireccionesAnteriores.v1.TipoDireccionAnterior"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarMatriculas/v1"
+			qname="ns:>tipoEntradaConsultaMatriculas>codDepartamento"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarPropietarios/v1"
+			qname="ns:>tipoPropietario>numDocumentoPersona"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>tipoPredio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarMatriculas/v1"
+			qname="ns:>tipoEntradaConsultaMatriculas>criterioBusqueda"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarMatriculas.v1.TipoEntradaConsultaMatriculasCriterioBusqueda"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDireccionesAnteriores/v1"
+			qname="ns:>tipoEntradaDireccionesAnteriores>convenio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>descripcionMensaje"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>estadoFolio"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDireccionesAnteriores/v1"
+			qname="ns:>tipoEntradaDireccionesAnteriores>tipoIdentificacionPredio"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarDireccionesAnteriores.v1.TipoEntradaDireccionesAnterioresTipoIdentificacionPredio"
+			serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:>tipoSalidaDatosInmueble>radicacion"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoMatricula>codDepartamento"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosImueble/v1"
+			qname="ns:tipoSalidaDatosInmueble"
+			type="java:co.gov.supernotariado.www.services.bachue.cb.inmuebles.consultarDatosImueble.v1.TipoSalidaDatosInmueble"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDireccionesAnteriores/v1"
+			qname="ns:>tipoSalidaDireccionesAnteriores>descripcionMensaje"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarDatosBasicos/v1"
+			qname="ns:>tipoPropietario>razonSocial" type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/services/bachue/cb/inmuebles/consultarMatriculas/v1"
+			qname="ns:>tipoSalidaConsultaMatriculas>descripcionMensaje"
+			type="java:java.lang.String"
+			serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
+			encodingStyle="" />
+	</service>
+
+
+	<transport name="http">
+		<requestFlow>
+			<handler type="URLMapper" />
+			<handler
+				type="java:org.apache.axis.handlers.http.HTTPAuthHandler" />
+		</requestFlow>
+		<parameter name="qs:list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs:wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+		<parameter name="qs.list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs.method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs:method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs.wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+	</transport>
+	<transport name="local">
+		<responseFlow>
+			<handler type="LocalResponder" />
+		</responseFlow>
+	</transport>
+</deployment>

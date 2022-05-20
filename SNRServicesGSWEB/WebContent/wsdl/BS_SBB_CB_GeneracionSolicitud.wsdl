@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/generacionsolicitud/v1"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/cb/generacionsolicitud/generarsolicitud/v1"
+	xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/cb/generacionsolicitud/consultarestadosolicitud/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/generacionsolicitud/v1">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/generacionsolicitud/generarsolicitud/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType name="tipoEntradaGenerarSolicitud">
+				<xsd:sequence>
+					<xsd:element name="modulo" type="xsd:string" />
+					<xsd:element name="solicitante"
+						type="bachue1:tipoSolicitanteGSI" />
+					<xsd:element name="servicios">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="servicio"
+									type="bachue1:tipoServicioGSI" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="tipoSolicitanteGSI">
+				<xsd:sequence>
+					<xsd:element name="tipoDocumento">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="CC" />
+								<xsd:enumeration value="CE" />
+								<xsd:enumeration value="NIT" />
+								<xsd:enumeration value="PS" />
+								<xsd:enumeration value="TI" />
+								<xsd:enumeration value="NU" />
+								<xsd:enumeration value="SE" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numeroDocumento" type="xsd:string" />
+					<xsd:element name="tipoPersona" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="tipoServicioGSI">
+				<xsd:sequence>
+					<xsd:element name="tipoServicio" type="xsd:string" />
+					<xsd:element name="subtipoServicio" type="xsd:string" />
+					<xsd:element name="criterios">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="criterio"
+									type="bachue1:tipoCriterioGSI" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="tipoCriterioGSI">
+				<xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string" />
+					<xsd:element name="valor" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="entradaGenerarSolicitud"
+				type="bachue1:tipoEntradaGenerarSolicitud" />
+
+			<xsd:complexType name="tipoSalidaGenerarSolicitud">
+				<xsd:sequence>
+					<xsd:element name="NIR" type="xsd:string" />
+					<xsd:element name="codigoEstadoSolicitud"
+						type="xsd:string" />
+					<xsd:element name="descripcionEstadoSolicitud"
+						type="xsd:string" />
+					<xsd:element name="mensajeAlSolicitante"
+						type="xsd:string" />
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="salidaGenerarSolicitud"
+				type="bachue1:tipoSalidaGenerarSolicitud" />
+		</xsd:schema>
+
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/generacionsolicitud/consultarestadosolicitud/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaConsultarEstadoSolicitud">
+				<xsd:sequence>
+					<xsd:element name="modulo" type="xsd:string" />
+					<xsd:element name="solicitante"
+						type="bachue2:tipoSolicitanteCESI" />
+					<xsd:element name="NIR" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="tipoSolicitanteCESI">
+				<xsd:sequence>
+					<xsd:element name="tipoDocumento">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="CC" />
+								<xsd:enumeration value="CE" />
+								<xsd:enumeration value="NIT" />
+								<xsd:enumeration value="PS" />
+								<xsd:enumeration value="TI" />
+								<xsd:enumeration value="NU" />
+								<xsd:enumeration value="SE" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numeroDocumento" type="xsd:string" />
+					<xsd:element name="tipoPersona" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="entradaConsultarEstadoSolicitud"
+				type="bachue2:tipoEntradaConsultarEstadoSolicitud" />
+
+			<xsd:complexType
+				name="tipoSalidaConsultarEstadoSolicitud">
+				<xsd:sequence>
+					<xsd:element name="NIR" type="xsd:string" />
+					<xsd:element name="idEtapa" type="xsd:string" />
+					<xsd:element name="nombreEtapa" type="xsd:string" />
+					<xsd:element name="idMotivo" type="xsd:string" />
+					<xsd:element name="descripcionMotivo" type="xsd:string" />
+					<xsd:element name="estado" type="xsd:string" />
+					<xsd:element name="fechaFin" type="xsd:dateTime" />
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="salidaConsultarEstadoSolicitud"
+				type="bachue2:tipoSalidaConsultarEstadoSolicitud" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="GenerarSolicitud_Request">
+		<wsdl:part name="entrada"
+			element="bachue1:entradaGenerarSolicitud" />
+	</wsdl:message>
+	<wsdl:message name="GenerarSolicitud_Response">
+		<wsdl:part name="salida"
+			element="bachue1:salidaGenerarSolicitud" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarEstadoSolicitud_Request">
+		<wsdl:part name="entrada"
+			element="bachue2:entradaConsultarEstadoSolicitud" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarEstadoSolicitud_Response">
+		<wsdl:part name="salida"
+			element="bachue2:salidaConsultarEstadoSolicitud" />
+	</wsdl:message>
+
+	<wsdl:portType name="SBB_CB_GeneracionSolicitud">
+		<wsdl:operation name="GenerarSolicitud">
+			<wsdl:input message="bachue:GenerarSolicitud_Request" />
+			<wsdl:output message="bachue:GenerarSolicitud_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarEstadoSolicitud">
+			<wsdl:input
+				message="bachue:ConsultarEstadoSolicitud_Request" />
+			<wsdl:output
+				message="bachue:ConsultarEstadoSolicitud_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding
+		name="SBB_CB_GeneracionSolicitudSOAP12Binding"
+		type="bachue:SBB_CB_GeneracionSolicitud">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="GenerarSolicitud">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/generacionsolicitud/v1/GenerarSolicitud" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarEstadoSolicitud">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/generacionsolicitud/v1/ConsultarEstadoSolicitud" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<wsdl:service name="SBB_CB_GeneracionSolicitud">
+		<wsdl:port name="SBB_CB_GeneracionSolicitudPort"
+			binding="bachue:SBB_CB_GeneracionSolicitudSOAP12Binding">
+			<soap:address
+				location="http://localhost:7001/SNRServicesGSWEB/services/SBB_CB_GeneracionSolicitudPort" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

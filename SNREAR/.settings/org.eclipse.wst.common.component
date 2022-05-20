@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+	<wb-module deploy-name="SNREAR">
+		<wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
+		<dependent-module archiveName="SNRConfig.jar" deploy-path="/lib" handle="module:/resource/SNRConfig/SNRConfig">
+			<dependency-type>uses</dependency-type>
+		</dependent-module>
+		<dependent-module archiveName="SNRCommon.jar" deploy-path="/lib" handle="module:/resource/SNRCommon/SNRCommon">
+			<dependency-type>uses</dependency-type>
+		</dependent-module>
+		<dependent-module archiveName="SNRModel.jar" deploy-path="/lib" handle="module:/resource/SNRModel/SNRModel">
+			<dependency-type>uses</dependency-type>
+		</dependent-module>
+		<dependent-module archiveName="SNRDao.jar" deploy-path="/lib" handle="module:/resource/SNRDao/SNRDao">
+			<dependency-type>uses</dependency-type>
+		</dependent-module>
+		<dependent-module archiveName="SNRIntegration.jar" deploy-path="/lib" handle="module:/resource/SNRIntegration/SNRIntegration">
+			<dependency-type>uses</dependency-type>
+		</dependent-module>
+		<dependent-module archiveName="SNRBusiness.jar" deploy-path="/lib" handle="module:/resource/SNRBusiness/SNRBusiness">
+			<dependency-type>uses</dependency-type>
+		</dependent-module>
+		<dependent-module archiveName="SNREJB.jar" deploy-path="/lib" handle="module:/resource/SNREJB/SNREJB">
+			<dependency-type>uses</dependency-type>
+		</dependent-module>
+		<dependent-module archiveName="SNREJBClient.jar" deploy-path="/lib" handle="module:/resource/SNREJBClient/SNREJBClient">
+			<dependency-type>uses</dependency-type>
+		</dependent-module>
+		<dependent-module archiveName="SNRScheduler.jar" deploy-path="/lib" handle="module:/resource/SNRScheduler/SNRScheduler">
+			<dependency-type>uses</dependency-type>
+		</dependent-module>
+        <dependent-module archiveName="SNREnvioDocumentosWEB.war" deploy-path="/" handle="module:/resource/SNREnvioDocumentosWEB/SNREnvioDocumentosWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCAWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCAWEB/SNRServicesCAWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCCWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCCWEB/SNRServicesCCWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesGATWEB.war" deploy-path="/" handle="module:/resource/SNRServicesGATWEB/SNRServicesGATWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCTWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCTWEB/SNRServicesCTWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesEPWEB.war" deploy-path="/" handle="module:/resource/SNRServicesEPWEB/SNRServicesEPWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCHSPWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCHSPWEB/SNRServicesCHSPWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesBachueWEB.war" deploy-path="/" handle="module:/resource/SNRServicesBachueWEB/SNRServicesBachueWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesOFWEB.war" deploy-path="/" handle="module:/resource/SNRServicesOFWEB/SNRServicesOFWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCDWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCDWEB/SNRServicesCDWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCDRWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCDRWEB/SNRServicesCDRWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesGCCWEB.war" deploy-path="/" handle="module:/resource/SNRServicesGCCWEB/SNRServicesGCCWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesMCOWEB.war" deploy-path="/" handle="module:/resource/SNRServicesMCOWEB/SNRServicesMCOWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesNMWEB.war" deploy-path="/" handle="module:/resource/SNRServicesNMWEB/SNRServicesNMWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCSWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCSWEB/SNRServicesCSWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesRRRMWEB.war" deploy-path="/" handle="module:/resource/SNRServicesRRRMWEB/SNRServicesRRRMWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesPIWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCXSWEB/SNRServicesPIWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCLPWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCLPWEB/SNRServicesCLPWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCXSWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCXSWEB/SNRServicesCXSWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCXAWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCXAWEB/SNRServicesCXAWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCXCTWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCXCTWEB/SNRServicesCXCTWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCXHPWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCXHPWEB/SNRServicesCXHPWEB">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCXIWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCXIWEB/SNRServicesCXIWEB">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCXIPWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCXIPWEB/SNRServicesCXIPWEB">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCXMRWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCXMRWEB/SNRServicesCXMRWEB">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCXTCWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCXTCWEB/SNRServicesCXTCWEB">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCXCMWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCXCMWEB/SNRServicesCXCMWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesSCWEB.war" deploy-path="/" handle="module:/resource/SNRServicesSCWEB/SNRServicesSCWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCYNWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCYNWEB/SNRServicesCYNWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+                <dependent-module archiveName="SNRServicesCYNMRWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCYNMRWEB/SNRServicesCYNMRWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesNWEB.war" deploy-path="/" handle="module:/resource/SNRServicesNWEB/SNRServicesNWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesSDCWEB.war" deploy-path="/" handle="module:/resource/SNRServicesSDCWEB/SNRServicesSDCWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesATWEB.war" deploy-path="/" handle="module:/resource/SNRServicesATWEB/SNRServicesATWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesCPWEB.war" deploy-path="/" handle="module:/resource/SNRServicesCPWEB/SNRServicesCPWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesRNBWEB.war" deploy-path="/" handle="module:/resource/SNRServicesRNBWEB/SNRServicesRNBWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SNRServicesNDCWEB.war" deploy-path="/" handle="module:/resource/SNRServicesNDCWEB/SNRServicesNDCWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+	</wb-module>
+</project-modules>

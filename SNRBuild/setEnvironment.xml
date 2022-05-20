@@ -1,0 +1,13 @@
+<project name="Set Environment" default="prd" basedir=".">
+	<property name="workspace.dir" location="${basedir}/.."/>
+	<property name="dataAccess.config.dir" location="${workspace.dir}/SNRConfig/src/com/bachue/common/dataAccess2/source/"/>
+	<target name="init">
+		<delete file="${dataAccess.config.dir}/prosnr01.properties" verbose="true"/>
+	</target>
+	<target name="driver.dev" depends="init">
+		<copy file="${dataAccess.config.dir}/prosnr01.properties.driver.dev" tofile="${dataAccess.config.dir}/prosnr01.properties" verbose="true"/>
+	</target>
+	<target name="prd" depends="init">
+		<copy file="${dataAccess.config.dir}/prosnr01.properties.prd" tofile="${dataAccess.config.dir}/prosnr01.properties" verbose="true"/>
+	</target>
+</project>

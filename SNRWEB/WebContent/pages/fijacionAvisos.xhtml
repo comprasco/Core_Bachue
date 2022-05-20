@@ -1,0 +1,386 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelPublicaciones}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelPublicacionAvisosWeb}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						rendered="#{beanPublicacionAvisosWeb.idEtapa eq 232}"
+						value="#{messageBeanSNR.commonLabelFijacionAvisosOficinaOrigen}" />
+					<p:outputLabel
+						rendered="#{beanPublicacionAvisosWeb.idEtapa eq 233}"
+						value="#{messageBeanSNR.commonLabelDesfijacionAvisosWeb}" /> 
+					<p:outputLabel
+						rendered="#{beanPublicacionAvisosWeb.idEtapa eq 234}"
+						value="#{messageBeanSNR.commonLabelFijacionAvisosOficinaDestino}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fFijacionAvisos" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true"
+					redisplay="false" />
+
+				<p:remoteCommand name="failImpresion"
+					actionListener="#{beanPublicacionAvisosWeb.errorImpresion('fFijacionAvisos')}"
+					update="idGrowl" partialSubmit="true" global="false" />
+				<p:remoteCommand name="imprimirDocumento"
+					actionListener="#{beanPublicacionAvisosWeb.imprimirDocumentos('fFijacionAvisos')}"
+					update="idGrowl" partialSubmit="true" global="false" />
+
+				<center>
+					<p:outputLabel
+						rendered="#{beanPublicacionAvisosWeb.idEtapa eq 232}"
+						value="#{messageBeanSNR.commonLabelFijacionAvisosOficinaOrigen}" />
+					<p:outputLabel
+						rendered="#{beanPublicacionAvisosWeb.idEtapa eq 233}"
+						value="#{messageBeanSNR.commonLabelDesfijacionAvisosWeb}" />
+					<p:outputLabel
+						rendered="#{beanPublicacionAvisosWeb.idEtapa eq 234}"
+						value="#{messageBeanSNR.commonLabelFijacionAvisosOficinaDestino}" />
+					<br />
+					<p:panel header="#{messageBeanSNR.commonLabelBandejaDeEntrada}"
+						style="min-width:800px;" toggleable="true">
+						<div class="ui-g">
+							<p:outputPanel>
+								<p:dataTable id="idDtTurnos"
+									value="#{beanPublicacionAvisosWeb.turnos}" var="row"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									paginator="true" rows="50">
+
+									<p:column width="50"
+										rendered="#{!(beanPublicacionAvisosWeb.idEtapa eq 232) and !(beanPublicacionAvisosWeb.idEtapa eq 234)}"
+										headerText="#{messageBeanSNR.commonLabelSeleccionar}">
+										<f:facet name="header">
+											<p:selectBooleanCheckbox id="idSBCSeleccionarTodo"
+												value="#{beanPublicacionAvisosWeb.seleccionarTodo}">
+												<p:ajax event="change"
+													update="fFijacionAvisos:idGrowl,fFijacionAvisos:idPanelDocsImprimir"
+													listener="#{beanPublicacionAvisosWeb.cambiarEstadoCasos()}" />
+											</p:selectBooleanCheckbox>
+										</f:facet>
+										<div align="center">
+											<p:selectBooleanCheckbox id="idSBCSeleccionado"
+												value="#{row.seleccionado}">
+												<p:ajax event="change"
+													update="fFijacionAvisos:idGrowl,fFijacionAvisos:idPanelDocsImprimir"
+													listener="#{beanPublicacionAvisosWeb.cambiarSeleccionInd(row)}" />
+											</p:selectBooleanCheckbox>
+										</div>
+									</p:column>
+
+									<p:column width="150"
+										headerText="#{messageBeanSNR.commonLabelNIR}"
+										filterBy="#{row.nir}" filterMatchMode="contains">
+										<h:outputText value="#{row.nir}" />
+									</p:column>
+
+									<p:column width="150"
+										headerText="#{messageBeanSNR.commonLabelTurno}"
+										filterBy="#{row.idTurno}" filterMatchMode="contains">
+										<h:outputText value="#{row.idTurno}" />
+									</p:column>
+
+									<p:column width="150"
+										headerText="#{messageBeanSNR.commonLabelProceso}"
+										filterBy="#{row.nombreProceso}" filterMatchMode="contains">
+										<h:outputText value="#{row.nombreProceso}" />
+									</p:column>
+
+									<p:column width="150"
+										headerText="#{messageBeanSNR.commonLabelSubProceso}"
+										filterBy="#{row.nombreSubproceso}" filterMatchMode="contains">
+										<h:outputText value="#{row.nombreSubproceso}" />
+									</p:column>
+
+									<p:column width="150"
+										headerText="#{messageBeanSNR.commonLabelDestinatario}"
+										filterBy="#{row.destinatario}" filterMatchMode="contains">
+										<h:outputText value="#{row.destinatario}" />
+									</p:column>
+
+									<p:column
+										rendered="#{!(beanPublicacionAvisosWeb.idEtapa eq 232) and !(beanPublicacionAvisosWeb.idEtapa eq 234)}"
+										headerText="#{messageBeanSNR.commonLabelInformacionNotificacion}"
+										width="120">
+										<div align="center">
+											<p:commandButton id="idCBInformacionNotificacion"
+												actionListener="#{beanPublicacionAvisosWeb.consultarInformacionNotificacion(row.idTurno)}"
+												icon="fa fa-info" style="width: 50%;" />
+										</div>
+									</p:column>
+
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelObservaciones}"
+										width="130">
+										<div align="center">
+											<p:commandButton id="idCBObservaciones"
+												icon="fa fa-id-card-o" onclick="PF('dlg4').show();"
+												actionListener="#{beanPublicacionAvisosWeb.setTurnoParaObservaciones(row)}"
+												update="fFijacionAvisos:idGrowl"
+												title="#{tooltipBeanSNR.procesosAprobacionObservacionesProcesoAnterior}"
+												style="width: 50%;" />
+										</div>
+									</p:column>
+
+									<p:column rendered="#{beanPublicacionAvisosWeb.idEtapa eq 232 or beanPublicacionAvisosWeb.idEtapa eq 234}"
+										headerText="#{messageBeanSNR.commonLabelFechaRecibido}"
+										width="200">
+										<div align="center">
+											<p:calendar id="idCalFeInicial" size="10" mask="true"
+												locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+												styleClass="#{row.fechaFijacionNoValida ? estiloCambiosBordes : ''}"
+												value="#{row.fechaInicial}" showOn="button" />
+										</div>
+									</p:column>
+
+									<p:column rendered="#{beanPublicacionAvisosWeb.idEtapa eq 232 or beanPublicacionAvisosWeb.idEtapa eq 234}"
+										headerText="#{messageBeanSNR.commonLabelFechaPublicacion}"
+										width="200">
+										<div align="center">
+											<p:calendar id="idCalFechaPublicacion" size="10" mask="true"
+												locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+												styleClass="#{row.fechaFijacionNoValida ? estiloCambiosBordes : ''}"
+												value="#{row.fechaPublicacionAvisoWeb}" showOn="button" />
+										</div>
+									</p:column>
+
+									<p:column rendered="#{beanPublicacionAvisosWeb.idEtapa eq 233}"
+										headerText="#{messageBeanSNR.commonLabelFechaDesfijacion}"
+										width="200">
+										<div align="center">
+											<p:calendar id="idCalFechaDesfijacion" size="10" mask="true"
+												locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+												styleClass="#{row.fechaFijacionNoValida ? estiloCambiosBordes : ''}"
+												value="#{row.fechaDesfijacionAviso}" showOn="button" />
+										</div>
+									</p:column>
+									
+									
+									<p:column headerText="#{messageBeanSNR.commonLabelPublicadoEn}"
+										rendered="#{(beanPublicacionAvisosWeb.idEtapa eq 232) or (beanPublicacionAvisosWeb.idEtapa eq 234)}"
+										width="200">
+										<p:selectOneMenu style="width:100%;"
+											id="idSoMPublicado" 
+											value="#{row.medioPublicacion}"
+											title="#{tooltipBeanSNR.procesosFijacionAvisosTipoPubliacion}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems
+												value="#{beanReference.buscarTiposPublicacion()}" var="item"
+												itemValue="#{item}" itemLabel="#{item}" />
+										</p:selectOneMenu>
+									</p:column>
+									
+									<p:column headerText="#{messageBeanSNR.commonLabelDetalle}"
+										rendered="#{!(beanPublicacionAvisosWeb.idEtapa eq 232) and !(beanPublicacionAvisosWeb.idEtapa eq 234)}"
+										width="70" style="aling-content:center">
+										<p:commandLink update="fFijacionAvisos:idGrowl"
+											action="#{beanPublicacionAvisosWeb.envioVisorSGD(row.idDocumentoSalida)}">
+										</p:commandLink>
+									</p:column>
+
+									<p:column headerText="#{messageBeanSNR.commonLabelDetalle}"
+										rendered="#{(beanPublicacionAvisosWeb.idEtapa eq 232) or (beanPublicacionAvisosWeb.idEtapa eq 234)}"
+										width="70" style="aling-content:center">
+										
+										<div align="center">
+										<p:commandButton
+											action="#{beanPublicacionAvisosWeb.validarFijacionAvisos(row)}" update="@form" icon="fa fa-search"/>
+										</div>
+
+									</p:column>
+								</p:dataTable>
+							</p:outputPanel>
+						</div>
+					</p:panel>
+					<br />
+					<p:outputPanel id="idPanelDocsImprimir">
+						<p:panel header="#{messageBeanSNR.commonLabelDocumentosAImprimir}"
+							toggleable="true"
+							rendered="#{beanPublicacionAvisosWeb.isValidCollection(beanPublicacionAvisosWeb.documentosImprimir) and !(beanPredioDocumentoActo.idEtapa eq 232 or beanPredioDocumentoActo.idEtapa eq 234)}">
+							<p:outputPanel>
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:dataTable id="idDtDocsImprimir" var="item"
+											value="#{beanPublicacionAvisosWeb.documentosImprimir}"
+											emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+											<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+												<h:outputText value="#{item.tipo}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelEstado}">
+												<h:outputText id="estadoDocumento"
+													value="#{item.estadoImpresion}" />
+											</p:column>
+										</p:dataTable>
+									</div>
+									<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+										<p:commandButton value="#{messageBeanSNR.commonLabelImprimir}"
+											global="false" icon="fa fa-print" id="botonImprimir"
+											widgetVar="botonImprimir" update="fFijacionAvisos:idGrowl"
+											actionListener="#{beanPublicacionAvisosWeb.imprimirDocumentos(true,'fFijacionAvisos')}" />
+									</div>
+								</div>
+							</p:outputPanel>
+						</p:panel>
+					</p:outputPanel>
+					<p:spacer />
+					<div class="ui-g" align="center">
+						<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+							<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="#{beanPublicacionAvisosWeb.regresar()}">
+							</p:commandButton>
+						</div>
+					</div>
+					<br />
+				</center>
+			</h:form>
+
+			<p:dialog appendTo="@(body)" id="idDDialogoConfirmacion"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgConfirmacion1" modal="true" height="90"
+				resizable="false">
+				<h:form id="fDialog1" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonMessageConfirmarInformacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							id="idCBConfirmar" icon="fa fa-check"
+							update="fFijacionAvisos, fFijacionAvisos:idGrowl"
+							action="#{beanPublicacionAvisosWeb.terminarProceso()}"
+							oncomplete="PF('dlgConfirmacion1').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlgConfirmacion1').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)" id="idDDialogoConfirmacion232"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgConfirmacion232" modal="true" height="90"
+				resizable="false">
+				<h:form id="fDialog232" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonMessageConfirmarInformacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							id="idCBConfirmar" icon="fa fa-check"
+							update="fFijacionAvisos, fFijacionAvisos:idGrowl"
+							action="#{beanPublicacionAvisosWeb.salvar()}"
+							oncomplete="PF('dlgConfirmacion232').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlgConfirmacion232').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelObservaciones}" widgetVar="dlg4"
+				modal="true" height="360" resizable="false" width="700">
+				<h:form id="fDialog" style="font-size: medium; top: 40%; left: 40%;">
+					<center>
+						<h:outputText value="#{messageBeanSNR.commonLabelObservaciones}" />
+					</center>
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonLabelGuardar}"
+							icon="fa fa-check" onclick="PF('dlg4').hide();"
+							actionListener="#{beanPublicacionAvisosWeb.agregarComentario()}"
+							id="id_SiCancelar" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonLabelCancelar}"
+							icon="fa fa-close" onclick="PF('dlg4').hide();" ajax="false">
+						</p:commandButton>
+					</div>
+					<br />
+					<h:outputText value="#{messageBeanSNR.commonLabelObservaciones}" />
+					<br />
+					<p:inputTextarea rows="7" cols="73" counter="display"
+						id="id_comentarioaprobacion" maxlength="4000"
+						onblur="value=value.toUpperCase()"
+						counterTemplate="{0} Caracteres faltantes" autoResize="true"
+						value="#{beanPublicacionAvisosWeb.observacionesTurnoHistoria}">
+					</p:inputTextarea>
+					<br />
+					<h:outputText id="display" />
+					<br />
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelObservacionesObligatorias}" />
+				</h:form>
+			</p:dialog>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelObservaciones}"
+				widgetVar="infoNot" modal="true" height="360" resizable="false"
+				width="700">
+				<h:form id="fInfoNot"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<p:outputPanel id="OPInformacionNotificacionDetalle">
+						<p:dataTable id="DTDocumentosNotificaciones"
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+							value="#{beanPublicacionAvisosWeb.infoNotificacion.documentosNotificaciones}"
+							var="item">
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelDocumentoNotificaciones}">
+								<div align="center">
+									<h:outputText value="#{item.tipo}" />
+								</div>
+							</p:column>
+							<p:column rendered="#{beanPublicacionAvisosWeb.idEtapa eq 232 or beanPublicacionAvisosWeb.idEtapa eq 234}"
+								headerText="#{messageBeanSNR.commonLabelFechaEnvioPublicacion}"
+								groupRow="true">
+								<div align="center">
+									<h:outputText value="#{item.fechaEnvioComponente}" />
+								</div>
+							</p:column>
+							<p:column rendered="#{beanPublicacionAvisosWeb.idEtapa eq 233}"
+								headerText="#{messageBeanSNR.commonLabelFechaAcuseDesficacion}"
+								groupRow="true">
+								<div align="center">
+									<h:outputText value="#{item.fechaAcuseReciboComponente}" />
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:outputPanel>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

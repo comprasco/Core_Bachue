@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelReparto}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelDesbordes}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<h:form id="fDesbordes" style="width: 100%;">
+				<p:autoUpdate />
+				<p:growl id="gDesbordesMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false"/>
+				<center>
+					<p:panel id="idPDesborde">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelOrip}" />
+								<br />
+								<p:selectOneMenu id="idSOMOrip" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionDesbordesOrip}"
+									value="#{beanDesbordes.circuloSeleccionado.idCirculo}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems value="#{beanDesbordes.circulos}"
+										itemValue="#{circulo.idCirculo}" var="circulo"
+										itemLabel="#{circulo.nombre}" />
+									<p:ajax listener="#{beanDesbordes.cargarRegional()}"
+										update="fDesbordes" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelRegional}" />
+								<br />
+								<p:inputText id="idItRegional" maxlength="30" disabled="true"
+									placeholder="#{messageBeanSNR.commonLabelRegional}"
+									title="#{tooltipBeanSNR.administracionDesbordesRegional}"
+									value="#{beanDesbordes.regional.nombre}" />
+							</div>
+						</div>
+					</p:panel>
+					<br />
+					<p:panel id="idPOficinas" style="min-width:800px;">
+						<p:dataTable
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+							id="idDtOficinas" var="item"
+							value="#{beanDesbordes.circulosPorRegional}">
+
+							<p:column headerText="#{messageBeanSNR.commonLabelOrip}">
+								<div align="left">
+									<h:outputText value="#{item.nombre}" />
+								</div>
+							</p:column>
+
+							<p:column headerText="#{messageBeanSNR.commonLabelHabilitar}">
+								<div align="left">
+									<p:selectOneMenu id="idSOMHabilitar" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionDesbordesHabilitar}"
+										value="#{item.habilitado}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSi}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelNo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+							</p:column>
+
+							<p:column headerText="#{messageBeanSNR.commonLabelOrden}">
+								<div align="left">
+									<p:inputNumber id="idItOrden" maxlength="29" minValue="0"
+										decimalPlaces="0"
+										placeholder="#{messageBeanSNR.commonLabelOrden}"
+										title="#{tooltipBeanSNR.administracionDesbordesObservaciones}"
+										value="#{item.orden}" />
+								</div>
+							</p:column>
+
+							<p:column headerText="#{messageBeanSNR.commonLabelObservaciones}">
+								<div align="left">
+									<p:inputText id="idItObservaciones" maxlength="2000"
+										placeholder="#{messageBeanSNR.commonLabelObservaciones}"
+										title="#{tooltipBeanSNR.administracionDesbordesObservaciones}"
+										value="#{item.observaciones}" />
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<br />
+					<p:outputPanel>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									action="principal?faces-redirect=true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelGuardarCambios}"
+									icon="fa fa-check-circle" iconPos="left"
+									update="fDesbordes gDesbordesMsg" ajax="false"
+									actionListener="#{beanDesbordes.salvar()}" />
+							</div>
+						</div>
+					</p:outputPanel>
+				</center>
+			</h:form>
+
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

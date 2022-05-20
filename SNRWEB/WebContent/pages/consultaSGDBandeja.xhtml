@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBuscar}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelConsultaSGD}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fBandejaSGD" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="15000" />
+				<center>
+					<p:outputPanel id="camposConsulta">
+						<p:panel header="#{messageBeanSNR.commonLabelConsultaSGD}"
+							style="min-width:800px;" id="pConsultaTrazabilidad">
+							<div class="ui-g" align="center">
+								<div class="ui-g-3 ui-md-3 ui-lg-3" align="center">
+									<h:panelGrid columns="2">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+											styleClass="textosConsultaEstadoPredio" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()" id="idNIR"
+											label="#{messageBeanSNR.commonLabelNIR}"
+											disabled="#{beanConsultaSGDBandeja.circulo.length() ge 1 or beanConsultaSGDBandeja.matricula.toString().length() ge 1  or beanConsultaSGDBandeja.idTurnoConsulta.length() ge 1}"
+											onkeypress="if (event.keyCode == 13) {value=value.toUpperCase();}"
+											title="#{tooltipBeanSNR.buscarConsultaDeTrazabilidadNir}"
+											placeholder="#{messageBeanSNR.commonLabelNIR}"
+											value="#{beanConsultaSGDBandeja.nir}" maxlength="20">
+											<p:ajax event="blur" update="idTurno,itMatricula,itCirculo" />
+										</p:inputText>
+									</h:panelGrid>
+								</div>
+								<div class="ui-g-3 ui-md-3 ui-lg-3" align="center">
+									<h:panelGrid columns="2">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}" />
+										<br />
+										<p:inputText onblur="value=value.toUpperCase()" id="idTurno"
+											disabled="#{beanConsultaSGDBandeja.circulo.length() ge 1 or beanConsultaSGDBandeja.matricula.toString().length() ge 1 or beanConsultaSGDBandeja.nir.length() ge 1}"
+											title="#{tooltipBeanSNR.buscarConsultaDeTrazabilidadTurno}"
+											label="#{messageBeanSNR.commonLabelTurno}"
+											placeholder="#{messageBeanSNR.commonLabelTurno}"
+											value="#{beanConsultaSGDBandeja.idTurnoConsulta}"
+											maxlength="20">
+											<p:ajax event="blur" update="idNIR,itMatricula,itCirculo" />
+										</p:inputText>
+									</h:panelGrid>
+								</div>
+								<div class="ui-g-3 ui-md-3 ui-lg-3" align="center">
+									<h:panelGrid columns="2">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelCirculo}"
+											styleClass="textosConsultaEstadoPredio" />
+										<br />
+										<p:selectOneMenu id="itCirculo"
+											disabled="#{beanConsultaSGDBandeja.idTurnoConsulta.length() ge 1 or beanConsultaSGDBandeja.nir.length() ge 1}"
+											label="#{messageBeanSNR.commonLabelNIR}"
+											title="#{tooltipBeanSNR.buscarConsultaDeTrazabilidadNir}"
+											value="#{beanConsultaSGDBandeja.circulo}" maxlength="3">
+											<p:ajax event="change" update="idTurno,idNIR,itMatricula" />
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems
+												value="#{beanReference.findCirculoRegistral(false)}"
+												var="circulo"
+												itemLabel="#{circulo.idCirculo} - #{circulo.nombre}"
+												itemValue="#{circulo.idCirculo}" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+								</div>
+								<div class="ui-g-3 ui-md-3 ui-lg-3" align="center">
+									<h:panelGrid columns="2">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelMatricula}" />
+										<br />
+										<p:inputText id="itMatricula"
+											disabled="#{beanConsultaSGDBandeja.idTurnoConsulta.length() ge 1 or beanConsultaSGDBandeja.nir.length() ge 1}"
+											title="#{tooltipBeanSNR.buscarConsultaDeTrazabilidadTurno}"
+											label="#{messageBeanSNR.commonLabelTurno}"
+											value="#{beanConsultaSGDBandeja.matricula}">
+											<p:ajax event="blur" update="idNIR,idTurno,itCirculo" />
+										</p:inputText>
+									</h:panelGrid>
+								</div>
+							</div>
+							<div class="ui-g" align="center">
+								<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton value="#{messageBeanSNR.commonButtonLimpiar}"
+										icon="fa fa-trash" iconPos="left"
+										actionListener="#{beanConsultaSGDBandeja.clear()}"
+										update="@form" />
+								</div>
+								<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+									<p:commandButton value="#{messageBeanSNR.commonLabelConsultar}"
+										icon="lupa" iconPos="left"
+										actionListener="#{beanConsultaSGDBandeja.findAll}"
+										update="camposConsulta,idDataTurnosVinculados,idDataTramiteRecepcionDocumentos,consultaTrazaPorNir,globalMsg" />
+								</div>
+							</div>
+							<br />
+							<p:outputPanel id="idDataTramiteRecepcionDocumentos">
+								<p:panel widgetVar="idDataTramiteRecepcionDocumentos"
+									header="#{messageBeanSNR.commonLabelTramitePorRecepcionDocumentos}"
+									rendered="#{beanConsultaSGDBandeja.trazabilidad ne null and beanConsultaSGDBandeja.trazabilidad.size() ge 1}"
+									toggleable="true"
+									collapsed="#{beanConsultaSGDBandeja.nirPrincipal eq null}"
+									style="text-align:center">
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelNIRPrincipal}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.buscarConsultaTrazabilidadRecepcionDocumentosNirPrincipal}"
+												value="#{beanConsultaSGDBandeja.nirPrincipal.solicitud.nir}" />
+											<br />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTurnoPrincipal}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.buscarConsultaTrazabilidadRecepcionDocumentosTurno}"
+												value="#{beanConsultaSGDBandeja.nirPrincipal.turno.idTurno}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelEstadoDelNIR}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.buscarConsultaTrazabilidadRecepcionDocumentosEstadoNir}"
+												value="#{beanConsultaSGDBandeja.nirPrincipal.fases.nombre}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+												value="#{messageBeanSNR.commonLabelFechaCreacionNir}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.buscarConsultaTrazabilidadRecepcionDocumentosFechaCreacionNir}"
+												value="#{beanConsultaSGDBandeja.nirPrincipal.solicitud.fechaCreacion}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</p:inputText>
+										</div>
+										<div class="ui-g-12 ui-md-12 ui-lg-12">
+											<p:dataTable value="#{beanConsultaSGDBandeja.nirVinculados}"
+												rendered="#{beanConsultaSGDBandeja.nirVinculados ne null and  not(empty beanConsultaSGDBandeja.nirVinculados)}"
+												var="item">
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelNIRVinculado}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoOficina}"
+														value="#{item.solicitud.nir}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelTurnoGenerado}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludePais}"
+														value="#{item.turno.idTurno}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelTramiteVinculado}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeMunicipio}"
+														value="#{item.tramiteVinculado.tipoActo.nombre}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelFechaCreacionNir}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeDepartamento}"
+														value="#{item.solicitud.fechaCreacion}" />
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</p:panel>
+							</p:outputPanel>
+							<br />
+							<p:outputPanel id="idDataTurnosVinculados">
+								<p:panel widgetVar="idDataTurnosVinculados"
+									header="#{messageBeanSNR.commonLabelTurnosVinculados}"
+									collapsed="#{beanConsultaSGDBandeja.turnosVinculadosNirPrincipal eq null}"
+									rendered="#{beanConsultaSGDBandeja.trazabilidad ne null and beanConsultaSGDBandeja.trazabilidad.size() ge 1}"
+									toggleable="true" style="text-align:center">
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelNIRPrincipal}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoDocumento}"
+												value="#{beanConsultaSGDBandeja.turnosVinculadosNirPrincipal.solicitud.nir}" />
+											<br />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTurnoPrincipal}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeNumeroDocumento}"
+												value="#{beanConsultaSGDBandeja.turnosVinculadosNirPrincipal.turno.idTurno}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+												value="#{messageBeanSNR.commonLabelTramitePrincipal}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeFechaDocumento}"
+												value="#{beanConsultaSGDBandeja.turnosVinculadosNirPrincipal.acto.tipoActo.nombre}">
+											</p:inputText>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelEtapaTurno}" />
+											<br />
+											<p:inputText readonly="true"
+												title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeOficinaOrigen}"
+												value="#{beanConsultaSGDBandeja.turnosVinculadosNirPrincipal.etapa.nombre}" />
+										</div>
+										<div class="ui-g-12 ui-md-12 ui-lg-12">
+											<p:dataTable
+												value="#{beanConsultaSGDBandeja.turnosVinculadosNirVinculados}"
+												rendered="#{beanConsultaSGDBandeja.turnosVinculadosNirVinculados ne null and  not(empty beanConsultaSGDBandeja.turnosVinculadosNirVinculados)}"
+												var="item">
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelNIRVinculado}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTipoOficina}"
+														value="#{item.solicitud.nir}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelTurnoGenerado}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludePais}"
+														value="#{item.turno.idTurno}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelTramiteVinculado}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeMunicipio}"
+														value="#{item.tramiteVinculado.tipoActo.nombre}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelFechaCreacionNir}">
+													<h:outputText readonly="true"
+														title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeDepartamento}"
+														value="#{item.solicitud.fechaCreacion}" />
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</p:panel>
+							</p:outputPanel>
+							<br />
+							<p:outputPanel id="consultaTrazaPorNir">
+								<p:panel
+									rendered="#{beanConsultaSGDBandeja.trazabilidad ne null and beanConsultaSGDBandeja.trazabilidad.size() ge 1}"
+									toggleable="true"
+									header="#{messageBeanSNR.commonLabelConsultaTurnos}">
+									<p:dataTable id="idDtListado" style="min-width:500px;"
+										value="#{beanConsultaSGDBandeja.trazabilidad}" var="item"
+										emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+										<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+											<h:outputText value="#{item.solicitud.nir}" />
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+											<h:outputText value="#{item.turno.idTurno}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelEstadoDelTurno}">
+											<h:outputText value="#{item.fases.nombre}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelProcesoDelTurno}">
+											<h:outputText value="#{item.proceso.nombre}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelConsultaSGD}">
+											<div align="center">
+												<p:commandButton icon="lupa" iconPos="left"
+													action="#{beanConsultaSGDBandeja.consultaSGD(item)}" />
+											</div>
+										</p:column>
+									</p:dataTable>
+								</p:panel>
+							</p:outputPanel>
+						</p:panel>
+					</p:outputPanel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

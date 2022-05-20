@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelOperativo}" /></li>
+				<li class="breadcrumb-item" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelOpcion}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{beanOpcion.insertar ? messageBeanSNR.pageInsertarOpcion : messageBeanSNR.pageModificarOpcion}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fOpcionDetalle" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<center>
+					<p:panel>
+						<p:panel
+							header="#{beanOpcion.insertar ? messageBeanSNR.pageInsertarOpcion : messageBeanSNR.pageModificarOpcion}"
+							style="width:100%">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelOpcion}" />
+									<br />
+									<p:inputText id="idOpcion"
+										title="#{tooltipBeanSNR.administracionOpcionDetalleOpcion}"
+										placeholder="#{messageBeanSNR.commonLabelOpcion}"
+										value="#{beanOpcion.opcion.opcion}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelOpcionFrecuente}" />
+									<br />
+									<p:selectOneMenu id="idOpcionFrecuente" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionOpcionDetalleOpcion}"
+										value="#{beanOpcion.opcion.opcionFrecuente}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSi}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelNo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelDescripcion}" />
+									<br />
+									<p:inputText id="idDescripcion"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionOpcionDetalleDescripcion}"
+										placeholder="#{messageBeanSNR.commonLabelDescripcion}"
+										value="#{beanOpcion.opcion.descripcion}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelTipo}" />
+									<br />
+									<p:selectOneMenu id="idTipo" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionOpcionDetalleTipo}"
+										value="#{beanOpcion.opcion.tipo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelMenu}"
+											itemValue="MENU" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelPantalla}"
+											itemValue="PANTALLA" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelOpcionPadre}" />
+									<br />
+									<p:selectOneMenu id="idOpcionPadre" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionOpcionDetalleOpcionPadre}"
+										value="#{beanOpcion.opcion.idOpcionPadre}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanOpcion.findAllOpcionPadre()}"
+											var="OpcionPadre" itemValue="#{OpcionPadre.idOpcion}"
+											itemLabel="#{OpcionPadre.opcion}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelUrl}" />
+									<br />
+									<p:inputText id="idUrl"
+										title="#{tooltipBeanSNR.administracionOpcionDetalleUrl}"
+										placeholder="#{messageBeanSNR.commonLabelUrl}"
+										value="#{beanOpcion.opcion.url}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelUrlCatedra}" />
+									<br />
+									<p:inputText id="idUrlCatedra"
+										title="#{tooltipBeanSNR.administracionOpcionDetalleUrl}"
+										placeholder="#{messageBeanSNR.commonLabelUrlCatedra}"
+										value="#{beanOpcion.opcion.urlCatedra}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelFechaDesde}"
+										style="font-size: 100%;" />
+									<br />
+									<p:calendar id="idFechaDesde" size="20" mask="true"
+										title="#{tooltipBeanSNR.administracionOpcionDetalleFechaDesde}"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										value="#{beanOpcion.opcion.fechaDesde}" showOn="button" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelFechaHasta}"
+										style="font-size: 100%;" />
+									<br />
+									<p:calendar id="idFechaHasta" size="20" mask="true"
+										style="width:95% !important"
+										title="#{tooltipBeanSNR.administracionOpcionDetalleFechaHasta}"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										value="#{beanOpcion.opcion.fechaHasta}" showOn="button" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelComponente}" />
+									<br />
+									<p:selectOneMenu id="idComponente" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionOpcionDetalleComponente}"
+										value="#{beanOpcion.opcion.idComponente}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanOpcion.findAdministracionComponentes()}"
+											var="componente" itemValue="#{componente.idComponente}"
+											itemLabel="#{componente.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelActivo}" />
+									<p:selectOneMenu id="idActivo" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionTipoDocumentalDetalleActivo}"
+										value="#{beanOpcion.opcion.activo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelActivo}"
+											itemValue="S" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelInactivo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNuevaVentana}" />
+									<p:selectOneMenu id="idNuevaVentana" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionOpcionDetalleNuevaVentana}"
+										value="#{beanOpcion.opcion.ventanaNueva}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSi}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelNo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<br />
+							<p:outputPanel rendered="#{!beanOpcion.insertar}">
+								<p:dataTable id="idDetalle" var="item"
+									value="#{beanOpcion.datosAuditoria}"
+									emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+									<f:facet name="header">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+									</f:facet>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+										<h:outputText value="#{item.idUsuarioCreacion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+										<h:outputText value="#{item.fechaCreacion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+										<h:outputText value="#{item.idUsuarioModificacion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+										<h:outputText value="#{item.fechaModificacion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelIpModificación}">
+										<h:outputText value="#{item.ipModificacion}" />
+									</p:column>
+								</p:dataTable>
+							</p:outputPanel>
+							<br />
+							<p:panel header="#{messageBeanSNR.commonLabelAsignarEtapa}"
+								toggleable="true" style="text-align:center"
+								rendered="#{!beanOpcion.insertar}">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+										<p:pickList id="picklistDetalle"
+											value="#{beanOpcion.opcionEtapa.etapas}" showCheckbox="true"
+											var="etapaOpcion" responsive="true"
+											itemLabel="#{etapaOpcion.idEtapa}-#{etapaOpcion.nombre}"
+											itemValue="#{etapaOpcion.idEtapa}">
+										</p:pickList>
+									</div>
+								</div>
+							</p:panel>
+
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										update="globalMsg" action="#{beanOpcion.returnPages()}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton id="idBotoNAccion"
+										value="#{beanOpcion.insertar ? messageBeanSNR.commonButtonInsertarOpcion : messageBeanSNR.commonButtonModificarOpcion}"
+										icon="fa fa-pencil" iconPos="right" update="globalMsg"
+										action="#{beanOpcion.salvar}"
+										oncomplete="opcion?faces-redirect=true" ajax="false" />
+								</div>
+							</div>
+						</p:panel>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

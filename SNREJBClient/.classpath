@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="ejbModule"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SNRCommon"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SNRModel"/>
+	<classpathentry kind="con" path="oracle.eclipse.tools.glassfish.lib.system"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Oracle/Middleware/Oracle_Home/oracle_common/modules/javax.ejb.javax.ejb-api.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://docs.oracle.com/javaee/6/api/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

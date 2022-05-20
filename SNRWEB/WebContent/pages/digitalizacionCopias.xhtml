@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAnalistaDeCopias}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDigitalizacionCopias}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fDigitalizacionCopias">
+				
+				<p:poll listener="#{beanDigitalizacionCopias.consultarDocumentoDigitalizado}" update="fDigitalizacionCopias:idOPPaneles" interval="15" widgetVar="wvPoll" autoStart="false"/>
+				<p:growl id="idGrowl" sticky="false" showDetail="true" life="20000" globalOnly="true" redisplay="false"/>
+				
+				<!-- Datos del predio -->
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeNir}"
+							value="#{beanPredioDocumentoActo.predio.get('NIR')}" />
+					</div>
+					<div class="ui-g-12 ui-md-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelIdTurno}" />
+						<br />
+						<h:commandLink
+							action="#{beanPredioDocumentoActo.dirigirTrazabilidad()}"
+							target="_blank">
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTurno}"
+								value="#{beanPredioDocumentoActo.predio.get('ID_TURNO')}" />
+						</h:commandLink>
+					</div>
+					<div class="ui-g-12 ui-md-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelFechaCreacion}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeFechaCreacion}"
+							value="#{beanPredioDocumentoActo.turno.fechaCreacion}" />
+					</div>
+					<div class="ui-g-12 ui-md-2">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelDecisionCalificacionTramite}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeDecisionCalificacion}"
+							value="#{beanPredioDocumentoActo.decisionCalificacion}" />
+					</div>
+					<div class="ui-g-12 ui-md-3">
+						<br />
+						<div class="ui-g-12 ui-md-12">
+							<p:commandButton ajax="false"
+								value="#{messageBeanSNR.commonButtonVisualizarDocumentos}"
+								icon="fa fa-newspaper-o" iconPos="left" update="idGrowl"
+								actionListener="#{beanPredioDocumentoActo.descargarArchivoZip}">
+								<p:fileDownload value="#{beanPredioDocumentoActo.imagen}" />
+							</p:commandButton>
+						</div>
+					</div>
+					<script type="text/javascript">
+						function start()
+						{
+							PF('statusDownload').show();
+						}
+	
+						function stop()
+						{
+							PF('statusDownload').hide();
+						}
+					</script>
+				</div>
+				
+				<br/>
+
+				<p:outputPanel id="idOPPaneles">
+					<p:outputPanel id="idPCriterios">
+						<p:outputPanel>
+							<p:repeat id="idRepeatCriterios" var="item" value="#{beanDigitalizacionCopias.camposConsulta}">
+								<p:panel id="idPCriteriosCampos" header="#{messageBeanSNR.commonLabelCriteriosBusquedaM} #{item.criteriosDeBusqueda.descripcion}">
+									<div class="ui-g">
+										<p:repeat id="idRepeatCriteriosCampos" var="itemCamposConsulta" value="#{item.dataCamposConsulta}">
+											<div class="ui-g-12 ui-md-6 ui-lg-3">
+												<p:outputLabel value="#{itemCamposConsulta.etiquetaCampo}#{itemCamposConsulta.obligatorio eq 'S' ? messageBeanSNR.commonLabelObligatorio : ''}"/>
+												<p:outputPanel rendered="#{itemCamposConsulta.tipoDato eq 'TEXTO'}">
+													<p:inputText id="idTexto" value="#{itemCamposConsulta.valorCampo}" maxlength="#{itemCamposConsulta.longitud}" 
+														disabled="true"
+														style="#{itemCamposConsulta.rojoPantalla ? 'border-color:red !important;width:100%;' : 'width:100%;'};">
+														<p:ajax listener="#{beanDigitalizacionCopias.cambiarMinusculasAMayusculas(itemCamposConsulta)}" update="@this:@parent:@parent:@parent" global="false"/>
+														<p:ajax listener="#{beanDigitalizacionCopias.cargarNir(item)}" update="@this:@parent:@parent:@parent" global="false" event="blur"/>
+														<p:keyFilter regEx="/[0-9\a-zA-Z-]/" preventPaste="false" />
+													</p:inputText>
+												</p:outputPanel>
+												<p:outputPanel rendered="#{itemCamposConsulta.tipoDato eq 'MULTIVALOR'}">
+													<p:selectOneMenu id="somMultivalor" value="#{itemCamposConsulta.valorCampo}" disabled="true"
+														style="#{itemCamposConsulta.rojoPantalla ? 'border-color:red !important;width:100%;' : 'width:100%;'};">
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems
+															value="#{(itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? beanReference.findCirculoRegistral(true) :
+																	 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? beanReference.findTipoDocumentoPublicoActivo() : 
+																	 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '5' ? item.tiposOficina : 
+																	 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? beanReference.findPaises() :
+																	 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? item.departamentos :
+																	 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? item.municipios :
+																	 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '9' ? item.oficinasOrigen :  
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '10' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? beanReference.findCirculoRegistral(true) : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? beanReference.findLibroAntiguoSistema() :  
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? beanDigitalizacionCopias.findTomoAntiguoSistema() :  
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '3' ? beanDigitalizacionCopias.findFolioAntiguoSistema() :  
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '4' ? beanDigitalizacionCopias.findTipoPartidaAntiguoSistema() :  
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? item.municipios :  
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? beanDigitalizacionCopias.findAnioAntiguoSistema() :  
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? beanReference.findCirculoRegistral(true) :  
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '9' ? beanReference.findTipoPredio() : ''}"
+															var="itemDropDown"
+															itemValue="#{(itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.idCirculo :
+																		 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? itemDropDown.idTipoDocumento : 
+																		 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '5' ? itemDropDown.idTipoOficina :  
+																		 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? itemDropDown.idPais :         
+																		 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? itemDropDown.idDepartamento : 
+																		 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.idMunicipio :    
+																		 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '9' ? itemDropDown.idOficinaOrigen :
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '10' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.idCirculo :																							 
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.idLibroAntiguoSistema :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? itemDropDown.idTomoAntiguoSistema :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '3' ? itemDropDown.idFolioAntiguoSistema :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '4' ? itemDropDown.idTipoPartidaAntiguoSistema :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? itemDropDown.idMunicipio :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? itemDropDown.idAnioAntiguoSistema :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.idCirculo :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '9' ? itemDropDown.idTipoPredio : ''}"																							 
+															itemLabel="#{(itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.codigoNombre :
+																		 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? itemDropDown.nombre : 
+																		 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '5' ? itemDropDown.nombre :  
+																		 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? itemDropDown.nombre : 
+																		 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? itemDropDown.nombre :  
+																		 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.nombre :  
+																		 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '9' ? itemDropDown.nombre :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '10' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.codigoNombre :																							  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.idLibroAntiguoSistema :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? itemDropDown.nombre :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '3' ? itemDropDown.nombre :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '4' ? itemDropDown.nombre :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? itemDropDown.nombre :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? itemDropDown.nombre :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.codigoNombre :  
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '9' ? itemDropDown.descripcion : ''}"/>
+														<p:ajax listener="#{beanDigitalizacionCopias.cambiarDatosMultivaloresDinamicos(item)}" update="@this:@parent:@parent:@parent"/>
+													</p:selectOneMenu>
+												</p:outputPanel>
+												<p:outputPanel rendered="#{itemCamposConsulta.tipoDato eq 'DATE'}">
+													<p:calendar id="idDate" size="10" mask="true"
+														style="#{itemCamposConsulta.rojoPantalla ? 'border-color:red !important;width:100%;' : 'width:100%;'};"
+														locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+														showOn="button"
+														value="#{itemCamposConsulta.valorCampoFecha}"
+														disabled="true">
+														<p:ajax listener="#{beanDigitalizacionCopias.agregarValorFecha(itemCamposConsulta)}" update="@this:@parent:@parent:@parent" global="false"/>
+														<p:ajax event="dateSelect" listener="#{beanDigitalizacionCopias.agregarValorFecha(itemCamposConsulta)}" update="@this:@parent:@parent:@parent" global="false"/>
+													</p:calendar>
+												</p:outputPanel>
+											</div>
+										</p:repeat>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<br/>
+											<div class="ui-g-12 ui-md-12">
+												<p:commandButton style="width:100%"
+													rendered="#{!item.mostrarBotonAgregar and item.idTipoCriterioBusqueda ne '11'}"
+													value="#{messageBeanSNR.commonLabelConsultaSGD}"
+													update="fDigitalizacionCopias:idPCriterios,fDigitalizacionCopias:opResultadosBusqueda"
+													icon="fa fa-search-plus" iconPos="left"
+													actionListener="#{beanDigitalizacionCopias.consultarCriterio(false)}"
+													disabled="#{beanDigitalizacionCopias.digitalizarDocumento}"/>
+											</div>
+										</div>
+									</div>
+								</p:panel>
+								<br/>
+							</p:repeat>
+						</p:outputPanel>
+					</p:outputPanel>
+					
+					<br/>
+					
+					<p:outputPanel id="opResultadosBusqueda">
+						<p:dataTable id="iddtDocumentosOWCC"
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+							value="#{beanDigitalizacionCopias.documentosOWCC}" var="item"
+							rendered="#{beanDigitalizacionCopias.documentosOWCC != null}"
+							paginator="true"
+							rows="50"
+							style="width:auto">
+							<f:facet name="header">
+								<h:outputText value="#{messageBeanSNR.commonLabelDocumentosAlmacenadosEnSgd}" />
+							</f:facet>
+							<p:columnGroup type="header">
+								<p:column headerText="#{messageBeanSNR.commonLabelTipoDocumental}"/>
+								<p:column headerText="#{messageBeanSNR.commonLabelNIR}"/>
+								<p:column headerText="#{messageBeanSNR.commonLabelDatosDelDocumento}"/>
+								<p:column headerText="#{messageBeanSNR.commonLabelTurno}"/>
+								<p:column headerText="#{messageBeanSNR.commonLabelMatriculas}"/>
+								<p:column headerText="#{messageBeanSNR.commonLabelNumeroDeFolios}"/>
+								<p:column headerText="#{messageBeanSNR.commonLabelSeleccione}"/>
+							</p:columnGroup>
+
+							<p:column>
+								<h:outputText value="#{item.tipoDocumental.nombre}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.nir}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.docRegistrado}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.turno}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.matriculas}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item.numeroFolios}" />
+							</p:column>
+							<p:column style="text-align: center;">
+								<p:selectBooleanCheckbox value="#{item.seleccione}"/>
+							</p:column>
+						</p:dataTable>
+						<br/>
+					</p:outputPanel>
+					
+					<p:outputPanel id="idOpLiquidacionItem">
+						<p:outputPanel rendered="#{beanDigitalizacionCopias.liquidacionItem != null}">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:dataTable
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{beanDigitalizacionCopias.liquidacionItem}" var="item"
+										tableStyle="width:auto">
+										<f:facet name="header">
+											<h:outputText
+												value="#{messageBeanSNR.commonButtonDetalleDeLiquidacion}" />
+										</f:facet>
+										<p:columnGroup type="header">
+											<p:row>
+												<p:column headerText="#{messageBeanSNR.commonLabelIdentificadorDelProceso}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelNoMatriculasONuprePorOrip}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelTramiteOConcepto}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelCuantiaCantidadActo}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelCuantiaCantidadActo}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelValorAvaluo}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelDerechosACobrar}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelConservacionDocumental}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelTotalLiquidado}" />
+											</p:row>
+										</p:columnGroup>
+										<p:column>
+											<h:outputText value="#{item.idProceso}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.circulosRegistrales}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.numeroMatriculas}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.tramite}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.tarifa}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.certificadosAsociados}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.valorAvaluo}">
+												<f:convertNumber pattern="¤#,##0.00" currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+											</h:outputText>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.valorFinal}">
+												<f:convertNumber pattern="¤#,##0.00" currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+											</h:outputText>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.valorDocumental}">
+												<f:convertNumber pattern="¤#,##0.00" currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+											</h:outputText>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.valorTotal}">
+												<f:convertNumber pattern="¤#,##0.00" currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+											</h:outputText>
+										</p:column>
+										<p:columnGroup type="footer">
+								            <p:row>
+								                <p:column colspan="7" style="text-align:right" footerText="#{messageBeanSNR.commonLabelSubTotalesMayuscula}" />
+								                <p:column footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanDigitalizacionCopias.valorTotalDerechos}"/>
+									            <p:column footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanDigitalizacionCopias.valorTotalConservacion}"/>
+									            <p:column footerText="#{messageBeanSNR.commonLabelSignoPesos}#{beanDigitalizacionCopias.valorTotalLiquidacion}"/>
+								            </p:row>
+								        </p:columnGroup>
+									</p:dataTable>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-6">
+									<p:dataTable
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{beanDigitalizacionCopias.resumenPorOrip}" var="item"
+										tableStyle="width:100%">
+										<f:facet name="header">
+											<h:outputText
+												value="#{messageBeanSNR.commonLabelResumenPorOripMayuscula}" />
+										</f:facet>
+										<p:columnGroup type="header">
+											<p:row>
+												<p:column headerText="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+												<p:column headerText="#{messageBeanSNR.commonLabelTotalLiquidado}" />
+											</p:row>
+										</p:columnGroup>
+										<p:column>
+											<h:outputText value="#{item.circulosRegistrales}"/>
+										</p:column>
+										<p:column>
+											<h:outputText value="#{item.valorTotal}">
+												<f:convertNumber pattern="¤#,##0.00" currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+											</h:outputText>
+										</p:column>
+									</p:dataTable>
+								</div>
+								<div class="ui-g-12 ui-md-12 ui-lg-3" align="right">
+									<strong>
+										<h:outputText value="#{messageBeanSNR.commonLabelValorTotalAPagar}"/>
+									</strong>
+								</div>
+								<div class="ui-g-12 ui-md-12 ui-lg-3" align="right">
+									<h:outputText value="#{messageBeanSNR.commonLabelSignoPesos}#{beanDigitalizacionCopias.valorTotalLiquidacionConservacion}" style="font-size: 20px;"/>
+								</div>
+							</div>
+							<br/>
+						</p:outputPanel>
+					</p:outputPanel>
+					
+					<p:outputPanel id="idOPAcciones">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+								<p:commandButton id="idRegresar"
+									value="#{messageBeanSNR.commonLabelRegresar}"
+									title="#{tooltipBeanSNR.procesosCalificacionAntiguoSistemaConsultaPorCriteriosAnotacionRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									action="detalleActo?faces-redirect=true">
+								</p:commandButton>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+								<p:commandButton value="#{messageBeanSNR.commonLabelDigitalizar}"
+									id="idCbConsultarSGDDocumento"
+									icon="lupa"
+									actionListener="#{beanDigitalizacionCopias.abriUrlCapture}"
+									update="fDigitalizacionCopias:idOPPaneles, fDigitalizacionCopias:idGrowl"
+									rendered="#{!beanDigitalizacionCopias.digitalizarDocumento}">
+								</p:commandButton>
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonPreliquidar}"
+									title="#{messageBeanSNR.commonButtonPreliquidar}"
+									update="fDigitalizacionCopias:idGrowl, fDigitalizacionCopias:idOpLiquidacionItem, fDigitalizacionCopias:idOPAcciones" 
+									icon="fa fa-check-circle" iconPos="left"
+									actionListener="#{beanDigitalizacionCopias.preliquidar}" 
+									rendered="#{!beanDigitalizacionCopias.procesoTerminado and beanDigitalizacionCopias.documentosOWCC != null}"/>
+								<p:commandButton id="cbTerminarLiq"
+									value="#{messageBeanSNR.commonLabelTerminarProceso}"
+									rendered="#{!beanDigitalizacionCopias.procesoTerminado and beanDigitalizacionCopias.liquidacionItem != null}"
+									type="button" icon="fa fa-check-circle" iconPos="left"
+									onclick="PF('dlg2').show();" />
+							</div>
+						</div>
+					</p:outputPanel>
+				</p:outputPanel>
+			</h:form>
+			
+			<p:dialog id="idSinDatosOWCC"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" resizable="false"
+				modal="true" appendTo="@(body)" widgetVar="wvSinDatosOWCC"
+				width="50%">
+				<h:form id="fSinDatosOWCC">
+					<center>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12">
+								<p:outputLabel value="#{messageBeanSNR.commonMessageSinDatosOWCCDigitalizarDocumento}" />
+							</div>
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<p:commandButton value="#{messageBeanSNR.commonLabelSi}" 
+									icon="fa fa-check" 
+									actionListener="#{beanDigitalizacionCopias.abriUrlCapture}"
+									update="fDigitalizacionCopias:idOPAcciones" 
+									oncomplete="PF('wvSinDatosOWCC').hide();"/>
+								<p:spacer/>
+								<p:spacer/>
+								<p:commandButton value="#{messageBeanSNR.commonLabelNo}" 
+									icon="fa fa-close" 
+									onclick="PF('wvSinDatosOWCC').hide();"/>
+							</div>
+						</div>
+						<br />
+					</center>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)" position="center" id="dlg2"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg2"
+				modal="true" height="90" resizable="false">
+				<h:form id="fDialog" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeTerminarElProceso}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fDigitalizacionCopias"
+							action="#{beanDigitalizacionCopias.terminarProcesoCopias()}"
+							oncomplete="PF('dlg2').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlg2').hide();"/>
+					</div>
+				</h:form>
+			</p:dialog>
+
+			
+			<p:dialog id="idMatriculasPorDetalle"
+				header="#{messageBeanSNR.commonLabelMatriculas}" resizable="false"
+				modal="true" appendTo="@(body)" widgetVar="idMatriculasPorDetalle"
+				width="50%">
+				<h:form id="fMatriculasPorDetalle">
+					<center>
+						<p:dataTable id="idDTMatriculasPorDetalle" var="item"
+							value="#{beanDigitalizacionCopias.matriculasPorDetalle}"
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+
+							<f:facet name="header">
+								<h:outputText value="#{messageBeanSNR.commonLabelMatriculas}" />
+							</f:facet>
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column headerText="#{messageBeanSNR.commonLabelCirculo}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelMatricula}" />
+									<p:column headerText="#{messageBeanSNR.commonLabelSeleccione}" />
+								</p:row>
+							</p:columnGroup>
+							<p:column>
+								<div align="left">
+									<h:outputText value="#{item.idCirculo}" />
+								</div>
+							</p:column>
+							<p:column>
+								<div align="left">
+									<h:outputText value="#{item.idMatricula}" />
+								</div>
+							</p:column>
+							<p:column>
+								<div align="left">
+									<p:selectBooleanCheckbox value="#{item.matriculaSeleccionada}" />
+								</div>
+							</p:column>
+						</p:dataTable>
+						<br />
+						<p:commandButton value="#{messageBeanSNR.commonButtonCerrar}"
+							icon="fa fa-close"
+							onclick="PF('idMatriculasPorDetalle').hide();">
+						</p:commandButton>
+						<p:spacer/>
+						<p:spacer/>
+						<p:commandButton value="#{messageBeanSNR.commonLabelConsultaSGD}"
+							icon="lupa"
+							actionListener="#{beanDigitalizacionCopias.consultarOWCCAntiguoSistemaCopias(true)}"
+							update="fDigitalizacionCopias:opResultadosBusqueda,fDigitalizacionCopias:idOPAcciones"
+							oncomplete="PF('idMatriculasPorDetalle').hide();">
+						</p:commandButton>
+					</center>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

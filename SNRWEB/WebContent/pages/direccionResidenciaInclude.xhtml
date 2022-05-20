@@ -1,0 +1,404 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+
+	<style type="text/css">
+.ui-autocomplete-query {
+	font-weight: inherit;
+}
+</style>
+	<h:form id="idFormDireccionResidenciaInclude">
+		<p:outputPanel style="min-width:800px;">
+			<center>
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelTipoDePredio}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdTipoPredio"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idTipoPredio}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findTipoPredio()}"
+								var="var" itemValue="#{var.idTipoPredio}"
+								itemLabel="#{var.descripcion}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarEjeSecundario(true)}"
+								update="direccionResidenciaIdTipoEjePrincipal,direccionResidenciaIdTipoEjeSecundario,direccionResidenciaIdComplementoEjePrincipal,direccionResidenciaIdComplemento1EjeSecundario,direccionResidenciaIdComplemento2EjeSecundario,direccionResidenciaIdComplementoDireccion"
+								process="@this" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelTipoDeDireccion}" />
+						<br />
+						<p:inputText id="direccionResidenciaIdTipoDireccion"
+							readonly="true" style="width:100%"
+							value="#{messageBeanSNR.commonLabelResidencia}">
+						</p:inputText>
+					</div>
+				</div>
+				<br />
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-12 ui-lg-12">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelDireccionCompleta}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br />
+						<p:inputText id="direccionResidenciaIdDireccionCompleta"
+							onblur="value=value.toUpperCase()" readonly="true"
+							value="#{beanDireccion.direccionResidencia.direccion}" />
+					</div>
+				</div>
+				<br />
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelIdPais}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdPais"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idPais}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findPaises()}" var="var"
+								itemValue="#{var.idPais}" itemLabel="#{var.nombre}" />
+							<p:ajax
+								update="direccionResidenciaIdDepartamento,direccionResidenciaIdMunicipio" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdDepartamento"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idDepartamento}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findDepartamentos(beanDireccion.direccionResidencia.idPais)}"
+								var="var" itemValue="#{var.idDepartamento}"
+								itemLabel="#{var.nombre}" />
+							<p:ajax update="direccionResidenciaIdMunicipio" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelIdMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdMunicipio"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idMunicipio}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findMunicipios(beanDireccion.direccionResidencia.idPais,beanDireccion.direccionResidencia.idDepartamento)}"
+								var="var" itemValue="#{var.idMunicipio}"
+								itemLabel="#{var.nombre}" />
+							<p:ajax process="@this" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+				<br />
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-4 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelEjePrincipal}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdTipoEjePrincipal"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idTipoEjePrincipal}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findTipoEjeByTipoPredio(beanDireccion.direccionResidencia.idTipoPredio)}"
+								var="var" itemValue="#{var.idTipoEje}" itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarEjeSecundario(true)}"
+								update="direccionResidenciaIdTipoEjeSecundario"
+								process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-2">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelNumero}#{messageBeanSNR.commonLabelObligatorio}" />
+						<br />
+						<p:inputText onblur="value=value.toUpperCase()"
+							id="direccionResidenciaIdDatoEjePrincipal" maxlength="100"
+							readonly="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.datoEjePrincipal}">
+							<p:keyFilter regEx="/^[0-9\a-zA-Z\s]*$/" preventPaste="false" />
+							<p:ajax global="false"
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:inputText>
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelLetra}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdLetraEjePrincipal"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idLetraEjePrincipal}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findAllLetraEjeActivo()}"
+								var="var" itemValue="#{var.idLetra}" itemLabel="#{var.letra}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelComplemento}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdComplementoEjePrincipal"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idComplementoEjePrincipal}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findAllComplementoDireccionByTipoPredio(beanDireccion.direccionResidencia.idTipoPredio)}"
+								var="var" itemValue="#{var.idTipoEje}" itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelCoordenada}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdCoordenadaEjePrincipal"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idCoordenadaEjePrincipal}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findAllCoordenadaActivo()}"
+								var="var" itemValue="#{var.idCoordenada}"
+								itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelEjeSecundario}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdTipoEjeSecundario"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idTipoEjeSecundario}">
+							<f:selectItems
+								value="#{beanDireccion.tipoEjeSecundarioCorrespondencia}"
+								var="var" itemValue="#{var.idTipoEje}" itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelNumero1}" />
+						<br />
+						<p:inputText onblur="value=value.toUpperCase()"
+							id="direccionResidenciaIdDatoEjeSecundario" maxlength="100"
+							readonly="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.datoEjeSecundario}">
+							<p:keyFilter regEx="/^[0-9\a-zA-Z\s]*$/" preventPaste="false" />
+							<p:ajax global="false"
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:inputText>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelLetra1}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdLetra1EjeSecundario"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idLetra1EjeSecundario}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findAllLetraEjeActivo()}"
+								var="var" itemValue="#{var.idLetra}" itemLabel="#{var.letra}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelComplemento1}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdComplemento1EjeSecundario"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idComplemento1EjeSecundario}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findAllComplementoDireccionByTipoPredio(beanDireccion.direccionResidencia.idTipoPredio)}"
+								var="var" itemValue="#{var.idTipoEje}" itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelCoordenada1}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdCoordenada1EjeSecundario"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idCoordenada1EjeSecundario}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findAllCoordenadaActivo()}"
+								var="var" itemValue="#{var.idCoordenada}"
+								itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-6 ui-lg-4"></div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelNumero2}" />
+						<br />
+						<p:inputText onblur="value=value.toUpperCase()"
+							id="direccionResidenciaIdNumero2EjeSecundario" maxlength="100"
+							readonly="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.dato2EjeSecundario}">
+							<p:keyFilter regEx="/^[0-9\a-zA-Z\s]*$/" preventPaste="false" />
+							<p:ajax global="false"
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:inputText>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelLetra2}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdLetra2EjeSecundario"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idLetra2EjeSecundario}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findAllLetraEjeActivo()}"
+								var="var" itemValue="#{var.idLetra}" itemLabel="#{var.letra}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelComplemento2}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdComplemento2EjeSecundario"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idComplemento2EjeSecundario}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findAllComplementoDireccionByTipoPredio(beanDireccion.direccionResidencia.idTipoPredio)}"
+								var="var" itemValue="#{var.idTipoEje}" itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelCoordenada2}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdCoordenada2EjeSecundario"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idCoordenada2EjeSecundario}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems value="#{beanReference.findAllCoordenadaActivo()}"
+								var="var" itemValue="#{var.idCoordenada}"
+								itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+				<div class="ui-g" align="left">
+					<div class="ui-g-12 ui-md-6 ui-lg-4">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelComplementoDireccion}" />
+						<br />
+						<p:selectOneMenu style="width:100%"
+							id="direccionResidenciaIdComplementoDireccion"
+							disabled="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.idComplementoDireccion}">
+							<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+								itemvalue="" />
+							<f:selectItems
+								value="#{beanReference.findAllComplementoDireccionByTipoPredio(beanDireccion.direccionResidencia.idTipoPredio)}"
+								var="var" itemValue="#{var.idTipoEje}" itemLabel="#{var.nombre}" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta"
+								process="@this" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-8">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelDescripcionComplemento}" />
+						<br />
+						<p:inputText id="direccionResidenciaIdDescripcionDireccion"
+							onkeyup="value=value.toUpperCase()" size="30" maxlength="100"
+							readonly="#{beanDireccion.deshabilitarResidencia || !beanDireccion.habilitadoPorConsulta}"
+							value="#{beanDireccion.direccionResidencia.complementoDireccion}">
+							<p:keyFilter regEx="/^[0-9\a-zA-Z\s]*$/" preventPaste="false" />
+							<p:ajax
+								listener="#{beanDireccion.actualizarDireccionCompleta(true)}"
+								update="direccionResidenciaIdDireccionCompleta" process="@this" />
+						</p:inputText>
+					</div>
+				</div>
+			</center>
+		</p:outputPanel>
+	</h:form>
+
+</h:body>
+</html>

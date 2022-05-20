@@ -1,0 +1,769 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelCalificacion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelSuspension}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<ui:include src="detalleActoInclude.xhtml" />
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fSuspension" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<center>
+				
+					<p:panel id="idOPSolicitudDocumentacion"
+						header="#{messageBeanSNR.commonLabelSolicitudDocumentacion}"
+						rendered="#{beanSuspension.esSuspensionSolicitudDocumentacion}">
+						<p:dataTable id="idDtTiposDocumentales"
+							emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+							value="#{beanSuspension.tiposDocumentales}" var="tiposDoc">
+							<p:columnGroup type="header">
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelTipoDocumental}"
+									style="width: 35%;" />
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelObligatoriedad}"
+									style="width: 17%;" />
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelObservaciones}"
+									style="width: 52%;" />
+								<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+									style="width: 11%" />
+							</p:columnGroup>
+
+							<p:column>
+								<p:selectOneMenu id="idSOMTipoDocumental"
+									title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosTipoDocumental}"
+									style="width:100%" value="#{tiposDoc.idTipoDocumental}"
+									disabled="#{tiposDoc.activeTiposDoc || tiposDoc.obligatorio=='S' || tiposDoc.obligatorioC=='S' ? true : false}">
+									<f:selectItems itemValue="#{doc.idTipoDocumental}"
+										value="#{beanReference.findAllTiposDocumentales()}"
+										var="doc"
+										itemLabel="#{doc.nombre} - #{doc.idTipoDocumental}" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<p:selectBooleanCheckbox id="seleccionObli"
+									disabled="#{tiposDoc.obligatorio=='S' || tiposDoc.obligatorioC=='S' ? true : false}"
+									value="#{tiposDoc.seleccionado}" />
+							</p:column>
+							<p:column>
+								<p:inputText id="observaTipo"
+									onblur="value=value.toUpperCase()"
+									value="#{tiposDoc.observaciones}" maxlength="200"
+									style="#{tiposDoc.campoRojo ? 'border-color:red !important;width:100%;' : 'width:100%;'};"
+									title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosObservaciones}"
+									disabled="#{empty tiposDoc.obligatorio? tiposDoc.editar:false}"
+									placeholder="#{messageBeanSNR.commonLabelObservaciones}" />
+							</p:column>
+							<p:column>
+								<p:commandButton icon="fa fa-trash"
+									disabled="#{tiposDoc.obligatorio=='S' || tiposDoc.obligatorioC=='S' ? true : false}"
+									iconPos="left"
+									title="#{messageBeanSNR.commonLabelEliminar}"
+									actionListener="#{beanSuspension.deleteTipoDocumental(tiposDoc)}"
+									update="idDtTiposDocumentales" />
+							</p:column>
+						</p:dataTable>
+						<br />
+						<div align="right">
+							<p:commandButton
+								value="#{messageBeanSNR.commonLabelAgregarNuevoTipoDocumental}"
+								update="idDtTiposDocumentales" ajax="true"
+								icon="fa fa-plus-circle" iconPos="left"
+								actionListener="#{beanSuspension.addTipoDocumental()}" />
+						</div>
+					</p:panel>
+					<br/>
+
+					<p:panel
+						header="#{messageBeanSNR.commonLabelSuspensionDeTramitesArt18}"
+						style="min-width:800px;">
+						<p:outputPanel id="idOPDatosInteresado">
+							<p:panel
+								header="#{messageBeanSNR.commonLabelDatosDelInteresadoANotificar}"
+								rendered="#{(not((beanSuspension.proceso eq '43' and beanSuspension.motivoTramite eq '10') or beanSuspension.proceso eq '39') or beanSuspension.respuestaSolicitudDesistimiento ne null) and !beanSuspension.esAnalistaCopias}"
+								id="idpInteresadoANotificar">
+								<p:outputPanel id="idPanelListados">
+									<br />
+									<div class="ui-g" align="left">
+										<p:dataTable id="idDtPersonas" var="item"
+											value="#{beanSuspension.parametros.personas}"
+											emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelTipoDocumento}">
+												<h:outputText value="#{item.idDocumentoTipo}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+												<h:outputText value="#{item.numeroDocumento}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelNombres}">
+												<h:outputText
+													value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.nombreCompleto}" />
+											</p:column>
+										</p:dataTable>
+										<br />
+									</div>
+								</p:outputPanel>
+								<br />
+								<p:panel id="idPPanelDatosBasicos" collapsed="true"
+									header="#{messageBeanSNR.commonLabelDatosBasicosDelInteresado}"
+									toggleable="true">
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTipoDePersona}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMTipoPersona" style="width:100%"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoPersona}"
+												value="#{beanSuspension.parametros.datosDelInteresado.persona.idTipoPersona}"
+												disabled="#{beanSuspension.deshabilitarTipoPersona and !beanSuspension.editarDatosBasicos} ">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems value="#{beanReference.findTipoPersona()}"
+													var="tipoPersona" itemValue="#{tipoPersona.idTipoPersona}"
+													itemLabel="#{tipoPersona.descripcion}" />
+												<p:ajax event="change"
+													listener="#{beanSuspension.validarTipoPersonaDocumento()}"
+													update="idSOMTipoPersona idSOMTipoDoc idPanelDirRes idOLNombre idOLApellido idOLRazon @this,idOlDocumento,idSOMNacionalidad,idSOMGenero,idOlPNombre,idOlSNombre,idOlPApellido,idOlSApellido,idOlRazonSocial" />
+											</p:selectOneMenu>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMTipoDoc" style="width:100%"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoDocumento}"
+												value="#{beanSuspension.parametros.datosDelInteresado.persona.idDocumentoTipo}"
+												disabled="#{beanSuspension.deshabilitarTipoDocumento}">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems
+													value="#{beanReference.findTipoDocumentoActivo()}"
+													var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+													itemLabel="#{tipoDoc.descripcion}" />
+												<p:ajax event="change"
+													listener="#{beanSuspension.validarTipoPersonaDocumento()}"
+													update="idSOMTipoPersona idSOMTipoDoc idPanelDirRes idOLNombre idOLApellido idOLRazon @this,idOlDocumento,idSOMNacionalidad,idSOMGenero,idOlPNombre,idOlSNombre,idOlPApellido,idOlSApellido,idOlRazonSocial" />
+											</p:selectOneMenu>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idOlDocumento"
+												disabled="#{!beanSuspension.documento}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoDocumento}"
+												placeholder="#{messageBeanSNR.commonLabelDocumento}"
+												maxlength="20"
+												value="#{beanSuspension.parametros.datosDelInteresado.persona.numeroDocumento}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelNacionalidad}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMNacionalidad" style="width:100%"
+												disabled="#{!beanSuspension.editarDatosBasicos}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoNacionalidad}"
+												value="#{beanSuspension.parametros.datosDelInteresado.persona.idPais}">
+												<p:ajax update="idSOMNacionalidad" />
+												<f:selectItem itemValue=""
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+												<f:selectItems value="#{beanReference.findPaises()}"
+													var="paises" itemValue="#{paises.idPais}"
+													itemLabel="#{paises.nombre}" />
+											</p:selectOneMenu>
+										</div>
+									</div>
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+												value="#{messageBeanSNR.commonLabelCalidadEnQueActua}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idITCalidad" style="width:100%"
+												disabled="#{!beanSuspension.calidadActua}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoCalidadActua}"
+												value="#{beanSuspension.parametros.solicitud2.idCalidadSolicitante}">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems
+													value="#{beanReference.findCalidadSolicitante()}"
+													var="calSol" itemValue="#{calSol.idCalidadSolicitante}"
+													itemLabel="#{calSol.nombre}" />
+											</p:selectOneMenu>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel for="idOlPNombre" id="idOLNombre"
+												indicateRequired="#{!beanSuspension.deshabilitarCamposPorNit}"
+												value="#{messageBeanSNR.commonLabelPrimerNombre}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idOlPNombre" maxlength="100"
+												disabled="#{!beanSuspension.editarDatosBasicos}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerNombre}"
+												placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+												value="#{beanSuspension.parametros.datosDelInteresado.persona.primerNombre}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel for="idOlSNombre"
+												value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idOlSNombre" maxlength="100"
+												disabled="#{!beanSuspension.editarDatosBasicos}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoNombre}"
+												placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+												value="#{beanSuspension.parametros.datosDelInteresado.persona.segundoNombre}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel for="idOlPApellido" id="idOLApellido"
+												indicateRequired="#{!beanSuspension.deshabilitarCamposPorNit}"
+												value="#{messageBeanSNR.commonLabelPrimerApellido}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idOlPApellido" maxlength="150"
+												disabled="#{!beanSuspension.editarDatosBasicos}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerApellido}"
+												placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+												value="#{beanSuspension.parametros.datosDelInteresado.persona.primerApellido}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel for="idOlSApellido"
+												value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												id="idOlSApellido" maxlength="100"
+												disabled="#{!beanSuspension.editarDatosBasicos}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoApellido}"
+												placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+												value="#{beanSuspension.parametros.datosDelInteresado.persona.segundoApellido}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-2">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelGenero}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMGenero" style="width:100%"
+												disabled="#{!beanSuspension.editarDatosBasicos}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoGenero}"
+												value="#{beanSuspension.parametros.datosDelInteresado.persona.idNaturalGenero}">
+												<p:ajax update="idSOMGenero" />
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems value="#{beanReference.findGeneros()}"
+													var="generos" itemValue="#{generos.idNaturalGenero}"
+													itemLabel="#{generos.ilicode}" />
+											</p:selectOneMenu>
+										</div>
+	
+									</div>
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-12 ui-lg-6">
+											<p:outputLabel for="idOlRazonSocial" id="idOLRazon"
+												indicateRequired="#{beanSuspension.deshabilitarCamposPorNit}"
+												value="#{messageBeanSNR.commonLabelRazonSocial}" />
+											<br />
+											<p:inputText
+												title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoRazonSocial}"
+												onblur="value=value.toUpperCase()" id="idOlRazonSocial"
+												disabled="#{!beanSuspension.razonSocial}"
+												placeholder="#{messageBeanSNR.commonLabelRazonSocial}"
+												value="#{beanSuspension.parametros.datosDelInteresado.persona.razonSocial}" />
+										</div>
+									</div>
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-12 ui-lg-12">
+											<p:commandButton icon="fa fa-pencil" iconPos="left"
+												update="fSuspension"
+												value="#{messageBeanSNR.commonButtonModificarDatosBasicos}"
+												rendered="#{!beanSuspension.editarDatosBasicos}"
+												title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoSuspensionModificarDatosBasicos}"
+												actionListener="#{beanSuspension.visualizarModificar()}" />
+										</div>
+									</div>
+								</p:panel>
+								<br />
+								<p:panel id="idPanelDirRes" toggleable="true" collapsed="true"
+									widgetVar="wvPanelDireccionR"
+									style="#{beanSuspension.parametros.datosDelInteresado.persona.idTipoPersona eq 'J' ? 'display: none' : ''}"
+									header="#{messageBeanSNR.commonLabelDireccionDeResidencia}">
+									<ui:include src="direccionResidenciaInclude.xhtml"/>
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-12 ui-lg-12">
+											<p:commandButton icon="fa fa-pencil" iconPos="left"
+												update="fSuspension"
+												value="#{messageBeanSNR.commonButtonModificarDireccionResidencia}"
+												rendered="#{!beanSuspension.editarDireccionResidencia()}"
+												title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoSuspensionModificarDireccionResidencia}"
+												actionListener="#{beanSuspension.editarDireccionResidencia}" />
+										</div>
+									</div>
+								</p:panel>
+								<br />
+								<p:panel id="idPanelDirCorr" toggleable="true" collapsed="true"
+									widgetVar="wvPanelDireccionC"
+									header="#{messageBeanSNR.commonLabelDireccionDeCorrespondencia}">
+									<ui:include src="direccionCorrespondenciaInclude.xhtml"/>
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-12 ui-lg-12">
+											<p:commandButton icon="fa fa-pencil" iconPos="left"
+												update="fSuspension"
+												value="#{messageBeanSNR.commonButtonModificarDireccionCorrespondencia}"
+												rendered="#{!beanSuspension.editarDireccionCorrespondencia()}"
+												title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoSuspensionModificarDireccionCorrespondencia}"
+												actionListener="#{beanSuspension.editarDireccionCorrespondencia}" />
+										</div>
+									</div>
+								</p:panel>
+								<br />
+								<p:panel id="idPanelDatosContacto" widgetVar="wvPanelDatosC"
+									header="#{messageBeanSNR.commonLabelDatosDelContacto}"
+									toggleable="true" collapsed="true">
+									<p:outputPanel id="idOpTelFijo">
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelPaisDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:selectOneMenu id="idSOMPaisTel" style="width:80%"
+														disabled="#{!beanSuspension.editarDatosContacto()}"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoPaisTelefonoFijo}"
+														value="#{beanSuspension.parametros.datosDelInteresado.telefonoFijo.idPais}">
+														<p:ajax
+															listener="#{beanSuspension.cambiarPaisTelefono}"
+															update="idSOMDepTel,idItIndicativo" />
+														<f:selectItem itemValue=""
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+														<f:selectItems value="#{beanReference.findPaises()}"
+															var="paises" itemValue="#{paises.idPais}"
+															itemLabel="#{paises.nombre}" />
+													</p:selectOneMenu>
+												</div>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelDepartamentoDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:selectOneMenu id="idSOMDepTel" style="width:80%"
+														disabled="#{!beanSuspension.editarDatosContacto}"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoDepartamentoTelefonoFijo}"
+														value="#{beanSuspension.parametros.datosDelInteresado.telefonoFijo.idDepartamento}">
+														<p:ajax
+															listener="#{beanSuspension.findIndicativoDepartamento}"
+															update="idItIndicativo" />
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems
+															value="#{beanSuspension.findDepartamentosTelefono()}"
+															var="depRes" itemValue="#{depRes.idDepartamento}"
+															itemLabel="#{depRes.nombre}" />
+													</p:selectOneMenu>
+												</div>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<div class="ui-g-4 ui-md-4 ui-lg-3">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelIndicativo}" />
+												</div>
+												<div class="ui-g-2 ui-md-2 ui-lg-2">
+													<p:inputText onblur="value=value.toUpperCase()"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoIndicativo}"
+														id="idItIndicativo" disabled="true" size="4"
+														value="#{beanSuspension.parametros.datosDelInteresado.telefonoFijo.indicativo}"
+														maxlength="15" />
+												</div>
+												<div class="ui-g-1 ui-md-1 ui-lg-1">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelSignoNumero}" />
+												</div>
+												<div class="ui-g-5 ui-md-5 ui-lg-4">
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idItTelefonoFijo"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoTelefonoFijo}"
+														placeholder="#{messageBeanSNR.commonLabelTelefonoFijo}"
+														maxlength="7"
+														disabled="#{!beanSuspension.editarDatosContacto}"
+														value="#{beanSuspension.parametros.datosDelInteresado.telefonoFijo.telefono}">
+														<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+													</p:inputText>
+												</div>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelPaisDelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:selectOneMenu id="idSOMPaisTelMov" style="width:80%"
+														disabled="#{!beanSuspension.editarDatosContacto}"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoPaisTelefonoMovil}"
+														value="#{beanSuspension.parametros.datosDelInteresado.telefonoMovil.idPais}">
+														<p:ajax update="idItIndicativoMovil" />
+														<f:selectItem itemValue=""
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+														<f:selectItems value="#{beanReference.findPaises()}"
+															var="paises" itemValue="#{paises.idPais}"
+															itemLabel="#{paises.nombre}" />
+													</p:selectOneMenu>
+												</div>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<div class="ui-g-4 ui-md-4 ui-lg-3">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelIndicativo}" />
+													<p:spacer />
+												</div>
+												<div class="ui-g-2 ui-md-2 ui-lg-2">
+													<p:inputText onblur="value=value.toUpperCase()"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoIndicativoMovil}"
+														id="idItIndicativoMovil" disabled="true" size="4"
+														value="#{beanSuspension.parametros.datosDelInteresado.telefonoMovil.idPais}" />
+												</div>
+												<div class="ui-g-1 ui-md-1 ui-lg-1">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelSignoNumero}" />
+													<p:spacer />
+												</div>
+	
+												<div class="ui-g-5 ui-md-5 ui-lg-5">
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idItTelefonoMovil"
+														disabled="#{!beanSuspension.editarDatosContacto}"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoTelefonoMovil}"
+														placeholder="#{messageBeanSNR.commonLabelTelefonoMovil}"
+														value="#{beanSuspension.parametros.datosDelInteresado.telefonoMovil.telefono}"
+														maxlength="10">
+														<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+													</p:inputText>
+												</div>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelCorreoElectronico}#{messageBeanSNR.commonLabelObligatorio}" />
+												<div class="ui-g-12 ui-md-12 ui-lg-12">
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idItEmail" style="width:83% !important"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoCorreoElectronico}"
+														placeholder="#{messageBeanSNR.commonLabelEjemploCorreo}"
+														size="30" maxlength="100"
+														disabled="#{!beanSuspension.editarDatosContacto}"
+														value="#{beanSuspension.parametros.datosDelInteresado.correoElectronico.correoElectronico}" />
+												</div>
+											</div>
+										</div>
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<p:commandButton icon="fa fa-pencil" iconPos="left"
+													update="fSuspension"
+													value="#{messageBeanSNR.commonButtonModificarDatosContacto}"
+													rendered="#{!beanSuspension.editarDatosContacto}"
+													title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoSuspensionModificarDatosContacto}"
+													actionListener="#{beanSuspension.editarDatosContacto}" />
+											</div>
+										</div>
+									</p:outputPanel>
+								</p:panel>
+							</p:panel>
+							<br />
+						</p:outputPanel>
+						<div class="ui-c" align="center">
+							<p:dataTable id="idDtTurnosVinculados"
+								rendered="#{beanSuspension.infoTurnos != null}"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+								value="#{beanSuspension.infoTurnos}" var="item">
+								<p:column headerText="#{messageBeanSNR.commonLabelIdTipoTurno}"
+									style="text-align:center">
+									<h:outputText value="#{item.estadoPredio}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelIdTurno}"
+									style="text-align:center">
+									<h:outputText value="#{item.turno}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelSeleccion}"
+									style="text-align:center">
+									<p:selectBooleanCheckbox value="#{item.matriculaSeleccionada}"
+										disabled="#{not(item.matriculasAdd)}">
+										<p:ajax update="idDtTurnosVinculados"
+											listener="#{beanSuspension.accionSeleccionTurno(item)}" />
+									</p:selectBooleanCheckbox>
+								</p:column>
+							</p:dataTable>
+						</div>
+						<br />
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-5">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelTipo}" />
+								<br />
+								<p:selectOneMenu id="idSOMTipo" disabled="true"
+									value="#{beanSuspension.parametros.tipo}">
+									<f:selectItem itemLabel="Artículo 18" itemValue="ART_18" />
+									<p:ajax listener="#{beanSuspension.ocultarPorTipo}"
+										update=":fSuspension:opArticulo" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+
+						<p:outputPanel id="opArticulo">
+							<p:outputPanel>
+								<div class="ui-g" align="left">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelArticulo} #{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:inputTextarea rows="5" cols="240" id="idItaArticulo"
+											onblur="value=value.toUpperCase()"
+											onmouseover="contarCaracteres('fSuspension:idItaArticulo','fSuspension:idOTNumCaracteresArticulo')"
+											onkeyup="contarCaracteres('fSuspension:idItaArticulo','fSuspension:idOTNumCaracteresArticulo')"
+											title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoSuspensionArticulo}"
+											placeholder="#{messageBeanSNR.commonLabelArticulo}"
+											value="#{beanSuspension.parametros.articulo}" />
+										<p:outputPanel>
+											<div align="right">
+												<h:outputText id="idOTNumCaracteresArticulo" align="right"
+													value="#{beanPredioDocumentoActo.contar(beanSuspension.parametros.articulo)}" />
+												<h:outputText
+													value=" #{messageBeanSNR.commonLabelCaracteres}" />
+											</div>
+										</p:outputPanel>
+									</div>
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelPertinencia} #{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:inputTextarea rows="5" cols="240" id="idItaPertinencia"
+											onblur="value=value.toUpperCase()"
+											onmouseover="contarCaracteres('fSuspension:idItaPertinencia','fSuspension:idOTNumCaracteresPertenencia')"
+											onkeyup="contarCaracteres('fSuspension:idItaPertinencia','fSuspension:idOTNumCaracteresPertenencia')"
+											title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoSuspensionPertinencia}"
+											placeholder="#{messageBeanSNR.commonLabelPertinencia}"
+											value="#{beanSuspension.parametros.pertinencia}" />
+										<p:outputPanel>
+											<div align="right">
+												<h:outputText id="idOTNumCaracteresPertenencia"
+													align="right"
+													value="#{beanPredioDocumentoActo.contar(beanSuspension.parametros.pertinencia)}" />
+												<h:outputText
+													value=" #{messageBeanSNR.commonLabelCaracteres}" />
+											</div>
+										</p:outputPanel>
+									</div>
+								</div>
+								<div class="ui-g" align="left">
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelRazon1} #{messageBeanSNR.commonLabelObligatorio}" />
+										<br />
+										<p:inputTextarea rows="5" cols="240" id="idItaRazon1"
+											onblur="value=value.toUpperCase()"
+											onmouseover="contarCaracteres('fSuspension:idItaRazon1','fSuspension:idOTNumCaracteresRazon1')"
+											onkeyup="contarCaracteres('fSuspension:idItaRazon1','fSuspension:idOTNumCaracteresRazon1')"
+											title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoSuspensionRazon1}"
+											placeholder="#{messageBeanSNR.commonLabelRazon1}"
+											value="#{beanSuspension.parametros.razon1}" />
+										<p:outputPanel>
+											<div align="right">
+												<h:outputText id="idOTNumCaracteresRazon1" align="right"
+													value="#{beanPredioDocumentoActo.contar(beanSuspension.parametros.razon1)}" />
+												<h:outputText
+													value=" #{messageBeanSNR.commonLabelCaracteres}" />
+											</div>
+										</p:outputPanel>
+									</div>
+									<div class="ui-g-12 ui-md-12 ui-lg-12">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelRazon2}" />
+										<br />
+										<p:inputTextarea rows="5" cols="240" id="idItaRazon2"
+											onblur="value=value.toUpperCase()"
+											onmouseover="contarCaracteres('fSuspension:idItaRazon2','fSuspension:idOTNumCaracteresRazon2')"
+											onkeyup="contarCaracteres('fSuspension:idItaRazon2','fSuspension:idOTNumCaracteresRazon2')"
+											title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoSuspensionRazon2}"
+											placeholder="#{messageBeanSNR.commonLabelRazon2}"
+											value="#{beanSuspension.parametros.razon2}" />
+										<p:outputPanel>
+											<div align="right">
+												<h:outputText id="idOTNumCaracteresRazon2" align="right"
+													value="#{beanPredioDocumentoActo.contar(beanSuspension.parametros.razon2)}" />
+												<h:outputText
+													value=" #{messageBeanSNR.commonLabelCaracteres}" />
+											</div>
+										</p:outputPanel>
+									</div>
+								</div>
+							</p:outputPanel>
+							<br />
+							<p:outputPanel id="idObservaciones">
+								<div align="left">
+									<strong>
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelObservaciones}" />
+									</strong>
+									<p:inputTextarea rows="5" cols="240"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoSuspensionObservaciones}"
+										onblur="value=value.toUpperCase()"
+										value="#{beanSuspension.observaciones}" queryDelay="750"
+										maxlength="4000" minQueryLength="4"
+										counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+										counter="idNumeroCaracteres">
+									</p:inputTextarea>
+								</div>
+								<div align="right">
+									<h:outputText id="idNumeroCaracteres" />
+								</div>
+							</p:outputPanel>
+
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-12">
+									<p:outputPanel id="opPanelTerminarProceso">
+										<p:commandButton
+											value="#{messageBeanSNR.commonButtonGenerarDocumentos}"
+											icon="fa fa-file-o" iconPos="left"
+											update=":fSuspension:opPanelTerminarProceso,:fSuspension:globalMsg,fSuspension:idSOMTipo,fSuspension:idItaArticulo,fSuspension:idItaPertinencia,fSuspension:idItaRazon1"
+											onclick="PF('dlg2').show();">
+										</p:commandButton>
+										<p:spacer />
+										<p:commandButton id="idCbDescargarZip"
+											value="#{messageBeanSNR.commonButtonGenerarDocumentos} #{messageBeanSNR.commonLabelZipMayuscula}"
+											rendered="#{beanSuspension.documentoGenerado}"
+											actionListener="#{beanSuspension.descargarDocumentos()}"
+											ajax="false" icon="fa fa-arrow-down">
+											<p:fileDownload value="#{beanSuspension.imagen}" />
+										</p:commandButton>
+										<p:spacer />
+										<p:commandButton
+											rendered="#{beanSuspension.documentoGenerado}"
+											value="#{messageBeanSNR.commonButtonEnviarAlAprobador}"
+											icon="fa fa-chevron-right" iconPos="right"
+											update=":fSuspension:opPanelTerminarProceso,:fSuspension:globalMsg"
+											actionListener="#{beanSuspension.terminarProceso()}"
+											action="#{beanSuspension.accionTerminarProceso}" />
+									</p:outputPanel>
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:panel>
+
+					<p:spacer />
+					<div class="ui-g" align="left">
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="detalleActo?faces-redirect=true">
+							<f:param name="idTurno"
+								value="#{beanPredioDocumentoActo.idTurno}" />
+							<f:param name="idMotivo"
+								value="#{beanPredioDocumentoActo.motivoTramite}" />
+							<f:param name="idConfrontacion"
+								value="#{beanPredioDocumentoActo.confrontacion}" />
+							<f:param name="datosBasicos"
+								value="#{beanPredioDocumentoActo.datosBasicos}" />
+							<f:param name="insertarMatricula"
+								value="#{beanPredioDocumentoActo.insertaMatricula}" />
+							<f:param name="eliminarMatricula"
+								value="#{beanPredioDocumentoActo.eliminaMatricula}" />
+							<f:param name="varificarFolioCerrado"
+								value="#{beanPredioDocumentoActo.verificaFolioCerrado}" />
+						</p:commandButton>
+					</div>
+					<br />
+
+					<p:confirmDialog global="true">
+						<div class="ui-g">
+							<div align="right" class="ui-g-6 ui-md-6 ui-lg-6">
+								<p:commandButton value="#{messageBeanSNR.commonLabelSi}"
+									type="button" styleClass="ui-confirmdialog-yes"
+									icon="fa fa-check" />
+							</div>
+							<div align="right" class="ui-g-6 ui-md-6 ui-lg-6">
+								<p:commandButton value="#{messageBeanSNR.commonLabelNo}"
+									type="button" styleClass="ui-confirmdialog-no"
+									icon="fa fa-close" />
+							</div>
+						</div>
+					</p:confirmDialog>
+
+
+				</center>
+			</h:form>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg2"
+				modal="true" height="90" resizable="false">
+				<h:form id="fDialog" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelMensajeConfirmarGeneracionDocs}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fSuspension"
+							actionListener="#{beanSuspension.generarDocumentos}"
+							oncomplete="PF('dlg2').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlg2').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<!--
+			<p:dialog header="DialogPDF" widgetVar="pdfPrev" appendTo="@(body)"
+				resizable="false" id="pdfPrev">
+				<h:form id="form">
+					<h:panelGrid columns="1" cellpadding="5">
+						<p:media value="#{beanSuspension.pdfPrev}" player="pdf"
+							width="600px" height="300px">
+							<f:param name="id"
+								value="#{beanSuspension.generateRandomIdForNotCaching()}" />
+						</p:media>
+					</h:panelGrid>
+
+				</h:form>
+			</p:dialog>-->
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

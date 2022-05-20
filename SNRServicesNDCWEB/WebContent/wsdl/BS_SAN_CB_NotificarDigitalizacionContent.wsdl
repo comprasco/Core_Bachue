@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/co/notificarDigitalizacionContent/v1"
+	xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:WL5G3N1="https://www.supernotariado.gov.co/schemas/bachue/co/notificarDigitalizacionContent/notificarDigitalizacionContent/v1"
+	xmlns:WL5G3N2="https://www.supernotariado.gov.co/services/bachue/co/notificarDigitalizacionContent/v1"
+	xmlns:WL5G3N3="http://schemas.xmlsoap.org/wsdl/soap/">
+	<WL5G3N0:types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/co/notificarDigitalizacionContent/notificarDigitalizacionContent/v1"
+			xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+			xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/co/notificarDigitalizacionContent/v1"
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/co/notificarDigitalizacionContent/notificarDigitalizacionContent/v1"
+			elementFormDefault="qualified" version="1.3">
+			<xsd:complexType
+				name="tipoEntradaNotificarDigitalizacionContent">
+				<xsd:sequence>
+					<xsd:element name="sistemaOrigen" type="xsd:string"
+						minOccurs="1" />
+					<xsd:element name="identificadorTramite"
+						type="xsd:string" minOccurs="1" />
+					<xsd:element name="estado" type="xsd:string"
+						minOccurs="1" />
+					<xsd:element name="docName" type="xsd:string"
+						minOccurs="1" />
+					<xsd:element name="dID" type="xsd:integer"
+						minOccurs="1" />
+					<xsd:element name="dDocType" type="xsd:string"
+						minOccurs="1" />
+					<xsd:element name="fechaEnviado" type="xsd:date"
+						minOccurs="1" />
+					<xsd:element name="idTurno" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="idTurnoVinculado" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="id_completitud" type="xsd:string"
+						minOccurs="1" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaNotificarDigitalizacionContent"
+				type="bachue1:tipoEntradaNotificarDigitalizacionContent" />
+			<xsd:complexType
+				name="tipoSalidaNotificarDigitalizacionContent">
+				<xsd:sequence minOccurs="1">
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="1" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaNotificarDigitalizacionContent"
+				type="bachue1:tipoSalidaNotificarDigitalizacionContent" />
+		</xsd:schema>
+	</WL5G3N0:types>
+	<WL5G3N0:message
+		name="NotificarDigitalizacionContent_Request">
+		<WL5G3N0:part name="entrada"
+			element="WL5G3N1:entradaNotificarDigitalizacionContent" />
+	</WL5G3N0:message>
+	<WL5G3N0:message
+		name="NotificarDigitalizacionContent_Response">
+		<WL5G3N0:part name="salida"
+			element="WL5G3N1:salidaNotificarDigitalizacionContent" />
+	</WL5G3N0:message>
+	<WL5G3N0:portType
+		name="BS_SAN_CB_NotificarDigitalizacionContent">
+		<WL5G3N0:operation
+			name="NotificarDigitalizacionContent">
+			<WL5G3N0:input
+				message="WL5G3N2:NotificarDigitalizacionContent_Request" />
+			<WL5G3N0:output
+				message="WL5G3N2:NotificarDigitalizacionContent_Response" />
+		</WL5G3N0:operation>
+	</WL5G3N0:portType>
+	<WL5G3N0:binding
+		name="BS_SAN_CB_NotificarDigitalizacionContent"
+		type="WL5G3N2:BS_SAN_CB_NotificarDigitalizacionContent">
+		<WL5G3N3:binding
+			transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+		<WL5G3N0:operation
+			name="NotificarDigitalizacionContent">
+			<WL5G3N3:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/co/notificarDigitalizacionContent/v1/NotificarDigitalizacionContent" />
+			<WL5G3N0:input>
+				<WL5G3N3:body use="literal" parts="entrada" />
+			</WL5G3N0:input>
+			<WL5G3N0:output>
+				<WL5G3N3:body use="literal" parts="salida" />
+			</WL5G3N0:output>
+		</WL5G3N0:operation>
+	</WL5G3N0:binding>
+	<WL5G3N0:service
+		name="BS_SAN_CB_NotificarDigitalizacionContent">
+		<WL5G3N0:documentation>OSB Service</WL5G3N0:documentation>
+		<WL5G3N0:port
+			name="BS_SAN_CB_NotificarDigitalizacionContentPort"
+			binding="WL5G3N2:BS_SAN_CB_NotificarDigitalizacionContent">
+			<WL5G3N3:address
+				location="http://localhost:7001/BS_SAN_CB_NotificarDigitalizacionContent" />
+		</WL5G3N0:port>
+	</WL5G3N0:service>
+</WL5G3N0:definitions>

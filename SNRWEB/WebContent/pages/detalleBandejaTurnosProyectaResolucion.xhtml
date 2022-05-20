@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel rendered="#{beanDetalleProyectaResolucion.idEtapa != 687}" value="#{messageBeanSNR.commonLabelTraslados}" />
+					<p:outputLabel rendered="#{beanDetalleProyectaResolucion.idEtapa == 687}" value="#{messageBeanSNR.commonLabelEjecucionDeTrasladosProyectosResolucion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeTraslados}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fDetalleProyectaResolucion" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true" redisplay="false" />
+				<center>
+					<p:panel header="#{messageBeanSNR.commonLabelBandejaDeTurnos}"
+						style="min-width:800px;" toggleable="true">
+
+						<h:panelGroup
+							rendered="#{beanDetalleProyectaResolucion.consultaIndividual==false}">
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+									<h:panelGrid columns="1">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+											style="font-size: 100%;" />
+										<p:inputText placeholder="#{messageBeanSNR.commonLabelNIR}"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosNir}"
+											id="nir" value="#{beanDetalleProyectaResolucion.nir}">
+										</p:inputText>
+									</h:panelGrid>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+									<h:panelGrid columns="1">
+										<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}"
+											style="font-size: 100%;" />
+										<p:inputText placeholder="#{messageBeanSNR.commonLabelTurno}"
+											title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosTurno}"
+											id="idTurno"
+											value="#{beanDetalleProyectaResolucion.idTurnoHistoria}">
+										</p:inputText>
+									</h:panelGrid>
+								</div>
+							</div>
+
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<h:panelGroup>
+										<p:commandButton
+											value="#{messageBeanSNR.commonButtonConsultar}"
+											actionListener="#{beanDetalleProyectaResolucion.generarData}"
+											ajax="true" icon="lupa" update="idDtTurnos, idGrowl" />
+									</h:panelGroup>
+								</div>
+							</div>
+						</h:panelGroup>
+
+						<div class="ui-g">
+							<p:outputPanel id="idDatTableTurnos">	
+								<p:dataTable id="idDtTurnos"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									value="#{beanDetalleProyectaResolucion.data}" var="item">
+	
+									<p:column headerText="#{messageBeanSNR.commonLabelFiltrarTurno}"
+										width="20%" style="text-align:left">
+										<h:outputText value="#{item['ID_TURNO']}" />
+									</p:column>
+									
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaRadicacion}"
+										width="15%" style="text-align:left">
+										<h:outputText value="#{item['FECHA_ASIGNACION']}">
+											<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+										</h:outputText>
+									</p:column>
+									
+									<p:column headerText="#{messageBeanSNR.commonLabelFiltrarNir}"
+										width="25%" style="text-align:left">
+										<h:outputText value="#{item['NIR']}" />
+									</p:column>
+									
+									<p:column headerText="#{messageBeanSNR.commonLabelProceso}"
+										width="15%" style="text-align:left">
+										<h:outputText value="#{item['PROCESO']}" />
+									</p:column>
+									
+									<p:column headerText="#{messageBeanSNR.commonLabelSubProceso}"
+										rendered="#{beanDetalleProyectaResolucion.idEtapa != 687}"
+										width="15%" style="text-align:left">
+										<h:outputText value="#{item['SUBPROCESO']}" />
+									</p:column>
+									
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaAsignacion}"
+										width="15%" style="text-align:left">
+										<h:outputText value="#{item['FECHA_ASIGNACION']}">
+											<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+										</h:outputText>
+									</p:column>
+	
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelMotivo}"
+										width="15%" style="text-align:left">
+										<h:outputText value="#{item['MOTIVO_NO_TRAMITE']}" />
+									</p:column>
+									
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelTipificacionTurno}"
+										width="15%" style="text-align:left">
+										<h:outputText value="#{item['ID_MOTIVO']}" />
+									</p:column>
+	
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+										style="width: 13%;">
+										<div align="center">
+											<p:commandButton id="abrirObsProcesoAnterior"
+												icon="fa fa-id-card-o"
+												actionListener="#{beanDetalleProyectaResolucion.mostrarObservacionesProcesoAnterior(item['OBSERVACIONES'])}"
+												title="#{tooltipBeanSNR.procesosAprobacionObservacionesProcesoAnterior}"
+												style="width: 50%;" />
+										</div>
+									</p:column>
+									<p:column style="width:15%;"
+										headerText="#{messageBeanSNR.commonLabelCertificadosAsociados}">
+										<h:outputText value="#{item['TURNO_ASOCIADO']}" />
+									</p:column>
+									<p:column style="width:10%;"
+										headerText="#{messageBeanSNR.commonLabelTurnosRelacionados}">
+										<h:outputText value="#{item['TURNO_RELACIONADO']}" />
+									</p:column>
+	
+									<p:column headerText="#{messageBeanSNR.commonLabelVisualizar}"
+										rendered="#{beanDetalleProyectaResolucion.idEtapa != 687}"
+										width="8%" style="text-align:left">
+										<div align="center">
+											<h:commandButton
+												value="#{messageBeanSNR.commonLabelVerDetalle}"
+												action="#{beanDetalleProyectaResolucion.detalleActoEtapa(item)}"
+												onclick="PrimeFaces.monitorDownload(start, stop);"
+												immediate="true" image="../images/find.png"
+												rendered="#{item['ESTADO_ACTIVIDAD'] eq 'ASG'}">
+												<f:param name="idTurnoHistoria"
+													value="#{item['ID_TURNO_HISTORIA']}" />
+												<f:param name="idTurno" value="#{item['ID_TURNO']}" />
+											</h:commandButton>
+										</div>
+									</p:column>
+									
+									<p:column headerText="#{messageBeanSNR.commonLabelConsultaSGD}"
+										rendered="#{beanDetalleProyectaResolucion.idEtapa == 687}"
+										width="8%" style="text-align:left">
+										<div align="center">
+											<h:commandButton
+												value="#{messageBeanSNR.commonLabelVerDetalle}"
+												action="#{beanDetalleProyectaResolucion.detalleActoEtapa(item)}"
+												onclick="PrimeFaces.monitorDownload(start, stop);"
+												immediate="true" image="../images/find.png"
+												rendered="#{item['ESTADO_ACTIVIDAD'] eq 'ASG'}">
+												<f:param name="idTurnoHistoria"
+													value="#{item['ID_TURNO_HISTORIA']}" />
+												<f:param name="idTurno" value="#{item['ID_TURNO']}" />
+											</h:commandButton>
+										</div>
+									</p:column>
+									
+									<p:column headerText="#{messageBeanSNR.commonLabelEjecucionCompletada}"
+										width="8%" style="text-align:left"
+										rendered="#{beanDetalleProyectaResolucion.idEtapa == 687}">
+										<p:selectBooleanCheckbox 
+											value="#{item['SELECCIONADO']}" />
+									</p:column>
+										
+									<!-- 
+									<p:column headerText="#{messageBeanSNR.commonLabelEjecucionCompletada}"
+										width="8%" style="text-align:left"
+										rendered="#{beanDetalleProyectaResolucion.idEtapa == 687}">
+										<p:selectOneRadio id="idSORCompletado" value="#{item['SELECCIONADO']}" unselectable="true">
+								            <f:selectItem itemLabel="" itemValue="true" />
+								         </p:selectOneRadio>									  
+									</p:column>
+									 -->
+																									
+								</p:dataTable>
+							</p:outputPanel>
+						</div>
+						<script type="text/javascript">
+							function start()
+							{
+								PF('statusDownload').show();
+							}
+
+							function stop()
+							{
+								PF('statusDownload').hide();
+							}
+						</script>
+						<p:dialog modal="true" widgetVar="statusDownload"
+							draggable="false" closable="false" resizable="false">
+							<p:graphicImage value="/images/ajaxloadingbar.gif" />
+						</p:dialog>
+					</p:panel>
+					<p:spacer />
+					
+					<div align="left">
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="#{beanDetalleProyectaResolucion.volver}"
+							rendered="#{beanDetalleProyectaResolucion.idEtapa != 687}">
+						</p:commandButton>
+					</div>
+					
+					<div align="right">
+						<p:commandButton id="idCBSalvar" 
+							value="#{messageBeanSNR.commonButtonSalvar}"
+							rendered="#{beanDetalleProyectaResolucion.idEtapa == 687}"
+							actionListener="#{beanDetalleProyectaResolucion.salvar()}" icon="fa fa-save"
+							update="fDetalleProyectaResolucion"/>
+					</div>
+					
+					
+					<br />
+				</center>
+			</h:form>
+			<p:dialog id="cuadroObsProcesoAnterior" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+				widgetVar="obsProcesoAnterior" modal="true" resizable="false"
+				width="700">
+				<h:form id="fDialog" style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaCuadroProcesoAnterior" maxwidth="280"
+						cellspacing="1" cellpadding="20" border="1" bgcolor="#1E679A"
+						align="center">
+						<tr>
+							<td id="fila1TablaCuadroProcesoAnterior" bgcolor="#ffffff">
+								<h:outputText value="#{beanDetalleProyectaResolucion.observaciones}"
+									id="id_observacionesProcesoAnterior" />
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

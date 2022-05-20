@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cn/notificadorcorrespondencia/v1"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cn/notificadorcorrespondencia/v1"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/cn/notificadorcorrespondencia/notificarcorrespondencia/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cn/notificadorcorrespondencia/notificarcorrespondencia/v1"
+			elementFormDefault="qualified" version="1.3">
+			<xsd:complexType
+				name="tipoEntradaNotificarCorrespondencia">
+				<xsd:sequence>
+					<xsd:element name="identificador" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="guia" type="xsd:string"
+						minOccurs="0" nillable="true" />
+					<xsd:element name="fechaAcuse" type="xsd:dateTime"
+						minOccurs="0" />
+					<xsd:element name="fechaEnvio" type="xsd:dateTime"
+						minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaNotificarCorrespondencia"
+				type="bachue1:tipoEntradaNotificarCorrespondencia" />
+			<xsd:complexType
+				name="tipoSalidaNotificarCorrespondencia">
+				<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaNotificarCorrespondencia"
+				type="bachue1:tipoSalidaNotificarCorrespondencia" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="NotificarCorrespondencia_Request">
+		<wsdl:part name="entrada"
+			element="bachue1:entradaNotificarCorrespondencia" />
+	</wsdl:message>
+	<wsdl:message name="NotificarCorrespondencia_Response">
+		<wsdl:part name="salida"
+			element="bachue1:salidaNotificarCorrespondencia" />
+	</wsdl:message>
+
+	<wsdl:portType name="SUT_CN_NotificadorCorrespondencia">
+		<wsdl:operation name="NotificarCorrespondencia">
+			<wsdl:input
+				message="bachue:NotificarCorrespondencia_Request" />
+			<wsdl:output
+				message="bachue:NotificarCorrespondencia_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding
+		name="SUT_CN_NotificadorCorrespondenciaSOAP12Binding"
+		type="bachue:SUT_CN_NotificadorCorrespondencia">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="NotificarCorrespondencia">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cn/notificadorcorrespondencia/v1/NotificarCorrespondencia" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SUT_CN_NotificadorCorrespondencia">
+		<wsdl:port name="SUT_CN_NotificadorCorrespondenciaPort"
+			binding="bachue:SUT_CN_NotificadorCorrespondenciaSOAP12Binding">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

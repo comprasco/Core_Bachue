@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelNegocio}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelReportes}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fReportes" style="width: 100%;">
+				<p:growl id="gReportesMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false"/>
+
+				<p:panel id="idPReportes" style="min-width:800px;">
+
+					<div class="ui-g" align="left">
+						<div class="ui-g-12 ui-md-6 ui-lg-4">
+							<p:commandButton
+								value="#{messageBeanSNR.commonLabelInsertarReporte}"
+								icon="fa fa-plus-circle" iconPos="left"
+								action="#{beanReportes.botonInsertar(null, true)}" />
+						</div>
+					</div>
+
+					<p:dataTable
+						emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+						id="idDReportes" var="item"
+						value="#{beanReportes.cargarReportes()}" paginator="true"
+						rows="50">
+						<f:facet name="header">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelReportes}" />
+						</f:facet>
+						
+						<p:column headerText="#{messageBeanSNR.commonLabelReportes}"
+							filterBy="#{item.idReporte}">
+							<div align="left">
+								<p:commandLink id="idRGReporte" ajax="false"
+									update="fReporte,gReporteMsg" value="#{item.idReporte}"
+									styleClass="subrayado" color="blue"
+									action="#{beanReportes.botonInsertar(item, false)}">
+								</p:commandLink>
+							</div>
+						</p:column>
+
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelCodigo}"
+							filterBy="#{item.codigo}">
+							<div align="left">
+								<h:outputText value="#{item.codigo}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="#{messageBeanSNR.commonLabelDescripcion}"
+							filterBy="#{item.descripcion}">
+							<div align="left">
+								<h:outputText value="#{item.descripcion}" />
+							</div>
+						</p:column>
+
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelOrdenEjecucion}"
+							filterBy="#{item.ordenEjecucion}">
+							<div align="left">
+								<h:outputText value="#{item.ordenEjecucion}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="#{messageBeanSNR.commonLabelOrdenConsulta}"
+							filterBy="#{item.ordenConsulta}">
+							<div align="left">
+								<h:outputText value="#{item.ordenConsulta}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="#{messageBeanSNR.commonLabelEstado}"
+							filterBy="#{item.estado}">
+							<div align="left">
+								<h:outputText value="#{item.estado}" />
+							</div>
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

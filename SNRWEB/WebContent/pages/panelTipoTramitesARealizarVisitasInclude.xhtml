@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtmltransitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<p:panel id="panelTipoTramitesRealizarVisitas" toggleable="false"
+	header="#{messageBeanSNR.commonLabelTipo}" style="text-align:center; ">
+	<p:selectOneRadio id="tramitesVisitasTipo"
+		value="#{bean.tipoTramiteSeleccionado}" layout="responsive"
+		columns="3" styleClass="ui-selectoneradiosinnegrilla">
+		<f:selectItems itemValue="#{it.idTramiteVisitaTipo}" var="it"
+			itemLabel="#{it.nombre}" value="#{bean.tipoTramitesARealizar}" />
+		<p:ajax update="@form" />
+	</p:selectOneRadio>
+</p:panel>
+</html>

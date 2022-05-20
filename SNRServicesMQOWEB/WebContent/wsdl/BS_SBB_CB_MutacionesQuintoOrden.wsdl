@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/mutacionesQuintoOrden/v1"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/mutacionesQuintoOrden/v1"
+	xmlns:bachue5="https://www.supernotariado.gov.co/schemas/bachue/cb/mutacionesQuintoOrden/registrarCambioQuintoOrden/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/mutacionesQuintoOrden/registrarCambioQuintoOrden/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaRegistrarCambioQuintoOrden">
+				<xsd:sequence>
+					<xsd:element name="tipoIdentificacionPredio"
+						minOccurs="0">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="matricula" />
+								<xsd:enumeration value="numeroPredial" />
+								<xsd:enumeration value="numeroPredialAnterior" />
+								<xsd:enumeration value="NUPRE" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numIdentificacionPredio"
+						type="xsd:string" minOccurs="0" />
+					<xsd:element name="codDepartamento" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="codMunicipio" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="predio" minOccurs="0">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="numPredial" type="xsd:string"
+									minOccurs="0" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaRegistrarCambioQuintoOrden"
+				type="bachue5:tipoEntradaRegistrarCambioQuintoOrden" />
+			<xsd:complexType
+				name="tipoSalidaRegistrarCambioQuintoOrden">
+				<xsd:sequence>
+					<xsd:element name="numIdentificacionPredio"
+						type="xsd:string" minOccurs="0" />
+					<xsd:element name="tipoPredio" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="codMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaRegistrarCambioQuintoOrden"
+				type="bachue5:tipoSalidaRegistrarCambioQuintoOrden" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="RegistraCambioQuintoOrden_Request">
+		<wsdl:part name="entrada"
+			element="bachue5:entradaRegistrarCambioQuintoOrden" />
+	</wsdl:message>
+	<wsdl:message name="RegistraCambioQuintoOrden_Response">
+		<wsdl:part name="salida"
+			element="bachue5:salidaRegistrarCambioQuintoOrden" />
+	</wsdl:message>
+	<wsdl:portType name="SBB_CB_MutacionesQuintoOrden">
+		<wsdl:operation name="RegistraCambioQuintoOrden">
+			<wsdl:input
+				message="bachue:RegistraCambioQuintoOrden_Request" />
+			<wsdl:output
+				message="bachue:RegistraCambioQuintoOrden_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SBB_CB_MutacionesQuintoOrden"
+		type="bachue:SBB_CB_MutacionesQuintoOrden">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="RegistraCambioQuintoOrden">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/mutacionesQuintoOrden/v1/RegistraCambioQuintoOrden" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SBB_CB_MutacionesQuintoOrden">
+		<wsdl:port name="SBB_CB_MutacionesQuintoOrdenPort"
+			binding="bachue:SBB_CB_MutacionesQuintoOrden">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

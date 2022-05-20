@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTablaBasica}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelNaturalezaJuridica}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{beanNaturalezaJuridica.insertar ? messageBeanSNR.pageInsertarNaturalezaJuridica : messageBeanSNR.pageModificarNaturalezaJuridica}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fNaturalezaJurDetalle" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false"/>
+				<center>
+					<p:panel>
+						<p:panel
+							header="#{beanNaturalezaJuridica.insertar ? messageBeanSNR.pageInsertarNaturalezaJuridica : messageBeanSNR.pageModificarNaturalezaJuridica}"
+							style="width:100%">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelDominiosNaturalezaJuridica}" />
+									<br />
+									<p:selectOneMenu id="idDominioNatJur" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionNaturalezaJuridicaDetalleDominioNaturalezaJuridica}"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.idDominioNatJur}">
+										<f:selectItem itemValue=""
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+										<f:selectItems value="#{beanNaturalezaJuridica.cargarDominioNaturalezaJuridica()}"
+											var="dominioNatJuridica" itemValue="#{dominioNatJuridica.idDominioNatJur}"
+											itemLabel="#{dominioNatJuridica.idDominioNatJur}-#{dominioNatJuridica.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelGrupoNaturalezaJuridica}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idGrupoNatJur" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionNaturalezaJuridicaDetalleGrupoNaturalezaJuridica}"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.idGrupoNatJur}">
+										<f:selectItem itemValue=""
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+										<f:selectItems value="#{beanNaturalezaJuridica.cargarGrupoNaturalezaJuridica()}"
+											var="grupoNatJuridica" itemValue="#{grupoNatJuridica.idGrupoNatJuridica}"
+											itemLabel="#{grupoNatJuridica.idGrupoNatJuridica}-#{grupoNatJuridica.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelTipoRRR}" />
+									<br />
+									<p:selectOneMenu id="idtipoRrr" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionNaturalezaJuridicaDetalleTipoRrr}"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.idtipoRrr}">
+										<f:selectItem itemValue=""
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+										<f:selectItems value="#{beanNaturalezaJuridica.cargarTipoRrr()}"
+											var="tipoRrr" itemValue="#{tipoRrr.idTipoRrr}"
+											itemLabel="#{tipoRrr.idTipoRrr}-#{tipoRrr.descripcion}" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNaturalezaJuridica}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText id="idNaturalezaJuridica"
+										onblur="value=value.toUpperCase()"
+										disabled="#{!beanNaturalezaJuridica.insertar}"
+										title="#{tooltipBeanSNR.administracionNaturalezaJuridicaDetalleNaturalezaJuridica}"
+										placeholder="#{messageBeanSNR.commonLabelNaturalezaJuridica}"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.idNaturalezaJuridica}" />
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelVersion}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText id="versionNaturalezaJuridica"
+										onblur="value=value.toUpperCase()"
+										disabled="#{!beanNaturalezaJuridica.insertar}"
+										title="#{tooltipBeanSNR.administracionNaturalezaJuridicaDetalleVersion}"
+										placeholder="#{messageBeanSNR.commonLabelVersion}"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.version}" />
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNombre}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText id="nombre"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionNaturalezaJuridicaDetalleNombre}"
+										placeholder="#{messageBeanSNR.commonLabelNombre}"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.nombre}"
+										 />
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelHabilitadaCalificacion}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="habilitadaCalificacion" style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.habilitadaCalificacion}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelAlertaTitular}" />
+									<br />
+									<p:selectOneMenu id="alertaTitular" style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.alertaTitular}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelBusquedaTitular}" />
+									<br />
+									<p:selectOneMenu id="busquedaTitular" style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.busquedaTitular}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelHeredarAnotacion}" />
+									<br />
+									<p:selectOneMenu id="heredarAnotacion" style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.heredarAnotacion}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelConstruirComplementacion}" />
+									<br />
+									<p:selectOneMenu id="construirComplementacion" style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.construirComplementacion}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelRequiereCierreFolio}" />
+									<br />
+									<p:selectOneMenu id="requiereCierreFolioString" style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.requiereCierreFolioString}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelSumatoriaArea}" />
+									<br />
+									<p:selectOneMenu id="sumatoriaArea" style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.sumatoriaArea}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelSumatoriaCoeficiente}" />
+									<br />
+									<p:selectOneMenu id="sumatoriaCoeficiente" style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.sumatoriaCoeficiente}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelValidarArea}" />
+									<br />
+									<p:selectOneMenu id="validarAreaString" style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.validarAreaString}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelActualizarLinderos}" />
+									<br />
+									<p:selectOneMenu id="actualizarLindero" style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.actualizarLindero}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelPropietario}" />
+									<br />
+									<p:selectOneMenu id="propietario" style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.propietario}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelRol}" />
+									<br />
+									<p:inputText id="rol"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionNaturalezaJuridicaDetalleRol}"
+										placeholder="#{messageBeanSNR.commonLabelRol}"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.rol}"
+										 />
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelHabilitaSecuencia}" />
+									<br />
+									<p:selectOneMenu id="habilitaSecuenciaString" style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.habilitaSecuenciaString}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelActivo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idActivo" style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.activo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelS}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonLabelN}"
+											itemValue="N" />
+									</p:selectOneMenu>
+							   </div>
+							   
+							   <div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDominioRRR}" />
+									<br />
+									<p:selectOneMenu id="idDominioRRRDet"
+										style="width:100%;"
+										value="#{beanNaturalezaJuridica.naturalezaJuridica.idDominioRrr}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanDominioRRR.findAllDominioRRR()}"
+											var="domRRR" itemValue="#{domRRR.idDominioRrr}"
+											itemLabel="#{domRRR.descripcion}" />
+									</p:selectOneMenu>
+								</div>
+							</div>  
+							<br />
+							<p:dataTable id="idDetalle" var="item"
+								value="#{beanNaturalezaJuridica.datosAuditoria}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}"
+								rendered="#{!beanNaturalezaJuridica.insertar}">
+								<f:facet name="header">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+								</f:facet>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+									<h:outputText value="#{item.idUsuarioCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<h:outputText value="#{item.fechaCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+									<h:outputText value="#{item.idUsuarioModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+									<h:outputText value="#{item.fechaModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIpModificación}">
+									<h:outputText value="#{item.ipModificacion}" />
+								</p:column>
+							</p:dataTable>
+
+							<div class="ui-g" align="left">
+
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										update="globalMsg" action="naturalezaJuridica?faces-redirect=true" />
+
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-8" align="right">
+									<p:commandButton
+										value="#{beanNaturalezaJuridica.insertar ? messageBeanSNR.commonButtonInsertarNaturalezaJuridica  : messageBeanSNR.commonButtonModificarNaturalezaJuridica}"
+										icon="fa fa-pencil" iconPos="left" update="globalMsg"
+										action="#{beanNaturalezaJuridica.salvar()}" ajax="false" />
+								</div>
+							</div>
+						</p:panel>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

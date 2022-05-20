@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBuscar}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultaSolicitud}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<h:form id="fConsultaSolicitud" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:outputPanel id="idOLNirConsultado" >
+						<p:outputPanel
+							rendered="#{beanConsultaSolicitud.nirConsultado ne null}">
+							<strong>
+								<p:outputLabel style="font-size: 30px;"
+									value="#{beanConsultaSolicitud.nirConsultado}"/>
+							</strong>
+						</p:outputPanel>
+					</p:outputPanel>
+					<p:panel style="min-width:800px;">
+						<p:wizard flowListener="#{beanConsultaSolicitud.flowListener}"
+							widgetVar="myWizard" showNavBar="false">
+							<p:tab id="trazabilidad" titleStyle="font-size:15px;"
+								title="#{messageBeanSNR.commonLabelConsultar}">
+								<p:panel>
+									<p:panel
+										header="#{messageBeanSNR.commonLabelConsultaSolicitudTitle}"
+										id="pConsultaTrazabilidad">
+										<div class="ui-g" align="center">
+											<div class="ui-g-6 ui-md-6 ui-lg-6" align="right">
+												<h:panelGrid columns="2">
+													<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+														styleClass="textosConsultaEstadoPredio" />
+													<br />
+													<p:inputText onblur="value=value.toUpperCase()" id="idNIR"
+														label="#{messageBeanSNR.commonLabelNIR}"
+														title="#{tooltipBeanSNR.buscarConsultaSolicitudNir}"
+														placeholder="#{messageBeanSNR.commonLabelNIR}"
+														value="#{beanConsultaSolicitud.nir}" maxlength="20" />
+												</h:panelGrid>
+											</div>
+											<div class="ui-g-6 ui-md-6 ui-lg-6" align="left">
+												<h:panelGrid columns="2">
+													<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}" />
+													<br />
+													<p:inputText onblur="value=value.toUpperCase()"
+														id="idTurno" label="#{messageBeanSNR.commonLabelTurno}"
+														title="#{tooltipBeanSNR.buscarConsultaSolicitudTurno}"
+														placeholder="#{messageBeanSNR.commonLabelTurno}"
+														value="#{beanConsultaSolicitud.idTurno}" maxlength="20" />
+												</h:panelGrid>
+											</div>
+										</div>
+										<div class="ui-g" align="center">
+											<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+												<p:commandButton
+													value="#{messageBeanSNR.commonLabelConsultar}" icon="lupa"
+													iconPos="left"
+													actionListener="#{beanConsultaSolicitud.findAll}"
+													ajax="true" update="pConsultaTrazabilidad,idOLNirConsultado,globalMsg" />
+											</div>
+										</div>
+										<br />
+										<p:dataTable id="idDtListado"
+											value="#{beanConsultaSolicitud.trazabilidad}" var="item"
+											emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+											<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+												<h:outputText value="#{item.solicitud.nir}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+												<p:commandLink />
+												<h:outputText value="#{item.turno.idTurno}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelDecisionCalificacion}">
+												<h:outputText value="#{item.decisionCalificacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelEstadoDelTurno}">
+												<h:outputText value="#{item.fases.nombre}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelDescripcion}">
+												<h:outputText value="#{item.solicitud.descripcion}" />
+											</p:column>
+										</p:dataTable>
+										<br />
+										<p:outputPanel id="nirVinculado"
+											rendered="#{beanConsultaSolicitud.estado}">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelNIRSVinculados}" />
+											<p:dataTable id="idDtListadoVinculados"
+												value="#{beanConsultaSolicitud.trazabilidadVinculados}"
+												var="item" emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+												<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+													<h:outputText value="#{item.solicitud.nir}" />
+												</p:column>
+												<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+													<p:commandLink />
+													<h:outputText value="#{item.turno.idTurno}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelDecisionCalificacion}">
+													<h:outputText value="#{item.decisionCalificacion}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelEstadoDelTurno}">
+													<h:outputText value="#{item.fases.nombre}" />
+												</p:column>
+												<p:column
+													headerText="#{messageBeanSNR.commonLabelDescripcion}">
+													<h:outputText value="#{item.solicitud.descripcion}" />
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:panel>
+								</p:panel>
+							</p:tab>
+							<p:tab id="datosInteresado_id" titleStyle="font-size:15px;"
+								title="#{messageBeanSNR.commonLabelDatosDelInteresadoTitle}">
+								<p:panel>
+									<p:panel header="#{messageBeanSNR.commonLabelInteresado}"
+										id="pInteresado">
+										<br />
+										<p:dataTable id="idInteresado" tableStyle="width:auto"
+											value="#{beanConsultaSolicitud.solicitudDatosConsultados.listadoPersona}"
+											var="item" emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+												<h:outputText value="#{item.idDocumentoTipo}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+												<h:outputText value="#{item.numeroDocumento}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelNombreCompleto}">
+												<h:outputText
+													value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.primerNombre.concat(' ').concat(item.segundoNombre).concat(' ').concat(item.primerApellido).concat(' ').concat(item.segundoApellido)}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelGenero}">
+												<h:outputText value="#{item.idNaturalGenero}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelMedioANotificar}">
+												<h:outputText value="#{item.medioNotificacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelMedioAComunicar}">
+												<h:outputText value="#{item.medioComunicacion}" />
+											</p:column>
+										</p:dataTable>
+									</p:panel>
+								</p:panel>
+							</p:tab>
+							<p:tab id="datosTramite" titleStyle="font-size:15px;"
+								title="#{messageBeanSNR.commonLabelDatosDelTramite}">
+								<p:panel>
+									<br />
+									<p:dataTable id="idTramite"
+										value="#{beanConsultaSolicitud.datosTramite}" var="item"
+										emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelProcedencia}">
+											<h:outputText value="#{item.nombreProcedencia}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelTipoDeTramite}">
+											<h:outputText value="#{item.nombreTramite}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelNIRRelacionado}">
+											<h:outputText value="#{item.nir}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelRadicadoPqr}">
+											<h:outputText value="#{item.radicado}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelFechaDeRadicadoPqr}">
+											<h:outputText value="#{item.fechaRadicado}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDerechoDePeticion}">
+											<h:outputText value="#{item.derechoPeticion}" />
+										</p:column>
+									</p:dataTable>
+								</p:panel>
+							</p:tab>
+							<p:tab id="datosDocumento" titleStyle="font-size:15px;"
+								title="#{messageBeanSNR.commonLabelDatosDelDocumento}">
+								<p:panel>
+									<br />
+									<p:dataTable id="idDocumento"
+										value="#{beanConsultaSolicitud.datosDocumento}" var="item"
+										emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+											<h:outputText value="#{item.nombreTipoDocumento}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelNumeroDelDocumento}">
+											<h:outputText value="#{item.numero}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelFechaDelDocumento}">
+											<h:outputText value="#{item.fechaDocumento}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelOficinaOrigen}">
+											<h:outputText value="#{item.nombreOficinaOrigen}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDepartamento}">
+											<h:outputText value="#{item.nombreDepartamento}" />
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelMunicipio}">
+											<h:outputText value="#{item.nombreMunicipio}" />
+										</p:column>
+									</p:dataTable>
+								</p:panel>
+							</p:tab>
+							<p:tab id="datosActo_id" titleStyle="font-size:15px;"
+								title="#{messageBeanSNR.commonLabelDatosDelActo}">
+								<p:panel>
+									<br />
+									<p:panel header="#{messageBeanSNR.commonLabelResultados}"
+										toggleable="true">
+										<p:dataTable id="idDtActo"
+											emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+											resizableColumns="true"
+											value="#{beanConsultaSolicitud.datosActo}" var="item">
+											<p:ajax event="rowToggle"
+												listener="#{beanConsultaSolicitud.onRowToggle}"
+												update="idDtActo" />
+											<p:column style="width:100px;"
+												headerText="#{messageBeanSNR.commonLabelVerDetalle}">
+												<p:rowToggler />
+											</p:column>
+
+
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelCodigoDelActo}">
+
+												<h:outputText value="#{item.codigo}" />
+											</p:column>
+
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelEspecificacion}">
+												<h:outputText value="#{item.especificacion}" />
+											</p:column>
+
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelTipoDeCuantia}">
+												<h:outputText
+													value="#{messageBeanSNR.commonLabelSinCuantia}"
+													rendered="#{item.actoConCuantia == 'S'}" />
+												<h:outputText
+													value="#{messageBeanSNR.commonLabelConCuantia}"
+													rendered="#{item.actoConCuantia == 'N'}" />
+											</p:column>
+											
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelCantidadDeActos}">
+												<h:outputText value="#{item.cantidadActos}" />
+											</p:column>
+
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelTipoDeTarifa}">
+												<h:outputText value="#{item.tipoTarifa}" />
+											</p:column>
+
+											<p:column headerText="#{messageBeanSNR.commonLabelCuantia}">
+												<h:outputText value="#{item.cuantiaActo}">
+													<f:convertNumber pattern="¤#,##0.00"
+														currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+												</h:outputText>
+											</p:column>
+
+											<p:rowExpansion>
+												<p:panelGrid columns="4" style="width:auto;">
+													<p:dataTable id="idDtTiposDocumentales"
+														emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+														value="#{beanConsultaSolicitud.tiposDocumentales}"
+														var="tiposDoc" tableStyle="width:auto">
+														<p:columnGroup type="header">
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelTipoDocumental}" />
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelObligatoriedad}" />
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelBoletaFiscal}" />
+															<p:column
+																headerText="#{messageBeanSNR.commonLabelObservaciones}" />
+														</p:columnGroup>
+
+														<p:column>
+															<h:outputText id="idSOMTipoDocumental"
+																style="width:-webkit-fill-available; width:-moz-available;"
+																value="#{tiposDoc.tipoDocumental}" />
+
+														</p:column>
+														<p:column>
+															<p:selectBooleanCheckbox id="seleccionObli"
+																value="#{tiposDoc.seleccionado}" disabled="true" />
+														</p:column>
+														<p:column>
+															<h:outputText onblur="value=value.toUpperCase()"
+																value="#{tiposDoc.boletaFiscal}" />
+
+														</p:column>
+														<p:column>
+															<h:outputText id="observaTipo"
+																value="#{tiposDoc.observaciones}" maxlength="200" />
+														</p:column>
+													</p:dataTable>
+												</p:panelGrid>
+
+											</p:rowExpansion>
+
+										</p:dataTable>
+
+									</p:panel>
+								</p:panel>
+							</p:tab>
+							<p:tab id="datosPredio" titleStyle="font-size:15px;"
+								title="#{messageBeanSNR.commonLabelDatosDelPredio}">
+								<p:panel>
+									<br />
+									<p:dataTable id="idPredio"
+										value="#{beanConsultaSolicitud.predios}" var="item"
+										emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelMatriculaInmobiliaria}">
+											<h:outputText value="#{item.matricula}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelActosAsociado}">
+											<h:outputText value="#{item.acto}" />
+										</p:column>
+									</p:dataTable>
+									<p:dataTable id="idSegregacion"
+										value="#{beanConsultaSolicitud.segregacion}" var="item"
+										emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelNombreDelPredio}">
+											<h:outputText value="#{item.nombrePredio}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}">
+											<h:outputText value="#{item.direccionPredio}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelAreaDelTerreno}">
+											<h:outputText value="#{item.areaTerreno}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelAreaPrivada}">
+											<h:outputText value="#{item.areaPrivada}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelAreaConstruida}">
+											<h:outputText value="#{item.areaConstruccion}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelCoeficiente}">
+											<h:outputText value="#{item.coeficiente}" />
+										</p:column>
+									</p:dataTable>
+								</p:panel>
+							</p:tab>
+							<p:tab id="datosInterviniente_id" titleStyle="font-size:15px;"
+								title="#{messageBeanSNR.commonLabelDatosDeLosIntervenientes}">
+								<p:panel>
+									<p:panel header="#{messageBeanSNR.commonLabelInterviniente}"
+										id="pInterviniente">
+										<br />
+										<p:dataTable id="idInterviniente" tableStyle="width:auto"
+											value="#{beanConsultaSolicitud.solicitudDatosConsultadosInt.listadoPersona}"
+											var="item" emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+												<h:outputText value="#{item.idDocumentoTipo}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+												<h:outputText value="#{item.numeroDocumento}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelNombreCompleto}">
+												<h:outputText
+													value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.primerNombre.concat(' ').concat(item.segundoNombre).concat(' ').concat(item.primerApellido).concat(' ').concat(item.segundoApellido)}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelGenero}">
+												<h:outputText value="#{item.idNaturalGenero}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelMedioANotificar}">
+												<h:outputText value="#{item.medioNotificacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelMedioAComunicar}">
+												<h:outputText value="#{item.medioComunicacion}" />
+											</p:column>
+										</p:dataTable>
+									</p:panel>
+								</p:panel>
+							</p:tab>
+							<p:tab id="datosEntrega_id" titleStyle="font-size:15px;"
+								title="#{messageBeanSNR.commonLabelDatosEntrega}">
+								<p:panel>
+									<p:panel header="#{messageBeanSNR.commonLabelPersonaEntrega}"
+										id="pTercero">
+										<br />
+										<p:dataTable id="idTercero" tableStyle="width:auto"
+											value="#{beanConsultaSolicitud.personasSolicitud}" var="item"
+											emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+											<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+												<h:outputText value="#{item.turno}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+												<div align="center">
+													<h:outputText value="#{item.idDocumentoTipo}" />
+												</div>
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+												<h:outputText value="#{item.numeroDocumento}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelNombreCompletoYORazonSocial}">
+												<h:outputText
+													value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.primerNombre.concat(' ').concat(item.segundoNombre).concat(' ').concat(item.primerApellido).concat(' ').concat(item.segundoApellido).concat(' ').concat(item.razonSocial)}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelFechaEntrega}">
+												<div align="center">
+													<h:outputText value="#{item.fechaEntrega}" />
+												</div>
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelCalidadEnQueActua}">
+												<div align="center">
+													<h:outputText value="#{item.nombreCalidad}" />
+												</div>
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelRepresentanteDe}">
+												<h:outputText value="#{item.idPersonaTercero}" />
+											</p:column>
+										</p:dataTable>
+										<br />
+									</p:panel>
+								</p:panel>
+							</p:tab>
+						</p:wizard>
+						<p:outputPanel id="opBotones">
+							<div align="right">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									update=":fConsultaSolicitud:opBotones,idOLNirConsultado"
+									rendered="#{beanConsultaSolicitud.mostrarAtras}"
+									onclick="PF('myWizard').back()" />
+								<p:spacer />
+								<p:commandButton value="#{messageBeanSNR.commonLabelSiguiente}"
+									icon="fa fa-arrow-circle-right" iconPos="right"
+									update=":fConsultaSolicitud:opBotones,idOLNirConsultado"
+									rendered="#{not(beanConsultaSolicitud.ocultarSiguiente)}"
+									onclick="PF('myWizard').next()" />
+								<p:spacer />
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonVolverAInicio}"
+									icon="fa fa-arrow-circle-left" iconPos="right"
+									update=":fConsultaSolicitud:opBotones,idOLNirConsultado"
+									rendered="#{beanConsultaSolicitud.ocultarRetorno}"
+									action="#{beanConsultaSolicitud.regresar}" immediate="true" />
+							</div>
+						</p:outputPanel>
+
+					</p:panel>
+
+				</center>
+
+			</h:form>
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

@@ -1,0 +1,1283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtmltransitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+					</li>
+					<li class="breadcrumb-item">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelRecursos}" />
+					</li>
+					<li class="breadcrumb-item">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelAnalisisAbogadoSustanciadorRecursos}" />
+					</li>
+					<li class="breadcrumb-item">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+					</li>
+					<li style="display: #{beanPredioDocumentoActo.aprobacion.vieneDeAprobacion ? 'none' : 'inline-block'}" class="breadcrumb-item">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+					</li>
+					<li style="display: #{!beanPredioDocumentoActo.aprobacion.vieneDeAprobacion ? 'none' : 'inline-block'}" class="breadcrumb-item">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelAprobacionDelRegistrador}" />
+					</li>
+					<li class="breadcrumb-item" aria-current="page">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+					</li>
+					
+					<li class="breadcrumb-item active" aria-current="page">
+						<p:outputLabel value="#{beanResolucionRecurso.idMotivo eq 10 ? messageBeanSNR.commonLabelAutoDeAperturaDePruebas : ''}" />
+					</li>
+				</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			
+			<ui:include src="detalleActoInclude.xhtml" />
+			
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+				
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			
+			<h:form id="fResolucionRecurso" style="width: 100%;" enctype="multipart/form-data" onkeypress="return event.keyCode!=13">
+			
+				<p:poll listener="#{beanResolucionRecurso.documentosEnviadosOWCC}" update="fResolucionRecurso:opBotones" interval="15" widgetVar="wvPoll" autoStart="false"/>
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true" sticky="false" life="20000" />
+				<center>
+					<p:panel header="#{beanResolucionRecurso.idMotivo eq 10 ? messageBeanSNR.commonLabelAutoDeAperturaDePruebas : ''}" toggleable="true" style="text-align:center">
+						
+						<p:outputPanel rendered="#{beanResolucionRecurso.mostrarSolicitudDocumentacion}">
+							<p:panel id="idOPSolicitudDocumentacion"
+								header="#{messageBeanSNR.commonLabelSolicitudDocumentacion}">
+								<p:dataTable id="idDtTiposDocumentales"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									value="#{beanResolucionRecurso.tiposDocumentales}" var="tiposDoc">
+									<p:columnGroup type="header">
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelTipoDocumental}"
+											style="width: 35%;" />
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelObligatoriedad}"
+											style="width: 17%;" />
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelObservaciones}"
+											style="width: 52%;" />
+										<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+											style="width: 11%" />
+									</p:columnGroup>
+		
+									<p:column>
+										<p:selectOneMenu id="idSOMTipoDocumental"
+											title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosTipoDocumental}"
+											style="width:100%" value="#{tiposDoc.idTipoDocumental}"
+											disabled="#{tiposDoc.activeTiposDoc || tiposDoc.obligatorio=='S' || tiposDoc.obligatorioC=='S' ? true : false}">
+											<f:selectItems itemValue="#{doc.idTipoDocumental}"
+												value="#{beanReference.findAllTiposDocumentales()}"
+												var="doc"
+												itemLabel="#{doc.nombre} - #{doc.idTipoDocumental}" />
+										</p:selectOneMenu>
+									</p:column>
+									<p:column>
+										<p:selectBooleanCheckbox id="seleccionObli"
+											disabled="#{tiposDoc.obligatorio=='S' || tiposDoc.obligatorioC=='S' ? true : false}"
+											value="#{tiposDoc.seleccionado}" />
+									</p:column>
+									<p:column>
+										<p:inputText id="observaTipo"
+											onblur="value=value.toUpperCase()"
+											value="#{tiposDoc.observaciones}" maxlength="200"
+											style="#{tiposDoc.campoRojo ? 'border-color:red !important;width:100%;' : 'width:100%;'};"
+											title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosObservaciones}"
+											disabled="#{empty tiposDoc.obligatorio ? tiposDoc.editar : false}"
+											placeholder="#{messageBeanSNR.commonLabelObservaciones}" />
+									</p:column>
+									<p:column>
+										<p:commandButton icon="fa fa-trash"
+											disabled="#{tiposDoc.obligatorio=='S' || tiposDoc.obligatorioC=='S' ? true : false}"
+											iconPos="left"
+											title="#{messageBeanSNR.commonLabelEliminar}"
+											actionListener="#{beanResolucionRecurso.deleteTipoDocumental(tiposDoc)}"
+											update="idDtTiposDocumentales" />
+									</p:column>
+								</p:dataTable>
+								<br />
+								<div align="right">
+									<p:commandButton
+										value="#{messageBeanSNR.commonLabelAgregarNuevoTipoDocumental}"
+										update="idDtTiposDocumentales" ajax="true"
+										icon="fa fa-plus-circle" iconPos="left"
+										actionListener="#{beanResolucionRecurso.addTipoDocumental()}" />
+								</div>
+							</p:panel>
+							<br/>
+						</p:outputPanel>
+						<p:panel header="#{messageBeanSNR.commonLabelPersonasANotificar}">
+							<p:dataTable id="idDtPersonasVinculadas" 
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+								value="#{beanResolucionRecurso.registroDatosConsultados.listadoPersona}"
+								var="item">
+								<f:facet name="header">
+									<h:outputText value="#{messageBeanSNR.commonLabelInteresados}" />
+								</f:facet>
+								<p:columnGroup type="header">
+									<p:row>
+										<p:column headerText="#{messageBeanSNR.commonLabelTipoDocumento}" />
+										<p:column headerText="#{messageBeanSNR.commonLabelDocumento}" />
+										<p:column headerText="#{messageBeanSNR.commonLabelNombres}" />
+										<p:column headerText="#{messageBeanSNR.commonLabelNIRVinculado}" />
+										<p:column headerText="#{messageBeanSNR.commonLabelSeleccione}" />
+										<p:column headerText="#{messageBeanSNR.commonLabelAccion}" />
+									</p:row>
+								</p:columnGroup>
+								<p:column width="8%" sortBy="#{item.idDocumentoTipo}">
+									<h:outputText value="#{item.idDocumentoTipo}" />
+								</p:column>
+			
+								<p:column width="12%" sortBy="#{item.numeroDocumento}">
+									<h:outputText value="#{item.numeroDocumento}" />
+								</p:column>
+			
+								<p:column width="20%">
+									<h:outputText value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.nombreCompleto}" />
+								</p:column>
+								
+								<p:column width="20%">
+									<h:outputText value="#{item.solicitud.nir}" />
+								</p:column>
+			
+								<p:column width="6%">
+									<p:selectOneRadio value="#{item.seleccionado}" id="SORColumnaPersona">
+										<f:selectItem itemLabel="" itemValue="true" />
+										<p:ajax
+											listener="#{beanResolucionRecurso.cargarDatosPersonalesRecursos(item)}"
+											update=":fResolucionRecurso:idPPanelDatosBasicos,:fResolucionRecurso:idDtPersonasVinculadas,:fResolucionRecurso:idOpDatosPersona,:fResolucionRecurso:idOpAgregarInteresadoInterviniente" />
+									</p:selectOneRadio>
+								</p:column>
+			
+								<p:column width="6%">
+									<p:commandButton icon="fa fa-pencil" iconPos="left"
+										update=":fResolucionRecurso:opConsultarAlInteresado,:fResolucionRecurso:idOpDatosPersona"
+										title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoEditar}"
+										actionListener="#{beanResolucionRecurso.accionBotonEditarPersonaRecurso(item)}" />
+								</p:column>
+							</p:dataTable>
+							<br/>
+							<p:outputPanel id="idOpAgregarInteresadoInterviniente">
+								<div class="ui-g" align="left">
+							     	<div class="ui-g-12 ui-md-6 ui-lg-6">
+							     	</div>
+							     	<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+										<p:commandButton id="idCmBtnAgregarInteresadoInterviniente"
+											value="#{messageBeanSNR.commonButtonAgregarInteresadoYoInterviniente}"
+											icon="fa fa-plus-circle" iconPos="left"
+											actionListener="#{beanResolucionRecurso.mostrarInteresadoIntervinienteRecursos}"
+											update=":fResolucionRecurso:opConsultarAlInteresado,:fResolucionRecurso:idOpDatosPersona"
+											rendered="#{!beanResolucionRecurso.mostrarDatosPersona}">
+										</p:commandButton>
+									</div>
+								 </div>
+							</p:outputPanel>
+						     <p:outputPanel id="opConsultarAlInteresado">
+							     <p:outputPanel rendered="#{beanResolucionRecurso.mostrarConsultarInteresadoInter and beanResolucionRecurso.mostrarPanelConsulta}">
+									<p:panel
+										header="#{messageBeanSNR.commonLabelConsultarAlInteresadoYoIntervinientes}"
+										toggleable="true" id="consultaralinteresado">
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-6 ui-lg-2"/>
+											<div class="ui-g-12 ui-md-6 ui-lg-3">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTipoDocumentoIdentidad}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMTipoDocIdentidad" ajax="true"
+													style="width:80%"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoTipoDocumentoIdentidad}"
+													value="#{beanResolucionRecurso.tipoDocInteresado}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanReference.findTipoDocumentoActivo()}"
+														var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+														itemLabel="#{tipoDoc.descripcion}" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-2"/>
+											<div class="ui-g-12 ui-md-6 ui-lg-3">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelDocumentoIdentidad}#{messageBeanSNR.commonLabelObligatorio}"
+														style="width:100%" />
+													<br />
+													<p:inputText onblur="value=value.toUpperCase()" ajax="true"
+														id="idItDocumentoID"
+														style="width:80% !important"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoDocumentoIdentidad}"
+														label="#{messageBeanSNR['commonLabelDocumento']}"
+														placeholder="#{messageBeanSNR['commonLabelDocumento']}"
+														value="#{beanResolucionRecurso.documentoInteresado}" maxlength="20"
+														requiredMessage="El campo Justificación es requerido">
+													</p:inputText>
+											</div>
+										</div>
+										<div class="ui-g" align="center">
+											<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+												<p:commandButton
+													value="#{messageBeanSNR.commonLabelConsultar}" icon="lupa"
+													iconPos="left" id="botonConsultaPersona"
+													update="idOPDatosConsulta,idPanelListados,globalMsg,idPPanelDatosBasicos,idPanelDirRes,idPanelDirCorr,idPanelDatosContacto,idSOMTipoDocIdentidad,idItDocumentoID,idOPIntervienePregunta"
+													actionListener="#{beanResolucionRecurso.consultarPersonaDocumentoActuacionesAdmin()}">
+												</p:commandButton>
+											</div>
+										</div>
+										<p:outputPanel id="idPanelListados">
+											<p:outputPanel rendered="#{beanResolucionRecurso.rendered}">
+												<br />
+												<div class="ui-g" align="left">
+													<p:dataTable id="idDtPersonas" 
+														emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+														value="#{beanResolucionRecurso.registroDatosConsultados.listadoPersona}"
+														var="item">
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelTipoDocumento}"
+															width="8%" sortBy="#{item.idDocumentoTipo}">
+															<h:outputText value="#{item.idDocumentoTipo}" />
+														</p:column>
+			
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelDocumento}"
+															width="12%" sortBy="#{item.numeroDocumento}">
+															<h:outputText value="#{item.numeroDocumento}" />
+														</p:column>
+			
+														<p:column
+															headerText="#{messageBeanSNR.commonLabelNombres}"
+															width="20%">
+															<h:outputText
+																value="#{item.idDocumentoTipo == 'NIT' ? item.razonSocial : item.nombreCompleto}" />
+														</p:column>
+			
+														<p:column width="6%" headerText="Seleccione">
+															<p:selectOneRadio value="#{item.seleccionado}" id="SORColumnaPersona">
+																<f:selectItem itemLabel="" itemValue="true" />
+																<p:ajax
+																	listener="#{beanResolucionRecurso.cargarDatosPersonalesActuacionesAdmin(item)}"
+																	update=":fResolucionRecurso:idPPanelDatosBasicos,idDtPersonas,:fResolucionRecurso:idPanelListados,:fResolucionRecurso:idPanelDirRes, :fResolucionRecurso:idOPDatosConsulta,:fResolucionRecurso:idSorMismaDir" />
+															</p:selectOneRadio>
+														</p:column>
+			
+														<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+															width="6%">
+															<p:commandButton icon="fa fa-pencil" iconPos="left"
+																update="fResolucionRecurso"
+																title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoEditar}"
+																actionListener="#{beanResolucionRecurso.accionBotonEditarPersona(item)}" />
+														</p:column>
+													</p:dataTable>
+													<br />
+												</div>
+											</p:outputPanel>
+										<p:outputPanel rendered="#{beanResolucionRecurso.personaConsultada}">
+											<div class="ui-g" align="center">
+												<div class="ui-g-12 ui-md-6 ui-lg-2"/>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelMedioANotificar}#{messageBeanSNR.commonLabelObligatorio}" 
+														style="width:100%"/>
+													<br />
+													<p:selectOneMenu id="idsomMedioANotificar" style="width:77%"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoMedioNotificar}"
+														value="#{beanResolucionRecurso.solicitud.idAutorizacionNotificacion}">
+														<p:ajax update="idsomMedioANotificar,idOPDatosConsulta" />
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems value="#{beanResolucionRecurso.mediosNotificar}"
+															var="habNot" itemValue="#{habNot.idTipoRecepcion}"
+															itemLabel="#{habNot.nombre}" />
+														<p:ajax event="change"
+															listener="#{beanResolucionRecurso.cambioDeMedioNotInteresado(beanResolucionRecurso.solicitud.idAutorizacionNotificacion)}"
+															update="idPanelDatosContacto idPanelDirCorr idPanelDirRes idOPDatosConsulta" />
+													</p:selectOneMenu>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-1"/>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelMedioAComunicar}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<p:selectOneMenu id="idsomMedioACom"  style="width:77%"
+														title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoMedioComunicar}"
+														value="#{beanResolucionRecurso.solicitud.idAutorizacionComunicacion}"
+														>
+														<p:ajax update="idsomMedioANotificar,idOPDatosConsulta" />
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems value="#{beanResolucionRecurso.mediosComunicar}"
+															var="habRec" itemValue="#{habRec.idTipoRecepcion}"
+															itemLabel="#{habRec.nombre}" />
+														<p:ajax event="change"
+															listener="#{beanResolucionRecurso.cambioDeMedioComInteresado(beanResolucionRecurso.solicitud.idAutorizacionComunicacion)}"
+															update="idPanelDatosContacto idPanelDirCorr idPanelDirRes idOPDatosConsulta" />
+													</p:selectOneMenu>
+												</div>
+											</div>
+											</p:outputPanel>
+											<p:outputPanel rendered="#{beanResolucionRecurso.rendered}">
+												<p:outputPanel id="idOPDatosConsulta" rendered="#{beanResolucionRecurso.mostrarDatosConsulta}">
+													<div class="ui-g" align="left">
+														<div class="ui-g-12 ui-md-6 ui-lg-4" style="display:#{(beanResolucionRecurso.mostrarDireccionesResidencia and (beanResolucionRecurso.habilitarDireccionReCo or beanResolucionRecurso.habilitarDireccionReNo)) ? 'block' : 'none'};">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDireccionesDeResidencia}" />
+															<br />
+															<p:selectOneMenu id="dire" style="width:80%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoDireccionesResidencia}"
+																value="#{beanResolucionRecurso.idDirResSeleccion}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanResolucionRecurso.registroDatosConsultados.listadoDireccionResidencia}"
+																	var="item"
+																	itemValue="#{item.idPersona}-#{item.idDireccion}"
+																	itemLabel="#{item.direccion}" />
+																<p:ajax
+																	listener="#{beanResolucionRecurso.cargarDireccionResidencia}"
+																	update=":fResolucionRecurso:idPanelDirRes,idSorMismaDir" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4" style="display:#{(beanResolucionRecurso.mostrarDireccionesCorrespondencia and (beanResolucionRecurso.habilitarDireccionCoCo or beanResolucionRecurso.habilitarDireccionCoNo)) ? 'block' : 'none'};">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelDireccionesDeCorrespondencia}" />
+															<br />
+															<p:selectOneMenu style="width:80%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoDireccionesCorrespondencia}"
+																value="#{beanResolucionRecurso.idDirCorrSeleccion}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanResolucionRecurso.registroDatosConsultados.listadoDireccionCorrespondencia}"
+																	var="item"
+																	itemValue="#{item.idPersona}-#{item.idDireccion}"
+																	itemLabel="#{item.direccion}" />
+																<p:ajax
+																	listener="#{beanResolucionRecurso.cargarDireccionCorrespondencia}"
+																	update=":fResolucionRecurso:idPanelDirCorr" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4" style="display:#{(beanResolucionRecurso.mostrarTelefonoFijo and (beanResolucionRecurso.habilitarTelFijoCo or beanResolucionRecurso.habilitarTelFijoNo)) ? 'block' : 'none'};">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabalTelefonosFijos}" />
+															<br />
+															<p:selectOneMenu style="width:80%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoTelefonosFijos}"
+																value="#{beanResolucionRecurso.idTelFijoSeleccion}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanResolucionRecurso.registroDatosConsultados.listadoTelefonoFijo}"
+																	var="item"
+																	itemValue="#{item.idPersona}-#{item.idTelefono}"
+																	itemLabel="#{item.telefono}" />
+																<p:ajax listener="#{beanResolucionRecurso.cargarTelefonoFijo}"
+																	update=":fResolucionRecurso:idOpTelFijo" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4" style="display:#{(beanResolucionRecurso.mostrarTelefonoMovil and (beanResolucionRecurso.habilitarTelMovilCo or beanResolucionRecurso.habilitarTelMovilNo)) ? 'block' : 'none'};">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabalTelefonosMoviles}" />
+															<br />
+															<p:selectOneMenu style="width:80%"
+																title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoTelefonosMoviles}"
+																value="#{beanResolucionRecurso.idTelMovSeleccion}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanResolucionRecurso.registroDatosConsultados.listadoTelefonoMovil}"
+																	var="item"
+																	itemValue="#{item.idPersona}-#{item.idTelefono}"
+																	itemLabel="#{item.telefono}" />
+																<p:ajax listener="#{beanResolucionRecurso.cargarTelefonoMovil}"
+																	update="idSOMPaisTelMov,idItTelefonoMovil" />
+															</p:selectOneMenu>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-4" style="display:#{(beanResolucionRecurso.mostrarCorreo and (beanResolucionRecurso.habilitarCorreoCo or beanResolucionRecurso.habilitarCorreoNo)) ? 'block' : 'none'};">
+															<p:outputLabel
+																value="#{messageBeanSNR.commonLabelCorreosElectronicos}" />
+															<br />
+															<p:selectOneMenu style="width:80%" id="SOMListadoCorreos"
+																title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoCorreosElectronicos}"
+																value="#{beanResolucionRecurso.idCorreoSeleccion}">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanResolucionRecurso.registroDatosConsultados.listadoCorreoElectronico}"
+																	var="item"
+																	itemValue="#{item.idPersona}-#{item.idCorreoElectronico}"
+																	itemLabel="#{item.correoElectronico}" />
+																<p:ajax
+																	listener="#{beanResolucionRecurso.cargarCorreoElectronico}"
+																	update="idItEmail" />
+															</p:selectOneMenu>
+														</div>
+													</div>
+												</p:outputPanel>
+											</p:outputPanel>
+										</p:outputPanel>
+									</p:panel>
+								</p:outputPanel>
+							</p:outputPanel>
+							<br />
+							<p:outputPanel id="idOpDatosPersona">
+								<p:outputPanel rendered="#{beanResolucionRecurso.mostrarDatosPersona}">
+									<p:panel id="idPPanelDatosBasicos"
+										header="#{beanResolucionRecurso.idProceso == '10' ? messageBeanSNR.commonLabelDatosBasicos : messageBeanSNR.commonLabelDatosBasicosDelInteresado}"
+										toggleable="true"
+										collapsed="#{beanResolucionRecurso.mostrarDatosBasicos}">
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-6 ui-lg-2">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTipoDePersona}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMTipoPersona" style="width:100%"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoPersona}"
+													value="#{beanResolucionRecurso.persona.idTipoPersona}"
+													disabled="#{beanResolucionRecurso.deshabilitarDatosBasicos || beanResolucionRecurso.deshabilitarTipoPersona || beanResolucionRecurso.esRetomarSolicitud || !beanResolucionRecurso.habilitadoPorConsulta}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems value="#{beanReference.findTipoPersona()}"
+														var="tipoPersona" itemValue="#{tipoPersona.idTipoPersona}"
+														itemLabel="#{tipoPersona.descripcion}" />
+													<p:ajax event="change"
+														listener="#{beanResolucionRecurso.validarTipoPersonaDocumento(beanResolucionRecurso.persona.idTipoPersona)}"
+														update="idSOMTipoPersona idSOMTipoDoc idsomMedioACom idsomMedioANotificar idPanelDirRes idOLNombre idOLApellido idOLRazon @this,idOlDocumento,idSOMNacionalidad,idSOMGenero,idOlPNombre,idOlSNombre,idOlPApellido,idOlSApellido,idOlRazonSocial" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-2">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMTipoDoc" style="width:100%"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoTipoDocumento}"
+													value="#{beanResolucionRecurso.persona.idDocumentoTipo}"
+													disabled="#{beanResolucionRecurso.deshabilitarDatosBasicos || beanResolucionRecurso.deshabilitarTipoDocumento || beanResolucionRecurso.esRetomarSolicitud || !beanResolucionRecurso.habilitadoPorConsulta}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanReference.findTipoDocumentoActivo()}"
+														var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+														itemLabel="#{tipoDoc.descripcion}" />
+													<p:ajax event="change"
+														listener="#{beanResolucionRecurso.validarTipoPersonaDocumento(beanResolucionRecurso.persona.idDocumentoTipo)}"
+														update="idSOMTipoPersona idSOMTipoDoc idsomMedioACom idsomMedioANotificar idPanelDirRes idOLNombre idOLApellido idOLRazon @this,idOlDocumento,idSOMNacionalidad,idSOMGenero,idOlPNombre,idOlSNombre,idOlPApellido,idOlSApellido,idOlRazonSocial" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-2">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:inputText onblur="value=value.toUpperCase()"
+													id="idOlDocumento"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoDocumento}"
+													placeholder="#{messageBeanSNR.commonLabelDocumento}"
+													maxlength="20"
+													value="#{beanResolucionRecurso.persona.numeroDocumento}"
+													disabled="#{beanResolucionRecurso.deshabilitarDatosBasicos || beanResolucionRecurso.esRetomarSolicitud|| !beanResolucionRecurso.habilitadoPorConsulta}" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelNacionalidad}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMNacionalidad" style="width:100%"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoNacionalidad}"
+													value="#{beanResolucionRecurso.persona.idPais}"
+													disabled="#{beanResolucionRecurso.deshabilitarDatosBasicos || beanResolucionRecurso.esRetomarSolicitud|| !beanResolucionRecurso.habilitadoPorConsulta}">
+													<p:ajax update="idSOMNacionalidad" />
+													<f:selectItem itemValue=""
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+													<f:selectItems value="#{beanReference.findPaises()}"
+														var="paises" itemValue="#{paises.idPais}"
+														itemLabel="#{paises.nombre}" />
+												</p:selectOneMenu>
+											</div>
+			
+										</div>
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-6 ui-lg-2">
+												<p:outputLabel style="font-size: 1em;white-space: nowrap;"
+													value="#{messageBeanSNR.commonLabelCalidadEnQueActua}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMCalidad" style="width:100%"
+													rendered="#{beanResolucionRecurso.idProceso != '6' || beanResolucionRecurso.idProceso == '10'}"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoCalidadActua}"
+													value="#{beanResolucionRecurso.solicitud.idCalidadSolicitante}" disabled="#{!beanResolucionRecurso.habilitadoPorConsulta}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanResolucionRecurso.findCalidadSolicitante()}"
+														var="calSol" itemValue="#{calSol.idCalidadSolicitante}"
+														itemLabel="#{calSol.nombre}" />
+												</p:selectOneMenu>
+												<p:inputText id="idITCalidad" style="width:100%"
+													disabled="true"
+													rendered="#{beanResolucionRecurso.idProceso == '6'  || beanResolucionRecurso.esRetomarSolicitud}"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoCalidadActua}"
+													value="#{beanResolucionRecurso.solicitud.idCalidadSolicitante == '3' ? 'INTERESADO' : ''}">
+												</p:inputText>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-2">
+												<p:outputLabel for="idOlPNombre" id="idOLNombre"
+													indicateRequired="#{!beanResolucionRecurso.deshabilitarCamposPorNit}"
+													value="#{messageBeanSNR.commonLabelPrimerNombre}" />
+												<br />
+												<p:inputText onblur="value=value.toUpperCase()"
+													id="idOlPNombre" maxlength="100"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerNombre}"
+													placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+													value="#{beanResolucionRecurso.persona.primerNombre}"
+													disabled="#{(beanResolucionRecurso.deshabilitarDatosBasicos || beanResolucionRecurso.deshabilitarCamposPorNit || beanResolucionRecurso.esRetomarSolicitud) and (!beanResolucionRecurso.accionBtnEditPerNormal) || !beanResolucionRecurso.habilitadoPorConsulta}" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-2">
+												<p:outputLabel for="idOlSNombre"
+													value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+												<br />
+												<p:inputText onblur="value=value.toUpperCase()"
+													id="idOlSNombre" maxlength="100"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoNombre}"
+													placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+													value="#{beanResolucionRecurso.persona.segundoNombre}"
+													disabled="#{(beanResolucionRecurso.deshabilitarDatosBasicos || beanResolucionRecurso.deshabilitarCamposPorNit || beanResolucionRecurso.esRetomarSolicitud) and (!beanResolucionRecurso.accionBtnEditPerNormal) || !beanResolucionRecurso.habilitadoPorConsulta}" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-2">
+												<p:outputLabel for="idOlPApellido" id="idOLApellido"
+													indicateRequired="#{!beanResolucionRecurso.deshabilitarCamposPorNit}"
+													value="#{messageBeanSNR.commonLabelPrimerApellido}" />
+												<br />
+												<p:inputText onblur="value=value.toUpperCase()"
+													id="idOlPApellido" maxlength="150"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoPrimerApellido}"
+													placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+													value="#{beanResolucionRecurso.persona.primerApellido}"
+													disabled="#{(beanResolucionRecurso.deshabilitarDatosBasicos || beanResolucionRecurso.deshabilitarCamposPorNit || beanResolucionRecurso.esRetomarSolicitud) and (!beanResolucionRecurso.accionBtnEditPerNormal) || !beanResolucionRecurso.habilitadoPorConsulta}" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-2">
+												<p:outputLabel for="idOlSApellido"
+													value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+												<br />
+												<p:inputText onblur="value=value.toUpperCase()"
+													id="idOlSApellido" maxlength="100"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoSegundoApellido}"
+													placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+													value="#{beanResolucionRecurso.persona.segundoApellido}"
+													disabled="#{(beanResolucionRecurso.deshabilitarDatosBasicos || beanResolucionRecurso.deshabilitarCamposPorNit || beanResolucionRecurso.esRetomarSolicitud) and (!beanResolucionRecurso.accionBtnEditPerNormal) || !beanResolucionRecurso.habilitadoPorConsulta}" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-2">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelGenero}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMGenero" style="width:100%"
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoGenero}"
+													value="#{beanResolucionRecurso.persona.idNaturalGenero}"
+													disabled="#{beanResolucionRecurso.deshabilitarCamposPorNit || beanResolucionRecurso.deshabilitarTipoDocumento || beanResolucionRecurso.deshabilitarTipoPersona || beanResolucionRecurso.esRetomarSolicitud || !beanResolucionRecurso.habilitadoPorConsulta}">
+													<p:ajax update="idSOMGenero" />
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems value="#{beanReference.findGeneros()}"
+														var="generos" itemValue="#{generos.idNaturalGenero}"
+														itemLabel="#{generos.ilicode}" />
+												</p:selectOneMenu>
+											</div>
+			
+										</div>
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-12 ui-lg-6">
+												<p:outputLabel for="idOlRazonSocial" id="idOLRazon"
+													indicateRequired="#{beanResolucionRecurso.deshabilitarCamposPorNit}"
+													value="#{messageBeanSNR.commonLabelRazonSocial}" />
+												<br />
+												<p:inputText
+													title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosBasicosInteresadoRazonSocial}"
+													onblur="value=value.toUpperCase()" id="idOlRazonSocial"
+													placeholder="#{messageBeanSNR.commonLabelRazonSocial}"
+													value="#{beanResolucionRecurso.persona.razonSocial}"
+													disabled="#{(beanResolucionRecurso.deshabilitarDatosBasicos || !beanResolucionRecurso.deshabilitarCamposPorNit || beanResolucionRecurso.esRetomarSolicitud) and (!beanResolucionRecurso.accionBtnEditPerNit) || !beanResolucionRecurso.habilitadoPorConsulta}" />
+											</div>
+										</div>
+										<p:outputPanel id="idOPIntervienePregunta">
+											<p:outputPanel rendered="#{!beanResolucionRecurso.rendered}">
+												<div class="ui-g" align="left">
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<h:panelGrid columns="2">
+															<p:outputLabel id="labelInterviene1"
+																for="idOlInterviene1"
+																rendered="#{beanResolucionRecurso.idProceso != '3' and beanResolucionRecurso.idProceso != '10'}"
+																value="#{messageBeanSNR.commonLabelPreguntaIntervieneEnElDocumentoARegistrar}#{messageBeanSNR.commonLabelObligatorio}" />
+															<p:selectOneRadio id="idOlInterviene1" style="width:100%"
+																rendered="#{beanResolucionRecurso.idProceso != '3' and beanResolucionRecurso.idProceso != '10'}"
+																value="#{beanResolucionRecurso.solicitud.participaInterviniente}" disabled="#{!beanResolucionRecurso.habilitadoPorConsulta}">
+																<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+																	itemValue="S" />
+																<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+																	itemValue="N" />
+															</p:selectOneRadio>
+														</h:panelGrid>
+													</div>
+												</div>
+											</p:outputPanel>
+										</p:outputPanel>
+									</p:panel>
+									<br />
+									<p:panel id="idPanelDirRes" toggleable="true"
+										widgetVar="wvPanelDireccionR"
+										style="#{beanResolucionRecurso.persona.idTipoPersona eq 'J' ? 'display: none' : ''}"
+										collapsed="#{!beanResolucionRecurso.habilitarPanelDirResidencia}"
+										header="#{messageBeanSNR.commonLabelDireccionDeResidencia}">
+										<ui:include src="direccionResidenciaInclude.xhtml"/>
+									</p:panel>
+									<br />
+									<p:panel id="idPanelDirCorr" toggleable="true"
+										widgetVar="wvPanelDireccionC"
+										collapsed="#{!beanResolucionRecurso.habilitarPanelDirCorrespondencia}"
+										header="#{messageBeanSNR.commonLabelDireccionDeCorrespondencia}">
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-8 ui-lg-8">
+												<h:panelGrid columns="2">
+													<p:outputLabel id="labelCorrespondencia"
+														value="#{messageBeanSNR.commonLabelPreguntaDeseaQueSeaLaMismaDireccion}#{messageBeanSNR.commonLabelObligatorio}" />
+													<p:selectOneRadio id="idSorMismaDir" style="width:100%"
+														disabled="#{!beanResolucionRecurso.habilitadoPorConsulta}"
+														value="#{beanResolucionRecurso.mismaDireccionCorrespondencia}">
+														<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+															itemValue="S" />
+														<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+															itemValue="N" />
+														<p:ajax
+															listener="#{beanResolucionRecurso.cambiarDireccionCorrespondencia}"
+															update=":fResolucionRecurso:idFormDireccionCorrespondenciaInclude" />
+													</p:selectOneRadio>
+												</h:panelGrid>
+											</div>
+										</div>
+										<ui:include src="direccionCorrespondenciaInclude.xhtml"/>
+									</p:panel>
+									<br />
+									<p:panel id="idPanelDatosContacto" widgetVar="wvPanelDatosC"
+										collapsed="#{!beanResolucionRecurso.habilitarPanelDatosContacto}"
+										header="#{messageBeanSNR.commonLabelDatosDelContacto}"
+										toggleable="true">
+										<p:outputPanel id="idOpTelFijo">
+											<div class="ui-g" align="left">
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelPaisDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:selectOneMenu id="idSOMPaisTel" style="width:80%"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoPaisTelefonoFijo}"
+															value="#{beanResolucionRecurso.telefonoFijo.idPais}"
+															disabled="#{beanResolucionRecurso.deshabilitarTelFijo || !beanResolucionRecurso.habilitadoPorConsulta}">
+															<p:ajax listener="#{beanResolucionRecurso.cambiarPaisTelefono}"
+																update="idSOMDepTel,idItIndicativo" />
+															<f:selectItem itemValue=""
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+															<f:selectItems value="#{beanReference.findPaises()}"
+																var="paises" itemValue="#{paises.idPais}"
+																itemLabel="#{paises.nombre}" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelDepartamentoDelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:selectOneMenu id="idSOMDepTel" style="width:80%"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoDepartamentoTelefonoFijo}"
+															value="#{beanResolucionRecurso.telefonoFijo.idDepartamento}"
+															disabled="#{beanResolucionRecurso.deshabilitarTelFijo || !beanResolucionRecurso.habilitadoPorConsulta}">
+															<p:ajax
+																listener="#{beanResolucionRecurso.findIndicativoDepartamento}"
+																update="idItIndicativo" />
+															<f:selectItem
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																itemValue="" />
+															<f:selectItems
+																value="#{beanResolucionRecurso.findDepartamentosTelefono()}"
+																var="depRes" itemValue="#{depRes.idDepartamento}"
+																itemLabel="#{depRes.nombre}" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelTelefonoFijo}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<div class="ui-g-4 ui-md-4 ui-lg-3">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelIndicativo}" />
+													</div>
+													<div class="ui-g-2 ui-md-2 ui-lg-2">
+														<p:inputText onblur="value=value.toUpperCase()"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoIndicativo}"
+															id="idItIndicativo" disabled="true" size="4"
+															value="#{beanResolucionRecurso.telefonoFijo.indicativo}"
+															maxlength="15" />
+													</div>
+													<div class="ui-g-1 ui-md-1 ui-lg-1">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelSignoNumero}" />
+													</div>
+			
+													<div class="ui-g-5 ui-md-5 ui-lg-4">
+														<p:inputText onblur="value=value.toUpperCase()"
+															id="idItTelefonoFijo"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoTelefonoFijo}"
+															placeholder="#{messageBeanSNR.commonLabelTelefonoFijo}"
+															maxlength="7"
+															value="#{beanResolucionRecurso.telefonoFijo.telefono}"
+															disabled="#{beanResolucionRecurso.deshabilitarTelFijo || !beanResolucionRecurso.habilitadoPorConsulta}">
+															<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+														</p:inputText>
+													</div>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelPaisDelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:selectOneMenu id="idSOMPaisTelMov" style="width:80%"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoPaisTelefonoMovil}"
+															value="#{beanResolucionRecurso.telefonoMovil.idPais}"
+															disabled="#{beanResolucionRecurso.deshabilitarTelMovil || !beanResolucionRecurso.habilitadoPorConsulta}">
+															<p:ajax update="idItIndicativoMovil" />
+															<f:selectItem itemValue=""
+																itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+															<f:selectItems value="#{beanReference.findPaises()}"
+																var="paises" itemValue="#{paises.idPais}"
+																itemLabel="#{paises.nombre}" />
+														</p:selectOneMenu>
+													</div>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelTelefonoMovil}#{messageBeanSNR.commonLabelObligatorio}" />
+													<br />
+													<div class="ui-g-4 ui-md-4 ui-lg-3">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelIndicativo}" />
+														<p:spacer />
+													</div>
+													<div class="ui-g-2 ui-md-2 ui-lg-2">
+														<p:inputText onblur="value=value.toUpperCase()"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoIndicativoMovil}"
+															id="idItIndicativoMovil" disabled="true" size="4"
+															value="#{beanResolucionRecurso.telefonoMovil.idPais}" />
+													</div>
+													<div class="ui-g-1 ui-md-1 ui-lg-1">
+														<p:outputLabel
+															value="#{messageBeanSNR.commonLabelSignoNumero}" />
+														<p:spacer />
+													</div>
+			
+													<div class="ui-g-5 ui-md-5 ui-lg-5">
+														<p:inputText onblur="value=value.toUpperCase()"
+															id="idItTelefonoMovil"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoTelefonoMovil}"
+															placeholder="#{messageBeanSNR.commonLabelTelefonoMovil}"
+															value="#{beanResolucionRecurso.telefonoMovil.telefono}"
+															disabled="#{beanResolucionRecurso.deshabilitarTelMovil || !beanResolucionRecurso.habilitadoPorConsulta}"
+															maxlength="10">
+															<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+														</p:inputText>
+													</div>
+												</div>
+												<div class="ui-g-12 ui-md-6 ui-lg-4">
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelCorreoElectronico}#{messageBeanSNR.commonLabelObligatorio}" />
+													<div class="ui-g-12 ui-md-12 ui-lg-12">
+														<p:inputText onblur="value=value.toUpperCase()"
+															id="idItEmail" style="width:83% !important"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosContactoCorreoElectronico}"
+															placeholder="#{messageBeanSNR.commonLabelEjemploCorreo}"
+															size="30" maxlength="100"
+															value="#{beanResolucionRecurso.correoElectronico.correoElectronico}"
+															disabled="#{beanResolucionRecurso.deshabilitarCorreo || !beanResolucionRecurso.habilitadoPorConsulta}" />
+													</div>
+												</div>
+											</div>
+										</p:outputPanel>
+									</p:panel>
+									<br/>
+									<div class="ui-g">
+								     	<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+											<p:commandButton id="idCmBtnAgregarInterviniente"
+												value="#{messageBeanSNR.commonButtonAgregarInteresadoYoInterviniente}"
+												icon="fa fa-plus-circle" iconPos="left"
+												actionListener="#{beanResolucionRecurso.agregarIntervinienteResultadoNotificacion('fResolucionRecurso')}"
+												update="fResolucionRecurso:idDtResultadosNotificacion, fResolucionRecurso:opConsultarAlInteresado, fResolucionRecurso:idOpDatosPersona, fResolucionRecurso:idOpAgregarInteresadoInterviniente, fResolucionRecurso:idDtPersonasVinculadas, fResolucionRecurso:globalMsg">
+											</p:commandButton>
+										</div>
+									 </div>
+								</p:outputPanel>
+							</p:outputPanel>
+							<br/>
+						     <p:fragment>
+						     	<p:autoUpdate/>
+							     <p:dataTable id="idDtTercerosDeterminados" var="item" tableStyle="width:auto;"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									value="#{beanResolucionRecurso.personaNotificacion}" rowIndexVar="rowKey">
+									<f:facet name="header">
+										<h:outputText
+											value="#{messageBeanSNR.commonLabelDatosDeLosTercerosDeterminados}" />
+									</f:facet>
+									<p:columnGroup type="header">
+										<p:row>
+											<p:column style="width:10%"/>
+											<p:column headerText="#{messageBeanSNR.commonLabelDestinatario}" />
+											<p:column headerText="#{messageBeanSNR.commonLabelDireccion}" />
+											<p:column headerText="#{messageBeanSNR.commonLabelDepartamento}" />
+											<p:column headerText="#{messageBeanSNR.commonLabelMunicipio}" />
+											<p:column headerText="#{messageBeanSNR.commonLabelAgregarAResultadosDeNotificacion}" />
+											<p:column headerText="#{messageBeanSNR.commonLabelEliminar}"/>
+										</p:row>
+									</p:columnGroup>
+									<p:column style="width:5%;">
+										<h:outputText value="#{item.identificador}" />
+									</p:column>
+									
+									<p:column>
+										<p:inputTextarea rows="3" cols="100"
+											onblur="value=value.toUpperCase()"
+											title="#{tooltipBeanSNR.procesosSustanciadorActuacionesAdminBandejaEntradaBandejaTurnosDetalleTurnoActuacionesAdministrativasDestinatario}"
+											value="#{item.destinatario}" 
+											maxlength="1024"/>
+									</p:column>
+			
+									<p:column>
+										<p:inputTextarea rows="3" cols="100"
+											onblur="value=value.toUpperCase()"
+											title="#{tooltipBeanSNR.procesosSustanciadorActuacionesAdminBandejaEntradaBandejaTurnosDetalleTurnoActuacionesAdministrativasDireccion}"
+											value="#{item.direccion}" 
+											maxlength="4000"/>
+									</p:column>
+			
+									<p:column>
+										<p:selectOneMenu id="idSOMDepartamento"
+											value="#{item.idDepartamento}" 
+											title="#{tooltipBeanSNR.procesosSustanciadorActuacionesAdminBandejaEntradaBandejaTurnosDetalleTurnoActuacionesAdministrativasDepartamento}">
+											<p:ajax  listener="#{beanResolucionRecurso.cargarMunicipios(item)}"  update="fResolucionRecurso:idDtTercerosDeterminados"/>
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems
+												value="#{beanReference.findDepartamentos()}" var="itemDepartamento"
+												itemValue="#{itemDepartamento.idDepartamento}"
+												itemLabel="#{itemDepartamento.nombre}" />
+										</p:selectOneMenu>
+									</p:column>
+									
+									<p:column>
+										<p:selectOneMenu id="idSOMMunicipios"
+											value="#{item.idMunicipio}"
+											title="#{tooltipBeanSNR.procesosSustanciadorActuacionesAdminBandejaEntradaBandejaTurnosDetalleTurnoActuacionesAdministrativasMunicipio}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems
+												value="#{item.municipios}" var="itemMunicipio"
+												itemValue="#{itemMunicipio.idMunicipio}"
+												itemLabel="#{itemMunicipio.nombre}" />
+										</p:selectOneMenu>
+									</p:column>
+									
+									<p:column style="width: 10%;">
+						        		<p:commandButton icon="fa fa-plus-circle"
+											title="#{messageBeanSNR.commonLabelAgregarAResultadosDeNotificacion}"
+											iconPos="center"
+											update="fResolucionRecurso:idDtResultadosNotificacion"
+											actionListener="#{beanResolucionRecurso.agregarTerceroResultadoNotificacion(item)}" />
+						        	</p:column>
+			
+									<p:column style="width: 10%;">
+										<p:commandButton icon="fa fa-trash"
+											title="#{messageBeanSNR.commonLabelEliminar}"
+											iconPos="center"
+											actionListener="#{beanResolucionRecurso.eliminarTerceroDeterminado(item)}" />
+									</p:column>
+								</p:dataTable>
+							</p:fragment>
+							<br/>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+									<p:commandButton id="idCmBtnAgregarTerceroDeterminado"
+										value="#{messageBeanSNR.commonButtonAgregarTerceroDeterminado}"
+										icon="fa fa-plus-circle" iconPos="left"
+										actionListener="#{beanResolucionRecurso.agregarTerceroDeterminado}"
+										update="idDtTercerosDeterminados">
+									</p:commandButton>
+								</div>
+							</div>
+							<br/>
+							<p:dataTable id="idDtResultadosNotificacion" var="item" tableStyle="width:100%;"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+								value="#{beanResolucionRecurso.resultadosNotificacion}" rowIndexVar="rowKey">
+								<f:facet name="header">
+									<h:outputText
+										value="#{messageBeanSNR.commonLabelResultadosDeNotificacion}" />
+								</f:facet>
+								<p:columnGroup type="header">
+									<p:row>
+										<p:column style="width:10%"/>
+										<p:column headerText="#{messageBeanSNR.commonLabelDestinatario}" />
+										<p:column headerText="#{messageBeanSNR.commonLabelTipoDocumentoDocumento}" />
+										<p:column headerText="#{messageBeanSNR.commonLabelCalidadEnQueActua}" />
+										<p:column headerText="#{messageBeanSNR.commonLabelEliminar}"/>
+									</p:row>
+								</p:columnGroup>
+								<p:column style="width:5%;">
+									<h:outputText value="#{item.identificador}" />
+								</p:column>
+								
+								<p:column>
+									<h:outputText value="#{item.destinatario}" />
+								</p:column>
+		
+								<p:column>
+									<h:outputText value="#{item.tipoDocumento} - #{item.documento}" />
+								</p:column>
+		
+								<p:column>
+									<h:outputText value="#{item.calidadEnQueActua}" />
+								</p:column>
+								
+								<p:column style="width: 10%;">
+									<p:commandButton icon="fa fa-trash"
+										title="#{messageBeanSNR.commonLabelEliminar}"
+										iconPos="center"
+										actionListener="#{beanResolucionRecurso.eliminarResultadoNotificacion(item)}" 
+										update="fResolucionRecurso:idDtResultadosNotificacion"/>
+								</p:column>
+							</p:dataTable>
+						</p:panel>
+						<br/>
+						<p:panel header="#{messageBeanSNR.commonLabelDatosDeLaResolucion}">
+							<center>
+								<h:panelGroup id="layoutsContainer">
+									<h:panelGrid id="layoutsGrid" columns="2"
+										style="margin-top: 15px;" cellpadding="0" cellspacing="0"
+										layout="responsive">
+										<p:layout style="min-width:170vh;min-height:100vh;">
+										    <p:layoutUnit position="west" resizable="true" size="50%">
+										    	<p:outputPanel rendered="#{beanResolucionRecurso.idMotivo eq 10 or beanResolucionRecurso.idMotivo eq 70}">
+													<div class="ui-g" align="center" style="max-width:100%;">
+														<div class="ui-g-12 ui-md-6 ui-lg-12">
+															<p:outputLabel value="#{messageBeanSNR.commonLabelAntecedentes}#{messageBeanSNR.commonLabelObligatorio}"/>
+															<br/>
+															<p:textEditor widgetVar="wbAntecedentes" value="#{beanResolucionRecurso.oficiosTexto.antecedentes}"
+																height="200" style="margin-bottom:10px; max-width:20hv">
+																<f:facet name="toolbar">
+																	<span class="ql-formats">
+																		<button class="ql-bold"/>
+														                <button class="ql-italic"/>
+														                <button class="ql-underline"/>
+																	</span>
+																</f:facet>
+															</p:textEditor>
+														</div>
+													</div>
+										    	</p:outputPanel>
+										    	<p:outputPanel rendered="#{beanResolucionRecurso.idMotivo eq 10 or beanResolucionRecurso.idMotivo eq 20 or beanResolucionRecurso.idMotivo eq 30 or beanResolucionRecurso.idMotivo eq 40}">
+													<div class="ui-g" align="center" style="max-width:100%;">
+														<div class="ui-g-12 ui-md-6 ui-lg-12">
+															<p:outputLabel value="#{messageBeanSNR.commonLabelConsideraciones}#{messageBeanSNR.commonLabelObligatorio}"/>
+															<br/>
+															<p:textEditor widgetVar="wbPertinencia" value="#{beanResolucionRecurso.oficiosTexto.pertinencia}"
+																height="200" style="margin-bottom:10px">
+																<f:facet name="toolbar">
+																	<span class="ql-formats">
+																		<button class="ql-bold"/>
+														                <button class="ql-italic"/>
+														                <button class="ql-underline"/>
+																	</span>
+																</f:facet>
+															</p:textEditor>
+														</div>
+													</div>
+										    	</p:outputPanel>
+										    	<p:outputPanel rendered="#{beanResolucionRecurso.idMotivo eq 20 or beanResolucionRecurso.idMotivo eq 30 or beanResolucionRecurso.idMotivo eq 40}">
+													<div class="ui-g" align="center" style="max-width:100%;">
+														<div class="ui-g-12 ui-md-6 ui-lg-12">
+															<p:outputLabel value="#{messageBeanSNR.commonLabelCopiarTextoNotaDevolutiva}#{messageBeanSNR.commonLabelObligatorio}"/>
+															<br/>
+															<p:textEditor widgetVar="wbRazon1" value="#{beanResolucionRecurso.oficiosTexto.razon1}"
+																height="200" style="margin-bottom:10px; max-width:20hv">
+																<f:facet name="toolbar">
+																	<span class="ql-formats">
+																		<button class="ql-bold"/>
+														                <button class="ql-italic"/>
+														                <button class="ql-underline"/>
+																	</span>
+																</f:facet>
+															</p:textEditor>
+														</div>
+													</div>
+												</p:outputPanel>
+												<p:outputPanel rendered="#{beanResolucionRecurso.idMotivo eq 20 or beanResolucionRecurso.idMotivo eq 30 or beanResolucionRecurso.idMotivo eq 40 or beanResolucionRecurso.idMotivo eq 50 or beanResolucionRecurso.idMotivo eq 60}">
+													<div class="ui-g" align="center" style="max-width:100%;">
+														<div class="ui-g-12 ui-md-6 ui-lg-12">
+															<p:outputLabel value="#{beanResolucionRecurso.idMotivo eq 50 or beanResolucionRecurso.idMotivo eq 60 ? messageBeanSNR.commonLabelAntecedentes : messageBeanSNR.commonLabelHechos}#{messageBeanSNR.commonLabelObligatorio}"/>
+															<br/>
+															<p:textEditor widgetVar="wbHechos" value="#{beanResolucionRecurso.oficiosTexto.antecedentes}"
+																height="200" style="margin-bottom:10px; max-width:20hv">
+																<f:facet name="toolbar">
+																	<span class="ql-formats">
+																		<button class="ql-bold"/>
+														                <button class="ql-italic"/>
+														                <button class="ql-underline"/>
+																	</span>
+																</f:facet>
+															</p:textEditor>
+														</div>
+													</div>
+												</p:outputPanel>
+												<p:outputPanel rendered="#{beanResolucionRecurso.idMotivo eq 20 or beanResolucionRecurso.idMotivo eq 30 or beanResolucionRecurso.idMotivo eq 40 or beanResolucionRecurso.idMotivo eq 50 or beanResolucionRecurso.idMotivo eq 60 or beanResolucionRecurso.idMotivo eq 70}">
+													<div class="ui-g" align="center" style="max-width:100%;">
+														<div class="ui-g-12 ui-md-6 ui-lg-12">
+															<p:outputLabel value="#{messageBeanSNR.commonLabelArgumentosDelRecurrente}#{messageBeanSNR.commonLabelObligatorio}"/>
+															<br/>
+															<p:textEditor widgetVar="wbArgumentosRecurrente" value="#{beanResolucionRecurso.oficiosTexto.argumentosRecurrente}"
+																height="200" style="margin-bottom:10px; max-width:20hv">
+																<f:facet name="toolbar">
+																	<span class="ql-formats">
+																		<button class="ql-bold"/>
+														                <button class="ql-italic"/>
+														                <button class="ql-underline"/>
+																	</span>
+																</f:facet>
+															</p:textEditor>
+														</div>
+													</div>
+												</p:outputPanel>
+												<p:outputPanel rendered="#{beanResolucionRecurso.idMotivo eq 20 or beanResolucionRecurso.idMotivo eq 30 or beanResolucionRecurso.idMotivo eq 40}">
+													<div class="ui-g" align="center" style="max-width:100%;">
+														<div class="ui-g-12 ui-md-6 ui-lg-12">
+															<p:outputLabel value="#{messageBeanSNR.commonLabelNotificaciones}#{messageBeanSNR.commonLabelObligatorio}"/>
+															<br/>
+															<p:textEditor widgetVar="wbNotificaciones" value="#{beanResolucionRecurso.oficiosTexto.razon2}"
+																height="200" style="margin-bottom:10px; max-width:20hv">
+																<f:facet name="toolbar">
+																	<span class="ql-formats">
+																		<button class="ql-bold"/>
+														                <button class="ql-italic"/>
+														                <button class="ql-underline"/>
+																	</span>
+																</f:facet>
+															</p:textEditor>
+														</div>
+													</div>
+												</p:outputPanel>
+												<p:outputPanel rendered="#{beanResolucionRecurso.idMotivo eq 20 or beanResolucionRecurso.idMotivo eq 30 or beanResolucionRecurso.idMotivo eq 40 or beanResolucionRecurso.idMotivo eq 50 or beanResolucionRecurso.idMotivo eq 60 or beanResolucionRecurso.idMotivo eq 70}">
+													<div class="ui-g" align="center" style="max-width:100%;">
+														<div class="ui-g-12 ui-md-6 ui-lg-12">
+															<p:outputLabel value="#{messageBeanSNR.commonLabelConsideracionesDelDespacho}#{messageBeanSNR.commonLabelObligatorio}"/>
+															<br/>
+															<p:textEditor widgetVar="wbConsideracion" value="#{beanResolucionRecurso.oficiosTexto.consideracion}"
+																height="200" style="margin-bottom:10px; max-width:20hv">
+																<f:facet name="toolbar">
+																	<span class="ql-formats">
+																		<button class="ql-bold"/>
+														                <button class="ql-italic"/>
+														                <button class="ql-underline"/>
+																	</span>
+																</f:facet>
+															</p:textEditor>
+														</div>
+													</div>
+												</p:outputPanel>
+												<p:outputPanel rendered="#{beanResolucionRecurso.idMotivo eq 30 or beanResolucionRecurso.idMotivo eq 40 or beanResolucionRecurso.idMotivo eq 50}">
+													<div class="ui-g" align="center" style="max-width:100%;">
+														<div class="ui-g-12 ui-md-6 ui-lg-12">
+															<p:outputLabel value="#{messageBeanSNR.commonLabelDecision}#{messageBeanSNR.commonLabelObligatorio}"/>
+															<br/>
+															<p:textEditor widgetVar="wbDecision" value="#{beanResolucionRecurso.oficiosTexto.razon1}"
+																height="200" style="margin-bottom:10px; max-width:20hv">
+																<f:facet name="toolbar">
+																	<span class="ql-formats">
+																		<button class="ql-bold"/>
+														                <button class="ql-italic"/>
+														                <button class="ql-underline"/>
+																	</span>
+																</f:facet>
+															</p:textEditor>
+														</div>
+													</div>
+												</p:outputPanel>
+												<p:outputPanel rendered="#{beanResolucionRecurso.idMotivo eq 10}">
+													<div class="ui-g" align="center" style="max-width:100%;">
+														<div class="ui-g-12 ui-md-6 ui-lg-12">
+															<p:outputLabel value="#{messageBeanSNR.commonLabelTerminoParaAportarPruebas}#{messageBeanSNR.commonLabelObligatorio}"/>
+														</div>
+													</div>
+													<div class="ui-g" align="center" style="max-width:100%;">
+														<div class="ui-g-12 ui-md-6 ui-lg-6">
+															<p:outputLabel value="#{messageBeanSNR.commonLabelNumeroDeDias}"/>
+															<br/>
+															<p:selectOneMenu id="idSOMListadoDias"
+																rendered="#{beanResolucionRecurso.listadoDias != null}"
+																value="#{beanResolucionRecurso.oficiosTexto.diasSuspension}"
+																style="width:100%">
+																<f:selectItem
+																	itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+																	itemValue="" />
+																<f:selectItems
+																	value="#{beanResolucionRecurso.listadoDias}"
+																	var="item" itemValue="#{item}"
+																	itemLabel="#{item}" />
+																<p:ajax listener="#{beanResolucionRecurso.convertirDiasLetrasOficiosTexto}" update="itDiasLetras"/>
+															</p:selectOneMenu>
+															
+															<p:inputNumber maxlength="5"
+																rendered="#{beanResolucionRecurso.listadoDias == null}"
+																title="#{messageBeanSNR.commonLabelNumeroDeDias}"
+																value="#{beanResolucionRecurso.oficiosTexto.diasSuspension}">
+																<p:keyFilter regEx="/^\d*$/" preventPaste="false" />
+																<p:ajax listener="#{beanResolucionRecurso.convertirDiasLetrasOficiosTexto}" update="itDiasLetras"/>
+															</p:inputNumber>
+														</div>
+														<div class="ui-g-12 ui-md-6 ui-lg-6">
+															<p:outputLabel value="#{messageBeanSNR.commonLabelDiasEnLetras}"/>
+															<br/>
+															<p:inputText id="itDiasLetras" disabled="true" value="#{beanResolucionRecurso.oficiosTexto.diasLetras}"/>
+														</div>
+													</div>
+												</p:outputPanel>
+												<p:outputPanel rendered="#{beanResolucionRecurso.idMotivo eq 10 or beanResolucionRecurso.idMotivo eq 20 or beanResolucionRecurso.idMotivo eq 30 or beanResolucionRecurso.idMotivo eq 40 or beanResolucionRecurso.idMotivo eq 50 or beanResolucionRecurso.idMotivo eq 60 or beanResolucionRecurso.idMotivo eq 70}">
+													<div class="ui-g" align="center" style="max-width:100%;">
+														<div class="ui-g-12 ui-md-6 ui-lg-12">
+															<p:outputLabel value="#{messageBeanSNR.commonLabelResuelve}#{messageBeanSNR.commonLabelObligatorio}"/>
+															<br/>
+															<p:textEditor widgetVar="wbeResuelve" value="#{beanResolucionRecurso.oficiosTexto.resuelve}"
+																height="200" style="margin-bottom:10px">
+																<f:facet name="toolbar">
+																	<span class="ql-formats">
+																		<button class="ql-bold"/>
+														                <button class="ql-italic"/>
+														                <button class="ql-underline"/>
+																	</span>
+																</f:facet>
+															</p:textEditor>
+														</div>
+													</div>
+												</p:outputPanel>
+										    </p:layoutUnit>
+										    <p:layoutUnit position="center">
+										        <p:outputPanel id="PanelDocumento" style="margin-left: 30px;">
+													<pe:documentViewer height="690px" id="documento" width="98%"
+														value="#{beanResolucionRecurso.imagenDocumento}" />
+												</p:outputPanel>
+										    </p:layoutUnit>
+										</p:layout>
+									</h:panelGrid>
+								</h:panelGroup>
+							</center>
+						</p:panel>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-6 ui-lg-12" align="center">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonVisualizarCambiosResolucion}"
+									icon="fa fa-check" update="fResolucionRecurso:globalMsg"
+									action="#{beanResolucionRecurso.visualizarCambiosResolucionRecurso()}" />
+							</div>
+						</div>
+					</p:panel>
+					<br/>
+					<p:outputPanel id="idObservaciones1">
+						<div align="left">
+							<strong>
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelObservaciones}" />
+							</strong>
+							<p:inputTextarea rows="10" cols="240"
+								title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoDatosObservaciones}"
+								onblur="value=value.toUpperCase()"
+								value="#{beanResolucionRecurso.observaciones}"
+								queryDelay="750" maxlength="4000" minQueryLength="4"
+								counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+								counter="idNumeroCaracteres1" />
+						</div>
+						<div align="right">
+							<h:outputText id="idNumeroCaracteres1" />
+						</div>
+					</p:outputPanel>
+					<p:outputPanel id="opBotones">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-6 ui-lg-3" align="left">
+								<br/>
+								<p:commandButton id="cbVolver"
+									value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									action="detalleActo?faces-redirect=true">
+								</p:commandButton>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-9" align="right">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonGenerarDocumentos}"
+									icon="fa fa-check"
+									onclick="PF('dlgGenerarDocumentos').show();"
+									rendered="#{!beanResolucionRecurso.mostrarDescargarZip}"/>
+								<h:commandLink action="#{beanPredioDocumentoActo.consultaSGD()}" rendered="#{beanResolucionRecurso.documentosEnviados}" target="_blank">
+									<p:commandButton
+										value="#{messageBeanSNR.commonLabelConsultaSGD}"
+										icon="lupa" iconPos="left"/>
+								</h:commandLink>	
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonEnviarAlCoordinadorJuridico}"
+									icon="fa fa-chevron-right"
+									rendered="#{beanResolucionRecurso.documentosEnviados}"
+									action="#{beanResolucionRecurso.enviarAResolucionRecurso()}" />
+							</div>
+						</div>
+					</p:outputPanel>
+				</center>
+			</h:form>
+			
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgGenerarDocumentos" modal="true" height="90" resizable="false">
+				<h:form id="dlgGenerarDocumentos"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeGenerarDocumentos}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fResolucionRecurso:opBotones"
+							actionListener="#{beanResolucionRecurso.generarDocumentosResolucionRecurso}"
+							oncomplete="PF('dlgGenerarDocumentos').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlgGenerarDocumentos').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

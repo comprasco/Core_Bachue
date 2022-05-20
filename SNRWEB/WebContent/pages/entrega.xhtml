@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelEntrega}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelEntrega}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fEntrega" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" life="10000" showDetail="true" redisplay="false"/>
+				<center>
+
+					<p:panel header="#{messageBeanSNR.commonLabelBandejaDeEntrega}"
+						id="panelPrincipal" style="min-width:800px;" toggleable="true">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+										style="font-size: 100%;" />
+									<p:inputText placeholder="#{messageBeanSNR.commonLabelNIR}"
+										onblur="value=value.toUpperCase()"
+										onkeypress="if (event.keyCode == 13) {value=value.toUpperCase();}"
+										maxlength="20"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosNir}"
+										id="nir" value="#{beanEntrega.nirConsulta}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}"
+										style="font-size: 100%;" />
+									<p:inputText placeholder="#{messageBeanSNR.commonLabelTurno}"
+										id="idTurno" value="#{beanEntrega.idTurnoConsulta}"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosTurno}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGroup>
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										actionListener="#{beanEntrega.generarDatosTramiteCantidad()}"
+										ajax="true" icon="lupa"
+										update="idDtTramiteCantidad,panelPrincipal,idGrowl" />
+								</h:panelGroup>
+
+							</div>
+						</div>
+						<p:outputPanel id="idDtTramiteCantidad">
+							<div class="ui-g">
+								<p:dataTable value="#{beanEntrega.datosTramiteCantidad}"
+									rendered="#{beanEntrega.isValidCollection(beanEntrega.datosTramiteCantidad)}"
+									var="item">
+									<p:column headerText="#{messageBeanSNR.commonLabelIdEtapa}"
+										width="20%" sortBy="#{item.nombre}">
+										<h:outputText value="#{item.nombre}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelCantidad}"
+										width="8%" sortBy="#{item.cantidad}">
+										<div align="center">
+											<h:outputText value="#{item.cantidad}" />
+										</div>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelDetalle}"
+										width="8%">
+										<div align="center">
+											<h:commandButton
+												value="#{messageBeanSNR.commonLabelVerDetalle}"
+												onclick="PrimeFaces.monitorDownload(start, stop);"
+												action="#{beanEntrega.returnPages}"
+												rendered="#{item.cantidad > 0}" image="../images/find.png">
+												<f:param name="idEtapa" value="#{item.idEtapa}"></f:param>
+											</h:commandButton>
+										</div>
+										<script type="text/javascript">
+											function start()
+											{
+												PF('statusDialog').show();
+											}
+
+											function stop()
+											{
+												PF('statusDialog').hide();
+											}
+										</script>
+									</p:column>
+									<f:facet name="footer">
+										<p:column style="text-align:right">
+											<h:outputText
+												value="#{messageBeanSNR.commonLabelTotalEnBandeja}" />
+										</p:column>
+										<p:column>
+											<h:outputText value="#{beanEntrega.totalBandeja}" />
+										</p:column>
+										<p:column>
+											<h:outputText value="" />
+										</p:column>
+									</f:facet>
+								</p:dataTable>
+							</div>
+						</p:outputPanel>
+					</p:panel>
+					<p:spacer />
+					<div align="left">
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="principal?faces-redirect=true">
+						</p:commandButton>
+					</div>
+					<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+						closable="false" resizable="false" showHeader="false">
+						<p:graphicImage value="/images/ajaxloadingbar.gif" />
+					</p:dialog>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

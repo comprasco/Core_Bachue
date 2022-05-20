@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelConciliacion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelReportes}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelArchivoIngresosING}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fIngresosING" style="width: 100%;">
+				<p:growl id="idGrowl" globalOnly="true" showDetail="true"
+					sticky="false" life="10000" redisplay="false" />
+				<center>
+					<p:panel>
+						<p:panel
+							header="#{messageBeanSNR.commonLabelArchivoIngresosING}"
+							style="width:100%">
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-4 ui-lg-4" align="center"></div>
+								<div class="ui-g-12 ui-md-4 ui-lg-4" align="left">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelFechaAConsultar}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:calendar id="idFechaConsulta" size="10" mask="true"
+										title="#{tooltipBeanSNR.conciliacionConfrontacionDeLaInformacionFechaAConfrontar}"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										value="#{beanArchivoIngresosING.fechaConsulta}"
+										showOn="button" />
+								</div>
+							</div>
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<h:panelGroup>
+										<p:commandButton
+											value="#{messageBeanSNR.commonButtonConsultar}" icon="lupa"
+											action="#{beanArchivoIngresosING.consultar()}"
+											update="fIngresosING:idPanelResultadoConsulta" />
+									</h:panelGroup>
+								</div>
+							</div>
+						</p:panel>
+						<br />
+						<p:outputPanel id="idPanelResultadoConsulta"
+							rendered="#{beanArchivoIngresosING.mostrarPanel}">
+							<p:panel
+								header="#{messageBeanSNR.commonLabelArchivoIngresosING}">
+								<p:tabView orientation="header">
+									<p:tab title="#{messageBeanSNR.commonLabelArchivoMaestro}">
+										<p:dataTable id="idListadoSiifMaestro"
+											style="min-width:500px;"
+											value="#{beanArchivoIngresosING.siifMaestro}" var="item"
+											emptyMessage="#{errorBeanSNR.errorSinRegistros}" scrollable="true">
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelIdSiifMaestro}">
+												<h:outputText value="#{item.idSiifMaestro}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelIdPeriodoCorte}">
+												<h:outputText value="#{item.idPeriodoCorte}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelConsecutivoMaestro}">
+												<h:outputText value="#{item.consecutivoMaestro}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelPciConexion}">
+												<h:outputText value="#{item.pciConexion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelDocumentoRecaudo}">
+												<h:outputText value="#{item.documentoRecaudo}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelTipoDocumento}">
+												<h:outputText value="#{item.tipoDocumento}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelPciOrigenDocumento}">
+												<h:outputText value="#{item.pciOrigenDocumento}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelAnioObligacion}">
+												<h:outputText value="#{item.anioObligacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelFechaRegistro}">
+												<h:outputText value="#{item.fechaRegistro}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelCodigoTipoDocTercero}">
+												<h:outputText value="#{item.codigoTipoDocTercero}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelNumeroDocTercero}">
+												<h:outputText value="#{item.numeroDocTercero}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelRelacionMoneda}">
+												<h:outputText value="#{item.relacionMoneda}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelValorTotalMonedaExtranjera}">
+												<h:outputText value="#{item.valorTotalMonedaExtranjera}">
+													<f:convertNumber pattern="¤#,##0.00"
+														currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+												</h:outputText>
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelValorTotalPesos}">
+												<h:outputText value="#{item.valorTotalPesos}">
+													<f:convertNumber pattern="¤#,##0.00"
+														currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+												</h:outputText>
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelFuenteFinanciacion}">
+												<h:outputText value="#{item.fuenteFinanciacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelSituacionFondo}">
+												<h:outputText value="#{item.situacionFondo}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelTipoDocumentoSoporte}">
+												<h:outputText value="#{item.tipoDocumentoSoporte}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelNumeroDocumentoSoporte}">
+												<h:outputText value="#{item.numeroDocumentoSoporte}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelFechaSolicitud}">
+												<h:outputText value="#{item.fechaSolicitud}" />
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelExpedidor}">
+												<h:outputText value="#{item.expedidor}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelNombreFuncionario}">
+												<h:outputText value="#{item.nombreFuncionario}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelCargoFuncionario}">
+												<h:outputText value="#{item.cargoFuncionario}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelObservacion}">
+												<h:outputText value="#{item.observacion}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelUrlDocumentoSoporte}">
+												<h:outputText value="#{item.urlDocumentoSoporte}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelUrlDescripcionDocumentoTercero}">
+												<h:outputText value="#{item.urlDescripcionDocumentoTercero}" />
+											</p:column>
+										</p:dataTable>
+									</p:tab>
+									<p:tab title="#{messageBeanSNR.commonLabelArchivoDetalle}">
+										<p:dataTable id="idListadoSiifDetalle"
+											style="min-width:500px;"
+											value="#{beanArchivoIngresosING.siifDetalle}" var="item"
+											emptyMessage="#{errorBeanSNR.errorSinRegistros}" scrollable="true">
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelIdSiifDetalle}">
+												<h:outputText value="#{item.idSiifDetalle}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelConsecutivoMaestro}">
+												<h:outputText value="#{item.consecutivoMaestro}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelConsecutivoDetalle}">
+												<h:outputText value="#{item.consecutivoDetalle}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelDependenciaAfectacionIng}">
+												<h:outputText value="#{item.dependenciaAfectacionIng}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelPosicionCatalogoIng}">
+												<h:outputText value="#{item.posicionCatalogoIng}" />
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelValorMonedaExtranjera}">
+												<h:outputText value="#{item.valorMonedaExtranjera}">
+													<f:convertNumber pattern="¤#,##0.00"
+														currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+												</h:outputText>
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelValorPesos}">
+												<h:outputText value="#{item.valorPesos}">
+													<f:convertNumber pattern="¤#,##0.00"
+														currencySymbol="#{messageBeanSNR.commonLabelSignoPesos}" />
+												</h:outputText>
+											</p:column>
+										</p:dataTable>
+									</p:tab>
+								</p:tabView>
+							</p:panel>
+						</p:outputPanel>
+					</p:panel>
+					<p:spacer />
+					<div align="left">
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="principal?faces-redirect=true">
+						</p:commandButton>
+					</div>
+					<br />
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

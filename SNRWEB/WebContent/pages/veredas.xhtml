@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTablaBasica}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelVeredas}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fVereda" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false"/>
+				<center>
+					<p:panel style="min-width:800px;">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonInsertarVereda}"
+									icon="fa fa-plus-circle" iconPos="left" update="globalMsg"
+									actionListener="#{beanVereda.cambiarEstado()}"
+									action="veredaDetalle?faces-redirect=true">
+									<f:param name="pInsertar" value="true" />
+								</p:commandButton>
+							</div>
+						</div>
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelPais}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idPais" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionVeredaPais}"
+										value="#{beanVereda.parametros.idPais}">
+										<p:ajax listener="#{beanVereda.pais()}"
+											update="idPais, idDepartamento" />
+										<f:selectItem itemValue=""
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+										<f:selectItems value="#{beanReference.findPaises()}"
+											var="paises" itemValue="#{paises.idPais}"
+											itemLabel="#{paises.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idDepartamento" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionVeredaDepartamento}"
+										value="#{beanVereda.parametros.idDepartamento}">
+										<p:ajax listener="#{beanVereda.departamento}"
+											update="idMunicipio" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanVereda.findDepartamentos()}"
+											var="depRes" itemValue="#{depRes.idDepartamento}"
+											itemLabel="#{depRes.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idMunicipio" style="width:100%;"
+										value="#{beanVereda.parametros.idMunicipio}"
+										title="#{tooltipBeanSNR.administracionVeredaMunicipio}">
+										<p:ajax listener="#{beanVereda.findAllVeredas()}"
+											update="fVereda:idDtListado" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanVereda.findMunicipios()}"
+											var="munRes" itemValue="#{munRes.idMunicipio}"
+											itemLabel="#{munRes.nombre}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+						<br />
+						<p:dataTable id="idDtListado" var="item"
+							value="#{beanVereda.veredas}"
+							emptyMessage="#{errorBeanSNR.errorSinRegistros}" paginator="true"
+							rows="50">
+							<f:facet name="header">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelVeredas}" />
+							</f:facet>
+							<p:column headerText="#{messageBeanSNR.commonLabelPais}"
+								filterBy="#{item.nombrePais}">
+								<h:outputText value="#{item.nombrePais}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelDepartamento}"
+								filterBy="#{item.nombreDepartamento}">
+								<h:outputText value="#{item.nombreDepartamento}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelMunicipio}"
+								filterBy="#{item.nombreMunicipio}">
+								<h:outputText value="#{item.nombreMunicipio}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelVereda}"
+								filterBy="#{item.idVereda}">
+								<h:outputText value="#{item.idVereda}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelNombre}"
+								filterBy="#{item.nombre}">
+								<p:commandLink styleClass="subrayado"
+									actionListener="#{beanVereda.consultaDetallada()}"
+									action="veredaDetalle?faces-redirect=true">
+									<f:param name="idDepartamento" value="#{item.idDepartamento}" />
+									<f:param name="idPais" value="#{item.idPais}" />
+									<f:param name="idMunicipio" value="#{item.idMunicipio}" />
+									<f:param name="idVereda" value="#{item.idVereda}" />
+									<h:outputText value="#{item.nombre}" />
+								</p:commandLink>
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelCabeceraMunicipal}"
+								filterBy="#{item.cabeceraMunicipal}">
+								<h:outputText value="#{item.cabeceraMunicipal}" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

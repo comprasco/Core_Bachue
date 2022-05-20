@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cn/mensajero/v1" xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/cn/mensajero/enviarmensaje/v1" xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/cn/mensajero/consultarenvio/v1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.supernotariado.gov.co/services/bachue/cn/mensajero/v1">
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cn/mensajero/enviarmensaje/v1" version="1.3">
+			<xsd:complexType name="tipoEntradaEnviarMensaje">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="modulo" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="identificadorEE" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="clasificacion" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="canal" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="orip" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="nir" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="turno" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="destinatario" type="bachue1:tipoDestinatarioEMI"/>
+					<xsd:element minOccurs="0" name="documentos">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="0" name="documento" type="bachue1:tipoDocumento"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="plantilla" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="variables">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="0" name="variable" type="bachue1:tipoVariableEMI"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoDestinatarioEMI">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="direccionCorreoElectronicoDestinatario" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="direccionCorreoFisicoDestinatario" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="numeroTelefonoDestinatario" type="xsd:integer"/>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="tipoVariableEMI">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="tipo" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="codigo" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="criterio" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="tipoDocumento">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="dID" type="xsd:integer"/>
+					<xsd:element minOccurs="0" name="dDocName" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaEnviarMensaje" type="bachue1:tipoEntradaEnviarMensaje"/>
+			<xsd:complexType name="tipoSalidaEnviarMensaje">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="fechaRecepcion" type="xsd:dateTime"/>
+					<xsd:element minOccurs="0" name="identificadorGenerado" type="xsd:string"/>
+					<xsd:element name="codMensaje" type="xsd:integer"/>
+					<xsd:element minOccurs="0" name="descripcionMensaje" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaEnviarMensaje" type="bachue1:tipoSalidaEnviarMensaje"/>
+		</xsd:schema>
+
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cn/mensajero/consultarenvio/v1" version="1.3">
+			<xsd:complexType name="tipoEntradaConsultarEnvio">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="fechaInicial" type="xsd:dateTime"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="fechaFinal" nillable="true" type="xsd:dateTime"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="tipoID" nillable="true" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="identificador" nillable="true" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="pagina" nillable="true" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="direccionCorreoElectronicoDestinatario" nillable="true" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="numeroTelefonoDestinatario" nillable="true" type="xsd:integer"/>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="entradaConsultarEnvio" type="bachue2:tipoEntradaConsultarEnvio"/>
+
+			<xsd:complexType name="tipoSalidaConsultarEnvio">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="numeroRegistros" type="xsd:integer"/>
+					<xsd:element minOccurs="0" name="listaMensajes">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="0" name="mensaje">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element minOccurs="0" name="nir" type="xsd:string"/>
+											<xsd:element maxOccurs="1" minOccurs="0" name="turno" nillable="true" type="xsd:string"/>
+											<xsd:element maxOccurs="1" minOccurs="0" name="orip" nillable="true" type="xsd:string"/>
+											<xsd:element maxOccurs="1" minOccurs="0" name="identificadorEE" nillable="true" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="fechaEnvio" type="xsd:date"/>
+											<xsd:element minOccurs="0" name="asunto" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="cuerpo" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="para" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="documentos">
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element maxOccurs="unbounded" minOccurs="0" name="documento">
+															<xsd:complexType>
+																<xsd:sequence>
+																	<xsd:element minOccurs="0" name="dID" type="xsd:string"/>
+																	<xsd:element minOccurs="0" name="dDocName" type="xsd:string"/>
+																</xsd:sequence>
+															</xsd:complexType>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codMensaje" type="xsd:integer"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="descripcionMensaje" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarEnvio" type="bachue2:tipoSalidaConsultarEnvio"/>
+		</xsd:schema>
+
+
+	</wsdl:types>
+
+	<wsdl:message name="EnviarMensaje_Request">
+		<wsdl:part element="bachue1:entradaEnviarMensaje" name="entrada"/>
+	</wsdl:message>
+	<wsdl:message name="EnviarMensaje_Response">
+		<wsdl:part element="bachue1:salidaEnviarMensaje" name="salida"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultarEnvio_Request">
+		<wsdl:part element="bachue2:entradaConsultarEnvio" name="entrada"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultarEnvio_Response">
+		<wsdl:part element="bachue2:salidaConsultarEnvio" name="salida"/>
+	</wsdl:message>
+
+	<wsdl:portType name="SUT_CN_Mensajero">
+		<wsdl:operation name="EnviarMensaje">
+			<wsdl:input message="bachue:EnviarMensaje_Request"/>
+			<wsdl:output message="bachue:EnviarMensaje_Response"/>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarEnvio">
+			<wsdl:input message="bachue:ConsultarEnvio_Request"/>
+			<wsdl:output message="bachue:ConsultarEnvio_Response"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SUT_CN_MensajeroSOAP12Binding" type="bachue:SUT_CN_Mensajero">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="EnviarMensaje">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/services/bachue/cn/mensajero/v1/EnviarMensaje" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarEnvio">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/services/bachue/cn/mensajero/v1/ConsultarEnvio" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SUT_CN_Mensajero">
+		<wsdl:port binding="bachue:SUT_CN_MensajeroSOAP12Binding" name="SUT_CN_MensajeroPort">
+			<soap:address location="http://localhost:7001/SNRServicesCYNMRWEB/services/SUT_CN_MensajeroPort"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

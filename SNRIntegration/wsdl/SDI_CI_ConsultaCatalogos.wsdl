@@ -1,0 +1,64 @@
+
+<WL5G3N0:definitions xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="https://www.supernotariado.gov.co/schemas/bachue/ci/consultacatalogos/consultarcatalogos/v1" xmlns:WL5G3N2="https://www.supernotariado.gov.co/services/bachue/ci/consultacatalogos/v1" xmlns:WL5G3N3="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="https://www.supernotariado.gov.co/services/bachue/ci/consultacatalogos/v1">
+	<WL5G3N0:types>
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:concat="https://www.supernotariado.gov.co/schemas/bachue/ci/consultacatalogos/consultarcatalogos/v1" targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ci/consultacatalogos/consultarcatalogos/v1" elementFormDefault="qualified" version="1.3">
+			<xs:element name="entradaConsultarCatalogos" type="concat:tipoEntradaConsultarCatalogos"/>
+			<xs:element name="salidaConsultarCatalogos" type="concat:tipoSalidaConsultarCatalogos"/>
+			<xs:complexType name="catalogo">
+				<xs:sequence>
+					<xs:element name="catalogo" type="concat:catalogoType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="catalogoType">
+				<xs:sequence>
+					<xs:element name="codigo" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="nombre" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="tipoEntradaConsultarCatalogos">
+				<xs:sequence>
+					<xs:element name="modulo" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="catalogo" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="parametro" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="tipoSalidaConsultarCatalogos">
+				<xs:sequence>
+					<xs:element name="catalogos" type="concat:catalogo" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="codigoMensaje" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="descripcionMensaje" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:schema>
+	</WL5G3N0:types>
+	<WL5G3N0:message name="ConsultarCatalogos_Request">
+		<WL5G3N0:part element="WL5G3N1:entradaConsultarCatalogos" name="entrada"/>
+	</WL5G3N0:message>
+	<WL5G3N0:message name="ConsultarCatalogos_Response">
+		<WL5G3N0:part element="WL5G3N1:salidaConsultarCatalogos" name="salida"/>
+	</WL5G3N0:message>
+	<WL5G3N0:portType name="SDI_CI_ConsultaCatalogos">
+		<WL5G3N0:operation name="ConsultarCatalogos">
+			<WL5G3N0:input message="WL5G3N2:ConsultarCatalogos_Request"/>
+			<WL5G3N0:output message="WL5G3N2:ConsultarCatalogos_Response"/>
+		</WL5G3N0:operation>
+	</WL5G3N0:portType>
+	<WL5G3N0:binding name="SDI_CI_ConsultaCatalogosSOAP12Binding" type="WL5G3N2:SDI_CI_ConsultaCatalogos">
+		<WL5G3N3:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<WL5G3N0:operation name="ConsultarCatalogos">
+			<WL5G3N3:operation soapAction="https://www.supernotariado.gov.co/services/bachue/ci/consultacatalogos/v1/ConsultarCatalogos" style="document"/>
+			<WL5G3N0:input>
+				<WL5G3N3:body parts="entrada" use="literal"/>
+			</WL5G3N0:input>
+			<WL5G3N0:output>
+				<WL5G3N3:body parts="salida" use="literal"/>
+			</WL5G3N0:output>
+		</WL5G3N0:operation>
+	</WL5G3N0:binding>
+	<WL5G3N0:service name="SDI_CI_ConsultaCatalogos">
+		<WL5G3N0:documentation>OSB Service</WL5G3N0:documentation>
+		<WL5G3N0:port binding="WL5G3N2:SDI_CI_ConsultaCatalogosSOAP12Binding" name="SDI_CI_ConsultaCatalogosPort">
+			<WL5G3N3:address location="http://192.168.100.43:7018/services/ci/consultarcatalogos/v1"/>
+		</WL5G3N0:port>
+	</WL5G3N0:service>
+</WL5G3N0:definitions>

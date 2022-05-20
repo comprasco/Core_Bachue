@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelCuentaCupos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleTurno}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<p:dialog widgetVar="statusDispositivo" modal="true"
+				draggable="false" closable="false" resizable="false"
+				showHeader="false" appendTo="@(body)" width="16%">
+				<p:progressBar id="progressBar" mode="indeterminate"
+					widgetVar="progressBar" rendered="true" />
+			</p:dialog>
+			<h:form id="fCuentaCupos">
+				<p:growl id="idGrowl" sticky="false" showDetail="true" life="20000"
+					globalOnly="true" redisplay="false" />
+				<p:remoteCommand name="segundaVerificacion"
+					actionListener="#{beanCuentaCupos.segundaVerificacion}"
+					update="fCuentaCupos:idGrowl" partialSubmit="true" global="false" />
+				<p:remoteCommand name="fail"
+					actionListener="#{beanDispositivos.error}"
+					update="fCuentaCupos:idGrowl" partialSubmit="true" global="false" />
+				<p:remoteCommand name="verify"
+					action="#{beanCuentaCupos.aprobarSolicitudCuentaCupo()}"
+					update="fDialog1,fCuentaCupos:idGrowl,fCuentaCupos:idPValores,fCuentaCupos:idPDesicion" />
+				<p:panel style="min-width:800px;">
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+							<br />
+							<p:inputText readonly="true"
+								value="#{beanCuentaCupos.datosAprobacion.nir}" />
+						</div>
+						<div class="ui-g-12 ui-md-3">
+							<p:outputLabel value="Turno" />
+							<br />
+							<p:inputText readonly="true" value="#{beanCuentaCupos.idTurno}" />
+						</div>
+					</div>
+				</p:panel>
+				<br />
+				<p:panel id="idPInformacionTurno" style="min-width:800px;"
+					header="#{messageBeanSNR.commonLabelInformacionGeneral}">
+					<div class="ui-g" align="center">
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+							<br />
+							<p:inputText id="idITNir" style="width:100%;" disabled="true"
+								value="#{beanCuentaCupos.datosAprobacion.nir}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelRazonSocial}" />
+							<br />
+							<p:inputText id="idITRazonSocial" style="width:100%;"
+								disabled="true"
+								value="#{beanCuentaCupos.datosAprobacion.razonSocial}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelNIT}" />
+							<br />
+							<p:inputText id="idITNit" style="width:100%;" disabled="true"
+								value="#{beanCuentaCupos.datosAprobacion.nit}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelRepresentanteLegal}" />
+							<br />
+							<p:inputText id="idITRepresentanteLegal" style="width:100%;"
+								disabled="true"
+								value="#{beanCuentaCupos.datosAprobacion.representanteLegal}" />
+						</div>
+					</div>
+					<div class="ui-g" align="center">
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelCiudad}" />
+							<br />
+							<p:inputText id="idITCiudad" style="width:100%;" disabled="true"
+								value="#{beanCuentaCupos.datosAprobacion.ciudad}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelTelefono}" />
+							<br />
+							<p:inputText id="idITTelefono" style="width:100%;"
+								disabled="true"
+								value="#{beanCuentaCupos.datosAprobacion.telefono}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelCorreoElectronico}" />
+							<br />
+							<p:inputText id="idITCorreoElectronico" style="width:100%;"
+								disabled="true"
+								value="#{beanCuentaCupos.datosAprobacion.correoElectronico}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelFechaSolicitud}" />
+							<br />
+							<p:inputText id="idITFechaSolicitud" style="width:100%;"
+								disabled="true"
+								value="#{beanCuentaCupos.datosAprobacion.fechaSolicitud}" />
+						</div>
+					</div>
+					<div class="ui-g" align="center">
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelTipoSolicitud}" />
+							<br />
+							<p:inputText id="idITTipoSolicitud" style="width:100%;"
+								disabled="true"
+								value="#{beanCuentaCupos.datosAprobacion.tipoSolicitud}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelEstado}" />
+							<br />
+							<p:inputText id="idITEstado" style="width:100%;" disabled="true"
+								value="#{beanCuentaCupos.datosAprobacion.estado}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelValorMinimo}" />
+							<br />
+							<p:inputText id="idITValorMinimo" style="width:100%;"
+								disabled="true"
+								value="#{beanCuentaCupos.datosAprobacion.valorMinimo}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel value="#{messageBeanSNR.commonLabelValorMaximo}" />
+							<br />
+							<p:inputText id="idITValorMaximo" style="width:100%;"
+								disabled="true"
+								value="#{beanCuentaCupos.datosAprobacion.valorMaximo}" />
+						</div>
+					</div>
+					<div class="ui-c" align="left">
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel
+								value="#{messageBeanSNR.commonButtonVisualizarDocumentos}" />
+							<br />
+							<p:commandButton ajax="false"
+								value="#{messageBeanSNR.commonLabelConsultaSGD}" icon="lupa"
+								iconPos="left" update="idGrowl"
+								action="#{beanCuentaCupos.consultaSGD()}">
+							</p:commandButton>
+						</div>
+					</div>
+				</p:panel>
+				<br />
+				<p:panel id="idPValores" style="min-width:800px;"
+					rendered="#{!beanCuentaCupos.solicitudCancelacion}"
+					header="#{messageBeanSNR.commonLabelValoresCuentaCupo}">
+					<div class="ui-g" align="center">
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel
+								indicateRequired="#{beanCuentaCupos.aprobarSolicitud}"
+								value="#{messageBeanSNR.commonLabelValorMinimoNuevo}" />
+							<br />
+							<p:inputNumber id="idINValorMinNuevo" size="20"
+								disabled="#{beanCuentaCupos.solicitudModificacion}"
+								value="#{beanCuentaCupos.nuevoValorMinimo}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel
+								indicateRequired="#{beanCuentaCupos.aprobarSolicitud}"
+								value="#{messageBeanSNR.commonLabelValorMaximoNuevo}" />
+							<br />
+							<p:inputNumber id="idINValorMaxNuevo" size="20"
+								disabled="#{beanCuentaCupos.solicitudModificacion}"
+								value="#{beanCuentaCupos.nuevoValorMaximo}" />
+						</div>
+					</div>
+				</p:panel>
+				<br />
+				<p:panel id="idPDesicion" style="min-width:800px;"
+					header="#{messageBeanSNR.commonLabelDecision}">
+					<div class="ui-g" align="center">
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:selectOneRadio layout="responsive" columns="2"
+								style="text-align: initial;width:100%;"
+								value="#{beanCuentaCupos.aprobarSolicitud}"
+								styleClass="ui-selectoneradiosinnegrilla">
+								<f:selectItem itemValue="true"
+									itemLabel="#{messageBeanSNR.commonLabelAprobarSolicitud}" />
+								<f:selectItem itemValue="false"
+									itemLabel="#{messageBeanSNR.commonLabelRechazarSolicitud}" />
+								<p:ajax event="click"
+									update="idITAObservaciones,idOLObservaciones,idPValores" />
+							</p:selectOneRadio>
+						</div>
+					</div>
+					<br />
+					<div class="ui-g" align="center">
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:outputLabel id="idOLObservaciones"
+								indicateRequired="#{!beanCuentaCupos.aprobarSolicitud}"
+								value="#{messageBeanSNR.commonLabelObservaciones}" />
+							<br />
+							<p:inputTextarea rows="7" cols="73" id="idITAObservaciones"
+								maxlength="4000" onblur="value=value.toUpperCase()"
+								counterTemplate="{0} Caracteres faltantes" autoResize="true"
+								value="#{beanCuentaCupos.observaciones}">
+							</p:inputTextarea>
+						</div>
+					</div>
+				</p:panel>
+				<br />
+				<div class="ui-g" align="center">
+					<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="cuentaCuposTramites?faces-redirect=true">
+						</p:commandButton>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+						<p:commandButton id="idCBVisualizar"
+							value="#{messageBeanSNR.commonLabelVisualizar}" ajax="true"
+							icon="fa fa-download" iconPos="left" update="idGrowl"
+							actionListener="#{beanCuentaCupos.exportarArchivoConstancia()}"
+							onclick="PrimeFaces.monitorDownload(start, stop);">
+							<p:fileDownload value="#{beanCuentaCupos.documentoConstancia}" />
+						</p:commandButton>
+						<p:commandButton id="idCBGuardar"
+							value="#{messageBeanSNR.commonLabelGuardar}" icon="fa fa-save"
+							iconPos="left" update="idGrowl"
+							onclick="PF('dlgConfirmacion1').show();" />
+					</div>
+				</div>
+			</h:form>
+
+			<p:dialog appendTo="@(body)" id="idDDialogoConfirmacion"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgConfirmacion1" modal="true" height="90"
+				resizable="false">
+				<h:form id="fDialog1" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonMessageConfirmarInformacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							id="idCBConfirmar" icon="fa fa-check"
+							onclick="procesar();PF('dlgConfirmacion1').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlgConfirmacion1').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

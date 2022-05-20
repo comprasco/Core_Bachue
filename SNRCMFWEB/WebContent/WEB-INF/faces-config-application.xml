@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+    version="2.2">
+	<application>
+		<message-bundle>com.bachue.snr.prosnr01.web.bean.resources.DefaultMessages</message-bundle>
+		<resource-bundle>
+			<base-name>com.bachue.snr.prosnr21.web.bean.resources.Errors</base-name>
+			<var>errorBeanSNR</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>com.bachue.snr.prosnr21.web.bean.resources.Options</base-name>
+			<var>optionBeanSNR</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>com.bachue.snr.prosnr21.web.bean.resources.Messages</base-name>
+			<var>messageBeanSNR</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>com.bachue.snr.prosnr01.web.bean.resources.Criterios</base-name>
+			<var>CriteriosBeanSNR</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>com.bachue.snr.prosnr21.web.bean.resources.Tooltips</base-name>
+			<var>tooltipBeanSNR</var>
+		</resource-bundle>
+		<action-listener>
+            org.primefaces.application.DialogActionListener
+        </action-listener>
+        <navigation-handler>
+            org.primefaces.application.DialogNavigationHandler
+        </navigation-handler>
+        <view-handler>
+            org.primefaces.application.DialogViewHandler
+        </view-handler>
+		<locale-config>
+			<default-locale>es</default-locale>
+			<supported-locale>en</supported-locale>
+		</locale-config>
+        <view-handler>com.bachue.snr.prosnr21.web.bean.handlers.SNRViewHandler</view-handler>
+	</application>
+</faces-config>

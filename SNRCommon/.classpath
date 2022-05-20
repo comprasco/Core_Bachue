@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.system"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/SNREAR/EarContent/lib/axis.jar"/>
+	<classpathentry kind="lib" path="/SNREAR/EarContent/lib/poi-3.7-20101029.jar"/>
+	<classpathentry kind="lib" path="/SNREAR/EarContent/lib/poi-ooxml-3.7-20101029.jar"/>
+	<classpathentry kind="lib" path="/SNREAR/EarContent/lib/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="/SNREAR/EarContent/lib/jsch-0.1.55.jar"/>
+	<classpathentry kind="lib" path="/SNREAR/EarContent/lib/javax.mail-1.6.2.jar"/>
+	<classpathentry kind="lib" path="/SNRWEB/WebContent/WEB-INF/lib/javax.servlet-api-3.1.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

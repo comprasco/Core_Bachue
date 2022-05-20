@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTablaBasica}" />
+				</li>
+				<li class="breadcrumb-item" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelMunicipios}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{beanMunicipios.insertar ? messageBeanSNR.pageInsertarMunicipio : messageBeanSNR.pageModificarMunicipio}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fMunicipiosDetalle" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false"/>
+				<center>
+					<p:panel>
+						<p:panel
+							header="#{beanMunicipios.insertar ? messageBeanSNR.pageInsertarMunicipio : messageBeanSNR.pageModificarMunicipio}">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelIdPais}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idMunIdPais" style="width:100%;"
+										title="#{tooltipBeanSNR.administracionMunicipiosIdPais}"
+										disabled="#{!beanMunicipios.insertar}"
+										value="#{beanMunicipios.parametros.idPais}">
+										<p:ajax listener="#{beanMunicipios.pais()}"
+											update="idMunIdPais, idMunIdDepartamento" />
+										<f:selectItem itemValue=""
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+										<f:selectItems value="#{beanReference.findPaises()}"
+											var="paises" itemValue="#{paises.idPais}"
+											itemLabel="#{paises.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelIdDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idMunIdDepartamento" style="width:100%;"
+										disabled="#{!beanMunicipios.insertar}"
+										title="#{tooltipBeanSNR.administracionMunicipioIdDepartamento}"
+										value="#{beanMunicipios.parametros.idDepartamento}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanMunicipios.findDepartamentos()}"
+											var="depRes" itemValue="#{depRes.idDepartamento}"
+											itemLabel="#{depRes.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelIdMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText id="idMunIdMunicipio" maxlength="20"
+										title="#{tooltipBeanSNR.administracionMunicipioIdMunicipio}"
+										placeholder="#{messageBeanSNR.commonLabelIdMunicipio}"
+										value="#{beanMunicipios.parametros.idMunicipio}">
+										<p:keyFilter regEx="/[\d\-\.]/" preventPaste="false" />
+									</p:inputText>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelNombre}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText id="idMunNombre"
+										onblur="value=value.toUpperCase()" maxlength="100"
+										title="#{tooltipBeanSNR.administracionMunicipioNombre}"
+										placeholder="#{messageBeanSNR.commonLabelNombre}"
+										value="#{beanMunicipios.parametros.nombre}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelImplementadoNupre}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu style="width:100%;" id="idMunImNup"
+										title="#{tooltipBeanSNR.administracionMunicipioImplementadoNupre}"
+										value="#{beanMunicipios.parametros.implementadoNupre}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelActivo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu style="width:100%;" id="idActivo"
+										title="#{tooltipBeanSNR.administracionMunicipioActivo}"
+										value="#{beanMunicipios.parametros.activo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelZonaRiesgo}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu style="width:100%;" id="idZonaRiesgo"
+										title="#{tooltipBeanSNR.administracionMunicipioZonaRiesgo}"
+										value="#{beanMunicipios.parametros.zonaRiesgo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<br />
+							<p:dataTable id="idDetalle" var="item"
+								rendered="#{!beanMunicipios.insertar}"
+								value="#{beanMunicipios.parametros}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+								<f:facet name="header">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+								</f:facet>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+									<h:outputText value="#{item.idUsuarioCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<h:outputText value="#{item.fechaCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+									<h:outputText value="#{item.idUsuarioModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+									<h:outputText value="#{item.fechaModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIpModificación}">
+									<h:outputText value="#{item.ipModificacion}" />
+								</p:column>
+							</p:dataTable>
+							<br />
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										update="globalMsg" action="municipios?faces-redirect=true" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton
+										value="#{beanMunicipios.insertar ? messageBeanSNR.commonButtonInsertarMunicipio : messageBeanSNR.commonButtonModificarMunicipio}"
+										icon="fa fa-pencil" iconPos="left" update="globalMsg"
+										action="#{beanMunicipios.salvar()}" />
+								</div>
+
+							</div>
+						</p:panel>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

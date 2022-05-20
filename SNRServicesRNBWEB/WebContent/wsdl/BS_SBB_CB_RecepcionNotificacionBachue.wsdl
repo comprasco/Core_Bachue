@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/ci/recepcionNotificacionBachue/v1"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/ci/recepcionNotificacionBachue/v1"
+	xmlns:bachue5="https://www.supernotariado.gov.co/schemas/bachue/ci/recepcionNotificacionBachue/registrarReintentoServicio/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ci/recepcionNotificacionBachue/registrarReintentoServicio/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaRegistrarReintentoServicio">
+				<xsd:sequence>
+					<xsd:element name="codTransaccion" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="operacionRegistro" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="estadoRegistro" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="numeroReintento" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="fechaRegistro" type="xsd:string"
+						minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaRegistrarReintentoServicio"
+				type="bachue5:tipoEntradaRegistrarReintentoServicio" />
+			<xsd:complexType
+				name="tipoSalidaRegistrarReintentoServicio">
+				<xsd:sequence>
+					<xsd:element name="codMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaRegistrarReintentoServicio"
+				type="bachue5:tipoSalidaRegistrarReintentoServicio" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="RegistrarReintentoServicio_Request">
+		<wsdl:part name="entrada"
+			element="bachue5:entradaRegistrarReintentoServicio" />
+	</wsdl:message>
+	<wsdl:message name="RegistrarReintentoServicio_Response">
+		<wsdl:part name="salida"
+			element="bachue5:salidaRegistrarReintentoServicio" />
+	</wsdl:message>
+	<wsdl:portType
+		name="BS_SBB_CB_RecepcionNotificacionBachue">
+		<wsdl:operation name="RegistrarReintentoServicio">
+			<wsdl:input
+				message="bachue:RegistrarReintentoServicio_Request" />
+			<wsdl:output
+				message="bachue:RegistrarReintentoServicio_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="BS_SBB_CB_RecepcionNotificacionBachue"
+		type="bachue:BS_SBB_CB_RecepcionNotificacionBachue">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="RegistrarReintentoServicio">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ci/recepcionNotificacionBachue/v1/RegistrarReintentoServicio" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="BS_SBB_CB_RecepcionNotificacionBachue">
+		<wsdl:port name="BS_SBB_CB_RecepcionNotificacionBachuePort"
+			binding="bachue:BS_SBB_CB_RecepcionNotificacionBachue">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

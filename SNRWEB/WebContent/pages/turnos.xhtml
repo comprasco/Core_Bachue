@@ -1,0 +1,399 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb"  style="#{beanPredioDocumentoActo.idEtapa == 652 ? 'display:none;' : ''}">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item" style="#{beanTurnos.idEtapa == 410 ? '' : 'display:none'}">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelRecursos}"/>
+				</li>
+				<li class="breadcrumb-item" style="#{beanTurnos.idEtapa == 650 or beanTurnos.idEtapa == 651 ? '' : 'display:none'}">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTrasladosDeMatriculas}"/>
+				</li>
+				<li class="breadcrumb-item" style="#{beanTurnos.idEtapa == 175 or beanTurnos.idEtapa == 170 ? '' : 'display:none'}">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelActuacionesAdministrativas}"/>
+				</li>
+				<li class="breadcrumb-item" style="#{beanTurnos.idEtapa == 114 ? '' : 'display:none'}">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAprobacion}"/>
+				</li>
+				<li class="breadcrumb-item" style="#{beanTurnos.idEtapa == 375 or beanTurnos.idEtapa == 380 ? '' : 'display:none'}">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDevoluciones}"/>
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel rendered="#{beanTurnos.renderedCalificacion}"
+						value="#{messageBeanSNR.commonLabelCalificacion}" /> 
+					<p:outputLabel rendered="#{beanTurnos.grabacionMatriculas}"
+						value="#{messageBeanSNR.commonLabelGrabacion}" />
+					<p:outputLabel rendered="#{beanTurnos.renderedHomologacionActosLiquidacion}"
+						value="#{messageBeanSNR.commonLabelHomologacionActosLiquidacionMayorValor}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 310}"
+						value="#{messageBeanSNR.commonLabelCertificados}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 350}"
+						value="#{messageBeanSNR.commonLabelAnalistaDeCopias}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 132}"
+						value="#{messageBeanSNR.commonLabelEjecucionDeCorrecciones}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 130}"
+						value="#{messageBeanSNR.commonLabelCorrecciones}" />
+					<p:outputLabel value="#{messageBeanSNR.commonLabelModDeDatosBasicosYmatriculas}"
+						rendered="#{beanTurnos.renderedModDatosBasicos}" /> 
+					<p:outputLabel value="#{messageBeanSNR.commonLabelCorrecciones}"
+						rendered="#{beanTurnos.renderedCorrecciones}" />
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDigitadorMasivo}"
+						rendered="#{beanTurnos.renderedDigitadorMasivo}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 650}"
+						value="#{messageBeanSNR.commonLabelAnalisisDeTraslados}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 651}"
+						value="#{messageBeanSNR.commonLabelAnalisisDeTrasladosOficinaDestino}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 170}"
+						value="#{messageBeanSNR.commonLabelResponsableActuacionesAdministrativas}" /> 
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 175}"
+						value="#{messageBeanSNR.commonLabelSustanciadorActuacionesAdministrativas}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 410}"
+						value="#{messageBeanSNR.commonLabelAnalisisAbogadoSustanciadorRecursos}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 415}"
+						value="#{messageBeanSNR.commonLabelAsignacionTurnosManualRechazoRecursos}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 460}"
+						value="#{messageBeanSNR.commonLabelCoordinadorSegundaInstancia}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 430}"
+						value="#{messageBeanSNR.commonLabelAnalisisDeSegundaInstancia}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 236}"
+						value="#{messageBeanSNR.commonLabelPublicacionResolucion}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 114}"
+						value="#{messageBeanSNR.commonLabelAutorizaFirmaLibroAntiguoSistema}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 375}"
+						value="#{messageBeanSNR.commonLabelAnalisisDeDevolucionDeDinero}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 380}"
+						value="#{messageBeanSNR.commonLabelResponsableTesoreria}" />
+					<p:outputLabel rendered="#{beanTurnos.idEtapa == 377}"
+						value="#{messageBeanSNR.commonLabelEmisionDeActoAdministrativo}" />
+				</li>
+				<li class="breadcrumb-item"><p:outputLabel
+						rendered="#{!(beanTurnos.idEtapa == 130 or beanTurnos.idEtapa == 132)}"
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" /> <p:outputLabel
+						rendered="#{beanTurnos.idEtapa == 130 or beanTurnos.idEtapa == 132}"
+						value="#{messageBeanSNR.commonLabelBandejaDeCorreccion}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" /></li>
+			</ol>
+			<ol class="breadcrumb" style="#{beanPredioDocumentoActo.idEtapa == 652 ? '' : 'display:none;'}">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelTrasladosDeMatriculas}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAnalisisDeTraslados}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelProyectarResolucion}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<h:form id="fCalificacion" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true"
+					redisplay="false" />
+				<center>
+
+					<p:panel header="#{messageBeanSNR.commonLabelBandejaDeTurnos}"
+						toggleable="true">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}"
+										style="font-size: 100%;" />
+									<p:inputText placeholder="#{messageBeanSNR.commonLabelNIR}"
+										onblur="value=value.toUpperCase()"
+										onkeypress="if (event.keyCode == 13) {value=value.toUpperCase();}"
+										maxlength="20"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosNir}"
+										id="nir" value="#{beanTurnos.nirConsulta}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelTurno}"
+										style="font-size: 100%;" />
+									<p:inputText placeholder="#{messageBeanSNR.commonLabelTurno}"
+										id="idTurno" value="#{beanTurnos.idTurnoConsulta}"
+										title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosTurno}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGroup>
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										actionListener="#{beanTurnos.generarData()}" ajax="true"
+										icon="lupa" update="idDtTurnos,idDtTurnosCalificacion" />
+								</h:panelGroup>
+
+							</div>
+						</div>
+						<br />
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<p:dataTable id="idDtTurnos"
+									value="#{beanTurnos.datosCalificacion}" var="item"
+									rendered="#{!beanTurnos.detalleCalificador}"
+									filteredValue="#{beanTurnos.filtroCalificacion}"
+									tableStyle="width:auto"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+									<p:column style="width: 10%;"
+										headerText="#{messageBeanSNR.commonLabelFiltrarTurno}">
+										<h:outputText value="#{item.idTurno}"
+											title="#{tooltipBeanSNR.procesosAprobacionFiltrarTurno}" />
+									</p:column>
+									<p:column style="width: 10%;" sortBy="#{item.fechaCreacion}"
+										headerText="#{messageBeanSNR.commonLabelFechaRadicacion}">
+										<h:outputText value="#{item.fechaCreacion}" />
+									</p:column>
+									<p:column style="width: 13%;"
+										headerText="#{messageBeanSNR.commonLabelFiltrarNir}">
+										<h:outputText value="#{item.nir}"
+											title="#{tooltipBeanSNR.procesosAprobacionFiltrarNIR}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelProceso}"
+										width="10%" sortBy="#{item.nombreProceso}">
+										<h:outputText value="#{item.nombreProceso}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelSubProceso}"
+										width="10%" sortBy="#{item.nombreSubProceso}">
+										<h:outputText value="#{item.nombreSubProceso}" />
+									</p:column>
+									<p:column style="width: 8%;"
+										headerText="#{messageBeanSNR.commonLabelFechaAsignacion}">
+										<h:outputText value="#{item.fechaReparto}" />
+									</p:column>
+									<p:column style="width: 11%;"
+										headerText="#{messageBeanSNR.commonLabelMotivo}">
+										<h:outputText value="#{item.motivoNoTramite}" />
+									</p:column>
+									<p:column style="width:8%;"
+										headerText="#{messageBeanSNR.commonLabelTipificacionTurno}">
+										<h:outputText value="#{item.tipificacionTurno}" />
+									</p:column>
+									<p:column style="width: 8%;"
+										headerText="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+										rendered="false">
+										<h:outputText value="#{item.observaciones}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+										style="width: 9%;">
+										<div align="center">
+											<p:commandButton id="abrirObsProcesoAnterior"
+												icon="fa fa-id-card-o"
+												actionListener="#{beanTurnos.mostrarObservacionesProcesoAnterior(item)}"
+												title="#{tooltipBeanSNR.procesosCalificacionTurnosObservacionesProcesoAnterior}"
+												style="width: 23%;" />
+										</div>
+									</p:column>
+									<p:column style="width:15%;" 
+										rendered="#{beanTurnos.idEtapa != 375}"
+										headerText="#{messageBeanSNR.commonLabelCertificadosAsociados}">
+										<h:outputText value="#{item.turnosAsociados}" />
+									</p:column>
+									<p:column style="width:10%;"
+										rendered="#{beanTurnos.idEtapa != 375}"
+										headerText="#{messageBeanSNR.commonLabelTurnosRelacionados}">
+										<h:outputText value="#{item.turnosRelacionados}" />
+									</p:column>
+									<p:column rendered="#{beanTurnos.idEtapa == 350 or beanTurnos.idEtapa == 375 or beanTurnos.idEtapa == 415 or beanTurnos.idEtapa == 80 or beanTurnos.idEtapa == 170 or beanTurnos.idEtapa == 90 or beanTurnos.idEtapa == 103 or beanTurnos.idEtapa == 130 or beanTurnos.idEtapa == 132 or beanTurnos.idEtapa == 70 or beanTurnos.idEtapa == 175 or beanTurnos.idEtapa == 420 or beanTurnos.idEtapa == 460 or beanTurnos.idEtapa == 465 or beanTurnos.idEtapa == 377 or beanTurnos.idEtapa == 650 or beanTurnos.idEtapa == 651 or beanTurnos.idEtapa == 112 or beanTurnos.idEtapa == 114}"
+										headerText="#{messageBeanSNR.commonLabelFechaVencimiento}"
+										width="10%" style="text-align:left">
+										<h:outputText value="#{item.fechaVencimiento}">
+											<f:convertDateTime pattern="dd/MM/yyyy"
+												timeZone="GMT-5" />
+										</h:outputText>
+									</p:column>
+									<p:column style="width:15%;"
+										rendered="#{beanTurnos.idEtapa == 375}"
+										headerText="#{messageBeanSNR.commonLabelObservacionesRespuesta}">
+										<h:outputText value="#{item.observacionesRespuesta}" />
+									</p:column>
+									<p:column rendered="#{beanTurnos.idEtapa == 350 or beanTurnos.idEtapa == 410 or beanTurnos.idEtapa == 415 or beanTurnos.idEtapa == 430 or beanTurnos.idEtapa == 375 or beanTurnos.idEtapa == 80 or beanTurnos.idEtapa == 170 or beanTurnos.idEtapa == 90 or beanTurnos.idEtapa == 103 or beanTurnos.idEtapa == 130 or beanTurnos.idEtapa == 132 or beanTurnos.idEtapa == 70 or beanTurnos.idEtapa == 175 or beanTurnos.idEtapa == 420 or beanTurnos.idEtapa == 460 or beanTurnos.idEtapa == 465 or beanTurnos.idEtapa == 377 or beanTurnos.idEtapa == 650 or beanTurnos.idEtapa == 651 or beanTurnos.idEtapa == 112 or beanTurnos.idEtapa == 114}"
+										headerText="#{messageBeanSNR.commonLabelEstadoVencimiento}"
+										width="10%" style="text-align:left">
+										<h:outputText style="#{item.rojoTiempoVencimiento ? 'color:red' : 'color:blue'}" 
+											value="#{messageBeanSNR.commonLabelEstadoActivo} #{item.tiempoVencimiento}" rendered="#{item.rojoTiempoVencimiento}" />
+										<h:outputText style="#{item.rojoTiempoVencimiento ? 'color:red' : 'color:blue'}" 
+											value="#{messageBeanSNR.commonLabelEstadoVencido} #{item.tiempoVencimiento}" rendered="#{!item.rojoTiempoVencimiento}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelVisualizar}"
+										width="9%" style="text-align:left">
+										<div align="center">
+											<h:commandButton
+												value="#{messageBeanSNR.commonLabelVerDetalle}"
+												action="#{beanTurnos.detalleActoEtapa}" immediate="true"
+												image="../images/find.png"
+												title="#{tooltipBeanSNR.procesosCalificacionTurnosVisualizar}"
+												rendered="#{item.estadoActividad eq 'ASG'}"
+												onclick="PrimeFaces.monitorDownload(start, stop);">
+												<f:param name="idTurnoHistoria"
+													value="#{item.idTurnoHistoria}" />
+												<f:param name="idTurno" value="#{item.idTurno}" />
+												<f:param name="idEtapa" value="#{item.idEtapa}" />
+												<f:param name="idProceso" value="#{item.idProceso}" />
+												<f:param name="idSubProceso" value="#{item.idSubProceso}" />
+												<f:param name="isLectura" value="0" />
+												<script type="text/javascript">
+													function start() {
+														PF('statusDownload1')
+																.show();
+													}
+
+													function stop() {
+														PF('statusDownload1')
+																.hide();
+													}
+												</script>
+												<p:dialog modal="true" widgetVar="statusDownload1"
+													draggable="false" closable="false" resizable="false">
+													<p:graphicImage value="/images/ajaxloadingbar.gif" />
+												</p:dialog>
+											</h:commandButton>
+											<h:commandButton
+												value="#{messageBeanSNR.commonLabelVerDetalle}"
+												action="turnos.jsf" immediate="true"
+												image="../images/reestringido.png"
+												title="#{tooltipBeanSNR.procesosCalificacionTurnosVisualizarBloqueado}"
+												rendered="#{item.estadoActividad eq 'BLQ' or item.estadoActividad eq 'AUT'}">
+											</h:commandButton>
+										</div>
+									</p:column>
+								</p:dataTable>
+
+								<p:dataTable id="idDtTurnosCalificacion"
+									value="#{beanTurnos.dataBandeja}" var="item"
+									rendered="#{beanTurnos.detalleCalificador}">
+									<p:column headerText="#{messageBeanSNR.commonLabelProcesos}"
+										width="15%" style="text-align:left">
+										<h:outputText value="#{item.proceso}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelTurno}"
+										width="15%" style="text-align:left">
+										<h:outputText value="#{item.idTurno}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelNIR}"
+										width="15%" style="text-align:left">
+										<h:outputText value="#{item.nir}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelMotivoNoTramite}"
+										width="15%" style="text-align:left">
+										<h:outputText value="#{item.motivoNoTramite}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+										width="22%" style="text-align:left">
+										<h:outputText value="#{item.observaciones}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaAsignacion}"
+										width="10%" style="text-align:left">
+										<h:outputText value="#{item.fechaReparto}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+												timeZone="GMT-5" />
+										</h:outputText>
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaCreacion}"
+										width="10%" style="text-align:left">
+										<h:outputText value="#{item.fechaCreacion}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+												timeZone="GMT-5" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelVisualizar}"
+										width="8%" style="text-align:left">
+										<div align="center">
+											<h:commandButton
+												value="#{messageBeanSNR.commonLabelVerDetalle}"
+												action="#{beanTurnos.detalleActoEtapa}" immediate="true"
+												image="../images/find.png"
+												title="#{tooltipBeanSNR.procesosCalificacionTurnosVisualizar}"
+												rendered="#{item.mostrar}"
+												onclick="PrimeFaces.monitorDownload(start, stop);">
+												<f:param name="idTurnoHistoria"
+													value="#{item.idTurnoHistoria}" />
+												<f:param name="idTurno" value="#{item.idTurno}" />
+												<f:param name="idEtapa" value="#{item.idEtapa}" />
+												<f:param name="isLectura" value="0" />
+												<script type="text/javascript">
+													function start() {
+														PF('statusDownload')
+																.show();
+													}
+
+													function stop() {
+														PF('statusDownload')
+																.hide();
+													}
+												</script>
+												<p:dialog modal="true" widgetVar="statusDownload"
+													draggable="false" closable="false" resizable="false">
+													<p:graphicImage value="/images/ajaxloadingbar.gif" />
+												</p:dialog>
+											</h:commandButton>
+										</div>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</p:panel>
+					<p:spacer />
+					<div align="left">
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							rendered="#{beanTurnos.renderedRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							title="#{tooltipBeanSNR.procesosCalificacionTurnosRegresar}"
+							action="#{beanTurnos.accionVolver}">
+						</p:commandButton>
+					</div>
+					<br />
+				</center>
+			</h:form>
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<p:dialog id="cuadroObsProcesoAnterior" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}"
+				widgetVar="obsProcesoAnterior" modal="true" resizable="false"
+				width="700">
+				<h:form id="fDialog" style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaCuadroProcesoAnterior" maxwidth="280"
+						cellspacing="1" cellpadding="20" border="1" bgcolor="#1E679A"
+						align="center">
+						<tr>
+							<td id="fila1TablaCuadroProcesoAnterior" bgcolor="#ffffff">
+								<h:outputText value="#{beanTurnos.observaciones}"
+									id="id_observacionesProcesoAnterior" />
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

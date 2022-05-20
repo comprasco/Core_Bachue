@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/ee/cambiopropietario/v1" xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/ee/cambioPropietario/consultarCambioPropietario/v1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.supernotariado.gov.co/services/bachue/ee/cambiopropietario/v1">
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/cambioPropietario/consultarCambioPropietario/v1">
+			<xsd:complexType name="tipoEntradaConsultarCambioPropietario">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="0" name="tipoIdentificacionPredio">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="matricula"/>
+								<xsd:enumeration value="numeroPredial"/>
+								<xsd:enumeration value="numeroPredialAnterior"/>
+								<xsd:enumeration value="NUPRE"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element maxOccurs="1" minOccurs="0" name="numIdentificacionPredio" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarCambioPropietario" type="bachue1:tipoEntradaConsultarCambioPropietario"/>
+			<xsd:complexType name="tipoSalidaConsultarCambioPropietario">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="0" name="codDepartamento" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="codMunicipio" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="codCirculoRegistral" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="anotacionesPredio">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="0" name="anotacionPredio">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element minOccurs="0" name="comentario" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="fechaAnotacion" type="xsd:dateTime"/>
+											<xsd:element minOccurs="0" name="valorActo" type="xsd:double"/>
+											<xsd:element maxOccurs="1" minOccurs="0" name="codNaturalezaJuridicaFolio" nillable="true" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="propietarios">
+												<xsd:complexType>
+													<xsd:sequence>
+														<xsd:element maxOccurs="unbounded" minOccurs="0" name="propietario">
+															<xsd:complexType>
+																<xsd:sequence>
+																	<xsd:element minOccurs="0" name="tipoPersona" type="xsd:string"/>
+																	<xsd:element minOccurs="0" name="tipoDocumentoPersona" type="xsd:string"/>
+																	<xsd:element minOccurs="0" name="numDocumentoPersona" type="xsd:string"/>
+																	<xsd:element minOccurs="0" name="DRR" type="xsd:string"/>
+																	<xsd:element minOccurs="0" name="porcentajeParticipacion" type="xsd:string"/>
+																</xsd:sequence>
+															</xsd:complexType>
+														</xsd:element>
+													</xsd:sequence>
+												</xsd:complexType>
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="codMensaje" type="xsd:integer"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="descripcionMensaje" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarCambioPropietario" type="bachue1:tipoSalidaConsultarCambioPropietario"/>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="ConsultarCambioPropietario_Request">
+		<wsdl:part element="bachue1:entradaConsultarCambioPropietario" name="entrada"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultarCambioPropietario_Response">
+		<wsdl:part element="bachue1:salidaConsultarCambioPropietario" name="salida"/>
+	</wsdl:message>
+	<wsdl:portType name="BS_SBB_CB_CambioPropietario">
+		<wsdl:operation name="ConsultarCambioPropietario">
+			<wsdl:input message="bachue:ConsultarCambioPropietario_Request"/>
+			<wsdl:output message="bachue:ConsultarCambioPropietario_Response"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="BS_SBB_CB_CambioPropietario" type="bachue:BS_SBB_CB_CambioPropietario">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="ConsultarCambioPropietario">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/schemas/bachue/ee/cambioPropietario/v1/consultarCambioPropietario" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="BS_SBB_CB_CambioPropietario">
+		<wsdl:port binding="bachue:BS_SBB_CB_CambioPropietario" name="BS_SBB_CB_CambioPropietarioPort">
+			<soap:address location="http://localhost:7001/SNRServicesCPWEB/services/BS_SBB_CB_CambioPropietarioPort"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

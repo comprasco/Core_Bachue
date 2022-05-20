@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtmltransitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item active"><p:outputLabel
+						value="#{messageBeanSNR.reasignacionTurnosTitle}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="reasignarTurnos">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<p:outputPanel id="panelUsuariosReasignacion"
+					style="min-width:1000px;">
+					<p:panel header="#{messageBeanSNR.reasignacionTurnosTitle}"
+						style="text-align: center;">
+						<br />
+						<table cellspacing="1" cellpadding="20" border="1"
+							style="width: 100%; border-color: #b9b9b9">
+							<tr>
+								<td><p:outputPanel id="panelReasignadoDe">
+										<div style="text-align: left">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelReasignadoDe}" />
+										</div>
+										<br />
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-4 ui-lg-2.5">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelCirculo}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu style="width:100%;"
+													id="idCirculoReasignadoDE"
+													value="#{beanReasignarTurno.idCirculo}"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoConsultaPorCriteriosCirculoRegistral}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" noSelectionOption="true" />
+													<f:selectItems
+														value="#{beanReasignarTurno.cargarCirculos()}"
+														var="circulo" itemLabel="#{circulo.codigoNombre}"
+														itemValue="#{circulo.idCirculo}"></f:selectItems>
+													<p:ajax event="change"
+														listener="#{beanReasignarTurno.setHabilitarSeccionReasignadoA(false)}" />
+													<p:ajax event="change"
+														listener="#{beanReasignarTurno.consultarRoles()}"
+														update="panelUsuariosReasignacion" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-4 ui-lg-2.5">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelRol}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idRolReasignar" style="width:100%;"
+													value="#{beanReasignarTurno.idRol}"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosAntiguoSistemaRol}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" noSelectionOption="true" />
+													<f:selectItems value="#{beanReasignarTurno.cllRoles}"
+														var="rol" itemLabel="#{rol.nombre}"
+														itemValue="#{rol.idRol}"></f:selectItems>
+													<p:ajax event="change"
+														listener="#{beanReasignarTurno.setHabilitarSeccionReasignadoA(false)}" />
+													<p:ajax event="change"
+														listener="#{beanReasignarTurno.consultarEtapas()}"
+														update="panelUsuariosReasignacion, reasignarTurnos:globalMsg" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-4 ui-lg-2.5">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelEtapa}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idEtapaReasignar" style="width:100%;"
+													value="#{beanReasignarTurno.idEtapa}"
+													title="#{tooltipBeanSNR.procesosReasignacionTurnosEtapa}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" noSelectionOption="true" />
+													<f:selectItems value="#{beanReasignarTurno.cllEtapa}"
+														var="etapa" itemLabel="#{etapa.nombre}"
+														itemValue="#{etapa.idEtapa}" />
+													<p:ajax event="change"
+														listener="#{beanReasignarTurno.setHabilitarSeccionReasignadoA(false)}" />
+													<p:ajax event="change"
+														listener="#{beanReasignarTurno.consultarUsuarios()}"
+														update="panelUsuariosReasignacion, reasignarTurnos:globalMsg" />
+												</p:selectOneMenu>
+											</div>
+										</div>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-4 ui-lg-2.5">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelNombreUsuario}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="lstUsuarios" style="width:100%;"
+													value="#{beanReasignarTurno.usuarioSelected}"
+													title="#{tooltipBeanSNR.procesosReasignacionTurnosNombreUsuario}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" noSelectionOption="true" />
+													<f:selectItems value="#{beanReasignarTurno.usuarios}"
+														var="usuario"
+														itemLabel="#{usuario.primerNombre} #{usuario.primerApellido}"
+														itemValue="#{usuario.idUsuario}" />
+													<p:ajax event="change"
+														listener="#{beanReasignarTurno.setHabilitarSeccionReasignadoA(false)}" />
+													<p:ajax event="change"
+														listener="#{beanReasignarTurno.seleccionUsuarioReasignadoDe()}"
+														update="panelUsuariosReasignacion" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-4 ui-lg-2.5">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelIdUsuario}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="lstUsuarios2" style="width:100%;"
+													value="#{beanReasignarTurno.usuarioSelected}"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosAntiguoSistemaUsuario}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" noSelectionOption="true" />
+													<f:selectItems value="#{beanReasignarTurno.usuarios}"
+														var="usuario" itemLabel="#{usuario.idUsuario}"
+														itemValue="#{usuario.idUsuario}" />
+													<p:ajax event="change"
+														listener="#{beanReasignarTurno.setHabilitarSeccionReasignadoA(false)}" />
+													<p:ajax event="change"
+														listener="#{beanReasignarTurno.seleccionUsuarioReasignadoDe()}"
+														update="panelUsuariosReasignacion" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-4 ui-lg-2.5" align="center">
+												<br />
+												<p:commandButton icon="fa fa-search"
+													value="#{messageBeanSNR.commonButtonConsultar}"
+													actionListener="#{beanReasignarTurno.getOpcionesReasignacion()}"
+													update="reasignarTurnos, reasignarTurnos:globalMsg" />
+											</div>
+										</div>
+									</p:outputPanel></td>
+							</tr>
+							<tr>
+								<td><p:outputPanel id="panelReasignadoA">
+										<div style="text-align: left">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelReasignadoA}" />
+										</div>
+										<br />
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-4 ui-lg-2.5">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelCirculo}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu style="width:100%;"
+													id="idCirculoReasignadoA"
+													value="#{beanReasignarTurno.idCirculoReasignadoA}"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoConsultaPorCriteriosCirculoRegistral}"
+													disabled="#{beanReasignarTurno.paramAutomatico or !beanReasignarTurno.habilitarSeccionReasignadoA}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" noSelectionOption="true" />
+													<f:selectItems
+														value="#{beanReasignarTurno.circulosRegistralesReasignadoA}"
+														var="circulo" itemLabel="#{circulo.codigoNombre}"
+														itemValue="#{circulo.idCirculo}"></f:selectItems>
+													<p:ajax event="change"
+														listener="#{beanReasignarTurno.consultarUsuariosReasignadoA()}"
+														update="reasignarTurnos:idUsuarioAsignar, reasignarTurnos:idUsuarioAsignar2, reasignarTurnos:globalMsg" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-4 ui-lg-2.5">
+												<p:outputLabel value="#{messageBeanSNR.commonLabelRol}" />
+												<br />
+												<p:inputText id="idRolReasignadoA" disabled="true"
+													placeholder="#{messageBeanSNR.commonLabelRol}"
+													style="width:100%;" value="#{beanReasignarTurno.nombreRol}">
+												</p:inputText>
+											</div>
+											<div class="ui-g-12 ui-md-4 ui-lg-2.5">
+												<p:outputLabel value="#{messageBeanSNR.commonLabelEtapa}" />
+												<br />
+												<p:inputText id="idEtapaReasignadoA"
+													placeholder="#{messageBeanSNR.commonLabelEtapa}"
+													disabled="true" style="width:100%;"
+													value="#{beanReasignarTurno.nombreEtapa}">
+												</p:inputText>
+											</div>
+										</div>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-4 ui-lg-2.5">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelNombreUsuario}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idUsuarioAsignar" style="width:100%;"
+													disabled="#{beanReasignarTurno.paramAutomatico or !beanReasignarTurno.habilitarSeccionReasignadoA}"
+													value="#{beanReasignarTurno.usuarioAsignar}"
+													title="#{tooltipBeanSNR.procesosReasignacionTurnosNombreUsuario}">
+													<p:ajax event="change" update="idUsuarioAsignar2" />
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" noSelectionOption="true" />
+													<f:selectItems value="#{beanReasignarTurno.usuariosA}"
+														var="usuario"
+														itemLabel="#{usuario.primerNombre} #{usuario.primerApellido}"
+														itemValue="#{usuario.idUsuario}" />
+												</p:selectOneMenu>
+											</div>
+											<div class="ui-g-12 ui-md-4 ui-lg-2.5">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelIdUsuario}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idUsuarioAsignar2" style="width:100%;"
+													disabled="#{beanReasignarTurno.paramAutomatico or !beanReasignarTurno.habilitarSeccionReasignadoA}"
+													value="#{beanReasignarTurno.usuarioAsignar}"
+													title="#{tooltipBeanSNR.procesosAntiguoSistemaBandejaDeResumenBandejaDeTurnosDetalleDelTurnoDatosAntiguoSistemaUsuario}">
+													<p:ajax event="change" update="idUsuarioAsignar" />
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" noSelectionOption="true" />
+													<f:selectItems value="#{beanReasignarTurno.usuariosA}"
+														var="usuario" itemLabel="#{usuario.idUsuario}"
+														itemValue="#{usuario.idUsuario}" />
+												</p:selectOneMenu>
+											</div>
+										</div>
+									</p:outputPanel></td>
+							</tr>
+						</table>
+						<br />
+						<br />
+						<div align="center">
+							<table>
+								<tr>
+									<td><p:outputPanel id="radioRepartoAut">
+											<p:selectOneRadio
+												rendered="#{beanReasignarTurno.opcionesBotonRepartoAutomatico}"
+												value="#{beanReasignarTurno.opcionesRepartoAutomaticoValue}"
+												disabled="#{beanReasignarTurno.paramAutomatico}">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonMessageAleatorio}"
+													itemValue="A" />
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonMessageTodos}"
+													itemValue="T" />
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonMessagePorCantidadDeTurnos}"
+													itemValue="C" />
+												<p:ajax event="click"
+													listener="#{beanReasignarTurno.mostrarOpcionesRepartoAutomatico()}"
+													update=":reasignarTurnos:radioRepartoAut, cantTurnos, tblTurnos, idObsBtnSalvar, globalMsg" />
+											</p:selectOneRadio>
+										</p:outputPanel></td>
+									<td><p:outputPanel id="cantTurnos" style="width: 60px;">
+											<p:inputNumber id="ingCantidadTurnos"
+												value="#{beanReasignarTurno.cantidadTurnosRepAutomatico}"
+												minValue="0" maxValue="9999" widgetVar="wvINCantidadTurnos"
+												rendered="#{beanReasignarTurno.cantidadTurnos}"
+												title="#{tooltipBeanSNR.procesosReasignarTurnosCantidadDeTurnos}"
+												onkeypress="if (event.keyCode == 13) {return false;}">
+												<p:ajax
+													listener="#{beanReasignarTurno.consultarTurnos('C')}"
+													update=":reasignarTurnos:radioRepartoAut, cantTurnos, tblTurnos, idObsBtnSalvar, globalMsg" />
+											</p:inputNumber>
+										</p:outputPanel></td>
+								</tr>
+							</table>
+							<br /> <br />
+							<p:outputPanel id="tblTurnos">
+								<p:dataTable value="#{beanReasignarTurno.data}" var="dt"
+									paginator="true"
+									rows="#{beanReasignarTurno.constanteCantRegistrosTabla}"
+									emptyMessage="#{errorBeanSNR.errorSinRegistros}"
+									rendered="#{beanReasignarTurno.mostrarTablaTurnos}"
+									style="width: 80%;"
+									paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									rowsPerPageTemplate="5,10,20,30,40,50">
+									<p:column headerText="#{messageBeanSNR.commonLabelNumero}"
+										style="width: 90px; text-align: center;">
+										<h:outputText value=" #{dt.idOrdenTurno}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+										<h:outputText value="#{dt.idTurno}" />
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+										<h:outputText value="#{dt.nir}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelTurnosVinculados}">
+										<h:outputText value="#{dt.idTurnoHijo}" />
+									</p:column>
+									<p:column style="width: 90px; text-align: center;"
+										headerText="#{messageBeanSNR.pageReasignarTurnosReasignar}"
+										rendered="#{beanReasignarTurno.mostrarCampoReasignarTurnosTable}">
+										<p:selectBooleanCheckbox id="turnosReasignar"
+											disabled="#{(beanReasignarTurno.opcionesRepartoAutomaticoValue != 'A' and dt.seleccionado) or dt.inhabilitado}"
+											value="#{dt.seleccionado}">
+											<p:ajax
+												listener="#{beanReasignarTurno.desactivarTurnosPorSeleccionado(dt.seleccionado)}" />
+										</p:selectBooleanCheckbox>
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.pageReasignarTurnosRespuesta}"
+										rendered="#{beanReasignarTurno.mostrarRespuesta}">
+										<h:outputText value="#{dt.descripcionRespuesta}" />
+									</p:column>
+								</p:dataTable>
+							</p:outputPanel>
+						</div>
+						<br />
+						<p:outputPanel id="idObsBtnSalvar">
+							<div>
+								<div align="left">
+									<strong> <p:outputLabel
+											value="#{messageBeanSNR.commonLabelObservaciones}#{messageBeanSNR.commonLabelObligatorio}"
+											rendered="#{beanReasignarTurno.mostrarBotonSalvarYObservaciones}" />
+									</strong>
+									<p:inputTextarea id="observaciones"
+										rendered="#{beanReasignarTurno.mostrarBotonSalvarYObservaciones}"
+										rows="6" cols="240"
+										title="#{tooltipBeanSNR.procesosReasignarTurnosObservaciones}"
+										onblur="value=value.toUpperCase()"
+										value="#{beanReasignarTurno.observaciones}" queryDelay="750"
+										maxlength="400" mlength="400" minQueryLength="4"
+										counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+										counter="idNumeroCaracteres">
+									</p:inputTextarea>
+								</div>
+								<div align="right">
+									<h:outputText id="idNumeroCaracteres"
+										rendered="#{beanReasignarTurno.mostrarBotonSalvarYObservaciones}" />
+								</div>
+							</div>
+							<br />
+							<div>
+								<div align="left">
+									<strong> <p:outputLabel
+											value="#{messageBeanSNR.commonLabelJustificacionReasignacionEspecial}#{messageBeanSNR.commonLabelObligatorio}"
+											rendered="#{beanReasignarTurno.justificacionTurno}" />
+									</strong>
+									<p:inputTextarea id="justificacionReasignacionEspecial"
+										rendered="#{beanReasignarTurno.justificacionTurno}" rows="6"
+										cols="240"
+										title="#{tooltipBeanSNR.procesosReasignarTurnosJustificacionReasignacionEspecial}"
+										onblur="value=value.toUpperCase()"
+										value="#{beanReasignarTurno.justificacionReasignadoEspecial}"
+										queryDelay="750" maxlength="400" mlength="400"
+										minQueryLength="4"
+										counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+										counter="idNumeroCaracteres1">
+									</p:inputTextarea>
+								</div>
+								<div align="right">
+									<h:outputText id="idNumeroCaracteres1"
+										rendered="#{beanReasignarTurno.justificacionTurno}" />
+								</div>
+							</div>
+							<br />
+							<div align="right">
+								<p:commandButton icon="fa fa-check-circle" iconPos="left"
+									rendered="#{beanReasignarTurno.mostrarBotonSalvarYObservaciones}"
+									value="#{messageBeanSNR.commonButtonReasignar}"
+									update="reasignarTurnos"
+									action="#{beanReasignarTurno.mostrarCdrConfirmacionRepartoAutomatico()}" />
+							</div>
+						</p:outputPanel>
+					</p:panel>
+				</p:outputPanel>
+			</h:form>
+			<p:dialog id="cuadroRepartoAutomatico" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="cdrRepartoAutomatico" modal="true" resizable="false"
+				width="500">
+				<h:form id="fDialog" style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaUsuariosReasignacion" maxwidth="280"
+						cellspacing="1" cellpadding="20" border="0" align="center">
+						<tr>
+							<div align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonMessageConfirmacionReasignacion}" />
+							</div>
+						</tr>
+						<tr>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-check"
+										value="#{messageBeanSNR.commonLabelSi}"
+										action="#{beanReasignarTurno.salvar()}"
+										onclick="PF('cuadroRepartoAutomatico').hide();"
+										update="reasignarTurnos:tblTurnos" />
+								</div>
+							</td>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-times"
+										value="#{messageBeanSNR.commonLabelNo}"
+										action="#{beanReasignarTurno.habilitarReasignadoAyOpciones()}"
+										onclick="PF('cdrRepartoAutomatico').hide();" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+			<p:dialog id="cuadroRepartoAutomaticoUsuarioInactivo"
+				appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="cdrRepartoAutomaticoUsuarioInactivo" modal="true"
+				resizable="false" width="500">
+				<h:form id="fDialog2"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaCuadroRepartoAutomaticoUsuarioInactivo"
+						maxwidth="280" cellspacing="1" cellpadding="20" border="0"
+						align="center">
+						<tr>
+							<div align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonLabelUsuarioInactivoReasignacion}" />
+							</div>
+						</tr>
+						<tr>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-check"
+										value="#{messageBeanSNR.commonLabelSi}"
+										action="#{beanReasignarTurno.bloquearOpciones()}"
+										onclick="PF('cdrRepartoAutomaticoUsuarioInactivo').hide();"
+										update="reasignarTurnos:idCirculoReasignadoA, reasignarTurnos:idUsuarioAsignar, reasignarTurnos:idUsuarioAsignar2, reasignarTurnos:radioRepartoAut, reasignarTurnos:tblTurnos, reasignarTurnos:idObsBtnSalvar" />
+								</div>
+							</td>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-times"
+										value="#{messageBeanSNR.commonLabelNo}"
+										onclick="PF('cdrRepartoAutomaticoUsuarioInactivo').hide();"
+										update="reasignarTurnos:tblTurnos" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+			<p:dialog id="cuadroAutorizacionDirectorTecnico" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="cdrAutorizacionDirectorTecnico" modal="true"
+				resizable="false" width="800">
+				<h:form id="fDialog3"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaCuadroAutorizacionDirectorTecnico" maxwidth="280"
+						cellspacing="1" cellpadding="20" border="0" align="center">
+						<tr>
+							<div align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonMessageAutorizacionParteDirectorTecnicoRegistro}" />
+							</div>
+						</tr>
+						<tr>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-check"
+										value="#{messageBeanSNR.commonLabelSi}"
+										onclick="PF('cdrAutorizacionDirectorTecnico2').show();" />
+								</div>
+							</td>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-times"
+										value="#{messageBeanSNR.commonLabelNo}"
+										onclick="PF('cdrAutorizacionDirectorTecnico').hide();" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+			<p:dialog id="cuadroAutorizacionDirectorTecnico2" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelDobleConfirmacion}"
+				widgetVar="cdrAutorizacionDirectorTecnico2" modal="true"
+				resizable="false" width="800">
+				<h:form id="fDialog4"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaCuadroAutorizacionDirectorTecnico2" maxwidth=".280"
+						cellspacing="1" cellpadding="20" border="0" align="center">
+						<tr>
+							<div align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonMessageAutorizacionParteDirectorTecnicoRegistro}" />
+							</div>
+						</tr>
+						<tr>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-check"
+										value="#{messageBeanSNR.commonLabelSi}"
+										action="#{beanReasignarTurno.confirmacionAutorizacionDirectorTecnicoRegistro()}"
+										onclick="PF('cdrAutorizacionDirectorTecnico2').hide();"
+										oncomplete="PF('cdrAutorizacionDirectorTecnico').hide();"
+										update="reasignarTurnos:globalMsg" />
+								</div>
+							</td>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-times"
+										value="#{messageBeanSNR.commonLabelNo}"
+										onclick="PF('cdrAutorizacionDirectorTecnico2').hide();" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+			<p:dialog id="cuadroTurnosVinculados" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="cdrTurnosVinculados" modal="true" resizable="false"
+				width="500">
+				<h:form id="fDialog5"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaTurnosVonculados" maxwidth="280" cellspacing="1"
+						cellpadding="20" border="0" align="center">
+						<tr>
+							<div align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonMessagePreguntaTurnosVinculados}" />
+							</div>
+						</tr>
+						<tr>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-check"
+										value="#{messageBeanSNR.commonLabelSi}"
+										action="#{beanReasignarTurno.validacionTurnosVinculadosBloqueados()}"
+										onclick="PF('cdrTurnosVinculados').hide();" />
+								</div>
+							</td>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-times"
+										value="#{messageBeanSNR.commonLabelNo}"
+										action="#{beanReasignarTurno.desmarcarTurnoSeleccionado()}"
+										onclick="PF('cdrTurnosVinculados').hide();"
+										update="reasignarTurnos:tblTurnos, reasignarTurnos:globalMsg" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+			<p:dialog id="cuadroTurnosVinculados2" appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="cdrTurnosVinculados2" modal="true" resizable="false"
+				width="500">
+				<h:form id="fDialog6"
+					style="font-size: medium; top: 40%; left: 40%;">
+					<table id="tablaTurnosVonculados" maxwidth="280" cellspacing="1"
+						cellpadding="20" border="0" align="center">
+						<tr>
+							<div align="center">
+								<h:outputText
+									value="#{messageBeanSNR.commonMessagePreguntaTurnosVinculadosBloqueados}" />
+							</div>
+						</tr>
+						<tr>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-check"
+										value="#{messageBeanSNR.commonLabelSi}"
+										onclick="PF('cdrTurnosVinculados2').hide();" />
+								</div>
+							</td>
+							<td>
+								<div align="center">
+									<p:commandButton icon="fa fa-times"
+										value="#{messageBeanSNR.commonLabelNo}"
+										action="#{beanReasignarTurno.desmarcarTurnoSeleccionado()}"
+										onclick="PF('cdrTurnosVinculados2').hide();"
+										update="reasignarTurnos:tblTurnos, reasignarTurnos:globalMsg" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

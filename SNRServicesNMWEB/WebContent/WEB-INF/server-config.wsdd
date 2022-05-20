@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+	xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+	<globalConfiguration>
+		<parameter name="attachments.implementation"
+			value="org.apache.axis.attachments.AttachmentsImpl" />
+		<parameter name="disablePrettyXML" value="false" />
+		<parameter name="sendMultiRefs" value="true" />
+		<parameter name="sendXMLDeclaration" value="true" />
+		<parameter name="sendXsiTypes" value="true" />
+		<requestFlow>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="session" />
+			</handler>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="request" />
+				<parameter name="extension" value=".jwr" />
+			</handler>
+		</requestFlow>
+	</globalConfiguration>
+	<handler name="Authenticate"
+		type="java:org.apache.axis.handlers.SimpleAuthenticationHandler" />
+	<handler name="LocalResponder"
+		type="java:org.apache.axis.transport.local.LocalResponder" />
+	<handler name="URLMapper"
+		type="java:org.apache.axis.handlers.http.URLMapper" />
+	<service name="AdminService" provider="java:MSG">
+		<parameter name="allowedMethods" value="AdminService" />
+		<parameter name="enableRemoteAdmin" value="false" />
+		<parameter name="className"
+			value="org.apache.axis.utils.Admin" />
+		<namespace>http://xml.apache.org/axis/wsdd/</namespace>
+	</service>
+	<service name="Version" provider="java:RPC">
+		<parameter name="allowedMethods" value="getVersion" />
+		<parameter name="className" value="org.apache.axis.Version" />
+	</service>
+
+	<!-- Services from BS_SBB_CB_NuevasMatriculas WSDL service -->
+
+	<service name="BS_SBB_CB_NuevasMatriculasPort"
+		provider="java:RPC" style="document" use="literal">
+		<parameter name="wsdlTargetNamespace"
+			value="https://www.supernotariado.gov.co/services/bachue/ee/nuevasMatriculas/v1" />
+		<parameter name="wsdlServiceElement"
+			value="BS_SBB_CB_NuevasMatriculas" />
+		<parameter name="schemaQualified"
+			value="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1" />
+		<parameter name="wsdlServicePort"
+			value="BS_SBB_CB_NuevasMatriculasPort" />
+		<parameter name="className"
+			value="co.gov.supernotariado.www.services.bachue.ee.nuevasMatriculas.v1.BS_SBB_CB_NuevasMatriculas_BindingSkeleton" />
+		<parameter name="wsdlPortType"
+			value="BS_SBB_CB_NuevasMatriculas" />
+		<parameter name="typeMappingVersion" value="1.2" />
+		<parameter name="allowedMethods" value="*" />
+		<wsdlFile>./wsdl/BS_SBB_CB_NuevasMatriculasPort.wsdl</wsdlFile>
+
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:>>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula>anotacionPredio"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoSalidaConsultarNuevasMatriculasNuevasMatriculasNuevaMatriculaAnotacionPredio"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:>>>>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula>anotacionPredio>propietarios>propietario"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoSalidaConsultarNuevasMatriculasNuevasMatriculasNuevaMatriculaAnotacionPredioPropietariosPropietario"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoSalidaConsultarNuevasMatriculasNuevasMatriculasNuevaMatricula"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:>>>>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula>listaPublicidades>publicidad>intervinientes"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoSalidaConsultarNuevasMatriculasNuevasMatriculasNuevaMatriculaListaPublicidadesPublicidadIntervinientesInterviniente[]"
+			innerType="cmp-ns:>>>>>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula>listaPublicidades>publicidad>intervinientes>interviniente"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:tipoEntradaConsultarNuevasMatriculas"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoEntradaConsultarNuevasMatriculas"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:>>>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula>anotacionPredio>fuentesAdministrativas"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoSalidaConsultarNuevasMatriculasNuevasMatriculasNuevaMatriculaAnotacionPredioFuentesAdministrativasFuenteAdministrativa[]"
+			innerType="cmp-ns:>>>>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula>anotacionPredio>fuentesAdministrativas>fuenteAdministrativa"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:tipoSalidaConsultarNuevasMatriculas"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoSalidaConsultarNuevasMatriculas"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:>tipoEntradaConsultarNuevasMatriculas>agrupacionEspacial"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoEntradaConsultarNuevasMatriculasAgrupacionEspacial"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:>>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula>listaPublicidades"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoSalidaConsultarNuevasMatriculasNuevasMatriculasNuevaMatriculaListaPublicidadesPublicidad[]"
+			innerType="cmp-ns:>>>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula>listaPublicidades>publicidad"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoSalidaConsultarNuevasMatriculasNuevasMatriculasNuevaMatricula[]"
+			innerType="cmp-ns:>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			encodingStyle="" />
+		<arrayMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:>>>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula>anotacionPredio>propietarios"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoSalidaConsultarNuevasMatriculasNuevasMatriculasNuevaMatriculaAnotacionPredioPropietariosPropietario[]"
+			innerType="cmp-ns:>>>>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula>anotacionPredio>propietarios>propietario"
+			xmlns:cmp-ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:>>>>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula>anotacionPredio>fuentesAdministrativas>fuenteAdministrativa"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoSalidaConsultarNuevasMatriculasNuevasMatriculasNuevaMatriculaAnotacionPredioFuentesAdministrativasFuenteAdministrativa"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:>>>>>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula>listaPublicidades>publicidad>intervinientes>interviniente"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoSalidaConsultarNuevasMatriculasNuevasMatriculasNuevaMatriculaListaPublicidadesPublicidadIntervinientesInterviniente"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+		<typeMapping
+			xmlns:ns="https://www.supernotariado.gov.co/schemas/bachue/ee/nuevasMatriculas/consultarNuevasMatriculas/v1"
+			qname="ns:>>>>tipoSalidaConsultarNuevasMatriculas>nuevasMatriculas>nuevaMatricula>listaPublicidades>publicidad"
+			type="java:co.gov.supernotariado.www.schemas.bachue.ee.nuevasMatriculas.consultarNuevasMatriculas.v1.TipoSalidaConsultarNuevasMatriculasNuevasMatriculasNuevaMatriculaListaPublicidadesPublicidad"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" />
+	</service>
+	<transport name="http">
+		<requestFlow>
+			<handler type="URLMapper" />
+			<handler
+				type="java:org.apache.axis.handlers.http.HTTPAuthHandler" />
+		</requestFlow>
+		<parameter name="qs:list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs:wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+		<parameter name="qs.list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs.method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs:method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs.wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+	</transport>
+	<transport name="local">
+		<responseFlow>
+			<handler type="LocalResponder" />
+		</responseFlow>
+	</transport>
+</deployment>

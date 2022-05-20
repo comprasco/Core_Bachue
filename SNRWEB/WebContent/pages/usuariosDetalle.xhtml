@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelAdministracion}" /></li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelUsuario}" />
+				</li>
+				<li class="breadcrumb-item" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelUsuarios}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{beanUsuarios.insertUpdate ? messageBeanSNR.pageEditarUsuario : messageBeanSNR.pageCrearUsuario}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fUsuariosInsertarActualizar" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="gUserInsertUpdate" globalOnly="true" showDetail="true"
+					sticky="false" life="5000" redisplay="false" />
+				<center>
+					<p:panel>
+						<p:panel id="idPDatosUsuario"
+							rendered="#{beanUsuarios.noMostrarPanelDetalle}"
+							header="#{beanUsuarios.insertUpdate ? messageBeanSNR.pageEditarUsuario : messageBeanSNR.pageCrearUsuario}"
+							style="width:100%">
+
+							<div class="ui-g" align="center">
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelIdUsuario} #{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText id="user" maxlength="30" disabled="true"
+										onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleUsuario}"
+										placeholder="#{messageBeanSNR.commonLabelIdUsuario}"
+										value="#{beanUsuarios.usuario.idUsuario}" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeDocumento} #{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idTipoDocumento" style="width:100%;"
+										disabled="true"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleTipoDocumento}"
+										value="#{beanUsuarios.usuario.idDocumentoTipo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findTipoDocumentoActivo()}"
+											var="tipoDoc" itemValue="#{tipoDoc.idDocumentoTipo}"
+											itemLabel="#{tipoDoc.descripcion}" />
+										<p:ajax event="change"
+											listener="#{beanUsuarios.validarDocumento(beanUsuarios.usuario.idDocumentoTipo, beanUsuarios.usuario.numeroDocumento)}"
+											update="gUserInsertUpdate" />
+										<p:ajax event="change"
+											listener="#{beanUsuarios.validarTipoDocumetal(beanUsuarios.usuario.idDocumentoTipo)}"
+											update="pNombre,sNombre,pApellido,sApellido,idOLPrimerNombre,idOLPrimerApellido" />
+									</p:selectOneMenu>
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNumeroDeDocumento} #{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText id="cedula" maxlength="100" disabled="true"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleNumeroDocumento}"
+										placeholder="#{messageBeanSNR.commonLabelNumeroDeDocumento}"
+										value="#{beanUsuarios.usuario.numeroDocumento}">
+										<p:ajax event="change"
+											listener="#{beanUsuarios.validarDocumento(beanUsuarios.usuario.idDocumentoTipo, beanUsuarios.usuario.numeroDocumento)}"
+											update="gUserInsertUpdate" />
+									</p:inputText>
+									<p:keyFilter for="cedula" regEx="/[a-z0-9_\-]/i"
+										preventPaste="false" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelActivo} #{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:selectOneMenu id="idSOMActivo" style="width:100%;"
+										disabled="true"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleActivo}"
+										value="#{beanUsuarios.usuario.activo}">
+										<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+											itemValue="S" />
+										<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+											itemValue="N" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel id="idOLPrimerNombre"
+										value="#{messageBeanSNR.commonLabelPrimerNombre}"
+										indicateRequired="#{!beanUsuarios.docNit}" />
+									<br />
+									<p:inputText id="pNombre" maxlength="100"
+										onblur="value=value.toUpperCase()" disabled="true"
+										title="#{tooltipBeanSNR.administracionusuariosDetallePrimerNombre}"
+										placeholder="#{messageBeanSNR.commonLabelPrimerNombre}"
+										value="#{beanUsuarios.usuario.primerNombre}" />
+									<p:keyFilter for="pNombre" mask="alpha" preventPaste="false" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelSegundoNombre}" />
+									<br />
+									<p:inputText id="sNombre" maxlength="100"
+										onblur="value=value.toUpperCase()" disabled="true"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleSegundoNombre}"
+										placeholder="#{messageBeanSNR.commonLabelSegundoNombre}"
+										value="#{beanUsuarios.usuario.segundoNombre}" />
+									<p:keyFilter for="sNombre" mask="alpha" preventPaste="false" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel id="idOLPrimerApellido"
+										value="#{messageBeanSNR.commonLabelPrimerApellido}"
+										disabled="true" indicateRequired="#{!beanUsuarios.docNit}" />
+									<br />
+									<p:inputText id="pApellido" maxlength="150"
+										onblur="value=value.toUpperCase()" disabled="true"
+										title="#{tooltipBeanSNR.administracionusuariosDetallePrimerApellido}"
+										placeholder="#{messageBeanSNR.commonLabelPrimerApellido}"
+										value="#{beanUsuarios.usuario.primerApellido}" />
+									<p:keyFilter for="pApellido" mask="alpha" preventPaste="false" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelSegundoApellido}" />
+									<br />
+									<p:inputText id="sApellido" maxlength="100"
+										onblur="value=value.toUpperCase()" disabled="true"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleSegundoApellido}"
+										placeholder="#{messageBeanSNR.commonLabelSegundoApellido}"
+										value="#{beanUsuarios.usuario.segundoApellido}" />
+									<p:keyFilter for="sApellido" mask="alpha" preventPaste="false" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelCorreoElectronico} #{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText id="correo" maxlength="255"
+										onblur="value=value.toUpperCase()" disabled="true"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleCorreoElectronico}"
+										placeholder="#{messageBeanSNR.commonLabelCorreoElectronico}"
+										value="#{beanUsuarios.usuario.correoElectronico}" />
+									<p:keyFilter for="correo" mask="email" preventPaste="false" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelSegundoFactorAutenticacion}" />
+									<br />
+									<p:inputText id="sFactor" maxlength="4000"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleSegundoFactorAutenticacion}"
+										onblur="value=value.toUpperCase()" disabled="true"
+										placeholder="#{messageBeanSNR.commonLabelSegundoFactorAutenticacion}"
+										value="#{beanUsuarios.usuario.segundoFactorAutenticacion}" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelEntidadExterna}" />
+									<br />
+									<p:inputText id="eExterna" maxlength="20"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleEntidadExterna}"
+										onblur="value=value.toUpperCase()" disabled="true"
+										placeholder="#{messageBeanSNR.commonLabelEntidadExterna}"
+										value="#{beanUsuarios.usuario.idEntidadExterna}" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelSegundaClave}" />
+									<br />
+									<p:inputText id="id" maxlength="20"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleSegundaClave}"
+										onblur="value=value.toUpperCase()" disabled="true"
+										placeholder="#{messageBeanSNR.commonLabelSegundaClave}"
+										value="#{beanUsuarios.usuario.segundaClave}" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNumeroRadicadoSolicitud}" />
+									<br />
+									<p:inputText id="idRadicadoSol" maxlength="20"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleNumeroRadicadoSolicitud}"
+										onblur="value=value.toUpperCase()" disabled="true"
+										placeholder="#{messageBeanSNR.commonLabelNumeroRadicadoSolicitud}"
+										value="#{beanUsuarios.usuario.numeroRadicadoSolicitud}" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelCorreoElectronicoCorporativo}" />
+									<br />
+									<p:inputText id="idCorreoElecCorporativo" maxlength="20"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleCorreoElectronicoCorporativo}"
+										onblur="value=value.toUpperCase()" disabled="true"
+										placeholder="#{messageBeanSNR.commonLabelCorreoElectronicoCorporativo}"
+										value="#{beanUsuarios.usuario.correoElectronicoCorporativo}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelCargo}" />
+									<br />
+									<p:inputText id="idCargo" maxlength="20" disabled="true"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleCargo}"
+										onblur="value=value.toUpperCase()"
+										placeholder="#{messageBeanSNR.commonLabelCargo}"
+										value="#{beanUsuarios.usuario.cargo}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelJustificacion}" />
+									<br />
+									<p:inputText id="idJustificacion" maxlength="20"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleJustificacion}"
+										onblur="value=value.toUpperCase()" disabled="true"
+										placeholder="#{messageBeanSNR.commonLabelJustificacion}"
+										value="#{beanUsuarios.usuario.justificacionCambio}" />
+								</div>
+							</div>
+
+
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNumeroConvenio}" />
+									<br />
+									<p:inputText id="nConvenio" maxlength="100"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleNumeroConvenio}"
+										onblur="value=value.toUpperCase()" disabled="true"
+										placeholder="#{messageBeanSNR.commonLabelNumeroConvenio}"
+										value="#{beanUsuarios.usuario.numeroConvenio}" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelFechaDesde} #{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:calendar id="idCalFechaDesde" size="10" mask="true"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										disabled="true"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleFechaDesde}"
+										value="#{beanUsuarios.usuario.fechaDesde}" showOn="button" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelFechaHasta}" />
+									<br />
+									<p:calendar id="idCalFechaHasta" size="10" mask="true"
+										disabled="true" locale="es" placeholder="DD/MM/AAAA"
+										pattern="dd/MM/yyyy"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleFechaHasta}"
+										value="#{beanUsuarios.usuario.fechaHasta}" showOn="button" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelFechaVigenciaSegundaClave}" />
+									<br />
+									<p:calendar id="idCalFechaVigenciaSegundaClave" size="10"
+										mask="true" disabled="true" locale="es"
+										placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										title="#{tooltipBeanSNR.administracionusuariosDetalleFechaVigenciaSegundaClave}"
+										value="#{beanUsuarios.usuario.fechaVigenciaSegundaClave}"
+										showOn="button" />
+								</div>
+							</div>
+
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										update=":fUsuariosInsertarActualizar:gUserInsertUpdate"
+										action="#{beanUsuarios.clean()}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton
+										value="#{messageBeanSNR.commonLabelSegundoFactor}"
+										disabled="#{beanUsuarios.usuario.activo eq 'N'}"
+										icon="fa fa-check-circle" iconPos="left"
+										update=":fUsuariosInsertarActualizar"
+										action="#{beanUsuarios.botonSegundoFactor()}" ajax="false" />
+								</div>
+							</div>
+						</p:panel>
+
+						<p:panel id="idPOpcionesSegundoFactor"
+							rendered="#{beanUsuarios.esSegundoFactor}"
+							header="#{messageBeanSNR.commonLabelOpciones}" style="width:100%">
+							<div class="ui-g" align="center">
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<p:commandButton value="#{messageBeanSNR.commonButtonEnrolar}"
+										icon="fa fa-check-circle" iconPos="left"
+										update=":fUsuariosInsertarActualizar"
+										action="#{beanUsuarios.mostrarEnrolar()}" />
+								</div>
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonReinicioClave}"
+										icon="fa fa-check-circle" iconPos="left"
+										update=":fUsuariosInsertarActualizar"
+										action="#{beanUsuarios.mostrarReinicioClave()}" />
+								</div>
+								<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonReinicioHuella}"
+										icon="fa fa-check-circle" iconPos="left"
+										update=":fUsuariosInsertarActualizar"
+										action="#{beanUsuarios.mostrarReinicioHuella()}" />
+								</div>
+							</div>
+							<br />
+							<div class="ui-g" align="center">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									update=":fUsuariosInsertarActualizar"
+									action="#{beanUsuarios.regresarDetalleUsuario()}" />
+							</div>
+						</p:panel>
+
+						<p:panel id="idPOpcionEnrolar"
+							rendered="#{beanUsuarios.esEnrolar}"
+							header="#{messageBeanSNR.commonButtonEnrolar}" style="width:100%">
+							<center>
+								<h:panelGrid columns="2">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelUsuarioEnrolar}" />
+									<p:outputLabel value=" #{beanUsuarios.usuario.idUsuario}" />
+
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelUsuarioEnrolador}" />
+									<p:outputLabel value=" #{beanUsuarios.userId}" />
+								</h:panelGrid>
+
+								<p:commandButton value="#{messageBeanSNR.commonButtonEnrolar}"
+									icon="fa fa-check-circle" iconPos="left"
+									update=":fUsuariosInsertarActualizar:gUserInsertUpdate"
+									action="#{beanUsuarios.opcionEnrolar()}" />
+							</center>
+							<br />
+							<div class="ui-g">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									update=":fUsuariosInsertarActualizar"
+									action="#{beanUsuarios.regresarAOpciones()}" />
+							</div>
+						</p:panel>
+
+						<p:panel id="idPReinicioClave"
+							rendered="#{beanUsuarios.esReinicioClave}"
+							header="#{messageBeanSNR.commonButtonReinicioClave}"
+							style="width:100%">
+							<center>
+								<div>
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelCambioContraseñaRegistrada}" />
+								</div>
+
+								<div>
+									<p:outputLabel value=" #{beanUsuarios.usuario.idUsuario}" />
+								</div>
+
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonReinicioClave}"
+									icon="fa fa-check-circle" iconPos="left"
+									update=":fUsuariosInsertarActualizar:gUserInsertUpdate"
+									action="#{beanUsuarios.opcionReinicioHuellaOClave(true)}" />
+							</center>
+							<br />
+							<div class="ui-g">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									update=":fUsuariosInsertarActualizar"
+									action="#{beanUsuarios.regresarAOpciones()}" />
+							</div>
+						</p:panel>
+
+						<p:panel id="idPOpcionReinicioHuella"
+							rendered="#{beanUsuarios.esReinicioHuella}"
+							header="#{messageBeanSNR.commonButtonReinicioHuella}"
+							style="width:100%">
+							<center>
+								<div>
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelCambioHuellaRegistrada}" />
+								</div>
+
+								<div>
+									<p:outputLabel value=" #{beanUsuarios.usuario.idUsuario}" />
+								</div>
+
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonReinicioHuella}"
+									icon="fa fa-check-circle" iconPos="left"
+									update=":fUsuariosInsertarActualizar:gUserInsertUpdate"
+									action="#{beanUsuarios.opcionReinicioHuellaOClave(false)}" />
+							</center>
+							<br />
+							<div class="ui-g">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									update=":fUsuariosInsertarActualizar"
+									action="#{beanUsuarios.regresarAOpciones()}" />
+							</div>
+						</p:panel>
+
+						<p:remoteCommand name="fail"
+							actionListener="#{beanUsuarios.error}" update="gUserInsertUpdate"
+							partialSubmit="true" global="false" />
+						<p:remoteCommand name="verify"
+							actionListener="#{beanUsuarios.verify}"
+							update="gUserInsertUpdate" partialSubmit="true" global="false" />
+
+						<p:dialog widgetVar="statusDispositivo" modal="true"
+							draggable="false" closable="false" resizable="false"
+							showHeader="false" appendTo="@(body)" width="16%">
+							<p:progressBar id="progressBar" mode="indeterminate"
+								widgetVar="progressBar" rendered="true" />
+						</p:dialog>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

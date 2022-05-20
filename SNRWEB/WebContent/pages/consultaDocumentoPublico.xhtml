@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBuscar}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultaDocumentoRegistrado}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<h:form id="fConsultaDocumentoPublico" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false"/>
+				<center>
+					<p:panel>
+						<p:panel id="idPCamposConsulta"
+							header="#{messageBeanSNR.commonLabelConsultaDocumentoRegistrado}">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelCirculo}" />
+									<br />
+									<p:selectOneMenu id="idSOMCirculo"
+										title="#{tooltipBeanSNR.buscarConsultaDocumentoPublicoTipoDeEntidad}"
+										style="width:100%;"
+										value="#{beanConsultaDocumentoPublico.consultaDatosDocumento.circuloRegistral.idCirculo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findCirculoRegistral(true)}"
+											var="item" itemValue="#{item.idCirculo}"
+											itemLabel="#{item.idCirculo} - #{item.nombre}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelTipoDeDocumento}">
+									</p:outputLabel>
+									<br />
+									<p:selectOneMenu id="idSOMEscrituraDocumento"
+										title="#{tooltipBeanSNR.buscarConsultaDocumentoPublicoTipoDeDocumento}"
+										style="width:100%;"
+										value="#{beanConsultaDocumentoPublico.consultaDatosDocumento.documento.idTipoDocumento}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findTipoDocumentoPublicoActivo()}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoDocumento}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelNumeroDeDocumento}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()"
+										title="#{tooltipBeanSNR.buscarConsultaDocumentoPublicoNumeroDeDocumento}"
+										style="width:100%;" id="idItDocuActoDocumento"
+										placeholder="#{messageBeanSNR.commonLabelDocumento}"
+										maxlength="20"
+										value="#{beanConsultaDocumentoPublico.consultaDatosDocumento.documento.numero}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel indicateRequired="true"
+										value="#{messageBeanSNR.commonLabelFechaDelDocumento}" />
+									<br />
+									<p:calendar id="idCalFechaDocDocumento" size="10" mask="true"
+										title="#{tooltipBeanSNR.buscarConsultaDocumentoPublicoFechaDelDocumento}"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										value="#{beanConsultaDocumentoPublico.consultaDatosDocumento.documento.fechaDocumento}"
+										showOn="button">
+										<p:ajax event="dateSelect" update="globalMsg" />
+									</p:calendar>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeOficina}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoOficinaDocumento"
+										title="#{tooltipBeanSNR.buscarConsultaDocumentoPublicoTipoDeOficina}"
+										style="width:100%;"
+										value="#{beanConsultaDocumentoPublico.consultaDatosDocumento.oficinaOrigen.idTipoOficina}">
+										<p:ajax
+											listener="#{beanConsultaDocumentoPublico.tipoOficina(true)}"
+											update="idSOMTipoEntidadDocumento,idPaisDocumento1,idSOMDepartamentoDocumento,idSOMMunicipioDocumento,idSOMOficinaOrigenDocumento" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findAllTipoOficinaActivo()}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoOficina}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeEntidad}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoEntidadDocumento"
+										title="#{tooltipBeanSNR.buscarConsultaDocumentoPublicoTipoDeEntidad}"
+										style="width:100%;" disabled="true"
+										value="#{beanConsultaDocumentoPublico.consultaDatosDocumento.oficinaOrigen.idTipoEntidad}">
+										<f:selectItems value="#{beanReference.findTipoEntidad()}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoEntidad}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelPais}" />
+									<br />
+									<p:selectOneMenu id="idPaisDocumento1" style="width:100%;"
+										title="#{tooltipBeanSNR.buscarConsultaDocumentoPublicoPais}"
+										value="#{beanConsultaDocumentoPublico.consultaDatosDocumento.oficinaOrigen.idPais}">
+										<p:ajax listener="#{beanConsultaDocumentoPublico.pais(true)}"
+											update="idSOMDepartamentoDocumento,idSOMMunicipioDocumento,idSOMOficinaOrigenDocumento" />
+										<f:selectItem itemValue=""
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+										<f:selectItems value="#{beanReference.findPaises()}"
+											var="paises" itemValue="#{paises.idPais}"
+											itemLabel="#{paises.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDepartamento}" />
+									<br />
+									<p:selectOneMenu id="idSOMDepartamentoDocumento"
+										title="#{tooltipBeanSNR.buscarConsultaDocumentoPublicoDepartamento}"
+										style="width:100%;"
+										value="#{beanConsultaDocumentoPublico.consultaDatosDocumento.oficinaOrigen.idDepartamento}">
+										<p:ajax
+											listener="#{beanConsultaDocumentoPublico.departamento(true)}"
+											update="idSOMMunicipioDocumento,idSOMOficinaOrigenDocumento" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanConsultaDocumentoPublico.findDepartamentos(true)}"
+											var="item" itemValue="#{item.idDepartamento}"
+											itemLabel="#{item.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}" />
+									<br />
+									<p:selectOneMenu id="idSOMMunicipioDocumento"
+										title="#{tooltipBeanSNR.buscarConsultaDocumentoPublicoMunicipio}"
+										style="width:100%;"
+										value="#{beanConsultaDocumentoPublico.consultaDatosDocumento.oficinaOrigen.idMunicipio}">
+										<p:ajax
+											listener="#{beanConsultaDocumentoPublico.oficinaOrigen(true)}"
+											update="idSOMOficinaOrigenDocumento" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanConsultaDocumentoPublico.findMunicipios(true)}"
+											var="munRes" itemValue="#{munRes.idMunicipio}"
+											itemLabel="#{munRes.nombre}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelOficinaDeOrigen}" />
+									<br />
+									<p:selectOneMenu id="idSOMOficinaOrigenDocumento"
+										title="#{tooltipBeanSNR.buscarConsultaDocumentoPublicoOficinaDeOrigen}"
+										style="width:100%;"
+										value="#{beanConsultaDocumentoPublico.consultaDatosDocumento.oficinaOrigen.idOficinaOrigen}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanConsultaDocumentoPublico.getOficinaOrigen(true)}"
+											var="orig" itemLabel="#{orig.nombre}"
+											itemValue="#{orig.idOficinaOrigen}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3" align="center">
+									<br />
+									<p:commandButton value="#{messageBeanSNR.commonLabelBuscar}"
+										icon="lupa" iconPos="left"
+										actionListener="#{beanConsultaDocumentoPublico.consultarDocumento()}"
+										update="@form" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4" align="center">
+									<br />
+									<p:commandButton value="#{messageBeanSNR.commonButtonLimpiar}"
+										icon="fa fa-undo" iconPos="left"
+										actionListener="#{beanConsultaDocumentoPublico.limparDatos()}"
+										update="@form" />
+								</div>
+							</div>
+						</p:panel>
+						<br />
+						<p:outputPanel id="idPListadoDocumentos"
+							rendered="#{beanConsultaDocumentoPublico.renderAsociados}">
+							<p:panel
+								header="#{messageBeanSNR.commonLabelDocumentosAsociadosSolicitud}">
+								<p:dataTable id="idDtListadoDocumentos" var="item"
+									value="#{beanConsultaDocumentoPublico.documentosConsultados}"
+									paginator="true" rows="10"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+									<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+										<div align="center">
+											<h:outputText value="#{item.nir}" />
+										</div>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+										<div align="center">
+											<h:outputText value="#{item.idTurno}" />
+										</div>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelMatricula}">
+										<div align="center">
+											<h:outputText value="#{item.nirAsociados}" />
+										</div>
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelOficinaOrigen}">
+										<div align="center">
+											<h:outputText value="#{item.nombreOficinaOrigen}" />
+										</div>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelEstado}">
+										<div align="center">
+											<h:outputText value="#{item.estado}" />
+										</div>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelConsultaSGD}">
+										<div align="center">
+											<p:commandButton icon="lupa" iconPos="left"
+												action="#{beanConsultaDocumentoPublico.consultaSGD(true,item)}" update="fConsultaDocumentoPublico:globalMsg"/>
+										</div>
+									</p:column>
+								</p:dataTable>
+							</p:panel>
+						</p:outputPanel>
+						<br />
+						<p:outputPanel id="idPListadoDocumentos2"
+							rendered="#{beanConsultaDocumentoPublico.renderRegistrados}">
+							<p:panel
+								header="#{messageBeanSNR.commonLabelDocumentosRegistrados}">
+								<p:dataTable id="idDtListadoDocumentos2" var="item"
+									value="#{beanConsultaDocumentoPublico.documentosConsultados2}"
+									paginator="true" rows="10"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+									<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+										<div align="center">
+											<h:outputText value="#{item.nir}" />
+										</div>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+										<div align="center">
+											<h:outputText value="#{item.idTurno}" />
+										</div>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelMatricula}">
+										<div align="center">
+											<h:outputText value="#{item.idCirculo} - #{item.idMatricula}" />
+										</div>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelAnotaciones}">
+										<div align="center">
+											<h:outputText value="#{item.anotaciones}" />
+										</div>
+									</p:column>
+									<p:column headerText="#{messageBeanSNR.commonLabelConsultaSGD}">
+										<div align="center">
+											<p:commandButton icon="lupa" iconPos="left"
+												action="#{beanConsultaDocumentoPublico.consultaSGD(false,item)}" update="fConsultaDocumentoPublico:globalMsg"/>
+										</div>
+									</p:column>
+								</p:dataTable>
+							</p:panel>
+						</p:outputPanel>
+					</p:panel>
+				</center>
+
+			</h:form>
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

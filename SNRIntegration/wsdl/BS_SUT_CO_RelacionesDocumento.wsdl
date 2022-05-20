@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/co/relacionesdocumento/v1"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/co/relacionesdocumento/v1"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/co/relacionesdocumento/relacionardocumento/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified"
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/co/relacionesdocumento/relacionardocumento/v1">
+			<xsd:complexType
+				name="tipoEntradaRelacionarDocumento">
+				<xsd:sequence>
+					<xsd:element name="sistemaOrigen" type="xsd:string" />
+					<xsd:element name="parametros">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="parametro"
+									type="bachue1:tipoParametroRD" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="docName" type="xsd:string" />
+					<xsd:element name="dID" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoParametroRD">
+				<xsd:sequence>
+					<xsd:element name="nombre" type="xsd:string" />
+					<xsd:element name="valor" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaRelacionarDocumento"
+				type="bachue1:tipoEntradaRelacionarDocumento" />
+			<xsd:complexType name="tipoSalidaRelacionarDocumento">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaRelacionarDocumento"
+				type="bachue1:tipoSalidaRelacionarDocumento" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="RelacionarDocumento_Request">
+		<wsdl:part name="entrada"
+			element="bachue1:entradaRelacionarDocumento" />
+	</wsdl:message>
+	<wsdl:message name="RelacionarDocumento_Response">
+		<wsdl:part name="salida"
+			element="bachue1:salidaRelacionarDocumento" />
+	</wsdl:message>
+
+	<wsdl:portType name="SUT_CO_RelacionesDocumento">
+		<wsdl:operation name="RelacionarDocumento">
+			<wsdl:input message="bachue:RelacionarDocumento_Request" />
+			<wsdl:output
+				message="bachue:RelacionarDocumento_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding
+		name="SUT_CO_RelacionesDocumentoSOAP12Binding"
+		type="bachue:SUT_CO_RelacionesDocumento">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="RelacionarDocumento">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/co/relacionesdocumento/v1/RelacionarDocumento" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SUT_CO_RelacionesDocumento">
+		<wsdl:port name="SUT_CO_RelacionesDocumentoPort"
+			binding="bachue:SUT_CO_RelacionesDocumentoSOAP12Binding">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

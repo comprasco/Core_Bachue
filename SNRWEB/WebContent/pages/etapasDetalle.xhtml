@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelWorkflow}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelEtapas}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{beanEtapas.insert ? messageBeanSNR.pageInsertarEtapa : messageBeanSNR.pageEditarEtapa}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fEtapasDetalle" style="width: 100%;">
+				<p:growl id="gEtapasDetMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+
+					<p:panel id="idPInsertUpdate"
+						header="#{messageBeanSNR.commonLabelDetalleEtapas}">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelIdEtapa}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText id="idItIdEtapa" disabled="#{!beanEtapas.insert}"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleIdEtapa}"
+									placeholder="#{messageBeanSNR.commonLabelIdEtapa}"
+									maxlength="30" value="#{beanEtapas.etapa.idEtapa}" />
+								<p:keyFilter for="idItIdEtapa" regEx="/[0-9]/"
+									preventPaste="false" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelNombre}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:inputText id="idItNombreEtapa" maxlength="100"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleNombre}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelNombre}"
+									value="#{beanEtapas.etapa.nombre}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelDescripcion}" />
+								<br />
+								<p:inputText id="idItDescripcion" maxlength="255"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleDescripcion}"
+									onblur="value=value.toUpperCase()"
+									placeholder="#{messageBeanSNR.commonLabelDescripcion}"
+									value="#{beanEtapas.etapa.descripcion}" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelActivo}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMActivo" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleActivo}"
+									value="#{beanEtapas.etapa.estado}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelActivo}"
+										itemValue="A" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelInactivo}"
+										itemValue="I" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelIndicadorPeso}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMIndicadorPeso" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleIndicadorPeso}"
+									value="#{beanEtapas.etapa.indicadorPeso}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelIndicadorBloqueo}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMIndicadorBloqueo" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleIndicadorBloqueo}"
+									value="#{beanEtapas.etapa.indicadorBloqueo}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelIndicadorDesborde}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMIndicadorDesborde" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleIndicadorDesborde}"
+									value="#{beanEtapas.etapa.indicadorDesborde}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelDiasHabilesNormal}" />
+								<br />
+								<p:inputText id="idItDiasHabilesNormal" maxlength="8"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleDiasHabilesNormal}"
+									placeholder="#{messageBeanSNR.commonLabelDiasHabilesNormal}"
+									value="#{beanEtapas.etapa.diasHabilesNormal}" />
+								<p:keyFilter for="idItDiasHabilesNormal" regEx="/[0-9]/"
+									preventPaste="false" />
+							</div>
+						</div>
+
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelIndicadorTope}" />
+								<br />
+								<p:selectOneMenu id="idSOMIndicadorTope" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleIndicadorTope}"
+									value="#{beanEtapas.etapa.indicadorTope}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelFase}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMIdFase" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleFase}"
+									value="#{beanEtapas.etapa.idFase}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems value="#{beanEtapas.findAllFases()}" var="fases"
+										itemValue="#{fases.idFase}" itemLabel="#{fases.idFase} - #{fases.nombre}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelTipoReparto}#{messageBeanSNR.commonLabelObligatorio}" />
+								<br />
+								<p:selectOneMenu id="idSOMTipoReparto" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleTipoReparto}"
+									value="#{beanEtapas.etapa.tipoReparto}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelRepartoPorLineaDeProduccion}"
+										itemValue="L" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonLabelRepartoPorBalanceoDeCargas}"
+										itemValue="B" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelUnidadTiempoEspera}" />
+								<br />
+								<p:selectOneMenu id="idSOMIdUnidadTiempoEspera" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleIdUnidadTiempoEspera}"
+									value="#{beanEtapas.etapa.idUnidadTiempoEspera}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems value="#{beanEtapas.findAllUnidadesDeTiempo()}" var="unidadesTiempo"
+										itemValue="#{unidadesTiempo.idUnidadTiempo}" itemLabel="#{unidadesTiempo.descripcion}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelCantidadTiempoEspera}" />
+								<br />
+								<p:inputText id="cantidadTiempoEspera" maxlength="8"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleCantidadTiempoEspera}"
+									placeholder="#{messageBeanSNR.commonLabelCantidadTiempoEspera}"
+									value="#{beanEtapas.etapa.cantidadTiempoEspera}" >
+								<p:keyFilter regEx="/[0-9]/" preventPaste="false" />
+								</p:inputText>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-3">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelGenerarQR}" />
+								<br />
+								<p:selectOneMenu id="idSOMGenerarQR" style="width:100%;"
+									title="#{tooltipBeanSNR.administracionEtapasEtapasDetalleGenerarQR}"
+									value="#{beanEtapas.etapa.generarQRString}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonSi}"
+										itemValue="S" />
+									<f:selectItem itemLabel="#{messageBeanSNR.commonNo}"
+										itemValue="N" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<br />
+							<p:dataTable id="idDetalle" var="item"
+								rendered="#{!beanEtapas.insert}"
+								value="#{beanEtapas.etapa}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+								<f:facet name="header">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+								</f:facet>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+									<h:outputText value="#{item.idUsuarioCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<h:outputText value="#{item.fechaCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+									<h:outputText value="#{item.idUsuarioModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+									<h:outputText value="#{item.fechaModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIpModificación}">
+									<h:outputText value="#{item.ipModificacion}" />
+								</p:column>
+							</p:dataTable>
+						<br />
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									update="fEtapasDetalle,gEtapasDetMsg"
+									action="etapas?faces-redirect=true" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+								<p:commandButton
+									value="#{messageBeanSNR.commonLabelActualizarEtapa}"
+									rendered="#{!beanEtapas.insert}" icon="fa fa-check-circle"
+									iconPos="left" update="fEtapasDetalle,gEtapasDetMsg"
+									action="#{beanEtapas.insertUpdateEtapa(false)}" ajax="false" />
+								<p:commandButton value="#{messageBeanSNR.commonLabelCrearEtapa}"
+									rendered="#{beanEtapas.insert}" icon="fa fa-check-circle"
+									iconPos="left" update="fEtapasDetalle,gEtapasDetMsg"
+									action="#{beanEtapas.insertUpdateEtapa(true)}" ajax="false" />
+							</div>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

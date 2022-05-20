@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelCalificacion}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleTurno}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelReproduccionConstancia}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fRepConstancia" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:outputPanel style="min-width:800px;">
+						<p:panel header="#{messageBeanSNR.commonLabelConsultaPorTurno}">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTurnoORadicacion}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoTurnoRadicacion}"
+										placeholder="#{messageBeanSNR.commonLabelTurnoORadicacion}"
+										maxlength="100" id="idItTurnRadicacion"
+										value="#{beanReproduccionConstancia.idTurno}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+									<br />
+									<p:selectOneMenu style="width:100%" disabled="true"
+										id="idSOMCirculoRegistralAntSistemaConstanciaIdTurno"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoCirculoRegistral}"
+										value="#{beanReproduccionConstancia.idCirculo}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanRegistro.findCirculoRegistral()}"
+											var="circuloAntSistema"
+											itemValue="#{circuloAntSistema.idCirculo}"
+											itemLabel="#{circuloAntSistema.idCirculo} - #{circuloAntSistema.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-12" align="center">
+									<br />
+									<p:commandButton value="#{messageBeanSNR.commonLabelBuscar}"
+										icon="lupa" iconPos="left"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										actionListener="#{beanReproduccionConstancia.buscarRepConstanciaTurno()}"
+										update="idDtListadoDocumentos,globalMsg" />
+									<p:commandButton value="#{messageBeanSNR.commonButtonLimpiar}"
+										icon="fa fa-undo" iconPos="left"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										actionListener="#{beanReproduccionConstancia.limpiarRepConstanciaTurno()}"
+										update="idDtListadoDocumentos,idItTurnRadicacion,globalMsg" />
+								</div>
+							</div>
+						</p:panel>
+						<br/>
+						<p:panel header="#{messageBeanSNR.commonLabelConsultaDocumento }">
+							<p:outputPanel>
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6 ui-lg-5">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelCirculoRegistral}" />
+										<br />
+										<p:selectOneMenu style="width:100%" disabled="true"
+											id="idSOMCirculoRegistralAntSistemaConstancia"
+											title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoCirculoRegistral}"
+											value="#{beanReproduccionConstancia.idCirculo}">
+											<f:selectItem
+												itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+												itemValue="" />
+											<f:selectItems value="#{beanRegistro.findCirculoRegistral()}"
+												var="circuloAntSistema"
+												itemValue="#{circuloAntSistema.idCirculo}"
+												itemLabel="#{circuloAntSistema.idCirculo} - #{circuloAntSistema.nombre}" />
+											<p:ajax event="change" update="idSOMMunicipio"/>
+										</p:selectOneMenu>
+									</div>
+								</div>
+							</p:outputPanel>
+
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}">
+									</p:outputLabel>
+									<br />
+									<p:selectOneMenu id="idSOMEscritura" style="width:100%"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoTipoDocumento}"
+										value="#{beanReproduccionConstancia.bgnDocumento.idTipoDocumento}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReference.findTipoDocumentoPublicoActivo()}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoDocumento}" />
+										<p:ajax
+											listener="#{beanReproduccionConstancia.validarExistenciaDocumento(true)}"
+											update="globalMsg,idSOMOficinaOrigen" />
+										<p:ajax
+											listener="#{beanReproduccionConstancia.findTipoOficina}"
+											update="globalMsg,idSOMTipoOficina,idSOMOficinaOrigen" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelNumeroDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:inputText onblur="value=value.toUpperCase()"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										id="idItDocuActo"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoNumeroDocumento}"
+										placeholder="#{messageBeanSNR.commonLabelDocumento}"
+										maxlength="20"
+										value="#{beanReproduccionConstancia.bgnDocumento.numero}">
+										<p:ajax
+											listener="#{beanReproduccionConstancia.validarExistenciaDocumento(true)}"
+											update="globalMsg" />
+									</p:inputText>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelFechaDelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+									<br />
+									<p:calendar id="idCalFechaDoc" size="10" mask="true"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+										value="#{beanReproduccionConstancia.bgnDocumento.fechaDocumento}"
+										showOn="button"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoFechaDocumento}">
+									</p:calendar>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeOficina}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoOficina" style="width:100%"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										value="#{beanReproduccionConstancia.idTipoOficina}"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoTipoOficina}">
+										<p:ajax listener="#{beanReproduccionConstancia.tipoOficina}"
+											update="idSOMTipoEntidad,idPaisDocumento,idSOMDepartamento,idSOMMunicipio,idSOMOficinaOrigen" />
+										<f:selectItems
+											value="#{beanReproduccionConstancia.tipoOficinaDocumento}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoOficina}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTipoDeEntidad}" />
+									<br />
+									<p:selectOneMenu id="idSOMTipoEntidad" style="width:100%"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										value="#{beanReproduccionConstancia.idTipoEntidad}"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoTipoEntidad}">
+										<f:selectItems value="#{beanReference.findTipoEntidad()}"
+											var="item" itemLabel="#{item.nombre}"
+											itemValue="#{item.idTipoEntidad}" />
+										<p:ajax
+											listener="#{beanReproduccionConstancia.validarExistenciaDocumento(true)}"
+											update="globalMsg" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-5">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelPais}" />
+									<br />
+									<p:selectOneMenu id="idPaisDocumento" style="width:100%;"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										value="#{beanReproduccionConstancia.idPais}"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoPais}">
+										<p:ajax listener="#{beanReproduccionConstancia.pais}"
+											update="idSOMDepartamento,idSOMMunicipio,idSOMOficinaOrigen" />
+										<p:ajax
+											listener="#{beanReproduccionConstancia.validarExistenciaDocumento(true)}"
+											update="globalMsg" />
+										<f:selectItem itemValue=""
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+										<f:selectItems value="#{beanReference.findPaises()}"
+											var="paises" itemValue="#{paises.idPais}"
+											itemLabel="#{paises.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelDepartamento}" />
+									<br />
+									<p:selectOneMenu id="idSOMDepartamento" style="width:100%"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										value="#{beanReproduccionConstancia.idDepartamento}"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoDepartamento}">
+										<p:ajax listener="#{beanReproduccionConstancia.departamento}"
+											update="idSOMMunicipio,idSOMOficinaOrigen" />
+										<p:ajax
+											listener="#{beanReproduccionConstancia.validarExistenciaDocumento(true)}"
+											update="globalMsg" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReproduccionConstancia.findDepartamentos()}"
+											var="item" itemValue="#{item.idDepartamento}"
+											itemLabel="#{item.nombre}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelMunicipio}" />
+									<br />
+									<p:selectOneMenu id="idSOMMunicipio" style="width:100%"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										value="#{beanReproduccionConstancia.idMunicipio}"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoMunicipio}">
+										<p:ajax listener="#{beanReproduccionConstancia.oficinaOrigen}"
+											update="idSOMOficinaOrigen" />
+										<p:ajax
+											listener="#{beanReproduccionConstancia.validarExistenciaDocumento(true)}"
+											update="globalMsg" />
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems value="#{beanReproduccionConstancia.findMunicipiosByCirculo(beanReproduccionConstancia.idCirculo)}"
+											var="munRes" itemValue="#{munRes.idMunicipio}"
+											itemLabel="#{munRes.nombre}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12 ui-lg-12">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelOficinaDeOrigen}" />
+									<br />
+									<p:selectOneMenu id="idSOMOficinaOrigen" style="width:100%"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										value="#{beanReproduccionConstancia.idOficinaOrigen}"
+										title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoOficinaOrigen}">
+										<f:selectItem
+											itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+											itemValue="" />
+										<f:selectItems
+											value="#{beanReproduccionConstancia.findOficinasOrigen()}"
+											var="orig" itemLabel="#{orig.nombre}"
+											itemValue="#{orig.idOficinaOrigen}" />
+										<p:ajax
+											listener="#{beanReproduccionConstancia.validarExistenciaDocumento(true)}"
+											update="globalMsg" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3" align="center">
+									<br />
+									<p:commandButton value="#{messageBeanSNR.commonLabelBuscar}"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										icon="lupa" iconPos="left"
+										actionListener="#{beanReproduccionConstancia.buscarRepConstanciaDocumento}"
+										update="idDtListadoDocumentos,globalMsg" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-4" align="center">
+									<br />
+									<p:commandButton value="#{messageBeanSNR.commonButtonLimpiar}"
+										disabled="#{beanReproduccionConstancia.modificarValores}"
+										icon="fa fa-undo" iconPos="left"
+										actionListener="#{beanReproduccionConstancia.limpiarRepConstanciaDocumento()}"
+										update="idDtListadoDocumentos,globalMsg" />
+								</div>
+							</div>
+						</p:panel>
+						<br/>
+						<p:panel>
+							<p:dataTable id="idDtListadoDocumentos"
+								value="#{beanReproduccionConstancia.dataReproduccionConstancia}"
+								var="item"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+								<p:column style="width:100px"
+									headerText="#{messageBeanSNR.commonLabelVerDetalle}">
+									<p:rowToggler />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelDocumento}">
+									<div align="center">
+										<h:outputText value="#{item.documento.nombreTipoDocumento}" />
+									</div>
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaDelDocumento}">
+									<div align="center">
+										<h:outputText value="#{item.documento.fechaDocumento}" />
+									</div>
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelNumero}">
+									<div align="center">
+										<h:outputText value="#{item.documento.numero}" />
+									</div>
+								</p:column>
+
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelOficinaOrigen}">
+									<div align="center">
+										<h:outputText value="#{item.documento.nombreOficinaOrigen}" />
+									</div>
+								</p:column>
+								<p:rowExpansion>
+									<p:dataTable id="idDtListadoConstancia" tableStyle="width:auto"
+										value="#{item.anotacionPredioDireccion}" var="detalle"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelCirculoYMatricula}">
+											<div align="center">
+												<h:outputText
+													value="#{detalle.idCirculo} - #{detalle.idMatricula}" />
+											</div>
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}">
+											<div align="center">
+												<h:outputText value="#{detalle.direccionPredio}" />
+											</div>
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelNumeroAnotacion}">
+											<div align="center">
+												<h:outputText value="#{detalle.anotaciones}" />
+											</div>
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+											<div align="center">
+												<h:outputText value="#{detalle.radicacion}" />
+											</div>
+										</p:column>
+										<p:column style="width:20px;text-align:center"
+											rendered="#{beanReproduccionConstancia.modificarValores}"
+											headerText="#{messageBeanSNR.commonLabelSeleccione}">
+											<p:selectBooleanCheckbox
+												disabled="true"
+												id="idSbcConstanciaRep" value="#{detalle.seleccionado}" />
+										</p:column>
+										<p:column style="width:32px;text-align:center"
+											rendered="#{beanReproduccionConstancia.modificarValores}"
+											headerText="#{messageBeanSNR.commonLabelCantidadDeCopiasAReproducir}">
+											<p:spinner disabled="#{detalle.bloquearSeleccionado}"
+												title="#{tooltipBeanSNR.procesosRegistroDatosDocumentoCantidadCopiasReproducir}"
+												id="idSpCantidadDeCopiasAReproducir" min="1" size="5"
+												value="#{detalle.cantidadCopiasReproducir}" />
+										</p:column>
+									</p:dataTable>
+								</p:rowExpansion>
+							</p:dataTable>
+						</p:panel>
+					</p:outputPanel>
+
+
+					<p:outputPanel id="opBtnGenerateFile">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-4 ui-lg-4" align="left">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									action="#{beanReproduccionConstancia.regresar}">
+									<f:param name="idTurno"
+										value="#{beanPredioDocumentoActo.idTurno}" />
+									<f:param name="idMotivo"
+										value="#{beanPredioDocumentoActo.motivoTramite}" />
+									<f:param name="idConfrontacion"
+										value="#{beanPredioDocumentoActo.confrontacion}" />
+									<f:param name="datosBasicos"
+										value="#{beanPredioDocumentoActo.datosBasicos}" />
+									<f:param name="insertarMatricula"
+										value="#{beanPredioDocumentoActo.insertaMatricula}" />
+									<f:param name="eliminarMatricula"
+										value="#{beanPredioDocumentoActo.eliminaMatricula}" />
+									<f:param name="varificarFolioCerrado"
+										value="#{beanPredioDocumentoActo.verificaFolioCerrado}" />
+								</p:commandButton>
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonConfirmarDatos}"
+									disabled="#{beanReproduccionConstancia.modificarValores}"
+									update="fRepConstancia"
+									action="#{beanReproduccionConstancia.modificarValores}">
+								</p:commandButton>
+							</div>
+							<div class="ui-g-12 ui-md-8 ui-lg-8" align="right">
+								<p:commandButton id="btnSalvar" icon="fa fa-chevron-right"
+									value="#{messageBeanSNR.commonLabelGuardar}"
+									disabled="#{!beanReproduccionConstancia.modificarValores}"
+									iconPos="right" update="fRepConstancia"
+									action="#{beanReproduccionConstancia.guardarInfoReproduccion}" />
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonGenerarConstanciaReproduccion}"
+									iconPos="left" icon="fa fa-file-o"
+									rendered="#{beanReproduccionConstancia.generarArchivo}"
+									update="opBtnGenerateFile" id="idCBRepCons"
+									actionListener="#{beanReproduccionConstancia.generateFile()}" />
+								<p:commandLink id="idClnkRespuestaReproduccion" ajax="false"
+									rendered="#{beanReproduccionConstancia.envioAprobador}">
+									<p:graphicImage value="/images/pdf_ico.png" />
+									<p:fileDownload value="#{beanReproduccionConstancia.imagen}" />
+								</p:commandLink>
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonEnviarAlAprobador}"
+									iconPos="left" icon="fa fa-file-o"
+									rendered="#{beanReproduccionConstancia.envioAprobador}"
+									id="idEnvioAprobador"
+									action="#{beanReproduccionConstancia.enviarAprobador}">
+								</p:commandButton>
+							</div>
+						</div>
+					</p:outputPanel>
+				</center>
+			</h:form>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="dlgRepConst" modal="true" height="90" resizable="false">
+				<h:form id="dlgRepConst"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelDeseaGuardarConstanciaReproduccion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" ajax="true"
+							onclick="jQuery('.ui-row-toggler').click()"
+							oncomplete="PF('dlgRepConst').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onsuccess="PF('dlgRepConst').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBusqueda}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultarReciboLiquidacion}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fConsultaLiquidacion" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true"
+					redisplay="false" />
+				<center>
+					<p:panel header="#{messageBeanSNR.commonLabelBandejaDeEntrada}"
+						style="min-width:800px;" toggleable="true">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGrid columns="2">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelReferenciaPago}" />
+									<br />
+									<p:inputText
+										value="#{beanConsultaReciboLiquidacion.numeroReferencia}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGrid columns="1">
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										actionListener="#{beanConsultaReciboLiquidacion.consultar}"
+										update="idDTData" />
+								</h:panelGrid>
+							</div>
+						</div>
+						<br />
+						<div class="ui-g" align="center">
+							<p:dataTable var="item" id="idDTData" rows="50"
+								value="#{beanConsultaReciboLiquidacion.data}" paginator="true"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+								<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+									<h:outputText value="#{item.nir}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelNumeroDeReferencia}">
+									<h:outputText value="#{item.numeroReferencia}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelTipoLiquidacion}">
+									<h:outputText rendered="#{item.idTipoMayorValor == messageBeanSNR.commonLabelM}"
+										value="#{messageBeanSNR.commonLabelMayorValor} #{messageBeanSNR.commonLabelCalificacion}" />
+									<h:outputText rendered="#{item.idTipoMayorValor == messageBeanSNR.commonLabelN}"
+										value="#{messageBeanSNR.commonLabelMayorValor} #{messageBeanSNR.commonLabelNuevaEntrada}" />
+									<h:outputText rendered="#{item.idTipoMayorValor == messageBeanSNR.commonLabelR}"
+										value="#{messageBeanSNR.commonLabelMayorValor} #{messageBeanSNR.commonLabelCorrecciones}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelEstado}">
+									<h:outputText value="#{messageBeanSNR.commonLabelLiquidada}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelDetalle}"
+									width="8%">
+									<div align="center">
+										<h:commandButton
+											value="#{messageBeanSNR.commonLabelVerDetalle}"
+											action="#{beanConsultaReciboLiquidacion.returnPages(item)}"
+											image="../images/find.png"
+											onclick="PrimeFaces.monitorDownload(start, stop);" />
+									</div>
+									<script type="text/javascript">
+					function start() {
+					    PF('statusDialog').show();
+					}
+
+					function stop() {
+					    PF('statusDialog').hide();
+					}
+				    </script>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

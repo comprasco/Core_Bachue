@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelProcesos}" /></li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelCuentaCupos}" /></li>
+				<li class="breadcrumb-item active" aria-current="page"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultaCuentaCupos}" /></li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fConsultaCuentaCupos" style="width: 100%;">
+				<p:growl id="idGrowl" globalOnly="true" showDetail="true"
+					sticky="false" life="10000" redisplay="false" />
+				<center>
+					<p:panel id="idOPConsultaCC"
+						header="#{messageBeanSNR.commonLabelConsultaCuentaCupos}">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGrid columns="1">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelIdCuentaCupo}"
+										style="font-size: 100%;" />
+									<p:inputText
+										disabled="#{beanConsultaCuentaCupos.consultaExitosa}"
+										placeholder="#{messageBeanSNR.commonLabelIdCuentaCupo}"
+										id="idCuentaCupo"
+										value="#{beanConsultaCuentaCupos.idCuentaCupo}">
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGroup>
+									<p:commandButton id="idCBConsultar"
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										actionListener="#{beanConsultaCuentaCupos.consultarIdCuentaCupo()}"
+										disabled="#{beanConsultaCuentaCupos.consultaExitosa}"
+										ajax="true" icon="lupa"
+										update="idCuentaCupo,idCBConsultar,idOPDatosRecarga,idGrowl" />
+								</h:panelGroup>
+							</div>
+						</div>
+						<p:outputPanel id="idOPDatosRecarga">
+							<p:outputPanel
+								rendered="#{beanConsultaCuentaCupos.consultaExitosa}">
+								<div class="ui-g" align="center">
+									<div class="ui-g-12 ui-md-12 ui-lg-12" align="left">
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelFechaUltimaRecarga}" />
+											<br />
+											<p:inputText id="idITFechaUltimaRecarga" style="width:100%;"
+												disabled="true"
+												value="#{beanConsultaCuentaCupos.consultaRecarga.fechaUltimaRecarga}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelValorUltimaRecarga}" />
+											<br />
+											<p:inputText id="idITValorUltimaRecarga" style="width:100%;"
+												disabled="true"
+												value="#{beanConsultaCuentaCupos.consultaRecarga.valorUltimaRecarga}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelSaldoActual}" />
+											<br />
+											<p:inputText id="idITSaldoActual" style="width:100%;"
+												disabled="true"
+												value="#{beanConsultaCuentaCupos.consultaRecarga.saldoActual}" />
+										</div>
+									</div>
+								</div>
+								<br />
+								<p:panel id="idPConsultaMovimientos"
+									header="#{messageBeanSNR.commonLabelConsultaMovimientos}">
+									<div class="ui-g" align="center">
+										<div class="ui-g-12 ui-md-12 ui-lg-12" align="left">
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel indicateRequired="true"
+													value="#{messageBeanSNR.commonLabelFechaInicial}" />
+												<br />
+												<p:calendar id="idCalFechaInicial" size="10" mask="true"
+													locale="es" placeholder="DD/MM/AAAA HH:mm"
+													pattern="dd/MM/yyyy HH:mm"
+													title="#{tooltipBeanSNR.administracionusuariosDetalleFechaHasta}"
+													value="#{beanConsultaCuentaCupos.fechaInicial}"
+													showOn="button" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel indicateRequired="true"
+													value="#{messageBeanSNR.commonLabelFechaFinal}" />
+												<br />
+												<p:calendar id="idCalFechaFinal" size="10" mask="true"
+													locale="es" placeholder="DD/MM/AAAA HH:mm"
+													pattern="dd/MM/yyyy HH:mm"
+													title="#{tooltipBeanSNR.administracionusuariosDetalleFechaHasta}"
+													value="#{beanConsultaCuentaCupos.fechaFinal}"
+													showOn="button" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel value="" />
+												<br />
+												<p:commandButton id="idCBConsultarMovimientos"
+													value="#{messageBeanSNR.commonButtonConsultar}"
+													actionListener="#{beanConsultaCuentaCupos.consultarMovimientos()}"
+													ajax="true" icon="lupa"
+													update="idCalFechaInicial,idCalFechaFinal,idDTMovimientos,idGrowl,idCBExportar,idSOMTipoArchivo" />
+											</div>
+										</div>
+									</div>
+									<br />
+									<p:dataTable
+										value="#{beanConsultaCuentaCupos.consultaMovimientos.detalleMovimientos}"
+										var="movimiento" id="idDTMovimientos"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelNumeroNotaCredito}">
+											<h:outputText value="#{movimiento.idNotaCredito}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelFechaMovimiento}">
+											<h:outputText value="#{movimiento.fechaMovimiento}">
+												<f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm" />
+											</h:outputText>
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelReciboDeCaja}">
+											<h:outputText value="#{movimiento.reciboCaja}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelValorRecarga}">
+											<h:outputText value="#{movimiento.valorRecargaTxt}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelValorConsumo}">
+											<h:outputText value="#{movimiento.valorConsumoTxt}" />
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelSaldo}">
+											<h:outputText value="\$#{movimiento.valorSaldo}" />
+										</p:column>
+										<p:column headerText="#{messageBeanSNR.commonLabelEstado}">
+											<h:outputText value="#{movimiento.estado}" />
+										</p:column>
+
+										<p:columnGroup type="footer">
+											<p:row>
+												<p:column colspan="3" style="text-align:right"
+													footerText="#{messageBeanSNR.commonLabelTotales}" />
+												<p:column
+													footerText="\$#{beanConsultaCuentaCupos.consultaMovimientos.valorRecargaTotal}" />
+												<p:column
+													footerText="\$#{beanConsultaCuentaCupos.consultaMovimientos.valorConsumoTotal}" />
+												<p:column
+													footerText="\$#{beanConsultaCuentaCupos.consultaMovimientos.valorSaldoTotal}" />
+											</p:row>
+										</p:columnGroup>
+									</p:dataTable>
+									<br />
+									<div class="ui-c" align="center">
+										<div class="ui-g-12 ui-md-6 ui-lg-9" align="right"></div>
+										<div class="ui-g-12 ui-md-6 ui-lg-3" align="left">
+											<p:outputLabel indicateRequired="true"
+												value="#{messageBeanSNR.commonLabelTipoArchivo}" />
+											<br />
+											<p:selectOneMenu id="idSOMTipoArchivo" style="width:100%"
+												value="#{beanConsultaCuentaCupos.seleccionTipoArchivo}"
+												update="idSOMTipoArchivo"
+												disabled="#{!beanConsultaCuentaCupos.consultaMovimientosExitosa}">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelExcelxlsx}"
+													itemValue="#{beanConsultaCuentaCupos.opcionExcel}" />
+												<f:selectItem itemLabel="#{messageBeanSNR.commonLabelPDF}"
+													itemValue="#{beanConsultaCuentaCupos.opcionPdf}" />
+											</p:selectOneMenu>
+											<br /> <br />
+											<p:commandButton id="idCBExportar"
+												value="#{messageBeanSNR.commonLabelExportar}"
+												actionListener="#{beanConsultaCuentaCupos.exportarArchivoConsulta()}"
+												ajax="true" icon="fa fa-download"
+												onclick="PrimeFaces.monitorDownload(start, stop);"
+												disabled="#{!beanConsultaCuentaCupos.consultaMovimientosExitosa}"
+												update="idSOMTipoArchivo,idCalFechaInicial,idCalFechaFinal,idGrowl">
+												<p:fileDownload
+													value="#{beanConsultaCuentaCupos.documentoConsulta}" />
+											</p:commandButton>
+										</div>
+									</div>
+								</p:panel>
+							</p:outputPanel>
+						</p:outputPanel>
+					</p:panel>
+					<p:spacer />
+					<div align="left">
+						<p:commandButton
+							value="#{beanCuentaCuposInactivacion.consultaExitosa ? messageBeanSNR.commonLabelLimpiar : messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							update="idOPConsultaCC"
+							action="#{beanConsultaCuentaCupos.regresar()}">
+						</p:commandButton>
+					</div>
+					<br />
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

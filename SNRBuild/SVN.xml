@@ -1,0 +1,478 @@
+<project name="Build" default="svn" basedir=".">
+	<property name="expose.dir" location="C:\ear" />
+	<property name="workspace.dir" location="${basedir}/.." />
+	<property name="custody.dir" location="${workspace.dir}/_custody" />
+	<tstamp>
+		<format property="dateTime.ear" pattern="yyyyMMdd_HHmm" />
+	</tstamp>
+	<target name="all" depends="pre-clear,expose,post-clear" />
+	<target name="copy" depends="pre-clear,init,copySNRBuild,copySNRBusiness,copySNRDelegate,copySNRCommon,copySNRConfig,copySNRDao,copySNREAR,
+		copySNREJB,copySNREJBClient,copySNRIntegration,copySNRModel,copySNRWEB,copySNRWorkflowWEB,copySNRServicesBachueWEB,copySNRServicesOFWEB,
+		copySNRServicesCAWEB,copySNREnvioDocumentosWEB,copySNRServicesCCWEB,copySNRServicesMTOWEB,copySNRServicesGATWEB,copySNRServicesCTWEB,
+		copySNRServicesEPWEB,copySNRServicesCHSPWEB,copySNRServicesCDWEB,copySNRServicesCDRWEB,copySNRServicesGCCWEB,copySNRServicesMCOWEB,copySNRServicesMQOWEB,
+		copySNRServicesNMWEB,copySNRServicesRRRMWEB,copySNRServicesCSWEB,copySNRServicesPIWEB,copySNRServicesGSWEB,copySNRServicesCLPWEB,copySNRServicesCPWEB,
+		copySNRServicesCXAWEB,copySNRServicesCXCMWEB,copySNRServicesCXCTWEB,copySNRServicesCXHPWEB,copySNRServicesCXIPWEB,copySNRServicesCXIWEB,
+		copySNRServicesCXMRWEB,copySNRServicesCXSWEB,copySNRServicesCXTCWEB,copySNRServicesSCWEB,copySNRServicesSDCWEB,copySNRServicesATWEB,copySNRWEBCYN,
+		copySNRWEBCYNMR,copySNRWEBN,copySNRWEBRNB,copySNRCMFWEB,copySNRServicesNDCWEB,copySNRScheduler" />
+	<target name="copySNRBuild" depends="init">
+		<copy todir="${custody.dir}\SNRBuild" verbose="true">
+			<fileset dir="${workspace.dir}/SNRBuild">
+				<exclude name="**/CVS" />
+				<exclude name="bin/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRBusiness" depends="init">
+		<copy todir="${custody.dir}\SNRBusiness" verbose="true">
+			<fileset dir="${workspace.dir}/SNRBusiness">
+				<exclude name="**/CVS" />
+				<exclude name="bin/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRDelegate" depends="init">
+		<copy todir="${custody.dir}\SNRDelegate" verbose="true">
+			<fileset dir="${workspace.dir}/SNRDelegate">
+				<exclude name="**/CVS" />
+				<exclude name="bin/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRCommon" depends="init">
+		<copy todir="${custody.dir}\SNRCommon" verbose="true">
+			<fileset dir="${workspace.dir}/SNRCommon">
+				<exclude name="**/CVS" />
+				<exclude name="bin/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRConfig" depends="init">
+		<copy todir="${custody.dir}\SNRConfig" verbose="true">
+			<fileset dir="${workspace.dir}/SNRConfig">
+				<exclude name="**/CVS" />
+				<exclude name="bin/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRDao" depends="init">
+		<copy todir="${custody.dir}\SNRDao" verbose="true">
+			<fileset dir="${workspace.dir}/SNRDao">
+				<exclude name="**/CVS" />
+				<exclude name="bin/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNREAR" depends="init">
+		<copy todir="${custody.dir}\SNREAR" verbose="true">
+			<fileset dir="${workspace.dir}/SNREAR">
+				<exclude name="**/CVS" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNREJB" depends="init">
+		<copy todir="${custody.dir}\SNREJB" verbose="true">
+			<fileset dir="${workspace.dir}/SNREJB">
+				<exclude name="**/CVS" />
+				<exclude name="bin/" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNREJBClient" depends="init">
+		<copy todir="${custody.dir}\SNREJBClient" verbose="true">
+			<fileset dir="${workspace.dir}/SNREJBClient">
+				<exclude name="**/CVS" />
+				<exclude name="bin/" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRIntegration" depends="init">
+		<copy todir="${custody.dir}\SNRIntegration" verbose="true">
+			<fileset dir="${workspace.dir}/SNRIntegration">
+				<exclude name="**/CVS" />
+				<exclude name="bin/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRModel" depends="init">
+		<copy todir="${custody.dir}\SNRModel" verbose="true">
+			<fileset dir="${workspace.dir}/SNRModel">
+				<exclude name="**/CVS" />
+				<exclude name="bin/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRWEB" depends="init">
+		<copy todir="${custody.dir}\SNRWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRWorkflowWEB" depends="init">
+		<copy todir="${custody.dir}\SNRWorkflowWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRWorkflowWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRCMFWEB" depends="init">
+		<copy todir="${custody.dir}\SNRCMFWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRCMFWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRScheduler" depends="init">
+			<copy todir="${custody.dir}\SNRScheduler" verbose="true">
+				<fileset dir="${workspace.dir}/SNRScheduler">
+					<exclude name="**/CVS" />
+					<exclude name="build/" />
+				</fileset>
+			</copy>
+	</target>
+	<target name="copySNRServicesBachueWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesBachueWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesBachueWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesOFWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesOFWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesOFWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCAWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCAWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCAWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNREnvioDocumentosWEB" depends="init">
+		<copy todir="${custody.dir}\SNREnvioDocumentosWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNREnvioDocumentosWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCCWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCCWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCCWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCLPWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCLPWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCLPWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCPWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCPWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCPWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCXAWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCXAWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCXAWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCXCMWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCXCMWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCXCMWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCXCTWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCXCTWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCXCTWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCXHPWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCXHPWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCXHPWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCXIPWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCXIPWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCXIPWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCXIWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCXIWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCXIWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCXMRWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCXMRWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCXMRWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCXSWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCXSWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCXSWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCXTCWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCXTCWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCXTCWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesMTOWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesMTOWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesMTOWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesMCOWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesMCOWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesMCOWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesMQOWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesMQOWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesMQOWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesATWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesATWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesATWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesNMWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesNMWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesNMWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesRRRMWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesRRRMWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesRRRMWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCSWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCSWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCSWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesPIWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesPIWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesPIWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesGATWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesGATWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesGATWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCTWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCTWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCTWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesEPWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesEPWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesEPWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCHSPWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCHSPWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCHSPWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCDWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCDWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCDWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesCDRWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCDRWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCDRWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesGCCWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesGCCWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesGCCWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesGSWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesGSWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesGSWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesSCWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesSCWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesSCWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesSDCWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesSDCWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesSDCWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRWEBCYN" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCYNWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCYNWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRWEBCYNMR" depends="init">
+		<copy todir="${custody.dir}\SNRServicesCYNMRWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesCYNMRWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRWEBN" depends="init">
+		<copy todir="${custody.dir}\SNRServicesNWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesNWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRWEBRNB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesRNBWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesRNBWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copySNRServicesNDCWEB" depends="init">
+		<copy todir="${custody.dir}\SNRServicesNDCWEB" verbose="true">
+			<fileset dir="${workspace.dir}/SNRServicesNDCWEB">
+				<exclude name="**/CVS" />
+				<exclude name="build/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="expose" depends="copy">
+		<tstamp />
+		<zip basedir="${custody.dir}/" destfile="${custody.dir}/SNREAR.zip" />
+		<move file="${custody.dir}/SNREAR.zip" tofile="${expose.dir}/SNREAR_${dateTime.ear}.zip" verbose="true" />
+	</target>
+	<target name="init">
+		<mkdir dir="${custody.dir}" />
+		<mkdir dir="${expose.dir}" />
+	</target>
+	<target name="pre-clear">
+		<delete>
+			<fileset dir="${expose.dir}">
+				<include name="SNREAR_*.zip" />
+			</fileset>
+		</delete>
+	</target>
+	<target name="post-clear">
+		<delete dir="${custody.dir}" verbose="true" />
+	</target>
+	<target name="svn" depends="copy">
+			<move todir="${expose.dir}\SVN" verbose="true">
+				<fileset dir="${custody.dir}" >
+					<exclude name="**/CVS" />
+					<exclude name="**/build/" />
+					<exclude name="**/hs_err_pid*.log" />
+				</fileset>
+			</move>
+	</target>
+</project>

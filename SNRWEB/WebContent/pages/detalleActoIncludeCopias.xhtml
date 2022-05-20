@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+
+	<style type="text/css">
+.ui-autocomplete-query {
+	font-weight: inherit;
+}
+</style>
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+	<h:form id="fCopias">
+		<p:growl id="idGrowl" sticky="false" showDetail="true" life="20000" redisplay="false"
+			globalOnly="true" />
+		<p:outputPanel style="min-width:800px;">
+			<!-- Datos del predio -->
+			<div class="ui-g">
+				<div class="ui-g-12 ui-md-2">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+					<br />
+					<p:inputText readonly="true"
+						title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeNir}"
+						value="#{beanPredioDocumentoActo.predio.get('NIR')}" />
+				</div>
+				<div class="ui-g-12 ui-md-2">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelIdTurno}" />
+					<br />
+					<h:commandLink
+						action="#{beanPredioDocumentoActo.dirigirTrazabilidad()}"
+						target="_blank">
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTurno}"
+							value="#{beanPredioDocumentoActo.predio.get('ID_TURNO')}" />
+					</h:commandLink>
+				</div>
+				<div class="ui-g-12 ui-md-2">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelFechaCreacion}" />
+					<br />
+					<p:inputText readonly="true"
+						title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeFechaCreacion}"
+						value="#{beanPredioDocumentoActo.turno.fechaCreacion}" />
+				</div>
+				<div class="ui-g-12 ui-md-2">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelDecisionCalificacionTramite}" />
+					<br />
+					<p:inputText readonly="true"
+						title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeDecisionCalificacion}"
+						value="#{beanPredioDocumentoActo.decisionCalificacion}" />
+				</div>
+				<div class="ui-g-12 ui-md-3">
+					<br />
+					<div class="ui-g-12 ui-md-12">
+						<p:commandButton ajax="false"
+							value="#{messageBeanSNR.commonButtonVisualizarDocumentos}"
+							icon="fa fa-newspaper-o" iconPos="left" update="idGrowl"
+							actionListener="#{beanPredioDocumentoActo.descargarArchivoZip}">
+							<p:fileDownload value="#{beanPredioDocumentoActo.imagen}" />
+						</p:commandButton>
+					</div>
+				</div>
+				<script type="text/javascript">
+					function start()
+					{
+						PF('statusDownload').show();
+					}
+
+					function stop()
+					{
+						PF('statusDownload').hide();
+					}
+				</script>
+			</div>
+			
+			<br/>
+			
+			<p:outputPanel id="idPCriterios">
+				<p:outputPanel rendered="#{beanPredioDocumentoActo.criteriosDeConsulta.tipoConsulta eq 'INDIVIDUAL'}">
+					<p:repeat id="idRepeatCriterios" var="item" value="#{beanPredioDocumentoActo.camposConsulta}">
+						<p:panel id="idPCriteriosCampos" header="#{messageBeanSNR.commonLabelCriteriosBusquedaM} #{item.criteriosDeBusqueda.descripcion}">
+							<div class="ui-g">
+								<p:repeat id="idRepeatCriteriosCampos" var="itemCamposConsulta" value="#{item.dataCamposConsulta}">
+									<div class="ui-g-12 ui-md-6 ui-lg-3">
+										<p:outputLabel value="#{itemCamposConsulta.etiquetaCampo}#{itemCamposConsulta.obligatorio eq 'S' ? messageBeanSNR.commonLabelObligatorio : ''}"/>
+										<p:outputPanel rendered="#{itemCamposConsulta.tipoDato eq 'TEXTO'}">
+											<p:inputText id="idTexto" value="#{itemCamposConsulta.valorCampo}" maxlength="#{itemCamposConsulta.longitud}" 
+												disabled="true"
+												style="#{itemCamposConsulta.rojoPantalla ? 'border-color:red !important;width:100%;' : 'width:100%;'};">
+												<p:keyFilter regEx="/[0-9\a-zA-Z-]/" preventPaste="false" />
+											</p:inputText>
+										</p:outputPanel>
+										<p:outputPanel rendered="#{itemCamposConsulta.tipoDato eq 'MULTIVALOR'}">
+											<p:selectOneMenu id="somMultivalor" value="#{itemCamposConsulta.valorCampo}"
+												disabled="true"
+												style="#{itemCamposConsulta.rojoPantalla ? 'border-color:red !important;width:100%;' : 'width:100%;'};">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems
+													value="#{(itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? beanReference.findCirculoRegistral(true) :
+															 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? beanReference.findTipoDocumentoPublicoActivo() : 
+															 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '5' ? item.tiposOficina : 
+															 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? beanReference.findPaises() :
+															 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? item.departamentos :
+															 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? item.municipios :
+															 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '9' ? item.oficinasOrigen :  
+															 itemCamposConsulta.idTipoCriterioBusqueda eq '10' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? beanReference.findCirculoRegistral(true) : 
+															 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? beanReference.findLibroAntiguoSistema() :  
+															 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? beanExpedicionCopias.findTomoAntiguoSistema() :  
+															 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '3' ? beanExpedicionCopias.findFolioAntiguoSistema() :  
+															 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '4' ? beanExpedicionCopias.findTipoPartidaAntiguoSistema() :  
+															 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? beanReference.buscarTodosMunicipiosPorPais() :  
+															 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? beanExpedicionCopias.findAnioAntiguoSistema() :  
+															 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? beanReference.findCirculoRegistral(true) :  
+															 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '9' ? beanReference.findTipoPredio() : ''}"
+													var="itemDropDown"
+													itemValue="#{(itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.idCirculo :
+																 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? itemDropDown.idTipoDocumento : 
+																 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '5' ? itemDropDown.idTipoOficina :  
+																 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? itemDropDown.idPais :         
+																 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? itemDropDown.idDepartamento : 
+																 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.idMunicipio :    
+																 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '9' ? itemDropDown.idOficinaOrigen :
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '10' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.idCirculo :																							 
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.idLibroAntiguoSistema :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? itemDropDown.idTomoAntiguoSistema :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '3' ? itemDropDown.idFolioAntiguoSistema :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '4' ? itemDropDown.idTipoPartidaAntiguoSistema :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? itemDropDown.idMunicipio :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? itemDropDown.idAnioAntiguoSistema :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.idCirculo :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '9' ? itemDropDown.idTipoPredio : ''}"																							 
+													itemLabel="#{(itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.codigoNombre :
+																 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? itemDropDown.nombre : 
+																 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '5' ? itemDropDown.nombre :  
+																 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? itemDropDown.nombre : 
+																 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? itemDropDown.nombre :  
+																 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.nombre :  
+																 (itemCamposConsulta.idTipoCriterioBusqueda eq '9' or itemCamposConsulta.idTipoCriterioBusqueda eq '12') and itemCamposConsulta.idCampoCriterioBusqueda eq '9' ? itemDropDown.nombre :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '10' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.codigoNombre :																							  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.idLibroAntiguoSistema :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? itemDropDown.nombre :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '3' ? itemDropDown.nombre :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '4' ? itemDropDown.nombre :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? itemDropDown.nombre :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? itemDropDown.nombre :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.nombre :  
+																 itemCamposConsulta.idTipoCriterioBusqueda eq '11' and itemCamposConsulta.idCampoCriterioBusqueda eq '9' ? itemDropDown.descripcion : ''}" />
+											</p:selectOneMenu>
+										</p:outputPanel>
+										<p:outputPanel rendered="#{itemCamposConsulta.tipoDato eq 'DATE'}">
+											<p:calendar id="idDate" size="10" mask="true"
+												disabled="true"
+												style="#{itemCamposConsulta.rojoPantalla ? 'border-color:red !important;width:100%;' : 'width:100%;'};"
+												locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+												showOn="button"
+												value="#{itemCamposConsulta.valorCampoFecha}">
+											</p:calendar>
+										</p:outputPanel>
+									</div>
+								</p:repeat>
+							</div>
+						</p:panel>
+						<br/>
+					</p:repeat>
+				</p:outputPanel>
+			</p:outputPanel>
+			<!-- Panel para documentos aportados -->
+			<p:dataTable id="idCompletitudDocumentales"
+				emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+				value="#{beanPredioDocumentoActo.buscarDocumentosAportados()}"
+				rendered="#{beanPredioDocumentoActo.idEtapa eq 350}" 
+				var="tiposDoc">
+				<f:facet name="header">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelDocumentosAportados}" />
+				</f:facet>
+				<p:columnGroup type="header">
+					<p:column headerText="#{messageBeanSNR.commonLabelTipoDocumental}"
+						style="width: 17%;" />
+					<p:column headerText="#{messageBeanSNR.commonLabelObligatoriedad}"
+						style="width: 10%;" />
+					<p:column headerText="#{messageBeanSNR.commonLabelRecepcion}"
+						style="width: 10%" />
+					<p:column headerText="#{messageBeanSNR.commonLabelObservaciones}"
+						style="width: 25%;" />
+				</p:columnGroup>
+				<p:column>
+					<p:selectOneMenu id="idSOMTipoDocumental"
+						title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosTipoDocumental}"
+						disabled="true" style="width:100%"
+						value="#{tiposDoc.idTipoDocumental}">
+						<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+							itemValue="" />
+						<f:selectItems itemValue="#{doc.idTipoDocumental}"
+							value="#{beanReference.findAllTiposDocumentales()}" var="doc"
+							itemLabel="#{doc.nombre} - #{doc.idTipoDocumental}" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column>
+					<p:selectBooleanCheckbox id="seleccionObli" disabled="true"
+						value="#{tiposDoc.seleccionado}" />
+				</p:column>
+				<p:column>
+					<p:selectOneMenu id="idSOMedioRecepcion" disabled="true"
+						title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosRecepcionDocumento}"
+						style="width:100%" value="#{tiposDoc.medioRecepcion}">
+						<f:selectItem itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+							itemValue="" />
+						<f:selectItems value="#{beanReference.findAllRecepcionDocumento()}"
+							var="comp" itemLabel="#{comp}" itemValue="#{comp}" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column>
+					<p:inputText id="observaTipo" onblur="value=value.toUpperCase()"
+						disabled="true"
+						style="#{tiposDoc.campoRojoObservacion ? 'border-color:red !important;width:100%;' : 'width:100%;'};"
+						value="#{tiposDoc.observaciones}" maxlength="200"
+						title="#{tooltipBeanSNR.procesosRegistroDatosActoResultadosObservaciones}"
+						placeholder="#{messageBeanSNR.commonLabelObservaciones}">
+					</p:inputText>
+				</p:column>
+			</p:dataTable>
+		</p:outputPanel>
+	</h:form>
+</h:body>
+</html>
+		

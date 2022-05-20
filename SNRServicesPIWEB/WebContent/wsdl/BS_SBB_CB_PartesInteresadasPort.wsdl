@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/ee/partesinteresadas/v1" xmlns:bachue5="https://www.supernotariado.gov.co/schemas/bachue/ee/partesinteresadas/consultarpartesinteresadas/v1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.supernotariado.gov.co/services/bachue/ee/partesinteresadas/v1">
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified" targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ee/partesinteresadas/consultarpartesinteresadas/v1">
+			<xsd:complexType name="tipoEntradaConsultarPartesInteresadas">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="0" name="tipoIdentificacionPredio">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="matricula"/>
+								<xsd:enumeration value="numeroPredial"/>
+								<xsd:enumeration value="numeroPredialAnterior"/>
+								<xsd:enumeration value="NUPRE"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="numIdentificacionPredio" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarPartesInteresadas" type="bachue5:tipoEntradaConsultarPartesInteresadas"/>
+			<xsd:complexType name="tipoSalidaConsultarPartesInteresadas">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="codDepartamento" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="codMunicipio" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="codCirculoRegistral" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="numMatriculaInmobiliaria" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="interesados">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="0" name="interesado">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element minOccurs="0" name="tipoPersona" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="tipoDocumentoPersona" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="numDocumentoPersona" type="xsd:string"/>
+											<xsd:element maxOccurs="1" minOccurs="0" name="primerNombre" type="xsd:string"/>
+											<xsd:element maxOccurs="1" minOccurs="0" name="segundoNombre" type="xsd:string"/>
+											<xsd:element maxOccurs="1" minOccurs="0" name="primerApellido" type="xsd:string"/>
+											<xsd:element maxOccurs="1" minOccurs="0" name="segundoApellido" type="xsd:string"/>
+											<xsd:element maxOccurs="1" minOccurs="0" name="razonSocial" type="xsd:string"/>
+											<xsd:element minOccurs="0" name="tipoParteInteresada" type="xsd:string"/>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element minOccurs="1" name="codigoMensaje" type="xsd:integer"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="descripcionMensaje" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarPartesInteresadas" type="bachue5:tipoSalidaConsultarPartesInteresadas"/>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="ConsultarPartesInteresadas_Request">
+		<wsdl:part element="bachue5:entradaConsultarPartesInteresadas" name="entrada"/>
+	</wsdl:message>
+	<wsdl:message name="ConsultarPartesInteresadas_Response">
+		<wsdl:part element="bachue5:salidaConsultarPartesInteresadas" name="salida"/>
+	</wsdl:message>
+	<wsdl:portType name="BS_SBB_CB_PartesInteresadas">
+		<wsdl:operation name="ConsultarPartesInteresadas">
+			<wsdl:input message="bachue:ConsultarPartesInteresadas_Request"/>
+			<wsdl:output message="bachue:ConsultarPartesInteresadas_Response"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="BS_SBB_CB_PartesInteresadas" type="bachue:BS_SBB_CB_PartesInteresadas">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="ConsultarPartesInteresadas">
+			<soap:operation soapAction="https://www.supernotariado.gov.co/services/bachue/ee/partesinteresadas/v1/ConsultarPartesInteresadas" style="document"/>
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="BS_SBB_CB_PartesInteresadas">
+		<wsdl:port binding="bachue:BS_SBB_CB_PartesInteresadas" name="BS_SBB_CB_PartesInteresadasPort">
+			<soap:address location="http://localhost:7001/SNRServicesPIWEB/services/BS_SBB_CB_PartesInteresadasPort"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

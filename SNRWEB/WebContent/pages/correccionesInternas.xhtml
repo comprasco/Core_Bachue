@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{beanCorreccionInterna.correccionesParaGrabacion ? messageBeanSNR.commonLabelGrabacion : messageBeanSNR.commonLabelCalificacion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fCorreccionInterna">
+				<p:growl id="idGrowl" sticky="false" showDetail="true" life="20000"
+					globalOnly="true" redisplay="false"/>
+				<p:panel id="idPMatriculasCorrecion"
+					rendered="#{beanCorreccionInterna.correccionesCalificacion}">
+					<p:dataTable
+						emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+						id="idDTMatriculas" var="matricula"
+						value="#{beanCorreccionInterna.findMatriculasCorreccion()}">
+
+						<p:column headerText="#{messageBeanSNR.commonLabelMatricula}">
+							<div align="left">
+								<h:outputText
+									value="#{matricula.idCirculo}-#{matricula.idMatricula}" />
+							</div>
+						</p:column>
+
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelCantidadDeCertificados}">
+							<div align="left">
+								<h:outputText value="#{matricula.cantidadCertificados}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="#{messageBeanSNR.commonLabelAccion}">
+							<div align="left">
+								<p:commandButton style="width: 15%;"
+									title="#{tooltipBeanSNR.procesosCalificacionCorreccionesDatosDelPredioDetalle}"
+									actionListener="#{beanCorreccionInterna.cargarTablaCorrecciones(matricula)}"
+									icon="lupa" update="fCorreccionInterna" />
+							</div>
+						</p:column>
+					</p:dataTable>
+					<p:outputPanel
+						rendered="#{beanCorreccionInterna.procesoTerminado and beanCorreccionInterna.correccionesCalificacion}">
+						<br />
+						<div align="center">
+							<p:commandButton id="cbDescargarPdfCorreccion"
+								onclick="ocultarElemento('fCorreccionInterna:cbDescargarPdfCorreccion')"
+								value="#{messageBeanSNR.commonLabelDescargarPDF}"
+								update=",cbDescargarPdf,opPanelTerminarProceso,idDtListadoSolInter"
+								actionListener="#{beanCorreccionInterna.deshabilitarDescargaPDF()}"
+								process="@this"
+								disabled="#{beanCorreccionInterna.renderedPDFTerminado}" ajax="false"
+								icon="fa fa-arrow-down">
+								<p:fileDownload value="#{beanCorreccionInterna.archivoPdf}" />
+							</p:commandButton>
+						</div>
+					</p:outputPanel>
+					<br />
+					<p:outputPanel id="idObservaciones5">
+						<div align="left">
+							<strong>
+								<p:outputLabel indicateRequired="#{beanCorreccionInterna.correccionesParaGrabacion}"
+									value="#{messageBeanSNR.commonLabelObservaciones}" />
+							</strong>
+							<p:inputTextarea id="idITAObservaciones" 
+								rows="10" cols="240"
+								title="#{tooltipBeanSNR.procesosAnalisisGrabacionMatriculasCorreccionesObservaciones}"
+								onblur="value=value.toUpperCase()"
+								value="#{beanCorreccionInterna.observacionesProcesoCorrecciones}"
+								queryDelay="750" maxlength="4000" minQueryLength="4"
+								counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+								counter="idNumeroCaracteres5">
+							</p:inputTextarea>
+						</div>
+						<div align="right">
+							<h:outputText id="idNumeroCaracteres5" />
+						</div>
+					</p:outputPanel>
+				</p:panel>
+				<p:outputPanel id="idOPBotonesRegistro">
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-3" align="left">
+							<p:commandButton
+								rendered="#{beanCorreccionInterna.correccionesCalificacion}"
+								value="#{messageBeanSNR.commonLabelRegresarDetalleTurno}"
+								disabled="#{beanCorreccionInterna.solicitudCorreccionGenerada}"
+								icon="fa fa-arrow-circle-left" iconPos="left"
+								action="#{beanCorreccionInterna.accionRegresarCalificacion}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-9" align="right">
+							<p:commandButton
+								value="#{messageBeanSNR.commonButtonGenerarSolicitudCorrecciones}"
+								actionListener="#{beanCorreccionInterna.terminarProcesoCorrecciones}"
+								update="fDialog2:otMensaje,idOPBotonesRegistro,fCorreccionInterna:idPMatriculasCorrecion"
+								rendered="#{beanCorreccionInterna.validacionCorreccionSeleccionada and !beanCorreccionInterna.procesoTerminado}"
+								icon="fa fa-check" />
+								<p:spacer />
+							<p:commandButton
+								value="#{messageBeanSNR.commonLabelFinalizar}"
+								rendered="#{beanCorreccionInterna.procesoTerminado}"
+								icon="fa fa-check" action="principal?faces-redirect=true"
+								process="@this" />
+						</div>
+					</div>
+				</p:outputPanel>
+			</h:form>
+			
+			<p:dialog appendTo="@(body)" id="idDCausalesCorreccion"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" draggable="false"
+				widgetVar="causalesCorreccion" modal="true" resizable="false"
+				width="1200" height="500">
+				<h:form id="fDialogCausalesCorreccion">
+					<p:dataTable id="idDTCausales" var="causal"
+						value="#{beanCorreccionInterna.correccionesSolicitudCalificacion}">
+						<p:column headerText="#{messageBeanSNR.commonLabelGrupoCausal}">
+							<div align="center">
+								<h:outputText value="#{causal.grupoCausal}" />
+							</div>
+						</p:column>
+						<p:column
+							headerText="#{messageBeanSNR.commonLabelCausalCorreccion}">
+							<div align="center">
+								<h:outputText value="#{causal.nombre}" />
+							</div>
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelDescripcion}">
+							<div align="center">
+								<h:outputText value="#{causal.descripcion}" />
+							</div>
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelSeleccione}"
+							width="10%">
+							<div align="center">
+								<p:selectBooleanCheckbox value="#{causal.seleccionado}">
+									<p:ajax update="idCausalObservacionCalificacion"></p:ajax>
+								</p:selectBooleanCheckbox>
+							</div>
+						</p:column>
+						<p:column headerText="#{messageBeanSNR.commonLabelObservaciones}">
+							<p:inputTextarea onblur="value=value.toUpperCase()"
+								maxlength="4000" id="idCausalObservacionCalificacion"
+								disabled="#{!causal.seleccionado}"
+								title="#{tooltipBeanSNR.procesosCorreccionesDatosDelPredioConsultaMatriculaCorreccionObservaciones}"
+								placeholder="#{messageBeanSNR.commonLabelObservaciones}"
+								value="#{causal.observaciones}" />
+						</p:column>
+					</p:dataTable>
+					<br />
+					<div class="ui-g-12 ui-md-12 ui-lg-12" align="right">
+						<p:commandButton icon="fa fa-close"
+							value="#{messageBeanSNR.commonButtonCancelar}" update="fCorreccionInterna"
+							onclick="PF('causalesCorreccion').hide();" />
+						<p:commandButton icon="fa fa-check"
+							value="#{messageBeanSNR.commonLabelGuardar}" update="fCorreccionInterna"
+							actionListener="#{beanCorreccionInterna.guardarCausalesMatriculaCorreccion()}" />
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelNIRCreado}"
+				widgetVar="idDialogNir" modal="true" height="100" resizable="false">
+				<h:form id="fDialog2"
+					style="font-size: large; top: 100%; left: 100%;">
+					<h:outputText id="otMensaje"
+						value="#{beanCorreccionInterna.mensajeTerminarProceso}" />
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)" id="idDPreguntaCorreccionGeneral"
+				header="#{messageBeanSNR.commonLabelConfirmacion}"
+				widgetVar="preguntaCorreccionGeneral" modal="true" resizable="false"
+				width="50%" >
+				<h:form id="fDialogPreguntaCorreccionGeneral"
+					style="font-size: large; top: 50%; left: 50%;">
+					<div align="center">
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelAplicarCorrecciones}" />
+					</div>
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check"
+							actionListener="#{beanCorreccionInterna.aplicarCorreccionesGeneral()}"
+							oncomplete="PF('preguntaCorreccionGeneral').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							update="fCorreccionInterna" icon="fa fa-close"
+							onclick="PF('preguntaCorreccionGeneral').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

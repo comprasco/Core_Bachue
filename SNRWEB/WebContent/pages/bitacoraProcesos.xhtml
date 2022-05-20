@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelOperativo}" />
+				</li>
+				<li class="breadcrumb-item" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBitacoraProcesos}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fBitacoraProceso" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true" redisplay="false"/>
+				<center>
+
+					<p:panel header="#{messageBeanSNR.commonLabelBitacoraProcesos}"
+						style="min-width:800px;" toggleable="true">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-8 ui-lg-8">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelDescripcion}#{messageBeanSNR.commonLabelObligatorio}"
+									style="font-size: 100%;" />
+								<p:selectOneMenu id="idDescripcion" style="width:95%"
+									title="#{tooltipBeanSNR.bitacoraProcesoDescripcion}"
+									value="#{beanBitacoraProcesos.descripcion}">
+									<f:selectItem
+										itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+										itemValue="" />
+									<f:selectItems
+										value="#{beanReference.findProcesosAutomaticos()}"
+										var="proceso" itemValue="#{proceso.nombreProceso}"
+										itemLabel="#{proceso.idProcesoAutomatico} - #{proceso.descripcion}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-6 ui-lg-4" align="left">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelFechaDesde}#{messageBeanSNR.commonLabelObligatorio}"
+									style="font-size: 100%;" />
+								<br />
+								<p:calendar id="idFechaDesde" size="10" mask="true"
+									title="#{tooltipBeanSNR.bitacoraProcesoFechaDesde}" locale="es"
+									placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+									value="#{beanBitacoraProcesos.fechaDesde}" showOn="button" />
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-4" align="left">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelFechaHasta}#{messageBeanSNR.commonLabelObligatorio}"
+									style="font-size: 100%;" />
+								<br />
+								<p:calendar id="idFechaHasta" size="10" mask="true"
+									style="width:95% !important"
+									title="#{tooltipBeanSNR.bitacoraProcesoFechaHasta}" locale="es"
+									placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+									value="#{beanBitacoraProcesos.fechaHasta}" showOn="button" />
+							</div>
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<br />
+								<h:panelGroup>
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										actionListener="#{beanBitacoraProcesos.consultaDetallada()}"
+										ajax="true" icon="lupa"
+										update="idTablaBitacora,idDescripcion,idFechaDesde,idFechaHasta" />
+								</h:panelGroup>
+
+							</div>
+						</div>
+						<br />
+						<div class="ui-g">
+							<p:dataTable id="idTablaBitacora" tableStyle="width:auto"
+								value="#{beanBitacoraProcesos.datosBitacora}" var="item"
+								paginator="true" rows="50"
+								emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}">
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaEjecucion}"
+									sortBy="#{item.fechaCreacion}">
+									<h:outputText value="#{item.fechaCreacion}" />
+								</p:column>
+
+								<p:column headerText="#{messageBeanSNR.commonLabelEtapa}"
+									sortBy="#{item.idEtapa}">
+									<div align="center">
+										<h:outputText value="#{item.idEtapa}" />
+									</div>
+								</p:column>
+
+								<p:column headerText="#{messageBeanSNR.commonLabelNIR}"
+									sortBy="#{item.nir}">
+									<div align="center">
+										<h:outputText value="#{item.nir}" />
+									</div>
+								</p:column>
+
+								<p:column headerText="#{messageBeanSNR.commonLabelTurno}"
+									sortBy="#{item.idTurno}">
+									<div align="center">
+										<h:outputText value="#{item.idTurno}" />
+									</div>
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelDescripcion}"
+									sortBy="#{item.descripcion}">
+									<div align="center">
+										<h:outputText value="#{item.descripcion}" />
+									</div>
+								</p:column>
+
+							</p:dataTable>
+						</div>
+					</p:panel>
+					<p:spacer />
+					<div align="left">
+						<p:ajaxStatus onstart="PF('statusDialog').show()"
+							onsuccess="PF('statusDialog').hide()" />
+
+						<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+							closable="false" resizable="false" showHeader="false">
+							<p:graphicImage value="/images/ajaxloadingbar.gif" />
+						</p:dialog>
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="principal?faces-redirect=true">
+						</p:commandButton>
+					</div>
+					<br />
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

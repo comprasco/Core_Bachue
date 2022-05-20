@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/co/cierreaperturaexpediente/v1"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/co/cierreaperturaexpediente/v1"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/co/cierreaperturaexpediente/cierreturno/v1"
+	xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/co/cierreaperturaexpediente/aperturaturno/v1"
+	xmlns:bachue3="https://www.supernotariado.gov.co/schemas/bachue/co/cierreaperturaexpediente/obtenerindiceelectronico/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/co/cierreaperturaexpediente/cierreturno/v1"
+			elementFormDefault="qualified" version="1.3">
+			<xsd:complexType name="tipoEntradaCierreTurno">
+				<xsd:sequence>
+					<xsd:element name="sistemaOrigen" type="xsd:string" />
+					<xsd:element name="parametros">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element ref="bachue1:parametro" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<!-- Tipo complejo Parametro -->
+			<xsd:element name="parametro">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="nombre" type="xsd:string" />
+						<xsd:element name="valor" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="entradaCierreTurno"
+				type="bachue1:tipoEntradaCierreTurno" />
+			<xsd:complexType name="tipoSalidaCierreTurno">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200" />
+								<xsd:enumeration value="409" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaCierreTurno"
+				type="bachue1:tipoSalidaCierreTurno" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/co/cierreaperturaexpediente/aperturaturno/v1"
+			elementFormDefault="qualified" version="1.3">
+			<xsd:complexType name="tipoEntradaAperturaTurno">
+				<xsd:sequence>
+					<xsd:element name="sistemaOrigen" type="xsd:string" />
+					<xsd:element name="parametros">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element ref="bachue2:parametro" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<!-- Tipo complejo Parametro -->
+			<xsd:element name="parametro">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="nombre" type="xsd:string" />
+						<xsd:element name="valor" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="entradaAperturaTurno"
+				type="bachue2:tipoEntradaAperturaTurno" />
+			<xsd:complexType name="tipoSalidaAperturaTurno">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200" />
+								<xsd:enumeration value="409" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaAperturaTurno"
+				type="bachue2:tipoSalidaAperturaTurno" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/co/cierreaperturaexpediente/obtenerindiceelectronico/v1"
+			elementFormDefault="qualified" version="1.3">
+			<xsd:complexType
+				name="tipoEntradaObtenerIndiceElectronico">
+				<xsd:sequence>
+					<xsd:element name="sistemaOrigen" type="xsd:string" />
+					<xsd:element name="parametros">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="parametro"
+									type="bachue3:tipoParametro" minOccurs="0"
+									maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoParametro">
+				<xsd:sequence>
+					<xsd:element name="nombre" type="xsd:string" />
+					<xsd:element name="valor" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaObtenerIndiceElectronico"
+				type="bachue3:tipoEntradaObtenerIndiceElectronico" />
+			<xsd:complexType
+				name="tipoSalidaObtenerIndiceElectronico">
+				<xsd:sequence>
+					<xsd:element name="archivo" type="xsd:base64Binary" />
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaObtenerIndiceElectronico"
+				type="bachue3:tipoSalidaObtenerIndiceElectronico" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="CierreTurno_Request">
+		<wsdl:part name="entrada"
+			element="bachue1:entradaCierreTurno" />
+	</wsdl:message>
+	<wsdl:message name="CierreTurno_Response">
+		<wsdl:part name="salida" element="bachue1:salidaCierreTurno" />
+	</wsdl:message>
+	<wsdl:message name="AperturaTurno_Request">
+		<wsdl:part name="entrada"
+			element="bachue2:entradaAperturaTurno" />
+	</wsdl:message>
+	<wsdl:message name="AperturaTurno_Response">
+		<wsdl:part name="salida"
+			element="bachue2:salidaAperturaTurno" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerIndiceElectronico_Request">
+		<wsdl:part name="entrada"
+			element="bachue3:entradaObtenerIndiceElectronico" />
+	</wsdl:message>
+	<wsdl:message name="ObtenerIndiceElectronico_Response">
+		<wsdl:part name="salida"
+			element="bachue3:salidaObtenerIndiceElectronico" />
+	</wsdl:message>
+
+	<wsdl:portType name="SUT_CO_CierreAperturaExpediente">
+		<wsdl:operation name="CierreTurno">
+			<wsdl:input message="bachue:CierreTurno_Request" />
+			<wsdl:output message="bachue:CierreTurno_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="AperturaTurno">
+			<wsdl:input message="bachue:AperturaTurno_Request" />
+			<wsdl:output message="bachue:AperturaTurno_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerIndiceElectronico">
+			<wsdl:input
+				message="bachue:ObtenerIndiceElectronico_Request" />
+			<wsdl:output
+				message="bachue:ObtenerIndiceElectronico_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding
+		name="SUT_CO_CierreAperturaExpedienteSOAP12Binding"
+		type="bachue:SUT_CO_CierreAperturaExpediente">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="CierreTurno">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/co/cierreaperturaexpediente/v1/CierreTurno" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="AperturaTurno">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/co/cierreaperturaexpediente/v1/AperturaTurno" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerIndiceElectronico">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/co/cierreaperturaexpediente/v1/ObtenerIndiceElectronico" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SUT_CO_CierreAperturaExpediente">
+		<wsdl:port name="SUT_CO_CierreAperturaExpedientePort"
+			binding="bachue:SUT_CO_CierreAperturaExpedienteSOAP12Binding">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

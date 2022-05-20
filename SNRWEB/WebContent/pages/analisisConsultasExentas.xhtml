@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtmltransitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelConsultasProcesos}" />
+				</li>
+				<li class="breadcrumb-item" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+				</li>
+				<li class="breadcrumb-item" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelDetalleConsultas}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelAnalisisConsultasExentas}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fAnalisisConsultasExentasId" style="width: 100%;"
+				enctype="multipart/form-data" onkeypress="return event.keyCode!=13">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="10000" redisplay="false"/>
+				<p:panelGrid style="margin-top:20px;width:100%;text-align:center;">
+					<f:facet name="header">
+				        <p:row>
+				            <p:column colspan="4">#{messageBeanSNR.commonLabelDatosDelTurno}</p:column>
+				        </p:row>
+				    </f:facet>
+			        <p:row>
+			            <p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelNIR}</p:column>
+			            <p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelIdTurno}</p:column>
+			            <p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelFechaCreacion}</p:column>
+			            <p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonButtonVisualizarDocumentos}</p:column>
+			        </p:row>
+			        <p:row>
+			        	<p:column><p:outputLabel style="font-weight: 400;" value="#{beanPredioDocumentoActo.predio.get('NIR')}" escape="false"/></p:column>
+			            <p:column>
+				            <h:commandLink action="#{beanPredioDocumentoActo.dirigirTrazabilidad()}"
+								target="_blank">
+					            <p:outputLabel style="font-weight: 400;" value="#{beanPredioDocumentoActo.predio.get('ID_TURNO')}" escape="false"/>
+							</h:commandLink>
+						</p:column>
+			            <p:column><p:outputLabel style="font-weight: 400;" value="#{beanPredioDocumentoActo.turno.fechaCreacion}" escape="false"/></p:column>
+			            <p:column rowspan="3">
+							<p:commandButton ajax="false"
+								value="#{messageBeanSNR.commonLabelConsultaSGD}"
+								icon="lupa" iconPos="left" update="idGrowl"
+								action="#{beanPredioDocumentoActo.consultaSGD()}">
+							</p:commandButton>
+			            </p:column>
+			        </p:row>
+			        <p:row>
+			            <p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelDecisionCalificacionTramite}</p:column>
+			            <p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelTipoDeExpediente}</p:column>
+			            <p:column styleClass="estiloHeaderDataTable">#{messageBeanSNR.commonLabelExpediente}</p:column>
+			        </p:row>
+			        <p:row>
+			        	<p:column><p:outputLabel style="font-weight: 400;" value="#{beanPredioDocumentoActo.decisionCalificacion}" escape="false"/></p:column>
+			        	<p:column><p:outputLabel style="font-weight: 400;" value="#{beanPredioDocumentoActo.turno.nombreTipoExpediente}" escape="false"/></p:column>
+			        	<p:column><p:outputLabel style="font-weight: 400;" value="#{beanPredioDocumentoActo.turno.expediente}" escape="false"/></p:column>
+			        </p:row>
+				</p:panelGrid>
+				<br/>
+				<center>
+					<p:panel id="idPCriterios">
+						<p:outputPanel
+							rendered="#{beanAnalisisConsultasExentas.criteriosDeConsulta.tipoConsulta eq 'INDIVIDUAL'}">
+							<p:repeat id="idRepeatCriterios" var="item"
+								value="#{beanAnalisisConsultasExentas.camposConsulta}">
+								<p:panel id="idPCriteriosCampos"
+									header="#{item.criteriosDeBusqueda.descripcion}">
+									<div class="ui-g">
+										<p:repeat id="idRepeatCriteriosCampos"
+											var="itemCamposConsulta" value="#{item.dataCamposConsulta}">
+											<div class="ui-g-12 ui-md-6 ui-lg-3">
+												<p:outputLabel
+													value="#{itemCamposConsulta.etiquetaCampo}#{itemCamposConsulta.obligatorio eq 'S' ? messageBeanSNR.commonLabelObligatorio : ''}" />
+												<p:outputPanel
+													rendered="#{itemCamposConsulta.tipoDato eq 'TEXTO'}">
+													<p:inputText id="idTexto"
+														value="#{itemCamposConsulta.valorCampo}"
+														maxlength="#{itemCamposConsulta.longitud}"
+														disabled="#{itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '11'}"
+														style="#{itemCamposConsulta.rojoPantalla ? 'border-color:red !important;width:100%;' : 'width:100%;'};">
+														<p:ajax
+															listener="#{beanAnalisisConsultasExentas.cargarDireccionCompleta(item)}"
+															update="fAnalisisConsultasExentasId:idPCriterios" />
+														<p:ajax
+															listener="#{beanAnalisisConsultasExentas.cambiarMinusculasAMayusculas(itemCamposConsulta)}"
+															update="fAnalisisConsultasExentasId:idPCriterios" />
+													</p:inputText>
+												</p:outputPanel>
+												<p:outputPanel
+													rendered="#{itemCamposConsulta.tipoDato eq 'MULTIVALOR'}">
+													<p:selectOneMenu id="somMultivalor"
+														value="#{itemCamposConsulta.valorCampo}"
+														style="#{itemCamposConsulta.rojoPantalla ? 'border-color:red !important;width:100%;' : 'width:100%;'};">
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems
+															value="#{itemCamposConsulta.idTipoCriterioBusqueda eq '1' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? beanReference.findTipoDocumentoActivo() : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '1' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? beanReference.findTipoPersona() : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? beanReference.findTipoDocumentoPublicoActivo() : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '4' ? beanReference.findTipoOficina() : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '5' ? beanReference.findPaises() :
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? item.departamentos :
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? item.municipios :
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? item.oficinasOrigen :
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? beanReference.findTipoPredio() : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? beanReference.findDepartamentos('57') : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '3' ? item.municipios : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '4' ? item.veredas : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? beanReference.findTipoEjeByTipoPredio(item.idTipoPredio) : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? beanReference.findTipoEjeByTipoPredio(item.idTipoPredio) : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '12' ? beanReference.findAllLetraEjeActivo() : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '13' ? beanReference.findTipoEjeByTipoPredio(item.idTipoPredio) : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '14' ? beanReference.findAllCoordenadaActivo() : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '15' ? beanReference.findAllLetraEjeActivo() : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '16' ? beanReference.findTipoEjeByTipoPredio(item.idTipoPredio) : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '17' ? beanReference.findAllCoordenadaActivo() : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '19' ? beanReference.findAllLetraEjeActivo() : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '20' ? beanReference.findTipoEjeByTipoPredio(item.idTipoPredio) : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '21' ? beanReference.findAllCoordenadaActivo() : 
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '22' ? beanReference.findTipoEjeByTipoPredio(item.idTipoPredio) :
+																	 itemCamposConsulta.idTipoCriterioBusqueda eq '5' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? beanReference.findCirculoRegistral(true) : ''}"
+															var="itemDropDown"
+															itemValue="#{itemCamposConsulta.idTipoCriterioBusqueda eq '1' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.idDocumentoTipo : 
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '1' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.idTipoPersona : 
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.idTipoDocumento : 
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '4' ? itemDropDown.idTipoOficina : 
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '5' ? itemDropDown.idPais : 
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? itemDropDown.idDepartamento : 
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? itemDropDown.idMunicipio :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.idOficinaOrigen :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.idTipoPredio :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? itemDropDown.idDepartamento :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '3' ? itemDropDown.idMunicipio :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '4' ? itemDropDown.idVereda :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? itemDropDown.idTipoEje :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.idTipoEje :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '12' ? itemDropDown.idLetra :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '13' ? itemDropDown.idTipoEje :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '14' ? itemDropDown.idCoordenada :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '15' ? itemDropDown.idLetra :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '16' ? itemDropDown.idTipoEje :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '17' ? itemDropDown.idCoordenada :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '19' ? itemDropDown.idLetra :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '20' ? itemDropDown.idTipoEje :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '21' ? itemDropDown.idCoordenada :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '22' ? itemDropDown.idTipoEje :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '5' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.idCirculo : ''}"
+															itemLabel="#{itemCamposConsulta.idTipoCriterioBusqueda eq '1' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.descripcion :
+																		 itemCamposConsulta.idTipoCriterioBusqueda eq '1' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.descripcion : 
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.nombre  : 
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '4' ? itemDropDown.nombre : 
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '5' ? itemDropDown.nombre  : 
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? itemDropDown.nombre : 
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '7' ? itemDropDown.nombre :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '2' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.nombre :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.descripcion  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '2' ? itemDropDown.nombre  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '3' ? itemDropDown.nombre  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '4' ? itemDropDown.nombre  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '6' ? itemDropDown.nombre :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '8' ? itemDropDown.nombre  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '12' ? itemDropDown.letra  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '13' ? itemDropDown.nombre  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '14' ? itemDropDown.nombre  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '15' ? itemDropDown.letra  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '16' ? itemDropDown.nombre  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '17' ? itemDropDown.nombre  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '19' ? itemDropDown.letra  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '20' ? itemDropDown.nombre  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '21' ? itemDropDown.nombre  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '3' and itemCamposConsulta.idCampoCriterioBusqueda eq '22' ? itemDropDown.nombre  :
+																	     itemCamposConsulta.idTipoCriterioBusqueda eq '5' and itemCamposConsulta.idCampoCriterioBusqueda eq '1' ? itemDropDown.codigoNombre : ''}" />
+														<p:ajax
+															listener="#{beanAnalisisConsultasExentas.cambiarDatosMultivaloresDinamicos(item)}"
+															update="fAnalisisConsultasExentasId:idPCriterios" />
+													</p:selectOneMenu>
+												</p:outputPanel>
+												<p:outputPanel
+													rendered="#{itemCamposConsulta.tipoDato eq 'DATE'}">
+													<p:calendar id="idDate" size="10" mask="true"
+														style="#{itemCamposConsulta.rojoPantalla ? 'border-color:red !important;width:100%;' : 'width:100%;'};"
+														locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+														showOn="button"
+														value="#{itemCamposConsulta.valorCampoFecha}">
+														<p:ajax
+															listener="#{beanAnalisisConsultasExentas.agregarValorFecha(itemCamposConsulta)}"
+															update="fAnalisisConsultasExentasId:idPCriterios" />
+														<p:ajax event="dateSelect"
+															listener="#{beanAnalisisConsultasExentas.agregarValorFecha(itemCamposConsulta)}"
+															update="fAnalisisConsultasExentasId:idPCriterios" />
+													</p:calendar>
+												</p:outputPanel>
+											</div>
+										</p:repeat>
+										<div class="ui-g-12 ui-md-6 ui-lg-3">
+											<br />
+											<div class="ui-g-12 ui-md-12">
+												<p:commandButton style="width:100%"
+													rendered="#{!item.mostrarBotonAgregar}"
+													value="#{messageBeanSNR.commonLabelAgregarCriterios}"
+													update="fAnalisisConsultasExentasId:idPCriterios"
+													icon="fa fa-plus-circle" iconPos="left"
+													actionListener="#{beanAnalisisConsultasExentas.agregarCriterioAnalisis(item)}" />
+											</div>
+										</div>
+									</div>
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-12 ui-lg-12">
+											<center>
+												<p:dataTable id="idDtCriteriosAgregados"
+													value="#{item.criteriosAgregados}"
+													var="itemCriterioAgregado"
+													emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+													tableStyle="width:80%"
+													rendered="#{item.criteriosAgregados != null}">
+
+													<p:column
+														headerText="#{messageBeanSNR.commonLabelConsecutivo}"
+														groupRow="true" style="width:15%">
+														<h:outputText
+															value="#{itemCriterioAgregado.consecutivoConsultaDetalle}" />
+													</p:column>
+
+													<p:column headerText="#{messageBeanSNR.commonLabelCampo}">
+														<h:outputText
+															value="#{itemCriterioAgregado.etiquetaCampo}" />
+													</p:column>
+
+													<p:column headerText="#{messageBeanSNR.commonLabelValor}">
+														<h:outputText value="#{itemCriterioAgregado.valorCampo}" />
+													</p:column>
+
+													<p:column headerText="#{messageBeanSNR.commonLabelAccion}"
+														style="width:10%">
+														<p:commandButton icon="fa fa-trash" iconPos="left"
+															style="align:center"
+															update="fAnalisisConsultasExentasId:idPCriterios"
+															title="#{tooltipBeanSNR.procesosRegistroDatosInteresadoConsultaInteresadoEditar}"
+															actionListener="#{beanAnalisisConsultasExentas.eliminarDetalle(item,itemCriterioAgregado)}" />
+													</p:column>
+												</p:dataTable>
+											</center>
+										</div>
+									</div>
+								</p:panel>
+								<br />
+							</p:repeat>
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{beanAnalisisConsultasExentas.criteriosDeConsulta.tipoConsulta eq 'MASIVO'}">
+							<p:repeat id="idRepeatCriteriosCargues" var="item"
+								value="#{beanAnalisisConsultasExentas.camposConsulta}">
+								<p:panel id="idPCriteriosCampos"
+									header="#{item.criteriosDeBusqueda.descripcion}">
+									<center>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<p:fileUpload
+													fileUploadListener="#{beanAnalisisConsultasExentas.cargarExcelCamposCriteriosAnalisis}"
+													mode="advanced" dragDropSupport="true"
+													cancelLabel="#{messageBeanSNR.commonLabelCancelar}"
+													uploadLabel="#{messageBeanSNR.commonLabelCargar}"
+													fileLimitMessage="#{messageBeanSNR.commonLabelSoloCargarUnArchivoALaVez}"
+													invalidFileMessage="#{messageBeanSNR.commonLabelElArchivoCargueDebeSerExcel}"
+													label="#{messageBeanSNR.commonLabelCargarExcel} #{item.criteriosDeBusqueda.descripcion}"
+													id="idFuLoadFile"
+													update="fAnalisisConsultasExentasId:idPCriterios"
+													fileLimit="1" allowTypes="/(\.|\/)(xlsx)$/"
+													oncomplete="limpiarUpload(this);">
+													<f:attribute name="nAttrCamposConsulta" value="#{item}" />
+												</p:fileUpload>
+											</div>
+										</div>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-12 ui-lg-12"
+												style="text-align: center;">
+												<p:commandLink id="idClnkRespuesta" ajax="false"
+													update="fAnalisisConsultasExentasId:idPCriterios"
+													actionListener="#{beanAnalisisConsultasExentas.descargarExcel(item)}"
+													rendered="#{item.archivoCargue != null}">
+													<p:graphicImage value="/images/excel_ico.png" width="48" />
+													<p:fileDownload
+														value="#{beanAnalisisConsultasExentas.archivoADescargar}" />
+												</p:commandLink>
+											</div>
+										</div>
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-12" align="right">
+												<p:commandButton id="idCLDescargarPlantilla"
+													value="#{messageBeanSNR.commonLabelDescargarPlantilla}"
+													ajax="false" icon="fa fa-file-excel-o" iconPos="left"
+													actionListener="#{beanAnalisisConsultasExentas.descargarPlantillaCargue(item)}">
+													<p:fileDownload value="#{beanAnalisisConsultasExentas.imagen}" />
+												</p:commandButton>
+											</div>
+										</div>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-12 ui-lg-12"
+												style="text-align: center;">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelRespuestaCargue}"
+													rendered="#{item.archivoCargue != null}" />
+											</div>
+										</div>
+									</center>
+								</p:panel>
+								<br />
+							</p:repeat>
+						</p:outputPanel>
+					</p:panel>
+					<p:outputPanel id="opBotones">
+						<p:outputPanel id="idOPBotonesRegistro">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-lg-3" align="left">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										title="#{tooltipBeanSNR.procesosCalificacionTurnosRegresar}"
+										action="detalleConsultasProcesos?faces-redirect=true">
+									</p:commandButton>
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-9" align="right">
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonGenerarConsulta}"
+										icon="fa fa-file-o" iconPos="left"
+										actionListener="#{beanAnalisisConsultasExentas.generarConsulta()}"
+										update="opBotones">
+									</p:commandButton>
+									<p:commandButton ajax="false"
+										value="#{messageBeanSNR.commonLabelConsultaSGD}" icon="lupa"
+										rendered="#{beanAnalisisConsultasExentas.pdfConsulta != null}"
+										iconPos="left" update="idGrowl"
+										action="#{beanAnalisisConsultasExentas.accionConsultaSGD}">
+									</p:commandButton>
+									<p:commandButton id="idCbEnviarEntrega"
+										value="#{messageBeanSNR.commonButtonEnviarAEntrega}"
+										rendered="#{beanAnalisisConsultasExentas.pdfConsulta != null}"
+										action="#{beanAnalisisConsultasExentas.enviarAEntrega}"
+										icon="fa fa-chevron-right" iconPos="left">
+									</p:commandButton>
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:outputPanel>
+				</center>
+			</h:form>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg3"
+				modal="true" height="165px" resizable="false" width="500px">
+				<h:form id="Dialog" style="font-size: medium; top: 40%; left: 40%;">
+					<center>
+						<h:outputText
+							value="#{messageBeanSNR.commonLabelEstaSeguroDeCancelarLaConsulta}" />
+					</center>
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check"
+							action="#{beanAnalisisConsultasExentas.cancelarConsulta}"
+							id="id_SiCancelar" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlg3').hide();" />
+					</div>
+					<br />
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)" position="center" id="dlg2"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg2"
+				modal="true" height="90" resizable="false">
+				<h:form id="fDialog" style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText
+						value="#{messageBeanSNR.commonLabelEstaSeguroDeTerminarElProceso}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							icon="fa fa-check" update="fAnalisisConsultasExentasId"
+							actionListener="#{beanAnalisisConsultasExentas.terminarProcesoConsultas()}"
+							oncomplete="PF('dlg2').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onclick="PF('dlg2').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelNIRCreado}"
+				widgetVar="idDialogNir" modal="true" height="100" resizable="false">
+				<h:form id="fDialog2"
+					style="font-size: large; top: 100%; left: 100%;">
+					<h:outputText id="otMensaje"
+						value="#{beanAnalisisConsultasExentas.mensajeTerminarProceso}" />
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

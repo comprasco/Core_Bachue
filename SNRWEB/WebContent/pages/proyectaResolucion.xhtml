@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel rendered="#{beanDetalleProyectaResolucion.idEtapa != 687}" value="#{messageBeanSNR.commonLabelProcesos}" />
+					<p:outputLabel rendered="#{beanDetalleProyectaResolucion.idEtapa == 687}"  value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel rendered="#{beanDetalleProyectaResolucion.idEtapa != 687}" value="#{messageBeanSNR.commonLabelTraslados}" />
+					<p:outputLabel rendered="#{beanDetalleProyectaResolucion.idEtapa == 687}" value="#{messageBeanSNR.commonLabelEjecutarTraslados}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeTraslados}" />
+				</li>
+				<li class="breadcrumb-item" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProyectarResolucion}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+			<h:form id="fProyectaResolucion">	
+				<p:growl id="idGrowl" sticky="false" showDetail="true" life="20000" globalOnly="true" redisplay="false"/>
+				<!-- Datos del predio -->
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelNIR}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeNir}"
+							value="#{beanPredioDocumentoActo.predio.get('NIR')}" />
+					</div>
+					<div class="ui-g-12 ui-md-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelIdTurno}" />
+						<br />
+						<h:commandLink
+							action="#{beanPredioDocumentoActo.dirigirTrazabilidad()}"
+							target="_blank">
+							<p:inputText readonly="true"
+								title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeTurno}"
+								value="#{beanPredioDocumentoActo.predio.get('ID_TURNO')}" />
+						</h:commandLink>
+					</div>
+					<div class="ui-g-12 ui-md-2">
+						<p:outputLabel value="#{messageBeanSNR.commonLabelFechaCreacion}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeFechaCreacion}"
+							value="#{beanPredioDocumentoActo.turno.fechaCreacionString}" />
+					</div>
+					<div class="ui-g-12 ui-md-2">
+						<p:outputLabel
+							value="#{messageBeanSNR.commonLabelDecisionCalificacionTramite}" />
+						<br />
+						<p:inputText readonly="true"
+							title="#{tooltipBeanSNR.procesosCalificacionBandejaEntradaBandejaTurnosDetalleTurnoDetalleActoIncludeDecisionCalificacion}"
+							value="#{beanPredioDocumentoActo.decisionCalificacion}" />
+					</div>
+					<div class="ui-g-12 ui-md-3">
+						<br />
+						<div class="ui-g-12 ui-md-12">
+							<p:commandButton ajax="false"
+								value="#{messageBeanSNR.commonButtonVisualizarDocumentos}"
+								icon="fa fa-newspaper-o" iconPos="left" update="idGrowl"
+								actionListener="#{beanPredioDocumentoActo.descargarArchivoZip}">
+								<p:fileDownload value="#{beanPredioDocumentoActo.imagen}" />
+							</p:commandButton>
+						</div>
+					</div>
+					<script type="text/javascript">
+						function start()
+						{
+							PF('statusDownload').show();
+						}
+	
+						function stop()
+						{
+							PF('statusDownload').hide();
+						}
+					</script>
+					<p:spacer />
+				</div>
+				<br/>	
+				<div align="left">
+					<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+						icon="fa fa-arrow-circle-left" iconPos="left"
+						action="detalleBandejaTurnosProyectaResolucion?faces-redirect=true">
+					</p:commandButton>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

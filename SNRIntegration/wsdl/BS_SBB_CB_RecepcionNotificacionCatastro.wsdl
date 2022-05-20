@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/ce/notificarCambioCatastro/v1"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/ce/notificarCambioCatastro/v1"
+	xmlns:bachue5="https://www.supernotariado.gov.co/schemas/bachue/ce/recepcionNotificacionCatastro/notificarCambioCatastro/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/ce/recepcionNotificacionCatastro/notificarCambioCatastro/v1"
+			elementFormDefault="qualified">
+			<xsd:complexType
+				name="tipoEntradaNotificarCambioCatastro">
+				<xsd:sequence>
+					<xsd:element name="codCatastro" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="codTransaccion" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="operacionRegistro" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="fechaNotificacion" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="orips" minOccurs="0"
+						maxOccurs="unbounded" type="bachue5:tipoORP" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="tipoORP">
+				<xsd:sequence>
+					<xsd:element name="codCirculoRegistral" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>corresponde a la ORIP donde se ha registrado
+								el
+								predio
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="3" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="matriculas" minOccurs="0"
+						maxOccurs="unbounded" type="bachue5:tipoNumMatriculas" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaNotificarCambioCatastro"
+				type="bachue5:tipoEntradaNotificarCambioCatastro" />
+			<xsd:complexType name="tipoNumMatriculas">
+				<xsd:sequence>
+					<xsd:element name="numMatriculaInmobiliaria"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Corresponde al Número de Matrícula
+								Inmobiliaria,
+								sin el código de la ORIPS
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string"></xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType
+				name="tipoSalidaNotificarCambioCatastro">
+				<xsd:sequence>
+					<xsd:element name="estadoRegistro" type="xsd:string"
+						minOccurs="0" />
+					<xsd:element name="fechaRegistro" type="xsd:dateTime"
+						minOccurs="0" />
+					<xsd:element name="codMensaje" type="xsd:integer"
+						minOccurs="0" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaNotificarCambioCatastro"
+				type="bachue5:tipoSalidaNotificarCambioCatastro" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="RecepcionNotificacionCatastro_Request">
+		<wsdl:part name="entrada"
+			element="bachue5:entradaNotificarCambioCatastro" />
+	</wsdl:message>
+	<wsdl:message
+		name="RecepcionNotificacionCatastro_Response">
+		<wsdl:part name="salida"
+			element="bachue5:salidaNotificarCambioCatastro" />
+	</wsdl:message>
+	<wsdl:portType
+		name="BS_SBB_CB_RecepcionNotificacionCatastro">
+		<wsdl:operation name="NotificarCambioCatastro">
+			<wsdl:input
+				message="bachue:RecepcionNotificacionCatastro_Request" />
+			<wsdl:output
+				message="bachue:RecepcionNotificacionCatastro_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding
+		name="BS_SBB_CB_RecepcionNotificacionCatastro"
+		type="bachue:BS_SBB_CB_RecepcionNotificacionCatastro">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="NotificarCambioCatastro">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/ce/recepcionNotificacionCatastro/v1/notificarCambioCatastro" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service
+		name="BS_SBB_CB_RecepcionNotificacionCatastro">
+		<wsdl:port
+			name="BS_SBB_CB_RecepcionNotificacionCatastroPort"
+			binding="bachue:BS_SBB_CB_RecepcionNotificacionCatastro">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

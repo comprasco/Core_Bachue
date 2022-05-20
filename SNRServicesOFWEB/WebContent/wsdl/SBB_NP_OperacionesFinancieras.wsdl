@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/np/operacionesfinancieras/v2"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/np/operacionesfinancieras/consultarestadoliquidacion/v2"
+	xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/np/operacionesfinancieras/registrarliquidacion/v2"
+	xmlns:bachue3="https://www.supernotariado.gov.co/schemas/bachue/np/operacionesfinancieras/notificarpago/v2"
+	xmlns:bachue4="https://www.supernotariado.gov.co/schemas/bachue/np/operacionesfinancieras/registraranulacion/v2"
+	xmlns:bachue5="https://www.supernotariado.gov.co/schemas/bachue/np/operacionesfinancieras/registrarrecibocaja/v2"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/np/operacionesfinancieras/v2">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/np/operacionesfinancieras/consultarestadoliquidacion/v2">
+			<xsd:complexType
+				name="tipoEntradaConsultarEstadoLiquidacion">
+				<xsd:sequence>
+					<xsd:element name="numeroReferencia" type="xsd:string" />
+					<xsd:element name="montoTransaccion" type="xsd:decimal" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaConsultarEstadoLiquidacion"
+				type="bachue1:tipoEntradaConsultarEstadoLiquidacion" />
+			<xsd:complexType
+				name="tipoSalidaConsultarEstadoLiquidacion">
+				<xsd:sequence>
+					<xsd:element name="numeroReferencia" type="xsd:string" />
+					<xsd:element name="codigoTransaccionRecaudador"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+					<xsd:element name="estadoTransaccion">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="ReferenciaVencida" />
+								<xsd:enumeration value="ReferenciaPagada" />
+								<xsd:enumeration value="ReferenciaDisponible" />
+								<xsd:enumeration value="ReciboCajaGenerado" />
+								<xsd:enumeration value="ProductoEntregado" />
+								<xsd:enumeration value="ReferenciaAnulada" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaConsultarEstadoLiquidacion"
+				type="bachue1:tipoSalidaConsultarEstadoLiquidacion" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/np/operacionesfinancieras/registrarliquidacion/v2">
+			<xsd:complexType
+				name="tipoEntradaRegistrarLiquidacion">
+				<xsd:sequence>
+					<xsd:element name="numeroReferencia" type="xsd:string" />
+					<xsd:element name="nir" type="xsd:string" />
+					<xsd:element name="valorTotalServicio"
+						type="xsd:decimal" />
+					<xsd:element name="fechaLiquidacion"
+						type="xsd:dateTime" />
+					<xsd:element name="fechaVencimiento"
+						type="xsd:dateTime" />
+					<xsd:element name="canalOrigenServicio"
+						type="xsd:string" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaRegistrarLiquidacion"
+				type="bachue2:tipoEntradaRegistrarLiquidacion" />
+			<xsd:complexType
+				name="tipoSalidaRegistrarLiquidacion">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaRegistrarLiquidacion"
+				type="bachue2:tipoSalidaRegistrarLiquidacion" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/np/operacionesfinancieras/notificarpago/v2">
+			<xsd:complexType name="tipoEntradaNotificarPago">
+				<xsd:sequence>
+					<xsd:element name="codigoEntidadRecaudadora"
+						type="xsd:string" />
+					<xsd:element name="codigoPuntoRecaudoEntidad"
+						type="xsd:string" />
+					<xsd:element name="codigoTipoRecaudo" type="xsd:string" />
+					<xsd:element name="fechaTransaccion"
+						type="xsd:dateTime" />
+					<xsd:element name="fechaBancaria" type="xsd:dateTime" />
+					<xsd:element name="codigoTransaccionRecaudador"
+						type="xsd:string" />
+					<xsd:element name="montoTransaccion" type="xsd:decimal" />
+					<xsd:element name="numeroReferenciaBachue"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaNotificarPago"
+				type="bachue3:tipoEntradaNotificarPago" />
+			<xsd:complexType name="tipoSalidaNotificarPago">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaNotificarPago"
+				type="bachue3:tipoSalidaNotificarPago" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/np/operacionesfinancieras/registraranulacion/v2">
+			<xsd:complexType name="tipoEntradaRegistrarAnulacion">
+				<xsd:sequence>
+					<xsd:element name="numeroReferencia" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaRegistrarAnulacion"
+				type="bachue4:tipoEntradaRegistrarAnulacion" />
+			<xsd:complexType name="tipoSalidaRegistrarAnulacion">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaRegistrarAnulacion"
+				type="bachue4:tipoSalidaRegistrarAnulacion" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/np/operacionesfinancieras/registrarrecibocaja/v2">
+			<xsd:complexType
+				name="tipoEntradaRegistrarReciboCaja">
+				<xsd:sequence>
+					<xsd:element name="numeroReferencia" type="xsd:string" />
+					<xsd:element name="fechaHoraRecibo" type="xsd:dateTime" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="entradaRegistrarReciboCaja"
+				type="bachue5:tipoEntradaRegistrarReciboCaja" />
+			<xsd:complexType name="tipoSalidaRegistrarReciboCaja">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje" type="xsd:integer" />
+					<xsd:element name="descripcionMensaje"
+						type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="salidaRegistrarReciboCaja"
+				type="bachue5:tipoSalidaRegistrarReciboCaja" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="ConsultarEstadoLiquidacion_Request">
+		<wsdl:part name="entrada"
+			element="bachue1:entradaConsultarEstadoLiquidacion" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarEstadoLiquidacion_Response">
+		<wsdl:part name="salida"
+			element="bachue1:salidaConsultarEstadoLiquidacion" />
+	</wsdl:message>
+	<wsdl:message name="RegistrarLiquidacion_Request">
+		<wsdl:part name="entrada"
+			element="bachue2:entradaRegistrarLiquidacion" />
+	</wsdl:message>
+	<wsdl:message name="RegistrarLiquidacion_Response">
+		<wsdl:part name="salida"
+			element="bachue2:salidaRegistrarLiquidacion" />
+	</wsdl:message>
+	<wsdl:message name="NotificarPago_Request">
+		<wsdl:part name="entrada"
+			element="bachue3:entradaNotificarPago" />
+	</wsdl:message>
+	<wsdl:message name="NotificarPago_Response">
+		<wsdl:part name="salida"
+			element="bachue3:salidaNotificarPago" />
+	</wsdl:message>
+	<wsdl:message name="RegistrarAnulacion_Request">
+		<wsdl:part name="entrada"
+			element="bachue4:entradaRegistrarAnulacion" />
+	</wsdl:message>
+	<wsdl:message name="RegistrarAnulacion_Response">
+		<wsdl:part name="salida"
+			element="bachue4:salidaRegistrarAnulacion" />
+	</wsdl:message>
+	<wsdl:message name="RegistrarReciboCaja_Request">
+		<wsdl:part name="entrada"
+			element="bachue5:entradaRegistrarReciboCaja" />
+	</wsdl:message>
+	<wsdl:message name="RegistrarReciboCaja_Response">
+		<wsdl:part name="salida"
+			element="bachue5:salidaRegistrarReciboCaja" />
+	</wsdl:message>
+	<wsdl:portType name="SBB_NP_OperacionesFinancieras">
+		<wsdl:operation name="ConsultarEstadoLiquidacion">
+			<wsdl:input
+				message="bachue:ConsultarEstadoLiquidacion_Request" />
+			<wsdl:output
+				message="bachue:ConsultarEstadoLiquidacion_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="RegistrarLiquidacion">
+			<wsdl:input message="bachue:RegistrarLiquidacion_Request" />
+			<wsdl:output
+				message="bachue:RegistrarLiquidacion_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="NotificarPago">
+			<wsdl:input message="bachue:NotificarPago_Request" />
+			<wsdl:output message="bachue:NotificarPago_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="RegistrarAnulacion">
+			<wsdl:input message="bachue:RegistrarAnulacion_Request" />
+			<wsdl:output message="bachue:RegistrarAnulacion_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="RegistrarReciboCaja">
+			<wsdl:input message="bachue:RegistrarReciboCaja_Request" />
+			<wsdl:output
+				message="bachue:RegistrarReciboCaja_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding
+		name="SBB_NP_OperacionesFinancierasSOAP12Binding"
+		type="bachue:SBB_NP_OperacionesFinancieras">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="ConsultarEstadoLiquidacion">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/np/operacionesfinancieras/v2/ConsultarEstadoLiquidacion"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="RegistrarLiquidacion">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/np/operacionesfinancieras/v2/RegistrarLiquidacion" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="NotificarPago">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/np/operacionesfinancieras/v2/NotificarPago" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="RegistrarAnulacion">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/np/operacionesfinancieras/v2/RegistrarAnulacion" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="RegistrarReciboCaja">
+			<soap:operation style="document"
+				soapAction="https://www.supernotariado.gov.co/services/bachue/np/operacionesfinancieras/v2/RegistrarReciboCaja" />
+			<wsdl:input>
+				<soap:body use="literal" parts="entrada" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="salida" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SBB_NP_OperacionesFinancieras">
+		<wsdl:port name="SBB_NP_OperacionesFinancierasPort"
+			binding="bachue:SBB_NP_OperacionesFinancierasSOAP12Binding">
+			<soap:address location="http://www.example.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

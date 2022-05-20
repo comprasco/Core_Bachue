@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelNegocio}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelCondicionTarifa}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fCondicionTarifa" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:panel style="min-width:800px;">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonInsertarCondicionTarifa}"
+									icon="fa fa-plus-circle" iconPos="left" update="globalMsg"
+									actionListener="#{beanCondicionTarifa.cambiarEstado()}"
+									action="condicionTarifaDetalle?faces-redirect=true">
+									<f:param name="pInsertarCondicionTarifa" value="true" />
+								</p:commandButton>
+							</div>
+						</div>
+						<p:dataTable id="idBandeja" var="item"
+							value="#{beanCondicionTarifa.findAllCondicionTarifa()}"
+							emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+							<f:facet name="header">
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelCondicionTarifa}" />
+							</f:facet>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelCondicionTarifa}"
+								filterBy="#{item.idCondicionTarifa}">
+								<h:outputText value="#{item.idCondicionTarifa}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelDescripcion}"
+								filterBy="#{item.descripcion}">
+								<p:commandLink id="idCondicion" styleClass="subrayado"
+									actionListener="#{beanCondicionTarifa.consultaDetallada(item)}"
+									action="condicionTarifaDetalle?faces-redirect=true">
+									<h:outputText value="#{item.descripcion}" />
+									<f:param name="idDescripcion"
+										value="#{item.descripcion}" />
+								</p:commandLink>
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelActiva}"
+								filterBy="#{item.activa}">
+								<h:outputText value="#{messageBeanSNR.commonSi}"
+									rendered="#{item.activa=='S'}" />
+								<h:outputText value="#{messageBeanSNR.commonNo}"
+									rendered="#{item.activa=='N'}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelCodigoSqlValidacion}"
+								filterBy="#{item.codigoSqlValidacion}">
+								<h:outputText value="#{item.codigoSqlValidacion}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelTipoTarifaRegistral}"
+								filterBy="#{item.idTipoTarifaRegistral}">
+								<h:outputText value="#{item.idTipoTarifaRegistral}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelVersionTarifaRegistral}"
+								filterBy="#{item.versionTarifaRegistral}">
+								<h:outputText value="#{item.versionTarifaRegistral}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelTarifaFija}"
+								filterBy="#{item.idTarifaFija}">
+								<h:outputText value="#{item.idTarifaFija}" />
+							</p:column>
+							<p:column
+								headerText="#{messageBeanSNR.commonLabelVersionTarifaFija}"
+								filterBy="#{item.versionTarifaFija}">
+								<h:outputText value="#{item.versionTarifaFija}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelTipoActoCondicion}"
+								filterBy="#{item.idTipoActoCondicion}">
+								<h:outputText value="#{messageBeanSNR.commonManual}"
+									rendered="#{item.idTipoActoCondicion=='MANUAL'}" />
+								<h:outputText value="#{messageBeanSNR.commonAutomatica}"
+									rendered="#{item.idTipoActoCondicion=='AUTOMATICA'}" />
+								<h:outputText value="#{messageBeanSNR.commonSemiAutomatica}"
+									rendered="#{item.idTipoActoCondicion=='SEMIAUTOMATICA'}" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</center>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

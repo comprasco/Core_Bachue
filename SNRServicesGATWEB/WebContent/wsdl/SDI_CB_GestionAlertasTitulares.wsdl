@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions
+	xmlns:bachue="https://www.supernotariado.gov.co/services/bachue/cb/gestionalertastitulares/v1"
+	xmlns:bachue1="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionalertastitulares/consultaralerta/v1"
+	xmlns:bachue2="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionalertastitulares/consultartarifaalertastitulares/v1"
+	xmlns:bachue3="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionalertastitulares/inactivaralerta/v1"
+	xmlns:bachue4="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionalertastitulares/validarsolicitudalertaindividual/v1"
+	xmlns:bachue5="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionalertastitulares/validarsolicitudalertamasiva/v1"
+	xmlns:bachue6="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionalertastitulares/actualizarcontactoalerta/v1"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="https://www.supernotariado.gov.co/services/bachue/cb/gestionalertastitulares/v1">
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionalertastitulares/consultaralerta/v1">
+			<xsd:complexType name="tipoEntradaConsultarAlerta">
+				<xsd:sequence>
+					<xsd:element name="modulo" type="xsd:string" />
+					<xsd:element minOccurs="0" name="departamento"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="municipio"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="orip" nillable="true"
+						type="xsd:string" />
+					<xsd:element minOccurs="0" name="estado"
+						nillable="true">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="Activa" />
+								<xsd:enumeration value="Inactiva" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="numeroMatricula"
+						nillable="true" type="xsd:string" />
+					<xsd:element name="tipoDocumento">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="CC" />
+								<xsd:enumeration value="CE" />
+								<xsd:enumeration value="NIT" />
+								<xsd:enumeration value="PS" />
+								<xsd:enumeration value="TI" />
+								<xsd:enumeration value="NU" />
+								<xsd:enumeration value="SE" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numeroDocumento" type="xsd:string" />
+					<xsd:element minOccurs="0" name="primerNombre"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="segundoNombre"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="primerApellido"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="segundoApellido"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="razonSocial"
+						nillable="true" type="xsd:string" />
+					<xsd:element name="cantidadRegistrosPagina"
+						type="xsd:string" />
+					<xsd:element name="ultimoIdAlerta" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="entradaConsultarAlerta"
+				type="bachue1:tipoEntradaConsultarAlerta" />
+
+			<xsd:complexType name="tipoSalidaConsultarAlerta">
+				<xsd:sequence>
+					<xsd:element name="alertas">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" name="alerta"
+									nillable="true" type="bachue1:tiposAlertas" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+
+					<xsd:element name="codigoMensaje">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200" />
+								<xsd:enumeration value="404" />
+								<xsd:enumeration value="453" />
+								<xsd:enumeration value="454" />
+								<xsd:enumeration value="455" />
+								<xsd:enumeration value="456" />
+								<xsd:enumeration value="461" />
+								<xsd:enumeration value="500" />
+								<xsd:enumeration value="492" />
+								<xsd:enumeration value="493" />
+								<xsd:enumeration value="494" />
+								<xsd:enumeration value="495" />
+								<xsd:enumeration value="496" />
+								<xsd:enumeration value="497" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+
+					<xsd:element minOccurs="0" name="descripcionMensaje"
+						type="xsd:string" />
+
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<!-- Tipo complejo tiposAlertas -->
+			<xsd:complexType name="tiposAlertas">
+				<xsd:sequence>
+					<xsd:element name="identificadorAlerta"
+						type="xsd:string" />
+					<xsd:element name="numeroMatricula" type="xsd:string" />
+					<xsd:element name="direccion" type="xsd:string" />
+					<xsd:element name="fechaVigencia" type="xsd:string" />
+					<xsd:element name="departamento" type="xsd:string" />
+					<xsd:element name="municipio" type="xsd:string" />
+					<xsd:element name="orip" type="xsd:string" />
+					<xsd:element name="nombreOrip" type="xsd:string" />
+					<xsd:element name="estado" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="salidaConsultarAlerta"
+				type="bachue1:tipoSalidaConsultarAlerta" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionalertastitulares/consultartarifaalertastitulares/v1">
+			<xsd:complexType
+				name="tipoEntradaConsultarTarifaAlertasTitulares">
+				<xsd:sequence>
+					<xsd:element name="modulo" type="xsd:string" />
+					<xsd:element minOccurs="0" name="cantidadAlertasNuevas"
+						type="xsd:string" />
+					<xsd:element minOccurs="0" name="tipoDocumento"
+						type="xsd:string" />
+					<xsd:element minOccurs="0" name="numeroDocumento"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element
+				name="entradaConsultarTarifaAlertasTitulares"
+				type="bachue2:tipoEntradaConsultarTarifaAlertasTitulares" />
+
+			<xsd:complexType
+				name="tipoSalidaConsultarTarifaAlertasTitulares">
+				<xsd:sequence>
+					<xsd:element name="tarifas">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element maxOccurs="unbounded" minOccurs="0"
+									name="tarifa" type="bachue2:tiposTarifas" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="alertasInscrtitas"
+						type="xsd:string" />
+					<xsd:element minOccurs="0" name="tarifaNuevasAlertas"
+						type="xsd:string" />
+					<xsd:element name="codigoMensaje">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200" />
+								<xsd:enumeration value="404" />
+								<xsd:enumeration value="453" />
+								<xsd:enumeration value="463" />
+								<xsd:enumeration value="464" />
+								<xsd:enumeration value="465" />
+								<xsd:enumeration value="466" />
+								<xsd:enumeration value="467" />
+								<xsd:enumeration value="468" />
+								<xsd:enumeration value="500" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="descripcionMensaje"
+						type="xsd:string" />
+
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="tiposTarifas">
+				<xsd:sequence>
+					<xsd:element name="rango" type="xsd:string" />
+					<xsd:element name="valor" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+
+			<xsd:element name="salidaConsultarTarifaAlertasTitulares"
+				type="bachue2:tipoSalidaConsultarTarifaAlertasTitulares" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionalertastitulares/inactivaralerta/v1">
+			<xsd:complexType name="tipoEntradaInactivarAlerta">
+				<xsd:sequence>
+					<xsd:element name="modulo" type="xsd:string" />
+					<xsd:element name="identificadorAlerta"
+						type="xsd:string" />
+					<xsd:element name="tipoDocumento">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="CC" />
+								<xsd:enumeration value="CE" />
+								<xsd:enumeration value="NIT" />
+								<xsd:enumeration value="PS" />
+								<xsd:enumeration value="TI" />
+								<xsd:enumeration value="NU" />
+								<xsd:enumeration value="SE" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numeroDocumento" type="xsd:string" />
+					<xsd:element minOccurs="0" name="primerNombre"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="segundoNombre"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="primerApellido"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="segundoApellido"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="razonSocial"
+						nillable="true" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="entradaInactivarAlerta"
+				type="bachue3:tipoEntradaInactivarAlerta" />
+
+			<xsd:complexType name="tipoSalidaInactivarAlerta">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200" />
+								<xsd:enumeration value="453" />
+								<xsd:enumeration value="454" />
+								<xsd:enumeration value="455" />
+								<xsd:enumeration value="456" />
+								<xsd:enumeration value="461" />
+								<xsd:enumeration value="469" />
+								<xsd:enumeration value="500" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="descripcionMensaje"
+						type="xsd:string" />
+
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="salidaInactivarAlerta"
+				type="bachue3:tipoSalidaInactivarAlerta" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionalertastitulares/validarsolicitudalertaindividual/v1">
+			<xsd:complexType
+				name="tipoEntradaValidarSolicitudAlertaIndividual">
+				<xsd:sequence>
+					<xsd:element name="modulo" type="xsd:string" />
+					<xsd:element name="orip" type="xsd:string" />
+					<xsd:element name="numeroMatricula" type="xsd:string" />
+					<xsd:element name="tipoDocumento">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="CC" />
+								<xsd:enumeration value="CE" />
+								<xsd:enumeration value="NIT" />
+								<xsd:enumeration value="PS" />
+								<xsd:enumeration value="TI" />
+								<xsd:enumeration value="NU" />
+								<xsd:enumeration value="SE" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numeroDocumento" type="xsd:string" />
+					<xsd:element minOccurs="0" name="primerNombre"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="segundoNombre"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="primerApellido"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="segundoApellido"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="razonSocial"
+						nillable="true" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element
+				name="entradaValidarSolicitudAlertaIndividual"
+				type="bachue4:tipoEntradaValidarSolicitudAlertaIndividual" />
+
+			<xsd:complexType
+				name="tipoSalidaValidarSolicitudAlertaIndividual">
+				<xsd:sequence>
+					<xsd:element name="departamento" type="xsd:string" />
+					<xsd:element name="ciudad" type="xsd:string" />
+					<xsd:element name="direccion" type="xsd:string" />
+					<xsd:element name="codigoMensaje">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200" />
+								<xsd:enumeration value="452" />
+								<xsd:enumeration value="453" />
+								<xsd:enumeration value="454" />
+								<xsd:enumeration value="455" />
+								<xsd:enumeration value="463" />
+								<xsd:enumeration value="465" />
+								<xsd:enumeration value="466" />
+								<xsd:enumeration value="467" />
+								<xsd:enumeration value="469" />
+								<xsd:enumeration value="470" />
+								<xsd:enumeration value="471" />
+								<xsd:enumeration value="472" />
+								<xsd:enumeration value="473" />
+								<xsd:enumeration value="474" />
+								<xsd:enumeration value="500" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="descripcionMensaje"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element
+				name="salidaValidarSolicitudAlertaIndividual"
+				type="bachue4:tipoSalidaValidarSolicitudAlertaIndividual" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionalertastitulares/validarsolicitudalertamasiva/v1">
+			<xsd:complexType
+				name="tipoEntradaValidarSolicitudAlertaMasiva">
+				<xsd:sequence>
+					<xsd:element name="modulo" type="xsd:string" />
+					<xsd:element name="tipoDocumento">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="CC" />
+								<xsd:enumeration value="CE" />
+								<xsd:enumeration value="NIT" />
+								<xsd:enumeration value="PS" />
+								<xsd:enumeration value="TI" />
+								<xsd:enumeration value="NU" />
+								<xsd:enumeration value="SE" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numeroDocumento" type="xsd:string" />
+					<xsd:element minOccurs="0" name="primerNombre"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="segundoNombre"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="primerApellido"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="segundoApellido"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="razonSocial"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="oripSecuencia"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="matriculaInicial"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="matriculaFinal"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="archivo"
+						nillable="true" type="xsd:base64Binary" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="entradaValidarSolicitudAlertaMasiva"
+				type="bachue5:tipoEntradaValidarSolicitudAlertaMasiva" />
+
+			<xsd:complexType
+				name="tipoSalidaValidarSolicitudAlertaMasiva">
+				<xsd:sequence>
+					<xsd:element name="archivo" type="xsd:base64Binary" />
+					<xsd:element name="codigoMensaje">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200" />
+								<xsd:enumeration value="452" />
+								<xsd:enumeration value="453" />
+								<xsd:enumeration value="455" />
+								<xsd:enumeration value="463" />
+								<xsd:enumeration value="465" />
+								<xsd:enumeration value="466" />
+								<xsd:enumeration value="467" />
+								<xsd:enumeration value="469" />
+								<xsd:enumeration value="470" />
+								<xsd:enumeration value="471" />
+								<xsd:enumeration value="472" />
+								<xsd:enumeration value="473" />
+								<xsd:enumeration value="474" />
+								<xsd:enumeration value="500" />
+								<xsd:enumeration value="468" />
+								<xsd:enumeration value="451" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="descripcionMensaje"
+						type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="salidaValidarSolicitudAlertaMasiva"
+				type="bachue5:tipoSalidaValidarSolicitudAlertaMasiva" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="https://www.supernotariado.gov.co/schemas/bachue/cb/gestionalertastitulares/actualizarcontactoalerta/v1">
+			<xsd:complexType
+				name="tipoEntradaActualizarContactoAlerta">
+				<xsd:sequence>
+					<xsd:element name="modulo" type="xsd:string" />
+					<xsd:element name="tipoDocumento">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="CC" />
+								<xsd:enumeration value="CE" />
+								<xsd:enumeration value="NIT" />
+								<xsd:enumeration value="PS" />
+								<xsd:enumeration value="TI" />
+								<xsd:enumeration value="NU" />
+								<xsd:enumeration value="SE" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="numeroDocumento" type="xsd:string" />
+					<xsd:element minOccurs="0" name="primerNombre"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="segundoNombre"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="primerApellido"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="segundoApellido"
+						nillable="true" type="xsd:string" />
+					<xsd:element minOccurs="0" name="razonSocial"
+						nillable="true" type="xsd:string" />
+					<xsd:element name="correoElectronico" type="xsd:string" />
+					<xsd:element name="numeroCelular" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="entradaActualizarContactoAlerta"
+				type="bachue6:tipoEntradaActualizarContactoAlerta" />
+
+			<xsd:complexType
+				name="tipoSalidaActualizarContactoAlerta">
+				<xsd:sequence>
+					<xsd:element name="codigoMensaje">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="200" />
+								<xsd:enumeration value="453" />
+								<xsd:enumeration value="454" />
+								<xsd:enumeration value="455" />
+								<xsd:enumeration value="456" />
+								<xsd:enumeration value="457" />
+								<xsd:enumeration value="458" />
+								<xsd:enumeration value="459" />
+								<xsd:enumeration value="460" />
+								<xsd:enumeration value="461" />
+								<xsd:enumeration value="462" />
+								<xsd:enumeration value="500" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="descripcionMensaje"
+						type="xsd:string" />
+
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="salidaActualizarContactoAlerta"
+				type="bachue6:tipoSalidaActualizarContactoAlerta" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="ConsultarAlerta_Request">
+		<wsdl:part element="bachue1:entradaConsultarAlerta"
+			name="entrada" />
+	</wsdl:message>
+	<wsdl:message name="ConsultarAlerta_Response">
+		<wsdl:part element="bachue1:salidaConsultarAlerta"
+			name="salida" />
+	</wsdl:message>
+	<wsdl:message
+		name="ConsultarTarifaAlertasTitulares_Request">
+		<wsdl:part
+			element="bachue2:entradaConsultarTarifaAlertasTitulares"
+			name="entrada" />
+	</wsdl:message>
+	<wsdl:message
+		name="ConsultarTarifaAlertasTitulares_Response">
+		<wsdl:part
+			element="bachue2:salidaConsultarTarifaAlertasTitulares" name="salida" />
+	</wsdl:message>
+	<wsdl:message name="InactivarAlerta_Request">
+		<wsdl:part element="bachue3:entradaInactivarAlerta"
+			name="entrada" />
+	</wsdl:message>
+	<wsdl:message name="InactivarAlerta_Response">
+		<wsdl:part element="bachue3:salidaInactivarAlerta"
+			name="salida" />
+	</wsdl:message>
+	<wsdl:message
+		name="ValidarSolicitudAlertaIndividual_Request">
+		<wsdl:part
+			element="bachue4:entradaValidarSolicitudAlertaIndividual"
+			name="entrada" />
+	</wsdl:message>
+	<wsdl:message
+		name="ValidarSolicitudAlertaIndividual_Response">
+		<wsdl:part
+			element="bachue4:salidaValidarSolicitudAlertaIndividual"
+			name="salida" />
+	</wsdl:message>
+	<wsdl:message name="ValidarSolicitudAlertaMasiva_Request">
+		<wsdl:part
+			element="bachue5:entradaValidarSolicitudAlertaMasiva" name="entrada" />
+	</wsdl:message>
+	<wsdl:message name="ValidarSolicitudAlertaMasiva_Response">
+		<wsdl:part
+			element="bachue5:salidaValidarSolicitudAlertaMasiva" name="salida" />
+	</wsdl:message>
+	<wsdl:message name="ActualizarContactoAlerta_Request">
+		<wsdl:part element="bachue6:entradaActualizarContactoAlerta"
+			name="entrada" />
+	</wsdl:message>
+	<wsdl:message name="ActualizarContactoAlerta_Response">
+		<wsdl:part element="bachue6:salidaActualizarContactoAlerta"
+			name="salida" />
+	</wsdl:message>
+
+	<wsdl:portType name="SDI_CB_GestionAlertasTitulares">
+		<wsdl:operation name="ConsultarAlerta">
+			<wsdl:input message="bachue:ConsultarAlerta_Request" />
+			<wsdl:output message="bachue:ConsultarAlerta_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarTarifaAlertasTitulares">
+			<wsdl:input
+				message="bachue:ConsultarTarifaAlertasTitulares_Request" />
+			<wsdl:output
+				message="bachue:ConsultarTarifaAlertasTitulares_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="InactivarAlerta">
+			<wsdl:input message="bachue:InactivarAlerta_Request" />
+			<wsdl:output message="bachue:InactivarAlerta_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ValidarSolicitudAlertaIndividual">
+			<wsdl:input
+				message="bachue:ValidarSolicitudAlertaIndividual_Request" />
+			<wsdl:output
+				message="bachue:ValidarSolicitudAlertaIndividual_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ValidarSolicitudAlertaMasiva">
+			<wsdl:input
+				message="bachue:ValidarSolicitudAlertaMasiva_Request" />
+			<wsdl:output
+				message="bachue:ValidarSolicitudAlertaMasiva_Response" />
+		</wsdl:operation>
+		<wsdl:operation name="ActualizarContactoAlerta">
+			<wsdl:input
+				message="bachue:ActualizarContactoAlerta_Request" />
+			<wsdl:output
+				message="bachue:ActualizarContactoAlerta_Response" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding
+		name="SDI_CB_GestionAlertasTitularesSOAP12Binding"
+		type="bachue:SDI_CB_GestionAlertasTitulares">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="ConsultarAlerta">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionalertastitulares/v1/ConsultarAlerta"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ConsultarTarifaAlertasTitulares">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionalertastitulares/v1/ConsultarTarifaAlertasTitulares"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="InactivarAlerta">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionalertastitulares/v1/InactivarAlerta"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ValidarSolicitudAlertaIndividual">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionalertastitulares/v1/ValidarSolicitudAlertaIndividual"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ValidarSolicitudAlertaMasiva">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionalertastitulares/v1/ValidarSolicitudAlertaMasiva"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ActualizarContactoAlerta">
+			<soap:operation
+				soapAction="https://www.supernotariado.gov.co/services/bachue/cb/gestionalertastitulares/v1/ActualizarContactoAlerta"
+				style="document" />
+			<wsdl:input>
+				<soap:body parts="entrada" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="salida" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SDI_CB_GestionAlertasTitulares">
+		<wsdl:port
+			binding="bachue:SDI_CB_GestionAlertasTitularesSOAP12Binding"
+			name="SDI_CB_GestionAlertasTitularesPort">
+			<soap:address
+				location="http://localhost:7001/SNRServicesGATWEB/services/SDI_CB_GestionAlertasTitulares" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

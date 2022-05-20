@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item"><p:outputLabel
+						value="#{messageBeanSNR.commonLabelOperativo}" /></li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelResultadoConsulta}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{beanResultadoConsulta.insertar ? messageBeanSNR.commonButtonInsertarResultadoConsulta : messageBeanSNR.commonLabelModificarResultadoConsulta}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fResultadoConsultaDetalle" style="width: 100%;"
+				enctype="multipart/form-data">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="20000" redisplay="false" />
+				<center>
+					<p:panel>
+						<p:panel
+							header="#{beanResultadoConsulta.insertar ? messageBeanSNR.commonButtonInsertarResultadoConsulta : messageBeanSNR.commonLabelModificarResultadoConsulta}">
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:outputLabel value="#{messageBeanSNR.commonLabelConsulta}" />
+									<br />
+									<p:inputText style="width:100%;"
+										placeholder="#{messageBeanSNR.commonLabelConsulta}"
+										title="#{tooltipBeanSNR.administracionConstantesDetalleCaracter}"
+										value="#{beanResultadoConsulta.resultadoConsulta.hashConsulta}" />
+								</div>
+							</div>
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-12">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelSeleccioneArchivo}"
+										title="#{tooltipBeanSNR.administracionConstantesDetalleSeleccioneArchivo}" />
+									<br />
+									<p:fileUpload
+										fileUploadListener="#{beanConstantes.processFile}"
+										mode="advanced" dragDropSupport="true" cancelLabel="Cancelar"
+										uploadLabel="Cargar"
+										fileLimitMessage="Solo se Puede Cargar un archivo a la vez"
+										invalidFileMessage="El Archivo de Cargue debe ser de tipo .rtf, .jpg, .xlsx"
+										label="#{messageBeanSNR.commonLabelSeleccioneArchivo}"
+										invalidSizeMessage="El Archivo de Cargue no puede exceder los 500 Kb"
+										id="idFuLoadFile" widgetVar="idFuLoadFile" fileLimit="1"
+										allowTypes="/(\.|\/)(rtf|jpe?g|xls?x|bmp|xml)$/"
+										oncomplete="PF('idFuLoadFile').clear();" />
+								</div>
+							</div>
+							<br />
+							<p:dataTable id="idDetalle" var="item"
+								rendered="#{!beanResultadoConsulta.insertar}"
+								value="#{beanResultadoConsulta.datosAuditoria}"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+								<f:facet name="header">
+									<p:outputLabel
+										value="#{messageBeanSNR.commonLabelTrazabilidad}" />
+								</f:facet>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioCreacion}">
+									<h:outputText value="#{item.idUsuarioCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+									<h:outputText value="#{item.fechaCreacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelUsuarioModificacion}">
+									<h:outputText value="#{item.idUsuarioModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelFechaModificacion}">
+									<h:outputText value="#{item.fechaModificacion}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelIpModificación}">
+									<h:outputText value="#{item.ipModificacion}" />
+								</p:column>
+							</p:dataTable>
+							<br />
+							<div class="ui-g" align="left">
+								<div class="ui-g-12 ui-md-6 ui-lg-6">
+									<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+										icon="fa fa-arrow-circle-left" iconPos="left"
+										update="globalMsg" action="#{beanResultadoConsulta.returnPages()}" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-6" align="right">
+									<p:commandButton
+										value="#{beanResultadoConsulta.insertar ? messageBeanSNR.commonButtonInsertarResultadoConsulta : messageBeanSNR.commonLabelModificarResultadoConsulta}"
+										icon="fa fa-pencil" iconPos="left" update="globalMsg"
+										action="#{beanResultadoConsulta.salvar()}" />
+								</div>
+							</div>
+						</p:panel>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelAdministracion}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelWorkflow}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelSubProcesoVersion}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fSubProcesoVersion" style="width: 100%;">
+				<p:growl id="globalMsg" globalOnly="true" showDetail="true"
+					sticky="false" life="30000" redisplay="false" />
+				<center>
+					<p:panel style="min-width:800px;">
+						<div class="ui-g" align="left">
+							<div class="ui-g-12 ui-md-6 ui-lg-4">
+								<p:commandButton
+									value="#{messageBeanSNR.commonButtonInsertarSubProceso}" 
+									icon="fa fa-plus-circle" iconPos="left" update="globalMsg"
+									actionListener="#{beanSubProcesoVersion.cambiarEstado()}"
+									action="subProcesoVersionDetalle?faces-redirect=true">
+									<f:param name="pInsertarSubProcesoVersion"
+										value="true" />
+								</p:commandButton>
+							</div>
+						</div>
+						
+						<p:dataTable id="idDtListado" var="item"
+							value="#{beanSubProcesoVersion.findSubprocesosVersion()}"
+							paginator="true" rows="50"
+							emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+							<f:facet name="header">
+								<p:outputLabel value="#{messageBeanSNR.commonLabelSubProcesoVersion}" />
+							</f:facet>
+							<p:column headerText="#{messageBeanSNR.commonLabelProceso}"
+								filterBy="#{item.idProceso}">
+								<div align="left">
+									<p:commandLink id="idCLink" styleClass="subrayado"
+										actionListener="#{beanSubProcesoVersion.consultaDetallada(item)}"
+										action="subProcesoVersionDetalle?faces-redirect=true">
+									<h:outputText value="#{item.idProceso}" />
+									</p:commandLink>
+								</div>
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelSubProceso}"
+								filterBy="#{item.idSubproceso}">
+								<h:outputText value="#{item.idSubproceso}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelVersionSubproceso}"
+								filterBy="#{item.versionSubproceso}">
+								<h:outputText value="#{item.versionSubproceso}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelEtapaInicial}"
+								filterBy="#{item.idEtapaInicial}">
+								<h:outputText value="#{item.idEtapaInicial}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelEstadoActividad}"
+								filterBy="#{item.estadoActividad}">
+								<h:outputText value="#{item.estadoActividad}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelSolicitudCertificado}">
+								<h:outputText value="#{messageBeanSNR.commonLabelSi}"
+									rendered="#{item.solicitudCertificado=='S'}" />
+								<h:outputText value="#{messageBeanSNR.commonLabelNo}"
+									rendered="#{item.solicitudCertificado=='N'}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelPlantilla}"
+								filterBy="#{item.plantilla}">
+								<h:outputText value="#{item.plantilla}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelConservacionDocumental}">
+								<h:outputText value="#{messageBeanSNR.commonLabelSi}"
+									rendered="#{item.conservacionDocumental=='S'}" />
+								<h:outputText value="#{messageBeanSNR.commonLabelNo}"
+									rendered="#{item.conservacionDocumental=='N'}" />
+							</p:column>
+							<p:column headerText="#{messageBeanSNR.commonLabelObtenerReciboCaja}">
+								<h:outputText value="#{messageBeanSNR.commonLabelSi}"
+									rendered="#{item.obtenerReciboCaja=='S'}" />
+								<h:outputText value="#{messageBeanSNR.commonLabelNo}"
+									rendered="#{item.obtenerReciboCaja=='N'}" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

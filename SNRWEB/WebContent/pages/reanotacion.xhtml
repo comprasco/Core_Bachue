@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelRegistro}" />
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelReanotacion}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="fReanotacion" style="width: 100%;">
+				<p:growl id="idGrowl" sticky="true" showDetail="true" redisplay="false"/>
+				<center>
+
+					<p:panel header="#{messageBeanSNR.commonLabelReanotacion}"
+						style="min-width:800px;">
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<center>
+									<h:panelGrid columns="1">
+										<p:outputLabel
+											value="#{messageBeanSNR.commonLabelTurno}#{messageBeanSNR.commonLabelObligatorio}"
+											style="font-size: 100%;" />
+										<p:inputText placeholder="#{messageBeanSNR.commonLabelTurno}"
+											id="idTurno" value="#{beanReanotacion.idTurnoConsulta}"
+											title="#{tooltipBeanSNR.procesosReanotacionTurno}">
+										</p:inputText>
+									</h:panelGrid>
+								</center>
+							</div>
+						</div>
+						<div class="ui-g" align="center">
+							<div class="ui-g-12 ui-md-12 ui-lg-12" align="center">
+								<h:panelGroup>
+									<p:commandButton
+										value="#{messageBeanSNR.commonButtonConsultar}"
+										actionListener="#{beanReanotacion.consultaTurnoHistoria()}"
+										ajax="true" icon="lupa" update="fReanotacion idGrowl" />
+								</h:panelGroup>
+							</div>
+						</div>
+					</p:panel>
+					<h:panelGroup rendered="#{beanReanotacion.rendered}"
+						id="idTurnosAsociados">
+						<p:panel>
+							<p:dataTable id="idDtListado" style="min-width:500px;"
+								value="#{beanReanotacion.trazabilidad}" var="item"
+								emptyMessage="#{errorBeanSNR.errorSinRegistros}">
+								<p:column headerText="#{messageBeanSNR.commonLabelNIR}">
+									<h:outputText value="#{item.solicitud.nir}" />
+								</p:column>
+								<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+									<h:outputText value="#{item.turno.idTurno}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelEstadoDelTurno}">
+									<h:outputText value="#{item.fases.nombre}" />
+								</p:column>
+								<p:column
+									headerText="#{messageBeanSNR.commonLabelProcesoDelTurno}">
+									<h:outputText value="#{item.proceso.nombre}" />
+								</p:column>
+							</p:dataTable>
+						</p:panel>
+						<p:panel
+							header="#{messageBeanSNR.commonLabelTurnosBloqueadosPortramitesEnCurso}"
+							style="text-align:center">
+							<div class="ui-g">
+								<p:dataTable
+									emptyMessage="#{messageBeanSNR.commonLabelMensajeTurnosConEstadoBloqueado}"
+									value="#{beanReanotacion.turnosEnCurso}" var="item">
+									<p:column headerText="#{messageBeanSNR.commonLabelTurno}">
+										<h:outputText value="#{item['ID_TURNO_BLOQUEO']}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelFechaCreacion}">
+										<h:outputText value="#{item['FECHA_CREACION']}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelEstadoActualDelTruno}">
+										<h:outputText value="#{item['ESTADO_TURNO']}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelUsuarioActual}">
+										<h:outputText value="#{item['NOMBRE_USUARIO']}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelMatriculasRelacionadas}">
+										<h:outputText value="#{item['MATRICULA']}" />
+									</p:column>
+								</p:dataTable>
+							</div>
+						</p:panel>
+						<p:panel style="text-align: left;"
+							header="#{messageBeanSNR.commonLabelObservaciones} #{messageBeanSNR.commonLabelObligatorio}">
+							<p:inputTextarea rows="10" cols="240"
+								style="width: 100%;height: 50%;"
+								value="#{beanReanotacion.observaciones}"
+								id="observacionesReanotacion" onblur="value=value.toUpperCase()"
+								title="#{tooltipBeanSNR.procesosReanotacionObservaciones}"
+								queryDelay="750" maxlength="4000" minQueryLength="150"
+								counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+								counter="idNumeroCaracteres1" />
+							<div align="right">
+								<h:outputText id="idNumeroCaracteres1" />
+							</div>
+						</p:panel>
+						<br />
+					</h:panelGroup>
+					<div class="ui-g-12 ui-md-7 ui-lg-7">
+						<p:commandButton
+							value="#{messageBeanSNR.commonButtonEnviarAEntrega}"
+							icon="fa fa-save" iconPos="left"
+							action="#{beanReanotacion.enviarAEntrega()}"
+							rendered="#{beanReanotacion.rendered}"
+							update="fReanotacion idGrowl" style="float:right;">
+						</p:commandButton>
+						<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+							icon="fa fa-arrow-circle-left" iconPos="left"
+							action="principal?faces-redirect=true" style="float:left;">
+						</p:commandButton>
+					</div>
+					<br />
+					<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+						closable="false" resizable="false" showHeader="false">
+						<p:graphicImage value="/images/ajaxloadingbar.gif" />
+					</p:dialog>
+				</center>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

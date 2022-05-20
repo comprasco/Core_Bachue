@@ -1,0 +1,791 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<ui:composition template="../common/template.xhtml">
+		<ui:define name="migaPan">
+			<nav aria-label="breadcrumb nav navbar-nav navbar-right">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelProcesos}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelModDeDatosBasicosYmatriculas}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel
+						value="#{messageBeanSNR.commonLabelBandejaDeEntrada}" />
+				</li>
+				<li class="breadcrumb-item">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelBandejaDeTurnos}" />
+				</li>
+				<li class="breadcrumb-item active">
+					<p:outputLabel value="#{messageBeanSNR.commonLabelDetalleTurno}" />
+				</li>
+			</ol>
+			</nav>
+		</ui:define>
+		<ui:define name="content">
+			<ui:include src="detalleActoInclude.xhtml" />
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false" appendTo="@(body)">
+				<p:graphicImage value="/images/ajaxloadingbar.gif" />
+			</p:dialog>
+
+			<h:form id="confrontacion5">
+				<p:growl id="idGrowl" sticky="false"  showDetail="true" life="20000" redisplay="false"
+					globalOnly="true" />
+				<!-- Tabs a modificar de acuerdo a la seleccion -->
+				<p:tabView id="idCorregirDatBasicos">
+					<p:tab title="#{messageBeanSNR.commonLabelCorregirDatosBasicos}"
+						rendered="#{correctivosBean.datosBasicos}">
+						<p:fragment>
+							<p:autoUpdate />
+
+							<p:panel id="idPanelApertura">
+								<p:outputPanel id="idUpTurnoSiVinculado"
+									rendered="#{correctivosBean.indVinculado}">
+									<div align="right">
+										<p:dataTable
+											emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}."
+											value="#{correctivosBean.infoTurnos}" var="row">
+											<p:column headerText="#{messageBeanSNR.commonLabelIdTurno}">
+												<div align="center">
+													<h:outputText value="#{row.turno}"
+														styleClass="#{correctivosBean.turnoVinculado eq row.turno ? 'negrita' : 'sinNegrita'}" />
+												</div>
+											</p:column>
+											<p:column
+												headerText="#{messageBeanSNR.commonLabelEstadoDelTurno}">
+												<div align="center">
+													<h:outputText value="#{row.faseTurno}"
+														styleClass="#{correctivosBean.turnoVinculado eq row.turno ? 'negrita' : 'sinNegrita'}" />
+												</div>
+											</p:column>
+											<p:column headerText="#{messageBeanSNR.commonLabelDetalle}">
+												<div align="center">
+													<p:commandButton id="idCbDetalleDocumentoTurno"
+														rendered="#{row.dataConfrontacion.modDatosDocumento}"
+														disabled="#{correctivosBean.turnoSeleccionado}"
+														actionListener="#{correctivosBean.detalleTurnoSeleccionado(row)}"
+														icon="lupa" image="../images/find.png">
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</div>
+									<br />
+									<br />
+									<p:panel id="idUpDetalleTurnoSiVinculado"
+										rendered="#{correctivosBean.turnoSeleccionado}">
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<div>
+													<p:outputLabel
+														value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}">
+													</p:outputLabel>
+													<br />
+													<p:selectOneMenu id="idSOMEscrituraVinculado"
+														style="width:89%;"
+														title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaTipoDocumento}"
+														value="#{correctivosBean.apertura.documento.idTipoDocumento}"
+														disabled="#{!correctivosBean.calificaciones.tipoDocumento}">
+														<f:selectItem
+															itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+															itemValue="" />
+														<f:selectItems
+															value="#{beanReference.findTipoDocumentoPublicoActivo()}"
+															var="item" itemLabel="#{item.nombre}"
+															itemValue="#{item.idTipoDocumento}" />
+														<p:ajax listener="#{correctivosBean.tipoDocumentoValidar}"
+															update=":confrontacion5:idGrowl,idPanelApertura,idSOMTipoOficina" />
+													</p:selectOneMenu>
+													&nbsp;&nbsp;&nbsp;
+													<p:selectBooleanCheckbox disabled="true"
+														value="#{correctivosBean.calificaciones.tipoDocumento}" />
+												</div>
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelNumeroDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:inputText onblur="value=value.toUpperCase()"
+													style="width:89% !important;"
+													title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaNumeroDocumento}"
+													disabled="#{!correctivosBean.calificaciones.numeroDoc}"
+													id="idItDocuActoVinculado"
+													placeholder="#{messageBeanSNR.commonLabelDocumento}"
+													maxlength="20"
+													value="#{correctivosBean.apertura.documento.numero}">
+													<p:ajax
+														listener="#{correctivosBean.validarExistenciaDocumento}"
+														event="blur"
+														update=":confrontacion5:idGrowl,idPanelApertura" />
+												</p:inputText>
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{correctivosBean.calificaciones.numeroDoc}" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelFechaDelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:calendar id="idCalFechaDocVinculado" size="10"
+													mask="true" styleClass="inputTextDate"
+													title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaFechaDocumento}"
+													disabled="#{!correctivosBean.calificaciones.fechaDoc}"
+													locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+													value="#{correctivosBean.apertura.documento.fechaDocumento}"
+													showOn="button">
+													<p:ajax event="dateSelect"
+														listener="#{correctivosBean.validarExistenciaDocumento}"
+														update=":confrontacion5:idGrowl,idPanelApertura" />
+												</p:calendar>
+												&nbsp;&nbsp;
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{correctivosBean.calificaciones.fechaDoc}" />
+											</div>
+										</div>
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTipoDeOficina}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMTipoOficinaVinculado"
+													style="width:89%;"
+													title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaTipoOficina}"
+													value="#{correctivosBean.apertura.idTipoOficina}"
+													disabled="#{!correctivosBean.calificaciones.tipoOficina}">
+													<p:ajax listener="#{correctivosBean.tipoOficina}"
+														update="idPanelApertura" />
+													<p:ajax
+														listener="#{correctivosBean.validarExistenciaDocumento}"
+														update=":confrontacion5:idGrowl,idPanelApertura" />
+													<f:selectItems
+														value="#{correctivosBean.tipoOficinaDocumento}" var="item"
+														itemLabel="#{item.nombre}"
+														itemValue="#{item.idTipoOficina}" />
+												</p:selectOneMenu>
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{correctivosBean.calificaciones.tipoOficina}" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelPais}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idPaisDocumentoVinculado"
+													style="width:89%;"
+													title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaPais}"
+													value="#{correctivosBean.apertura.idPais}"
+													disabled="#{!correctivosBean.calificaciones.pais}">
+													<p:ajax listener="#{correctivosBean.pais}"
+														update="idPanelApertura" />
+													<p:ajax
+														listener="#{correctivosBean.validarExistenciaDocumento}"
+														update=":confrontacion5:idGrowl,idPanelApertura" />
+													<f:selectItem itemValue=""
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+													<f:selectItems value="#{beanReference.findPaises()}"
+														var="paises" itemValue="#{paises.idPais}"
+														itemLabel="#{paises.nombre}" />
+												</p:selectOneMenu>
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{correctivosBean.calificaciones.pais}" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMDepartamentoVinculado"
+													style="width:89%;"
+													title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaDepartamento}"
+													value="#{correctivosBean.apertura.idDepartamento}"
+													disabled="#{!correctivosBean.calificaciones.departamentoOficina}">
+													<p:ajax listener="#{correctivosBean.departamento}"
+														update="idPanelApertura" />
+													<p:ajax
+														listener="#{correctivosBean.validarExistenciaDocumento}"
+														update=":confrontacion5:idGrowl,idPanelApertura" />
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{correctivosBean.findDepartamentos()}" var="item"
+														itemValue="#{item.idDepartamento}"
+														itemLabel="#{item.nombre}" />
+												</p:selectOneMenu>
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{correctivosBean.calificaciones.departamentoOficina}" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMMunicipioVinculado"
+													style="width:89%;"
+													title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaMunicipio}"
+													value="#{correctivosBean.apertura.idMunicipio}"
+													disabled="#{!correctivosBean.calificaciones.municipioOficina}">
+													<p:ajax listener="#{correctivosBean.oficinaOrigenApertura}"
+														update="idPanelApertura" />
+													<p:ajax
+														listener="#{correctivosBean.validarExistenciaDocumento}"
+														update=":confrontacion5:idGrowl,idPanelApertura" />
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{correctivosBean.findMunicipioApertura()}"
+														var="munRes" itemValue="#{munRes.idMunicipio}"
+														itemLabel="#{munRes.nombre}" />
+												</p:selectOneMenu>
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{correctivosBean.calificaciones.municipioOficina}" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelOficinaDeOrigen}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:selectOneMenu id="idSOMOficinaOrigenVinculado"
+													style="width:89%;"
+													title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaOficinaOrigen}"
+													value="#{correctivosBean.apertura.idOficinaOrigen}"
+													disabled="#{!correctivosBean.calificaciones.oficinaOrigen}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{correctivosBean.getOficinaOrigenApertura()}"
+														var="orig" itemLabel="#{orig.nombre}"
+														itemValue="#{orig.idOficinaOrigen}" />
+													<p:ajax
+														listener="#{correctivosBean.validarExistenciaDocumento}"
+														update=":confrontacion5:idGrowl,idPanelApertura" />
+													<p:ajax listener="#{correctivosBean.tipoOficina()}"
+														update=":confrontacion5:idGrowl,idPanelApertura" />
+												</p:selectOneMenu>
+												&nbsp;&nbsp;
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{correctivosBean.calificaciones.oficinaOrigen}" />
+											</div>
+											<div class="ui-g-12 ui-md-6 ui-lg-4">
+												<p:outputLabel
+													rendered="#{correctivosBean.apertura.esActoConEjecutoria}"
+													value="#{messageBeanSNR.commonLabelFechaEjecutoria}#{messageBeanSNR.commonLabelObligatorio}" />
+												<br />
+												<p:calendar id="idCalFechaEjecutoriaVinculado" size="10"
+													mask="true"
+													rendered="#{correctivosBean.apertura.esActoConEjecutoria}"
+													styleClass="inputTextDate"
+													title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaFechaEjecutoria}"
+													disabled="#{!correctivosBean.calificaciones.fechaEjecutoria}"
+													locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+													value="#{correctivosBean.apertura.documento.fechaEjecutoria}"
+													showOn="button">
+													<p:ajax event="dateSelect"
+														listener="#{correctivosBean.validarExistenciaDocumento}"
+														update="confrontacion5:idGrowl,idPanelApertura" />
+													<p:ajax
+														listener="#{correctivosBean.validarActoEjecutoria()}"
+														update=":confrontacion5:idGrowl,idPanelApertura" />
+												</p:calendar>
+												&nbsp;&nbsp;
+												<p:selectBooleanCheckbox disabled="true"
+													rendered="#{correctivosBean.apertura.esActoConEjecutoria}"
+													value="#{correctivosBean.calificaciones.fechaEjecutoria}" />
+											</div>
+										</div>
+
+										<div class="ui-g" align="left">
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<div align="right">
+													<p:commandButton id="idCbGuardarDocumentoTurno"
+														value="#{messageBeanSNR.commonButtonModificarDatosBasicos}"
+														disabled="#{not(correctivosBean.indVinculado)}"
+														actionListener="#{correctivosBean.salvarTurnoSeleccionado}"
+														icon="fa fa-chevron-right" iconPos="right">
+													</p:commandButton>
+												</div>
+											</div>
+										</div>
+									</p:panel>
+								</p:outputPanel>
+
+								<p:outputPanel id="idUpTurnoNoVinculado"
+									rendered="#{not(correctivosBean.indVinculado)}">
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<div>
+												<p:outputLabel
+													value="#{messageBeanSNR.commonLabelTipoDeDocumento}#{messageBeanSNR.commonLabelObligatorio}">
+												</p:outputLabel>
+												<br />
+												<p:selectOneMenu id="idSOMEscritura" style="width:89%;"
+													title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaTipoDocumento}"
+													value="#{correctivosBean.apertura.documento.idTipoDocumento}"
+													disabled="#{!correctivosBean.calificaciones.tipoDocumento}">
+													<f:selectItem
+														itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+														itemValue="" />
+													<f:selectItems
+														value="#{beanReference.findTipoDocumentoPublicoActivo()}"
+														var="item" itemLabel="#{item.nombre}"
+														itemValue="#{item.idTipoDocumento}" />
+													<p:ajax listener="#{correctivosBean.tipoDocumentoValidar}"
+														update=":confrontacion5:idGrowl,idPanelApertura,idSOMTipoOficina" />
+												</p:selectOneMenu>
+												&nbsp;&nbsp;&nbsp;
+												<p:selectBooleanCheckbox disabled="true"
+													value="#{correctivosBean.calificaciones.tipoDocumento}" />
+											</div>
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelNumeroDeDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:inputText onblur="value=value.toUpperCase()"
+												style="width:89% !important;"
+												title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaNumeroDocumento}"
+												disabled="#{!correctivosBean.calificaciones.numeroDoc}"
+												id="idItDocuActo"
+												placeholder="#{messageBeanSNR.commonLabelDocumento}"
+												maxlength="20"
+												value="#{correctivosBean.apertura.documento.numero}">
+												<p:ajax
+													listener="#{correctivosBean.validarExistenciaDocumento}"
+													event="blur"
+													update=":confrontacion5:idGrowl,idPanelApertura" />
+											</p:inputText>
+											&nbsp;&nbsp;&nbsp;
+											<p:selectBooleanCheckbox disabled="true"
+												value="#{correctivosBean.calificaciones.numeroDoc}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelFechaDelDocumento}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:calendar id="idCalFechaDoc" size="10" mask="true"
+												styleClass="inputTextDate"
+												title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaFechaDocumento}"
+												disabled="#{!correctivosBean.calificaciones.fechaDoc}"
+												locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+												value="#{correctivosBean.apertura.documento.fechaDocumento}"
+												showOn="button">
+												<p:ajax event="dateSelect"
+													listener="#{correctivosBean.validarExistenciaDocumento}"
+													update=":confrontacion5:idGrowl,idPanelApertura" />
+												<p:ajax event="change"
+													listener="#{correctivosBean.validarExistenciaDocumento}"
+													update=":confrontacion5:idGrowl,idPanelApertura" />				
+											</p:calendar>
+											&nbsp;&nbsp;
+											<p:selectBooleanCheckbox disabled="true"
+												value="#{correctivosBean.calificaciones.fechaDoc}" />
+										</div>
+									</div>
+									<div class="ui-g" align="left">
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelTipoDeOficina}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMTipoOficina" style="width:89%;"
+												title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaTipoOficina}"
+												value="#{correctivosBean.apertura.idTipoOficina}"
+												disabled="#{!correctivosBean.calificaciones.tipoOficina}">
+												<p:ajax listener="#{correctivosBean.tipoOficina}"
+													update="idPanelApertura" />
+												<p:ajax
+													listener="#{correctivosBean.validarExistenciaDocumento}"
+													update=":confrontacion5:idGrowl,idPanelApertura" />
+												<f:selectItems
+													value="#{correctivosBean.findTipoOficina()}" var="item"
+													itemLabel="#{item.nombre}"
+													itemValue="#{item.idTipoOficina}" />
+											</p:selectOneMenu>
+											&nbsp;&nbsp;&nbsp;
+											<p:selectBooleanCheckbox disabled="true"
+												value="#{correctivosBean.calificaciones.tipoOficina}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelPais}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idPaisDocumento" style="width:89%;"
+												title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaPais}"
+												value="#{correctivosBean.apertura.idPais}"
+												disabled="#{!correctivosBean.calificaciones.pais}">
+												<p:ajax listener="#{correctivosBean.pais}"
+													update="idPanelApertura" />
+												<p:ajax
+													listener="#{correctivosBean.validarExistenciaDocumento}"
+													update=":confrontacion5:idGrowl,idPanelApertura" />
+												<f:selectItem itemValue=""
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}" />
+												<f:selectItems value="#{beanReference.findPaises()}"
+													var="paises" itemValue="#{paises.idPais}"
+													itemLabel="#{paises.nombre}" />
+											</p:selectOneMenu>
+											&nbsp;&nbsp;&nbsp;
+											<p:selectBooleanCheckbox disabled="true"
+												value="#{correctivosBean.calificaciones.pais}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelDepartamento}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMDepartamento" style="width:89%;"
+												title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaDepartamento}"
+												value="#{correctivosBean.apertura.idDepartamento}"
+												disabled="#{!correctivosBean.calificaciones.departamentoOficina}">
+												<p:ajax listener="#{correctivosBean.departamento}"
+													update="idPanelApertura" />
+												<p:ajax
+													listener="#{correctivosBean.validarExistenciaDocumento}"
+													update=":confrontacion5:idGrowl,idPanelApertura" />
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems
+													value="#{correctivosBean.findDepartamentos()}" var="item"
+													itemValue="#{item.idDepartamento}"
+													itemLabel="#{item.nombre}" />
+											</p:selectOneMenu>
+											&nbsp;&nbsp;&nbsp;
+											<p:selectBooleanCheckbox disabled="true"
+												value="#{correctivosBean.calificaciones.departamentoOficina}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelMunicipio}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMMunicipio" style="width:89%;"
+												title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaMunicipio}"
+												value="#{correctivosBean.apertura.idMunicipio}"
+												disabled="#{!correctivosBean.calificaciones.municipioOficina}">
+												<p:ajax listener="#{correctivosBean.oficinaOrigenApertura}"
+													update="idPanelApertura" />
+												<p:ajax
+													listener="#{correctivosBean.validarExistenciaDocumento}"
+													update=":confrontacion5:idGrowl,idPanelApertura" />
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems
+													value="#{correctivosBean.findMunicipioApertura()}"
+													var="munRes" itemValue="#{munRes.idMunicipio}"
+													itemLabel="#{munRes.nombre}" />
+											</p:selectOneMenu>
+											&nbsp;&nbsp;&nbsp;
+											<p:selectBooleanCheckbox disabled="true"
+												value="#{correctivosBean.calificaciones.municipioOficina}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												value="#{messageBeanSNR.commonLabelOficinaDeOrigen}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:selectOneMenu id="idSOMOficinaOrigen" style="width:89%;"
+												title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaOficinaOrigen}"
+												value="#{correctivosBean.apertura.idOficinaOrigen}"
+												disabled="#{!correctivosBean.calificaciones.oficinaOrigen}">
+												<f:selectItem
+													itemLabel="#{messageBeanSNR.commonLabelSeleccione}"
+													itemValue="" />
+												<f:selectItems
+													value="#{correctivosBean.getOficinaOrigenApertura()}"
+													var="orig" itemLabel="#{orig.nombre}"
+													itemValue="#{orig.idOficinaOrigen}" />
+												<p:ajax
+													listener="#{correctivosBean.validarExistenciaDocumento}"
+													update=":confrontacion5:idGrowl,idPanelApertura" />
+												<p:ajax listener="#{correctivosBean.tipoOficina()}"
+													update=":confrontacion5:idGrowl,idPanelApertura" />
+											</p:selectOneMenu>
+											&nbsp;&nbsp;
+											<p:selectBooleanCheckbox disabled="true"
+												value="#{correctivosBean.calificaciones.oficinaOrigen}" />
+										</div>
+										<div class="ui-g-12 ui-md-6 ui-lg-4">
+											<p:outputLabel
+												rendered="#{correctivosBean.apertura.esActoConEjecutoria}"
+												value="#{messageBeanSNR.commonLabelFechaEjecutoria}#{messageBeanSNR.commonLabelObligatorio}" />
+											<br />
+											<p:calendar id="idCalFechaEjecutoria" size="10" mask="true"
+												rendered="#{correctivosBean.apertura.esActoConEjecutoria}"
+												styleClass="inputTextDate"
+												title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaFechaEjecutoria}"
+												disabled="#{!correctivosBean.calificaciones.fechaEjecutoria}"
+												locale="es" placeholder="DD/MM/AAAA" pattern="dd/MM/yyyy"
+												value="#{correctivosBean.apertura.documento.fechaEjecutoria}"
+												showOn="button">
+												<p:ajax event="dateSelect"
+													listener="#{correctivosBean.validarExistenciaDocumento}"
+													update=":confrontacion5:idGrowl,idPanelApertura" />
+												<p:ajax 
+													listener="#{correctivosBean.validarExistenciaDocumento}"
+													update=":confrontacion5:idGrowl,idPanelApertura" 
+													event="change" />
+												<p:ajax
+													listener="#{correctivosBean.validarActoEjecutoria()}"
+													update=":confrontacion5:idGrowl,idPanelApertura" />
+											</p:calendar>
+											&nbsp;&nbsp;
+											<p:selectBooleanCheckbox disabled="true"
+												rendered="#{correctivosBean.apertura.esActoConEjecutoria}"
+												value="#{correctivosBean.calificaciones.fechaEjecutoria}" />
+										</div>
+									</div>
+								</p:outputPanel>
+							</p:panel>
+
+						</p:fragment>
+					</p:tab>
+					<!-- Inicio insertar matricula -->
+					<p:tab id="datosPredio_id" titleStyle="font-size:15px;"
+						title="#{messageBeanSNR.commonLabelInsertarMatricula}"
+						rendered="#{correctivosBean.insertaMatricula}">
+						<p:fragment>
+							<p:autoUpdate />
+							<p:panel>
+								<p:panel id="idPnActosResumen"
+									header="#{messageBeanSNR.commonLabelFoliosDeMatricula}"
+									toggleable="true">
+									<p:dataTable id="idDtActoAsociadoGeneral"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{correctivosBean.matriculasInsertar}" var="item"
+										scrollable="true"
+										selection="#{correctivosBean.selectedMatriculasInsertar}"
+										rowKey="#{item.matricula}">
+										<p:ajax event="rowSelect" listener="#{correctivosBean.cargarMensajePredioInconsistente()}" update="confrontacion5" />
+        								<p:ajax event="rowUnselect" listener="#{correctivosBean.cargarMensajePredioInconsistente()}" update="confrontacion5" />
+        								<p:ajax event="rowSelectCheckbox" listener="#{correctivosBean.cargarMensajePredioInconsistente()}" update="confrontacion5" />
+        								<p:ajax event="rowUnselectCheckbox" listener="#{correctivosBean.cargarMensajePredioInconsistente()}" update="confrontacion5" />
+        								<p:ajax event="rowDblselect" listener="#{correctivosBean.cargarMensajePredioInconsistente()}" update="confrontacion5" />
+										<p:column selectionMode="multiple"
+											headerText="#{messageBeanSNR.commonLabelSeleccione}"
+											style="width:70px;text-align:center" >
+										</p:column>
+										<p:column headerText="Matrículas" style="text-align:center">
+											<p:outputLabel id="idOlMatriculaPredio"
+												value="#{item.matricula}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}"
+											style="text-align:center">
+											<p:outputLabel id="idOlDireccionPredio"
+												value="#{item.direccion}" />
+										</p:column>
+										<p:columns value="#{correctivosBean.columns}" var="column"
+											style="text-align:center">
+											<f:facet name="header">
+												<h:outputText value="#{column.header}" />
+												<br />
+												<h:outputText value="Cuantía $ #{column.cuantia}" />
+											</f:facet>
+											<p:selectBooleanCheckbox id="idSbcbActosAsociados"
+												value="#{item.actos[column.idActo]}" disabled="true" />
+											<p:tooltip id="idTtActosAsociados" for="idSbcbActosAsociados"
+												value="#{column.name}" trackMouse="true" />
+										</p:columns>
+									</p:dataTable>
+								</p:panel>
+							</p:panel>
+						</p:fragment>
+					</p:tab>
+					<!-- Fin insertar matricula -->
+					<!-- Inicio eliminar matricula -->
+					<p:tab title="#{messageBeanSNR.commonLabelDesasociarMatricula}"
+						rendered="#{correctivosBean.eliminaMatricula}">
+						<p:fragment>
+							<p:autoUpdate />
+							<p:panel>
+								<p:panel id="idPnActosResumenEliminar"
+									header="#{messageBeanSNR.commonLabelFoliosDeMatricula}"
+									toggleable="true">
+									<p:dataTable id="idDtFoliosEliminar"
+										emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+										value="#{correctivosBean.matriculasEliminar}" var="item"
+										scrollable="true"
+										selection="#{correctivosBean.selectedMatriculasEliminar}"
+										rowKey="#{item.matricula}">
+										<p:column selectionMode="multiple"
+											headerText="#{messageBeanSNR.commonLabelSeleccione}"
+											style="width:70px;text-align:center;" />
+										<p:column headerText="#{messageBeanSNR.commonLabelMatriculas}"
+											style="text-align:center">
+											<p:outputLabel id="idOlMatriculaPredioEliminar"
+												value="#{item.matricula}" />
+										</p:column>
+										<p:column
+											headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}"
+											style="text-align:center">
+											<p:outputLabel id="idOlDireccionPredioEliminar"
+												value="#{item.direccion}" />
+										</p:column>
+										<p:columns value="#{correctivosBean.columns}" var="column"
+											style="text-align:center">
+											<f:facet name="header">
+												<h:outputText value="#{column.header}" />
+												<br />
+												<h:outputText value="Cuantía $ #{column.cuantia}" />
+											</f:facet>
+											<p:selectBooleanCheckbox id="idSbcbActosAsociadosEliminar"
+												value="#{item.actos[column.idActo]}" disabled="true" />
+											<p:tooltip id="idTtActosAsociadosEliminar"
+												for="idSbcbActosAsociadosEliminar" value="#{column.name}"
+												trackMouse="true" />
+										</p:columns>
+									</p:dataTable>
+								</p:panel>
+							</p:panel>
+						</p:fragment>
+					</p:tab>
+					<!-- Fin eliminar matricula -->
+					<!-- Tab para verificar folio -->
+					<p:tab title="#{messageBeanSNR.commonLabelVerificarFolioCerrado}"
+						rendered="#{correctivosBean.verificaFolioCerrado}">
+						<p:fragment>
+							<p:autoUpdate />
+							<p:panel id="idPnActosResumenReabrirFolio"
+								header="#{messageBeanSNR.commonLabelReabrirFoliosMatricula}"
+								toggleable="true">
+								<p:dataTable id="idDtFoliosReabrirFolio"
+									emptyMessage="#{messageBeanSNR.commonLabelNoSeEncontraronRegistros}"
+									value="#{correctivosBean.reabrirMatriculas}" var="item"
+									scrollable="true">
+									<p:column headerText="#{messageBeanSNR.commonLabelMatriculas}"
+										style="text-align:center">
+										<p:outputLabel id="idOlreabrirMatriculaPredio"
+											value="#{item.matricula}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelDireccionDelPredio}"
+										style="text-align:center">
+										<p:outputLabel id="idOlreabrirDireccionPredio"
+											value="#{item.direccion}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelEstadoDelPredio}"
+										style="text-align:center">
+										<p:outputLabel id="idOlreabrirEstadoPredio"
+											value="#{item.estado}" />
+									</p:column>
+									<p:column
+										headerText="#{messageBeanSNR.commonLabelReabrirMatricula}"
+										style="text-align:center">
+										<p:selectBooleanCheckbox value="#{item.certificadoAsociado}"
+											rendered="#{item.estado == 'CERRADO'}" />
+									</p:column>
+								</p:dataTable>
+							</p:panel>
+						</p:fragment>
+					</p:tab>
+				</p:tabView>
+				<br />
+				<p:panel>
+					<div align="left">
+						<p:outputPanel>
+							<strong>
+								<p:outputLabel
+									value="#{messageBeanSNR.commonLabelObservacionesProcesoAnterior}" />
+							</strong>
+							<p:inputTextarea rows="6" cols="170" maxlength="400"
+								disabled="true"
+								value="#{correctivosBean.observacionesProcesoAnterior}"
+								style="font-weight: inherit;width: 100%;height: 50%;" />
+						</p:outputPanel>
+						<br />
+						
+						<p:outputPanel id="idPanelObservacionesPredio">
+							<div align="left">
+								<h:outputLabel id="idObservacionesPredioInconsistente"
+									value="#{correctivosBean.mensajePredioInconsistente}" />
+								<br />
+							</div>
+						</p:outputPanel>
+						
+						<strong>
+							<p:outputLabel
+								value="#{messageBeanSNR.commonLabelJustificacion}#{messageBeanSNR.commonLabelObligatorio}" />
+						</strong>
+						<p:inputTextarea id="idJustificacion" rows="6" cols="140"
+							onblur="value=value.toUpperCase()"
+							title="#{tooltipBeanSNR.procesosDetalleConfrontacionCorrectivaJustificacion}"
+							label="Justificación" value="#{correctivosBean.justificacion}"
+							maxlength="400"
+							counterTemplate="{0} #{messageBeanSNR.commonLabelCaracteresRestantes}"
+							counter="idNumeroCaracteres1" />
+						<div align="right">
+							<h:outputText id="idNumeroCaracteres1" />
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="left">
+								<p:commandButton value="#{messageBeanSNR.commonLabelRegresar}"
+									icon="fa fa-arrow-circle-left" iconPos="left"
+									action="#{correctivosBean.accionVolver}">
+								</p:commandButton>
+							</div>
+							<div class="ui-g-12 ui-md-6 ui-lg-6" align="right"> 
+								<p:commandButton value="#{messageBeanSNR.commonButtonEnviar}"
+									id="idCbEnviar"
+									actionListener="#{beanPredioDocumentoActo.mensajeConfirmacion()}"
+									icon="fa fa-check-circle" iconPos="left" ajax="true">
+								</p:commandButton>
+							</div>
+						</div>
+					</div>
+				</p:panel>
+			</h:form>
+
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelConfirmacion}" widgetVar="dlg"
+				modal="true" height="90" resizable="false">
+				<h:form id="fDialogActo"
+					style="font-size: large; top: 50%; left: 50%;">
+					<h:outputText id="idMensaje"
+						value="#{beanPredioDocumentoActo.mensajeConfirmacion}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonSi}"
+							action="#{correctivosBean.salvar}" icon="fa fa-check"
+							update="confrontacion5" oncomplete="PF('dlg').hide();" />
+						<p:spacer />
+						<p:commandButton value="#{messageBeanSNR.commonNo}"
+							icon="fa fa-close" onsuccess="PF('dlg').hide();" />
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog appendTo="@(body)"
+				header="#{messageBeanSNR.commonLabelAdvertencia}"
+				closable="false" widgetVar="dlgSuspension" modal="true"
+				resizable="false" width="750" height="170"
+				style="text-align: justify">
+				<h:form id="fDialogSuspension"
+					style="font-size: large; text-align: justify top: 30%; left: 30%;">
+					<h:outputText style="text-align: justify;"
+						value="#{correctivosBean.observacionesTemporales}" />
+					<br />
+					<br />
+					<div align="center">
+						<p:commandButton value="#{messageBeanSNR.commonLabelConfirmar}"
+							icon="fa fa-check" oncomplete="PF('dlgSuspension').hide();"
+							action="#{correctivosBean.returnBandeja()}" />
+					</div>
+				</h:form>
+			</p:dialog>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
